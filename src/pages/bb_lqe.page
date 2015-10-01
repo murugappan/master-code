@@ -1,0 +1,31 @@
+<apex:page standardController="OpportunityLineItem" sidebar="false" showheader="false" >
+    <apex:form >
+
+        <apex:pageBlock id="thePageBlock2" >
+            <apex:pageBlockButtons >
+                <!-- 
+                <apex:commandButton value="Save" action="{!save}"/>
+                <apex:commandButton value="Cancel" action="{!cancel}"/>
+                -->
+                <apex:commandButton value="Save"  action="{!quicksave}" reRender="line_table" /> 
+                <apex:commandButton value="Cancel" immediate="true" action="{!cancel}" onClick="self.close();" reRender="line_table"  />  
+                <apex:commandButton value="Close" immediate="true"  onClick="self.close();"   />  
+                 
+            </apex:pageBlockButtons>    
+            
+            <apex:outputPanel > {!OpportunityLineItem.PricebookEntry.Name} </apex:outputPanel>
+            <apex:pageBlockTable value="{!OpportunityLineItem}"  var="l" id="line_table" >
+                <apex:column width="80px" headerValue="List Price">   <apex:outputText value="{!l.ListPrice}" style="width: 80px;"/> </apex:column>        
+                <apex:column width="80px" headerValue="Custom Price"> <apex:inputText value="{!l.Custom_Price__c}" style="width: 80px;"/> </apex:column>           
+                <apex:column width="60px"  headerValue="Quantity">     <apex:inputText value="{!l.Quantity}" style="width: 60px;"/> </apex:column>
+                <apex:column width="80px"  headerValue="Discount">     <apex:inputText value="{!l.Discount_Value__c}" style="width: 80px;"/> </apex:column>
+                <apex:column width="80px" headerValue="Discount Type"> <apex:inputText value="{!l.Discount_Type__c}" style="width: 80px;"/> </apex:column>
+                <apex:column width="80px"  headerValue="Backout">      <apex:inputText value="{!l.Backout_Value__c}" style="width: 80px;"/> </apex:column>
+                <apex:column width="80px" headerValue="Unit Price">   <apex:outputText value="{!l.UnitPrice}" style="width: 80px;"/> </apex:column>         
+            </apex:pageBlockTable>
+            
+
+  
+        </apex:pageBlock>
+    </apex:form>
+</apex:page>

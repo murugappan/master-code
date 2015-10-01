@@ -1,0 +1,30 @@
+<apex:page controller="btbb_upconfirmation" standardStylesheets="false" showheader="false" sidebar="false"  >
+
+
+
+<apex:composition template="btbb_template">
+<apex:define name="topbar"><c:btbb_globalsearch /></apex:define>
+<apex:define name="nav"><c:btbb_auth_nav /></apex:define>
+<apex:define name="content">
+
+<h2>My Institution Help Desk</h2>
+<div style="border: 2px solid #ccc; padding: 1em; background-color: #E9FFE9; margin-bottom: 1em; width: 100%; color: #000;">
+<b>Profile Updated</b>. You can <a href="/apex/btbb_confirmdisplay?id={!a.id}" target="_blank">view the updated profile</a> or <a href="/apex/btbb_updatedirecthelpprofile?id={!a.id}">return</a> to My Institution Help Desk. 
+</div>
+
+<!-- You can view the public page at: <u> http://institutionhelp.blackboard.com/?{!a.PS_Company_Id__c}{!errorText} </u> --> 
+<!-- https://cs12.salesforce.com/apex/auto7?id={!a.id}<br/> -->
+
+
+<apex:form >
+<apex:pageBlock >
+           
+
+</apex:pageBlock>
+</apex:form>
+</apex:define>
+</apex:composition>
+
+
+
+</apex:page>

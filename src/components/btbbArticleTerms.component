@@ -1,0 +1,7 @@
+<apex:component >
+	<p style="font-size:85%;text-align:center;">
+ 		The information contained in the Knowledge Base was written and/or verified by Blackboard Support. It is approved for client use.  Nothing in the Knowledge Base shall be 
+ 		deemed to modify your license in any way to any Blackboard product. If you have comments, questions, or concerns, please send an email to 
+ 		<a href = " mailto:kb@blackboard.com">kb@blackboard.com</a>. ©&nbsp; <apex:outputText value="{!YEAR(TODAY())}"/> Blackboard Inc.  All rights reserved
+ 	</p> 
+</apex:component>

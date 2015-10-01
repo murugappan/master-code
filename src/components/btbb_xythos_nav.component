@@ -1,0 +1,38 @@
+<apex:component >
+<!-- selfClosing="true" controller="btbbAuthNavController"> -->
+<!-- <ul id="primary-nav">
+    
+    <li class="CMSListMenuLIfirst">
+        <a href="{!$Page.btbb_home}" class="{!IF($CurrentPage.Name='btbb_xythoshome','CMSListMenuLinkHighlighted','CMSListMenuLink')}" title="Home">Home</a>
+    </li>
+    
+    <li class="CMSListMenuLI">
+        <a href="{!$Page.btbb_xythosselfservice}" class="{!IF($CurrentPage.Name='btbb_articlesearch' || $CurrentPage.Name='btbb_articleview' || $CurrentPage.Name='btbb_xythosselfservice','CMSListMenuLinkHighlighted','CMSListMenuLink')}" title="Self Service">Self Service</a>
+        <ul class="CMSListMenuUL">
+            <li class="CMSListMenuLIfirst"><a href="{!$Page.btbb_articlesearch}?aType=Documentation">Documentation</a></li>
+            <li class="CMSListMenuLI"><a href="{!$Page.btbb_articleview}?id=50170000000WmcMAAS">Downloads</a></li>
+            <li class="CMSListMenuLI"><a href="{!$Page.btbb_articlesearch}?aType=Knowledge">Knowledge Base</a></li>
+            <!-- Commented on 27th Feb 2012 to implement TP #1629
+            <li class="CMSListMenuLIlast"><a href="{!$Page.btbb_articlesearch}?aType=Known">Known Issues</a></li>-->
+       <!-- </ul>  
+    </li> -->
+    
+   <!--  <li class="CMSListMenuLI">
+        <a href="{!$Page.btbb_xythoscommunity}" class="{!IF($CurrentPage.Name='btbb_xythoscommunity','CMSListMenuLinkHighlighted','CMSListMenuLink')}" title="Community Resources">Community Resources</a>
+        <ul class="CMSListMenuULWide">
+            <li class="CMSListMenuLIfirstWide"><a href="https://connections.coursesites.com/" target="_blank">Connections</a></li>
+            <li class="CMSListMenuLIWide"><a href="http://www.blackboard.com/Platforms/Learn/Resources/Community-Programs/Meet-Your-Peers/Listservs.aspx" target="_blank">Listservs</a></li>
+            <li class="CMSListMenuLIlastWide"><a href="http://www.blackboard.com/Platforms/Learn/Products/Blackboard-Learn/Blackboard-Xythos/International-Channel-Partners.aspx" target="_blank">Partner Center</a></li>
+        </ul>  
+    </li>
+    
+    <li class="CMSListMenuLIlast">
+        <a href="{!$Page.btbb_casesearch}" class="{!IF($CurrentPage.Name='btbb_casesearch' || $CurrentPage.Name='btbb_caseview' || $CurrentPage.Name='btbb_newcase' || $CurrentPage.Name='btbb_caseConfirmation' || $CurrentPage.Name='btbb_caseRelevantArticles' || $CurrentPage.Name='TakeSurvey' || $CurrentPage.Name='ThankYou' ,'CMSListMenuLinkHighlighted','CMSListMenuLink')}" title="Bb Support">Bb Support</a>
+        <ul class="CMSListMenuUL">
+            <li class="CMSListMenuLIfirst" style="display:{!IF(NOT(isMLAAdmin) ,'block','none')}"><a href="{!$Page.btbb_newcase}">Create a Case</a></li>
+            <li class="CMSListMenuLIlast"><a href="{!$Page.btbb_casesearch}">Search Cases</a></li>
+        </ul>    
+    </li>
+        
+</ul> -->
+</apex:component>

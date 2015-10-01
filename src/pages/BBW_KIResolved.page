@@ -1,0 +1,41 @@
+<apex:page standardController="Solution" extensions="BBW_DetailArticle" action="{!originalArticle}">
+<apex:form >
+  <apex:pageMessages showDetail="false"/>
+  <apex:pageBlock Id="ArticleBlock">
+          <a id="Article_Link" href="/{!aId}"><font size ="2" color="blue">Go back to Article : {!Solution.SolutionNumber}</font></a>       
+          <apex:pageBlockButtons location="bottom">
+              <!--<apex:commandButton value="Previous" action="{!previousBtnClick}" disabled="{!previousButtonEnabled}" reRender="ArticleBlock" status="ArticleNext"></apex:commandButton>-->
+           <!--<apex:commandButton value="Next" action="{!nextBtnClick}" reRender="ArticleBlock" disabled="{!nextButtonDisabled}" status="ArticleNext"></apex:commandButton>-->
+              <apex:actionStatus startText="" stopText="" id="ArticleNext">
+                    <apex:facet name="start" ><apex:image url="{!URLFOR($Resource.btbbLoader)}"/></apex:facet>
+              </apex:actionStatus>
+          </apex:pageBlockButtons>
+            <apex:pageBlockTable value="{!KIResolvedArticleList}" var="KIArticle" id="Article_Table">
+                <apex:column width="30px">
+                     <apex:facet name="header"><strong>Article Number</strong></apex:facet> 
+                    <a href="/apex/BBW_KnownIssueDetailArticle?Id={!KIArticle.articleId}">{!KIArticle.SolutionNumber}</a>                     
+                </apex:column>                 
+                <apex:column >   
+                    <apex:facet name="header"><strong>Component</strong></apex:facet>
+                    {!KIArticle.categoriesName}
+                </apex:column>
+                <apex:column > 
+                    <apex:facet name="header"><strong>Version</strong></apex:facet>  
+                    {!KIArticle.Versions}
+                </apex:column>
+                <apex:column > 
+                    <apex:facet name="header"><strong>Issue Description</strong></apex:facet> 
+                    {!KIArticle.IssueDescription}
+                </apex:column>                    
+                <apex:column >
+                    <apex:facet name="header"><strong>Target Fix Release</strong></apex:facet>
+                    {!KIArticle.TargetFixRelease}
+                </apex:column>
+ <apex:inputHidden value="{!Solution.Version_s__c}"/>               
+<apex:inputHidden value="{!Solution.ParentId__c}"/>
+ <apex:inputHidden value="{!Solution.Isrejected__c}"/>
+ <apex:inputHidden value="{!Solution.iscopy__c}"/>    
+</apex:pageBlockTable>
+</apex:pageBlock>
+</apex:form>
+</apex:page>

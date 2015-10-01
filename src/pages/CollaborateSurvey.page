@@ -1,0 +1,132 @@
+<apex:page standardStylesheets="false" showHeader="false" sidebar="false" contentType="text/html" cache="false" standardcontroller="Collaborate_Survey__c" extensions="CollaborateSurvey">
+    <apex:composition template="btbb_publictemplate" > 
+        <apex:define name="content" > 
+        <style type="text/css">
+            .label { white-space:nowrap;
+             width: 150px; margin-left: 160px; font-weight: bold; line-height: 30px; font-size: 12px; color: #444;}
+            .field { margin-left: 60px; line-height: 30px; clear:none; font-size: 12px; width: 300px; color: #343434;}
+            .pagebuttons { float:right; margin-right: 50px; margin-top: 20px; margin-bottom: 20px;  }
+            .pagebuttons input[type="submit"] {
+                background: url({!URLFOR($Resource.BtBbStyles,'/includes/images/button_bg.gif')}) repeat-x top left;
+                height: 24px;   
+                color: #FFF;
+                border: 1px solid #CCC;
+                font-weight: bold;
+                margin: 0 5px 0 0;
+            }
+            @-moz-document url-prefix() { .pagebuttons input[type="submit"] { padding-bottom: 4px; } }
+            input[type="radio"] { position: relative; top: 3px; }
+            
+            </style>
+            <apex:define name="js">
+            <script type="text/javascript">
+
+            var pickvalue;
+            var j$ = jQuery.noConflict();
+            j$(document).ready(function() { 
+                 if(j$('.pick').val()=='Not at this time')
+                {
+                    j$(".iss").show();
+                }
+                else
+                {
+                    j$(".iss").hide();
+                }   
+            });
+            function validate(pickid)
+            {
+
+                 pickvalue= pickid.value;
+                if(pickvalue=='Not at this time')
+                {
+                    j$(".iss").show();
+                }
+                else
+                {
+                    j$(".iss").hide();
+                }   
+            }
+               
+
+          function  check()
+            {
+                if(pickvalue=='Not at this time' && (j$('.issf').val()==null || j$('.issf').val()==''))
+                {
+                    alert('Please Enter Additional Information');
+                    return false;
+                }
+                else
+                {
+                    return true;
+                }   
+            }     
+           </script>
+          
+        </apex:define>
+         <apex:form id="formid">
+                <apex:pageBlock title="Submit Your Response"  id="pageblockid" rendered="{!NOT(success)}">
+                 <span style="color: red;">All form fields are required.</span><br/>
+                 <apex:pageMessages />
+                 <apex:pageBlockSection id="corefields" columns="2" collapsible="false"
+                        showHeader="false">
+                        <apex:pageblocksectionitem >
+                            <apex:outputLabel for="Firstname" value="First Name:"  styleClass="label" />
+                        </apex:pageblocksectionitem>
+                        <apex:pageblocksectionitem >
+                             <apex:inputfield value="{!Collaborate_Survey__c.First_Name__c}"  styleClass="field"   id="Firstname"/>
+                          </apex:pageblocksectionitem>
+                          <apex:pageblocksectionitem >
+                            <apex:outputLabel for="Lastname" value="Last Name:"  styleClass="label" />
+                        </apex:pageblocksectionitem>  
+                        <apex:pageblocksectionitem >
+                             <apex:inputfield value="{!Collaborate_Survey__c.Last_Name__c}"  styleClass="field"   id="Lastname"/>
+                          </apex:pageblocksectionitem>
+                          <apex:pageblocksectionitem >
+                            <apex:outputLabel for="email" value="Email Address:"  styleClass="label" />
+                        </apex:pageblocksectionitem>  
+                        <apex:pageblocksectionitem >
+                             <apex:inputfield value="{!Collaborate_Survey__c.Email__c}"  styleClass="field"   id="email"/>
+                          </apex:pageblocksectionitem>
+                          <apex:pageblocksectionitem >
+                            <apex:outputLabel for="phone" value="Phone Number:"  styleClass="label" />
+                        </apex:pageblocksectionitem>  
+                        <apex:pageblocksectionitem >
+                             <apex:inputfield value="{!Collaborate_Survey__c.Phone__c}"  styleClass="field"   id="phone"/>
+                          </apex:pageblocksectionitem>
+                          <apex:pageblocksectionitem >
+                            <apex:outputLabel for="institution" value="Institution Name:"  styleClass="label" />
+                        </apex:pageblocksectionitem>  
+                        <apex:pageblocksectionitem >
+                             <apex:inputfield value="{!Collaborate_Survey__c.Institution__c}"  styleClass="field"   id="institution"/>
+                        </apex:pageblocksectionitem>    
+                        <apex:pageblocksectionitem >
+                            <apex:outputLabel for="issue" value="What alternative would you like?"  styleClass="label" />
+                        </apex:pageblocksectionitem>  
+                        <apex:pageblocksectionitem id="issueitem">
+                             <apex:selectList value="{!Collaborate_Survey__c.Alternative__c}"  styleClass="field pick"   id="issue" multiselect="false" size="1" onchange="validate(this);">
+                             <!-- <apex:selectOption itemValue="November option (TBD)" itemLabel="November option (TBD)"/> -->
+                             <apex:selectOption itemValue="December 22nd option" itemLabel="December 22nd option"/>
+                             <apex:selectOption itemValue="Not at this time" itemLabel="Not at this time"/>
+                             </apex:selectList>
+                        </apex:pageblocksectionitem>
+                        <apex:pageblocksectionitem id="issuelabel">
+                            <apex:outputLabel for="oissue" value="Additional Information"  styleClass="label iss" style="display:none" id="oissuel"/>
+                        </apex:pageblocksectionitem>  
+                        <apex:pageblocksectionitem id="issuefield">
+                                <apex:inputfield value="{!Collaborate_Survey__c.Other_Details__c}" id="oissue"  style="display:none" styleClass="field iss issf"/>
+                         </apex:pageblocksectionitem> 
+
+                  </apex:pageBlockSection>
+                  <apex:outputPanel styleClass="pagebuttons"
+                                id="NewCaseFormButtons" layout="Block">
+                    <apex:commandButton value="Submit"  action="{!save}"
+                                    styleClass="caseActionButton" style="float:right"/>
+                  </apex:outputPanel>                  
+                </apex:pageBlock>
+                <apex:pageblock rendered="{!success}">
+                We appreciate the information you have provided!
+                </apex:pageblock>
+         </apex:form>   
+        </apex:define>
+    </apex:composition>
+</apex:page>

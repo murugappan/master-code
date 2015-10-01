@@ -1,0 +1,108 @@
+<apex:page controller="publickbarticleview" id="ArticleView" standardStylesheets="false" showHeader="false" contentType="text/html" >
+   <apex:composition template="btbb_publictemplate">
+        <apex:define name="head">
+            <title>{!mainArticle.name} - Behind the Blackboard</title>
+            <link rel="stylesheet" href="{!URLFOR($Resource.btbbSubscriptions, 'checkbutton.css')}" type="text/css" media="all" />
+            <style>
+                input[type="radio"] { position: relative; top: 3px; }
+                ol li {list-style: numeric !important;}
+                .articleAttribute { margin-bottom: 10px; }
+                p {margin-top:7px;margin-bottom:7px;}
+                table { border-collapse:collapse;margin-top:7px;margin-bottom:7px;}
+                table, td {border:1px solid #757575;padding:5px;}
+                th {font-weight:bold;border:1px solid #757575;padding:5px;}
+                #btbbArticlefeedback td {border:none;}
+                #main li {margin-left:30px;}
+                pre 
+                {
+                    font-family: courier, fixed-width;
+                    white-space: pre-wrap;       /* css-3 */
+                    white-space: -moz-pre-wrap;  /* Mozilla, since 1999 */
+                    white-space: -pre-wrap;      /* Opera 4-6 */
+                    white-space: -o-pre-wrap;    /* Opera 7 */
+                    word-wrap: break-word;       /* Internet Explorer 5.5+ */
+                }
+                
+            </style>
+        </apex:define>
+        <apex:define name="topbar">
+            <c:btbb_unauthglobalsearch />
+        </apex:define>
+        <apex:define name="nav">
+            <c:btbb_unauth_nav />
+        </apex:define>
+        <apex:define name="content">
+            <apex:pageMessages />
+            <apex:outputPanel layout="block" style="width:100%" rendered="{!NOT(hasArticle)}">
+                <apex:outputText value="{!noArticleMessage}" />
+            </apex:outputPanel>
+            <apex:form rendered="{!hasArticle}">
+            <apex:outputpanel layout="inline" style="float:right;margin:2px" >
+                    <!-- <apex:commandlink styleclass="{!if(followDisplay=='Unfollow','gray-checkon','gray-check')}" action="{!doFollow}"  title="{!tooltip}" rendered="{!followDisplay != null}" style="position:relative;bottom:6px">
+                         <span >{!if(followDisplay=='Unfollow','click to unfollow','click to follow')}</span>
+                        </apex:commandlink>  -->
+                   <a href="{!$Page.btbb_exportarticlepdf}?id={!btbbController.mainArticle.knowledgeArticleId}&pdf=true" id="btbbArticlePdf"  target="_blank" >
+                   <apex:image id="PDFImage" value="{!URLFOR($Resource.DataTables, 'media/images/pdf_hover.png')}" title="Export to PDF"/></a>        
+                   <a href="{!$Page.btbb_ArticlePrint}?id={!btbbController.mainArticle.knowledgeArticleId}&print=true"  target="_blank" >
+                    <apex:image value="{!URLFOR($Resource.BtBbStyles, '/includes/theme2011/img/icons/print.png')}" alt="Print article" title="Print article" />
+                   </a>
+                 </apex:outputpanel>       
+                <h2>{!mainArticle.name}</h2>  
+                <div class="btbbArticleViewData" style="width:900px">
+                    <b>Date Published:</b>
+                    <apex:outputText value=" {0,date,MMM dd,yyyy}">
+                        <!-- changed my muru --> <!-- <apex:param value="{!DATEVALUE(btbbController.mainArticle.lastPublishedDate)}"/> -->
+                        <apex:param value="{!btbbController.mainArticle.lastPublishedDate}"/> 
+                    </apex:outputText>
+                    <b>Category:</b><span style="word-wrap:break-word">{!btbbController.mainArticle.dataCategories}</span>
+                    <b>Article No.:</b> {!btbbController.mainArticle.ArticleNumber}
+                    <apex:outputPanel layout="block" id="homepage" rendered="{!$CurrentPage.parameters.homepage == 'true'}" style="float:right"> 
+                        <a href="{!$Page.btbb_home}" title="Back to home page">Back to home page</a>                        
+                    </apex:outputPanel>
+                 
+                    <!-- <apex:commandLink action="{!exportToPDF}" target="_blank" type="image/png" title="Export to PDF" id="pdf">
+                        <apex:image id="PDFImage" value="{!URLFOR($Resource.DataTables, 'media/images/pdf_hover.png')}"/>                        
+                    </apex:commandLink> --> 
+                   
+                                <!--<a href="{!$Page.btbb_ArticlePrint}?id={!btbbController.mainArticle.knowledgeArticleId}&print=true" id="btbbArticlePrint" target="_blank" >
+                    <apex:image value="{!URLFOR($Resource.BtBbStyles, '/includes/theme2011/img/icons/print.png')}" alt="Print article" title="Print article" />
+                  </a>-->
+                  
+                      
+                  
+                    </div>
+                <div style="width:900px;word-wrap:break-word">  
+                 
+                <c:publicgeneralarticleview btbbController="{!btbbController}" showBackLinks="false" rendered="{!mainArticle.articleType == 'General Article'}" />
+                <c:publiccasearticleview btbbController="{!btbbController}" rendered="{!caseId != null}" />
+                 
+                <c:publicannouncementview btbbController="{!btbbController}" showBackLinks="false" rendered="{!mainArticle.articleType == 'Announcement'}" />
+                <c:publicknownissueview btbbController="{!btbbController}" showBackLinks="false" rendered="{!mainArticle.articleType == 'Known Issue'}" />
+                <c:publicotherresourcesview btbbController="{!btbbController}" showBackLinks="false" rendered="{!mainArticle.articleType == 'Other Resource'}" />
+                <c:publicproductdocumentationview btbbController="{!btbbController}" showBackLinks="false" rendered="{!mainArticle.articleType == 'Product Documentation'}" />
+                <c:publicquestionanswerview btbbController="{!btbbController}" showBackLinks="false" rendered="{!mainArticle.articleType == 'Question/Answer'}" />
+                <c:publicreleaseview btbbController="{!btbbController}" showBackLinks="false" rendered="{!mainArticle.articleType == 'Release'}" />
+                <c:publicmaintenancereleaseview btbbController="{!btbbController}" showBackLinks="false" rendered="{!mainArticle.articleType == 'Maintenance Release'}" />
+                
+                <c:publicsupportbulletinview btbbController="{!btbbController}" showBackLinks="false" rendered="{!mainArticle.articleType == 'Support Bulletin/Security Advisory'}" />
+                <c:publicsupportedtechnologiesview btbbController="{!btbbController}" showBackLinks="false" rendered="{!mainArticle.articleType == 'Supported Technologies'}" />
+                <c:publictroubleshootinginformationalview btbbController="{!btbbController}" showBackLinks="false" rendered="{!mainArticle.articleType == 'Troubleshooting/Informational'}" />
+                <c:publicblackboardclientprogramview btbbController="{!btbbController}" showBackLinks="false" rendered="{!mainArticle.articleType == 'Blackboard Client Program'}" />
+                 
+                 
+                </div>
+                
+                <!-- <div class="cleaner divider">&nbsp;</div>
+                <c:publicarticlefeedback btbbController="{!btbbController}" rendered="{!NOT(hasFeedback)}" /> -->
+                
+                
+                
+                
+           
+                
+            </apex:form>
+        </apex:define>
+    </apex:composition>
+
+
+</apex:page>

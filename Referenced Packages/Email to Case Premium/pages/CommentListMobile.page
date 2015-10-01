@@ -1,0 +1,36 @@
+<apex:page standardController="Case" extensions="E2CP.commentlist" showHeader="false" sidebar="false" standardStylesheets="false"  >
+    <head>
+        <link rel="stylesheet" href="{!URLFOR ($Resource.jquerymobile, '/jquery.mobile-1.0b2/jquery.mobile-1.0b2.css')}" />
+        
+        <script src="{!URLFOR ($Resource.jquerymobile, '/jquery.mobile-1.0b2/jquery-1.6.2.min.js')}"></script>
+        <script src="{!URLFOR ($Resource.jquerymobile, '/jquery.mobile-1.0b2/jquery.mobile-1.0b2.min.js')}"></script>
+        <meta content="width=320, user-scalable=no" name="viewport" />
+        <meta name="format-detection" content="telephone=no" />
+    </head>
+    
+    <body>
+        <div data-role="page" data-theme="b">
+        
+            <div data-role="header">
+                <h1>Case #{!case.casenumber}</h1>
+            </div>
+            
+            <div data-role="content"> 
+                <apex:form id="allCommentsF">
+                
+                   <ul data-role="listview" data-theme="b">
+                   <apex:repeat value="{!commentitems}" var="comment" >
+                       <li> 
+                            <apex:outputText value="Public Comment" rendered="{!comment.cmt.IsPublished}"/>
+                            <apex:outputText value="Private Comment" rendered="{!NOT(comment.cmt.IsPublished)}"/>
+                            <apex:outputText value=" by: "/><apex:outputField value="{!comment.cmt.CreatedById}"/>
+                            &nbsp;<apex:outputField value="{!comment.cmt.CreatedDate}"/>
+                            <br/><br/><apex:outputField value="{!comment.cmt.CommentBody}"/>
+                       </li>
+                    </apex:repeat>
+                    </ul>
+                </apex:form>
+            </div>
+        </div>
+    </body>
+</apex:page>

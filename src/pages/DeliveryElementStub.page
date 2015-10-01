@@ -1,0 +1,6 @@
+<apex:page standardController="KimbleOne__DeliveryElement__c">
+  <h1>View Delivery Element</h1>
+  <br/>
+  <br/>
+  Please refer to the Delivery Engagement to view details on Assignments and Elements.
+</apex:page>

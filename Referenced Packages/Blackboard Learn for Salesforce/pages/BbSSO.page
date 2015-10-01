@@ -1,0 +1,5 @@
+<apex:page controller="bbl.BbSSOController" action="{!goToBb}">
+    <apex:form >
+        <apex:commandButton action="{!goToBb}"  value="Go To Training"/>
+    </apex:form>
+</apex:page>

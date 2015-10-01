@@ -1,0 +1,3 @@
+<apex:page sidebar="false" >
+    <iframe src="https://blackboard.gosavo.com/SingleSignOn/Salesforce.ashx?sessionid={!$Api.Session_ID}&url={!$Api.Partner_Server_URL_70}" width="100%" height="900px"></iframe>
+</apex:page>

@@ -1,0 +1,73 @@
+<apex:page standardController="Case" extensions="createenduserCase">
+
+
+<apex:form prependid="false">
+<apex:pageBlock title="Create a New Support End User Case" mode="edit" id="thePageBlock">
+    <apex:pageBlockButtons >
+        <apex:commandButton value="Pre-Populate Values" action="{!Cancel}" />
+        <apex:commandButton value="Create New End User Case" action="{!Save}" timeout="900"/>
+        <apex:commandButton value="Cancel" action="{!Cancel}" />
+    </apex:pageBlockButtons>
+    
+<apex:pageBlockSection title="Account and Contact Information" columns="2">
+<apex:pageBlockSectionItem id="accountpageBlockSectionItem">
+        <apex:outputLabel value="Account:"></apex:outputLabel>
+        <apex:outputPanel >           
+              <apex:image url="{!$Resource.redbar1}"/>
+              <apex:inputfield value="{!case.accountid}" id="account"/> 
+        </apex:outputPanel>  
+</apex:pageBlockSectionItem><br/>
+
+
+<apex:pageBlockSectionItem id="contactpageBlockSectionItem">
+        <apex:outputLabel value="Contact:"></apex:outputLabel>
+        <apex:outputPanel >           
+              <apex:image url="{!$Resource.redbar1}"/>
+              <apex:inputfield value="{!case.contactid}" id="contact"/> 
+        </apex:outputPanel>  
+</apex:pageBlockSectionItem>
+</apex:pageBlockSection>
+
+
+<apex:pageBlockSection columns="1" title="Problem Information">
+
+<apex:pageBlockSectionItem >
+<apex:outputLabel value="Subject"/> 
+<apex:outputPanel >
+<apex:image url="{!$Resource.redbar1}" /> 
+<apex:inputField value="{!Case.Subject}" style="padding:3px; width: 35%;" />
+</apex:outputPanel>
+</apex:pageBlockSectionItem>
+
+<apex:pageBlockSectionItem dataStyle="height: 175px;">
+<strong>Description</strong>
+<apex:outputPanel >
+<apex:image url="{!$Resource.redbar2}" style="vertical-align:top"/> 
+<apex:inputField value="{!Case.Description}"  style="width:75%; height:150px;" />
+</apex:outputPanel>
+
+</apex:pageBlockSectionItem>
+
+
+<apex:pageBlockSectionItem dataStyle="height: 175px;" >
+
+<strong>Chat Transcript</strong>
+<apex:inputField value="{!Case.Chat_Transcript__c}"  style="margin-left:10px; width:93%; height:150px;"  />
+
+</apex:pageBlockSectionItem>  
+
+</apex:pageBlockSection>
+
+
+
+
+
+
+
+</apex:pageBlock>
+
+
+
+
+</apex:form>
+</apex:page>

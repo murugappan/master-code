@@ -1,0 +1,1 @@
+<apex:page standardController="CameleonCPQ__QuoteRelease__c" showHeader="true" action="{!URLFOR($Action.QuoteRelease__c.View,QuoteRelease__c.Id)}"/>

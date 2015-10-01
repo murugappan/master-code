@@ -1,0 +1,79 @@
+<apex:page standardController="Case" showHeader="true" extensions="BBW_AssetnewDetails">
+<apex:form >
+<!--<apex:dataTable id="escComment" value="{!a}" var="" columns="2" columnsWidth="400px" cellpadding="2px" rendered="{!a}">
+<apex:column >
+<apex:outputLabel value="Tier3 Escalation Comment" for="stage" />
+</apex:column>
+<apex:column >
+<apex:outputText value="{!a}" style="width:400px"/>
+</apex:column>
+</apex:dataTable>-->
+
+<apex:pageBlock mode="maindetail">
+<apex:pageBlockSection columns="2">
+<apex:pageBlockSectionItem >
+            <apex:outputLabel: value="Asset Name:" for="asset" />
+            <apex:outputText value="{!AssetName}"/>
+
+</apex:pageBlockSectionItem>
+<apex:pageBlockSectionItem >
+<apex:outputLabel >
+<a href="/{!AssetId}/e?retURL=%2F{!AssetId}" target="{!AssetId}" >[Edit Asset Environment]</a> 
+</apex:outputLabel>
+</apex:pageBlockSectionItem>
+
+<apex:pageBlockSectionItem >
+<apex:outputLabel: value="External Asset Name" for="asset" />
+<apex:outputText value="{!f}"/>
+</apex:pageBlockSectionItem>
+<apex:pageBlockSectionItem ></apex:pageBlockSectionItem>
+
+<apex:pageBlockSectionItem >
+            <apex:outputLabel: value="Installed Product ID" for="asset" />
+            <apex:outputText value="{!g}"/>
+
+</apex:pageBlockSectionItem>
+
+<apex:pageBlockSectionItem >
+<apex:outputLabel: value="Database Server OS" for="asset" />
+<apex:outputText value="{!b}"/>
+</apex:pageBlockSectionItem>
+
+        
+<apex:pageBlockSectionItem id="assetpageBlockSectionItem">
+            <apex:outputLabel: value="Application server OS" for="asset" />
+            <apex:outputText value="{!a}"/>
+
+</apex:pageBlockSectionItem>
+
+<apex:pageBlockSectionItem >
+<apex:outputLabel: value="JDK Version" for="asset" />
+<apex:outputText value="{!d}"/>
+</apex:pageBlockSectionItem>
+
+
+
+<apex:pageBlockSectionItem >
+<apex:outputLabel: value="Database" for="asset" />
+<apex:outputText value="{!c}"/>
+</apex:pageBlockSectionItem>
+
+
+<!--<apex:pageBlockSectionItem >
+<apex:outputLabel: value="Version" for="asset" />
+<apex:outputText value="{!h}"/>
+</apex:pageBlockSectionItem>-->
+<apex:pageBlockSectionItem >
+<apex:outputLabel value="Front Back End Access" for="asset"/>  
+<apex:outputText value="{!e}"/>
+
+
+</apex:pageBlockSectionItem>
+
+
+
+</apex:pageBlockSection>
+ 
+</apex:pageblock>
+</apex:form>
+</apex:page>

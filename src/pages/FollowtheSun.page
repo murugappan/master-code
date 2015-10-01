@@ -1,0 +1,39 @@
+<apex:page cache="true" standardController="Case" extensions="FollowtheSun">
+	<apex:includeScript value="/support/console/22.0/integration.js"/>
+	<script>
+		if ('{!case.Account_Complex_Hosting__c}' == 'TRUE')
+	  {
+	    alert('This is a Complex Hosting Case.  Follow the Sun functionality is not enabled for CHM cases.');
+	    window.location.href='/'+'{!case.id}';
+	   }
+	
+	</script>
+   <apex:form >
+   <apex:actionfunction name="navigatecase" action="{!navigatecase}" />
+   <script>
+  
+</script>
+    <apex:pageBlock tabStyle="Case" title="Assign Case" >
+        <b>Case Number : </b><apex:outputField style="font-weight:bold" value="{!Case.CaseNumber}"/><br/><br/>
+        <b>Institution Name : </b><apex:outputField style="font-weight:bold" value="{!Case.Account.Name}"/><br/><br/>
+        <b>Client Contact Name : </b><apex:outputField style="font-weight:bold" value="{!Case.Contact.Name}"/><br/><br/>
+        <b>Have any expectations been set with the client : </b> <br/>
+        <apex:inputTextarea value="{!expec}" cols="80" rows="3"/><br/><br/>
+        <b>Email and/or Phone number : </b><br/>
+        <apex:inputTextArea value="{!emailorphone}" rows="1" cols="80" /><br/><br/>
+        <b>Time constraints in terms of availability of the Contact : </b> <br/>
+        <apex:inputTextArea value="{!timecons}" rows="1" cols="80"/><br/><br/>
+        <b> Issue Description :</b><br/>
+        <apex:inputTextarea value="{!descrip}" rows="5" cols="80"/><br/><br/>
+        <b> Confirmed Access Information : </b><br/>
+        <apex:inputTextarea value="{!accessinfo}" rows="5" cols="80"/>
+        <br/><br/><br/><br/>
+        &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+        &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+        &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+        &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+        <apex:commandButton value="Assign" action="{!changecaseowner}"/>
+        <apex:commandButton value="Cancel" action="{!cancel}" />
+    </apex:pageBlock>
+  </apex:form>   
+</apex:page>

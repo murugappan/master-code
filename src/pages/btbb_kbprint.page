@@ -1,0 +1,200 @@
+<apex:page standardController="Solution" extensions="articleViewController" cache="false" id="ArticleView" standardStylesheets="false" showHeader="false" sidebar="false" renderAs="html" name="{!Solution.SolutionName} - BtBb KB Print">
+                <style>
+                p {margin-top:7px;margin-bottom:4px;}
+                table { border-collapse:collapse;margin-top:7px;margin-bottom:7px;}
+                table, td {border:1px solid #757575;padding:5px;}
+                th {font-weight:bold;border:1px solid #757575;padding:5px;}
+                #btbbArticlefeedback td {border:none;}
+                </style>
+            
+            <div class="mainpdf" style="font-family:arial,helvetica,sans-serif;font-size:85%;margin-left:2%;margin-right:2%;display:block;">
+            
+            <apex:image style="float:left;clear:all;margin-top:2%;height:80px%;width:80px;" alt="{!Solution.SolutionName}" value="{!URLFOR($Resource.BtBbKBPrint, '/Bb_Logo.jpg')}" /><br /><br /><br /><br /><br />
+            
+            <span style="background: transparent url('{!URLFOR($Resource.BtBbKBPrint, '/yellow_gray_blocks.jpg')}') repeat x;clear:none;">&nbsp;</span>
+                    
+                    <div class="btbbArticleViewData">
+                        
+                        <apex:outputText style="font-weight:bold;font-size:15px;" value="{!Solution.SolutionName}"/><br /><br />
+                        <b>Date Published:</b><apex:outputText value="{0,date,MMM dd,yyyy}">
+                        <apex:param value="{!DATEVALUE(Solution.LastModifiedDate)}"/> 
+                         </apex:outputText><br />
+                        <b>Category:</b> {!recordType}<br />
+                        <b>Article No.:</b> {!Solution.SolutionNumber}
+                    </div>
+                    
+                    
+                    
+                    <div id="btbbArticleViewBody">          
+                        
+                        <div id="articleDescription">                             
+                            
+                            <div id="btbbarticledetail" style="margin-top: 20px;{!IF(ISNULL(caseId),'','display:none;')}">                   
+                                                
+                            <div id="Product" style="{!IF(recordType == 'Troubleshooting/Informational' || recordType == 'Standard' || recordType == 'Known Issue' || recordType == 'Process/Procedure' || recordType == 'Product Documentation' || recordType == 'Product Release Information' || recordType == 'Support Bulletin/Security Advisory' || recordType == 'Supported Technologies Information' || recordType == 'Version Information' || recordType == 'Maintenance Release','','display:none;')}">
+                        
+                                <p><strong>Product:</strong>&nbsp;&nbsp;<apex:outputText escape="false" value="{!Solution.Product__c}"/></p>                        
+                        
+                            </div>  
+                        
+                            <div id="major" style="{!IF(recordType == 'Troubleshooting/Informational' || recordType == 'Standard' || recordType == 'Known Issue' || recordType == 'Product Documentation' || recordType == 'Product Release Information'  || recordType == 'Supported Technologies Information' || recordType == 'Version Information' || recordType == 'Maintenance Release','','display:none;')}">
+                        
+                                <p><strong>Major Release:</strong>&nbsp;&nbsp;<apex:outputText escape="false" value="{!Solution.Major_Release__c}"/></p>                                           
+                        
+                            </div>  
+                        
+                            <div id="version" style="{!IF(recordType == 'Troubleshooting/Informational' || recordType == 'Standard' || recordType == 'Known Issue' || recordType == 'Product Documentation' || recordType == 'Supported Technologies Information' || recordType == 'Version Information' || recordType == 'Maintenance Release','','display:none;')}">
+                        
+                                <p><strong>Version:</strong>&nbsp;&nbsp;<apex:outputText escape="false" value="{!Solution.Version_s__c}"/></p>                          
+                        
+                            </div>
+                        
+                            <div id="SupportBulletin" style="display:{!IF(recordType == 'Support Bulletin/Security Advisory','block','none')}">                          
+                        
+                                  <p><strong>Bulletin/Advisory Information:</strong>&nbsp;&nbsp;<apex:outputText escape="false" value="{!Solution.Bulletin_Advisory_Information__c}"/></p>                        
+                        
+                            </div>
+                      
+                        </div>  
+                     
+                            <div id="Issue" style="{!IF(recordType == 'Known Issue' || recordType == 'Standard','','display:none;')}">
+                      
+                                <p><strong>Issue Description:</strong>&nbsp;&nbsp;<apex:outputText escape="false" value="{!Solution.Issue_Description__c}"/></p>                                           
+                      
+                            </div>     
+                            
+                            <div id="DocumentType" style="{!IF(recordType == 'Product Documentation' || $Profile.Name == 'Product Documentation Team','','display:none;')}">
+                      
+                                <p><strong>Document Type:</strong>&nbsp;&nbsp;<apex:outputText escape="false" value="{!Solution.Document_Type__c}"/></p>
+                      
+                            </div>     
+                              
+                            <div id="StepstoReproduce" style="{!IF(recordType == 'Known Issue' ,'','display:none;')}">
+                      
+                                <p><strong>Steps to Repeat:</strong>&nbsp;&nbsp;<apex:outputText escape="false" value="{!Solution.Steps_to_Reproduce__c}"/></p>
+                      
+                             </div>                           
+                            
+                            <div id="Process" style="{!IF(recordType == 'Process/Procedure','','display:none;')}">
+                      
+                                <p><strong>Team:</strong>&nbsp;&nbsp;<apex:outputText escape="false" value="{!Solution.Team_s__c}"/></p>
+                      
+                            </div>
+                            
+                            <div id="ProDoc" style="{!IF(recordType == 'Product Documentation','','display:none;')}">
+                      
+                                <p><strong>Document Link:</strong>&nbsp;&nbsp;<apex:outputText escape="false" value="{!Solution.Document_Link__c}"/></p>
+                      
+                            </div>                      
+                      
+                        </div>                    
+                        
+                        <div class="cleaner divider">&nbsp;</div>
+                        
+                        <div id="Otheresources" style="{!IF(recordType == 'Other Resource','','display:none;')}">
+                           
+                           <apex:outputText style="font-weight:bold;" rendered="{!IF(Solution.ResourceType__c != Null, True, False)}" value="Resource Type:"/>&nbsp;&nbsp;<apex:OutputText value="{!Solution.ResourceType__c}" escape="false"/><br />
+                           <apex:outputText style="font-weight:bold;" rendered="{!IF(Solution.Resource_Description__c != Null, True, False)}" value="Resource Description:"/>&nbsp;&nbsp;<apex:OutputText value="{!Solution.Resource_Description__c}" escape="false"/>                    
+                           <apex:outputText style="font-weight:bold;" rendered="{!IF(Solution.Important_Information__c != Null, True, False)}" value="Important Information:"/>&nbsp;&nbsp;<apex:OutputText value="{!Solution.Important_Information__c}" escape="false"/>                        
+                           <apex:outputText style="font-weight:bold;" rendered="{!IF(Solution.Resource_Link__c != Null, True, False)}">Resource Link:</apex:outputText>&nbsp;&nbsp;<apex:OutputText value="{!Solution.Resource_Link__c}" escape="false"/>
+                       
+                        </div>  
+                        
+                        <div id="StandardAndKnownIssue" style="{!IF(recordType == 'Standard' || recordType == 'Known Issue','','display:none;')}">
+     
+                               <apex:outputText style="font-weight:bold;" rendered="{!IF(Solution.Symptoms__c != Null, True, False)}" value="Symptoms:"/>&nbsp;&nbsp;<apex:OutputText value="{!Solution.Symptoms__c}" escape="false" rendered="{!IF(Solution.Symptoms__c != Null, True, False)}"/>                         
+                               <apex:outputText style="font-weight:bold;" rendered="{!IF(Solution.Cause__c != Null, True, False)}" value="Cause:"/>&nbsp;&nbsp;<apex:OutputText value="{!Solution.Cause__c}" escape="false" rendered="{!IF(Solution.Cause__c != Null, True, False)}"/>
+                               <apex:outputText style="font-weight:bold;" rendered="{!IF(Solution.Resolution_Workaround__c != Null, True, False)}" value="Resolution/Workaround:"/>&nbsp;&nbsp;<apex:OutputText value="{!Solution.Resolution_Workaround__c}" escape="false" rendered="{!IF(Solution.Resolution_Workaround__c != Null, True, False)}"/>
+                               <apex:outputText style="font-weight:bold;" rendered="{!IF(Solution.Best_Practice_Information__c != Null, True, False)}" value="Best Practice Info:"/>&nbsp;&nbsp;<apex:OutputText value="{!Solution.Best_Practice_Information__c}" escape="false" rendered="{!IF(Solution.Best_Practice_Information__c != Null, True, False)}"/>  
+                        
+                        </div>    
+                        
+                        <div id="TSG" style="{!IF(recordType == 'Troubleshooting/Informational','','display:none;')}">
+                                           
+                            <apex:outputText style="font-weight:bold;" rendered="{!IF(Solution.How_is_the_component_designed_to_work__c != Null, True, False)}" value="Introduction:"/>&nbsp;&nbsp;<apex:OutputText value="{!Solution.How_is_the_component_designed_to_work__c}" escape="false"/>
+                            <apex:outputText style="font-weight:bold;" rendered="{!IF(Solution.Files_collection_to_troubleshoot_cpnent__c != Null, True, False)}" value="Functionality:"/>&nbsp;&nbsp;<apex:OutputText value="{!Solution.Files_collection_to_troubleshoot_cpnent__c}" escape="false"/>                      
+                            <apex:outputText style="font-weight:bold;" rendered="{!IF(Solution.Evaluation_of_logs_information__c != Null, True, False)}" value="Related System Information:"/>&nbsp;&nbsp;<apex:OutputText value="{!Solution.Evaluation_of_logs_information__c}" escape="false"/>
+                            <apex:outputText style="font-weight:bold;" rendered="{!IF(Solution.Causes_of_the_common_issues_with_this_cp__c != Null, True, False)}" value="Evaluating Related System Information:"/>&nbsp;&nbsp;<apex:OutputText value="{!Solution.Causes_of_the_common_issues_with_this_cp__c}" escape="false"/>
+                            <apex:outputText style="font-weight:bold;" rendered="{!IF(Solution.Resources_use_to_troubleshoot_this_cp__c != Null, True, False)}" value="Common Issues:"/>&nbsp;&nbsp;<apex:OutputText value="{!Solution.Resources_use_to_troubleshoot_this_cp__c}" escape="false"/>
+                        
+                        </div>           
+                            
+                        <div id="ProcessProcedure" style="{!IF(recordType == 'Process/Procedure','','display:none;')}">
+                        
+                            <p><strong>Process Flow:</strong>&nbsp;&nbsp;<apex:OutputText value="{!Solution.Process_Flow__c}" escape="false"/></p>
+                            <p><strong>Process Detail:</strong>&nbsp;&nbsp;<apex:OutputText value="{!Solution.Process_Details__c}" escape="false"/></p>
+                              
+                        </div>
+                        
+                        <div id="ProductDoc" style="{!IF(recordType == 'Product Documentation','','display:none')}">
+                         
+                            <p><strong>Document Summary:</strong>&nbsp;&nbsp;<apex:OutputText value="{!Solution.Document_Summary__c}" escape="false"/></p>                    
+                            <p><strong>Document Details:</strong>&nbsp;&nbsp;<apex:OutputText value="{!Solution.Document_Details__c}" escape="false"/></p>
+                        
+                        </div>        
+                        
+                        <div id="ProductRelease" style="{!IF(recordType == 'Product Release Information','','display:none')}">
+                          
+                             <apex:outputText style="font-weight:bold;" rendered="{!IF(Solution.Available_Versions__c != Null , True, False)}" value="Available Versions:"/>&nbsp;&nbsp;<apex:OutputText value="{!Solution.Available_Versions__c}" escape="false"/><br />                      
+                             <apex:outputText style="font-weight:bold;" rendered="{!IF(Solution.Upgrade_Information__c != Null , True, False)}" value="Upgrade Information:"/>&nbsp;&nbsp;<apex:OutputText value="{!Solution.Upgrade_Information__c}" escape="false"/><br />                       
+                             <apex:outputText style="font-weight:bold;" rendered="{!IF(Solution.Product_Documentation__c != Null , True, False)}" value="Product Documentation:"/>&nbsp;&nbsp;<br /><apex:OutputText value="{!Solution.Product_Documentation__c}" escape="false"/><br />                     
+                             <apex:outputText style="font-weight:bold;" rendered="{!IF(Solution.Support_Policy__c != Null , True, False)}" value="Support Policy:"/>&nbsp;&nbsp;<apex:outputText escape="false" value="{!Solution.Support_Policy__c}"/><br />
+                             <apex:outputText style="font-weight:bold;" rendered="{!IF(Solution.Other_Information__c != Null , True, False)}" value="Other Information:"/>&nbsp;&nbsp;<apex:outputText escape="false" value="{!Solution.Other_Information__c}"/>
+                      
+                        </div>  
+                            
+                        <div id="target" style="{!IF(recordType == 'Standard','','display:none;')}">
+                                       
+                              <apex:outputText style="font-weight:bold;" rendered="{!IF(Solution.Target_Release_New__c != Null , True, False)}" value="Target Release:"/>&nbsp;&nbsp;<apex:outputText value="{!Solution.Target_Release_New__c}" escape="false"/><br />
+                              <apex:outputText style="font-weight:bold;" rendered="{!IF(Solution.Patch_Available__c != Null , True, False)}" value="Patch Available:"/>&nbsp;&nbsp;<apex:outputText value="{!Solution.Patch_Available__c}" escape="false"/><br />                                                           
+                              <apex:outputText style="font-weight:bold;" rendered="{!IF(Solution.Patch_Comments__c != Null , True, False)}" value="Patch Comments:"/>&nbsp;&nbsp;<apex:outputText value="{!Solution.Patch_Comments__c}" escape="false"/>       
+
+                        </div>  
+                        
+                        <div id="target" style="{!IF(recordType == 'Known Issue','','display:none;')}">
+                                       
+                            <apex:outputText style="font-weight:bold;" rendered="{!IF(Solution.Target_Release_New__c != Null , True, False)}" value="Target Release:"/>&nbsp;&nbsp;<apex:outputText value="{!Solution.Target_Release_New__c}" escape="false"/><br />
+                            <apex:outputText style="font-weight:bold;" rendered="{!IF(Solution.Patch_Available__c != Null , True, False)}" value="Patch Available:"/>&nbsp;&nbsp;<apex:outputText value="{!Solution.Patch_Available__c}" escape="false"/><br />                                                           
+                            <apex:outputText style="font-weight:bold;" rendered="{!IF(Solution.Patch_Comments__c != Null , True, False)}" value="Patch Comments:"/>&nbsp;&nbsp;<apex:outputText value="{!Solution.Patch_Comments__c}" escape="false"/>
+                        
+                        </div>
+                        
+                        <div id="Support Technology" style="{!IF(recordType == 'Supported Technologies Information','','display:none;')}">
+                        
+                            <apex:outputText style="font-weight:bold;display:block;" rendered="{!IF(Solution.Platform_Technologies__c != Null, True, False)}" value="Platform Technology:"/>&nbsp;&nbsp;<apex:OutputText value="{!Solution.Platform_Technologies__c}" escape="false"/>                        
+                            <apex:outputText style="font-weight:bold;display:block;" rendered="{!IF(Solution.Client_Technologies__c != Null, True, False)}" value="Client Technology:"/>&nbsp;&nbsp;<apex:OutputText value="{!Solution.Client_Technologies__c}" escape="false"/>                      
+                            <apex:outputText style="font-weight:bold;display:block;" rendered="{!IF(Solution.Upgrade_Paths__c != Null , True, False)}" value="Upgrade Paths:"/>&nbsp;&nbsp;<apex:OutputText value="{!Solution.Upgrade_Paths__c}" escape="false"/>      
+                        
+                        </div> 
+                        
+                        <div id="Announcement" style="{!IF(recordType == 'Announcement','','display:none;')}">
+              
+                            <p><strong>Announcement Details:</strong>&nbsp;&nbsp;<apex:outputText value="{!Solution.Announcement_Detail__c}" escape="false"/></p>
+                            <p><strong>Related Link(s):</strong>&nbsp;&nbsp;<apex:outputText value="{!Solution.Related_Link_s__c}" escape="false"/></p>             
+                        
+                        </div>              
+                                      
+                        <div id="VersionInfo" style="{!IF(recordType == 'Version Information','','display:none;')}">
+                            
+                           <p><strong>Download:</strong>&nbsp;&nbsp;<apex:OutputText value="{!Solution.Download__c}" escape="false"/></p>                      
+                           <p><strong>Supported Technology:</strong>&nbsp;&nbsp;<apex:OutputText value="{!Solution.Supported_Technologies__c}" escape="false"/></p>                       
+                           <p><strong>Release Notes:</strong>&nbsp;&nbsp;<apex:OutputText value="{!Solution.Release_Notes__c}" escape="false"/></p>                       
+                           <p><strong>Known Issues:</strong>&nbsp;&nbsp;<apex:OutputText value="{!Solution.Known_Issues__c}" escape="false"/></p>                                         
+                           <p><strong>Resolved Issues:</strong>&nbsp;&nbsp;<apex:OutputText value="{!Solution.Resolved_Issues__c}" escape="false"/></p>
+                      
+                        </div> 
+                        
+                      <div id="MaintenanceRelease" style="{!IF(recordType == 'Maintenance Release','','display:none;')}" >                            
+                           <apex:outputText style="font-weight:bold;display:block;" rendered="{!IF(Solution.Announcing__c != Null , True, False)}" value="Announcing:"/>&nbsp;&nbsp;<apex:OutputText rendered="{!IF(Solution.Announcing__c != Null , True, False)}" value="{!Solution.Announcing__c}" escape="false"/>                                               
+                           <apex:outputText style="font-weight:bold;display:block;" rendered="{!IF(Solution.Release_Notes__c != Null , True, False)}" value="Release Highlights:"/>&nbsp;&nbsp;<apex:OutputText rendered="{!IF(Solution.Release_Notes__c != Null , True, False)}" value="{!Solution.Release_Notes__c}" escape="false"/>
+                           <apex:outputText style="font-weight:bold;display:block;" rendered="{!IF(Solution.Upgrade_Paths__c != Null , True, False)}" value="Upgrade Paths:"/>&nbsp;&nbsp;<apex:OutputText rendered="{!IF(Solution.Upgrade_Paths__c != Null , True, False)}" value="{!Solution.Upgrade_Paths__c}" escape="false"/> 
+                           <apex:outputText style="font-weight:bold;display:block;" rendered="{!IF(Solution.Related_Resources__c != Null , True, False)}" value="Related Resources"/>&nbsp;&nbsp;<apex:OutputText rendered="{!IF(Solution.Related_Resources__c != Null , True, False)}" value="{!Solution.Related_Resources__c}" escape="false"/>                                               
+                           <apex:outputText style="font-weight:bold;display:block;" rendered="{!IF(Solution.Accessing_the_Build__c != Null , True, False)}" value="Accessing the Build:"/>&nbsp;&nbsp;<apex:OutputText style="font-weight:bold" rendered="{!IF(Solution.Accessing_the_Build__c != Null , True, False)}" value="{!Solution.Accessing_the_Build__c}" escape="false"/>                                          
+                        </div>           
+                </div>            
+                      
+                </div>
+                 <br/><br/><br/>           
+                <p style="font-size:85%;text-align:center;">This article was written and verified by Blackboard Support. It is approved for client use. If you have comments or questions, please email kb@blackboard.com.  Copyright &copy; {!year(today())} Blackboard Inc.  All rights reserved.</p>
+
+</apex:page>

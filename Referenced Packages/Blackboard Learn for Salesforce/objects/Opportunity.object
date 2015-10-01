@@ -1,0 +1,97 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<CustomObject xmlns="http://soap.sforce.com/2006/04/metadata">
+    <fields>
+        <fullName>Amount_Closed_Lost_Last_90_Days__c</fullName>
+        <deprecated>false</deprecated>
+        <description>This formula calculates the total amount of currency for an Opportunity if it is Closed Lost and the Closed Date occurred in the last 90 days. It is used to generate data for analytic snap shots that are part of the Blackboard Learn for Sales application.</description>
+        <externalId>false</externalId>
+        <formula>IF(Text(StageName) = &quot;Closed Lost&quot; &amp;&amp;  CloseDate  &gt;=   (TODAY() - 90),  Amount , NULL)</formula>
+        <formulaTreatBlanksAs>BlankAsZero</formulaTreatBlanksAs>
+        <label>Amount Closed Lost Last 90 Days</label>
+        <precision>18</precision>
+        <required>false</required>
+        <scale>2</scale>
+        <trackHistory>false</trackHistory>
+        <type>Currency</type>
+    </fields>
+    <fields>
+        <fullName>Amount_Closed_Won_90_Days__c</fullName>
+        <deprecated>false</deprecated>
+        <description>This formula calculates the total amount of currency for an Opportunity if it is Closed Won and the Closed Date occurred in the last 90 days. It is used to generate data for analytic snap shots that are part of the Blackboard Learn for Sales application.</description>
+        <externalId>false</externalId>
+        <formula>IF(Text(StageName) = &quot;Closed Won&quot; &amp;&amp;  CloseDate &gt;=   (TODAY() - 90),  Amount , NULL)</formula>
+        <formulaTreatBlanksAs>BlankAsZero</formulaTreatBlanksAs>
+        <label>Amount Closed Won 90 Days</label>
+        <precision>18</precision>
+        <required>false</required>
+        <scale>2</scale>
+        <trackHistory>false</trackHistory>
+        <type>Currency</type>
+    </fields>
+    <fields>
+        <fullName>Closed_Lost_90_Days__c</fullName>
+        <deprecated>false</deprecated>
+        <description>This formula displays a 1 if the Opportunity is Closed Lost and the Closed Date occurred in the last 90 days. It is used to generate data for analytic snap shots that are part of the Blackboard Learn for Sales application.</description>
+        <externalId>false</externalId>
+        <formula>IF(Text(StageName) = &quot;Closed Lost&quot; &amp;&amp;  CloseDate &gt;=  (TODAY() - 90), 1, NULL)</formula>
+        <label>Closed Lost 90 Days</label>
+        <precision>18</precision>
+        <required>false</required>
+        <scale>0</scale>
+        <trackHistory>false</trackHistory>
+        <type>Number</type>
+        <unique>false</unique>
+    </fields>
+    <fields>
+        <fullName>Closed_Won_90_Days__c</fullName>
+        <deprecated>false</deprecated>
+        <description>This formula displays a 1 if the Opportunity is Closed Won and the Closed Date occurred in the last 90 days. It is used to generate data for analytic snap shots that are part of the Blackboard Learn for Sales application.</description>
+        <externalId>false</externalId>
+        <formula>IF(Text(StageName) = &quot;Closed Won&quot;&amp;&amp;  CloseDate &gt;=   (TODAY() - 90), 1, NULL)</formula>
+        <formulaTreatBlanksAs>BlankAsZero</formulaTreatBlanksAs>
+        <label>Closed Won 90 Days</label>
+        <precision>18</precision>
+        <required>false</required>
+        <scale>0</scale>
+        <trackHistory>false</trackHistory>
+        <type>Number</type>
+        <unique>false</unique>
+    </fields>
+    <fields>
+        <fullName>Created_Last_90_Days__c</fullName>
+        <deprecated>false</deprecated>
+        <description>This formula displays a 1 if the Opportunity has a Created Date that occurred in the last 90 days. It is used to generate data for analytic snap shots that are part of the Blackboard Learn for Sales application.</description>
+        <externalId>false</externalId>
+        <formula>IF( NOT(ISBLANK(CreatedDate)) &amp;&amp; DATEVALUE(CreatedDate) &gt;=   (TODAY() - 90), 1, NULL)</formula>
+        <formulaTreatBlanksAs>BlankAsZero</formulaTreatBlanksAs>
+        <label>Created Last 90 Days</label>
+        <precision>18</precision>
+        <required>false</required>
+        <scale>0</scale>
+        <trackHistory>false</trackHistory>
+        <type>Number</type>
+        <unique>false</unique>
+    </fields>
+    <fields>
+        <fullName>Open_Last_90_Days__c</fullName>
+        <deprecated>false</deprecated>
+        <description>This formula calculates the total amount of currency for an Opportunity if it is Open and the Created Date occurred in the last 90 days. It is used to generate data for analytic snap shots that are part of the Blackboard Learn for Sales application.</description>
+        <externalId>false</externalId>
+        <formula>IF(Text(  StageName ) = &quot;Prospecting&quot; &amp;&amp;   DATEVALUE(CreatedDate)  &gt;=   (TODAY() - 90), 1, 
+IF(Text(  StageName ) = &quot;Qualification&quot; &amp;&amp;   DATEVALUE(CreatedDate)   &gt;=   (TODAY() - 90), 1, 
+IF(Text(  StageName ) = &quot;Needs Analysis&quot; &amp;&amp;   DATEVALUE(CreatedDate)   &gt;=  (TODAY() - 90), 1, 
+IF(Text(  StageName ) = &quot;Value Proposition&quot; &amp;&amp;   DATEVALUE(CreatedDate)   &gt;=   (TODAY() - 90), 1, 
+IF(Text(  StageName ) = &quot;Id. Decision Makers&quot; &amp;&amp;   DATEVALUE(CreatedDate)  &gt;=   (TODAY() - 90), 1, 
+IF(Text(  StageName ) = &quot;Perception Analysis&quot; &amp;&amp;   DATEVALUE(CreatedDate)   &gt;=   (TODAY() - 90), 1, 
+IF(Text(  StageName ) = &quot;Proposal/Price Quote &quot; &amp;&amp;   DATEVALUE(CreatedDate)   &gt;=   (TODAY() - 90), 1, 
+IF(Text(  StageName ) = &quot;Negotiation/Review&quot; &amp;&amp;   DATEVALUE(CreatedDate)   &gt;=   (TODAY() - 90), 1, 
+NULL))))))))</formula>
+        <label>Open Last 90 Days</label>
+        <precision>18</precision>
+        <required>false</required>
+        <scale>0</scale>
+        <trackHistory>false</trackHistory>
+        <type>Number</type>
+        <unique>false</unique>
+    </fields>
+</CustomObject>

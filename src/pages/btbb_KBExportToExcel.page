@@ -1,0 +1,45 @@
+<apex:page controller="btbb_articleSearchController" readOnly="true"  contentType="application/vnd.ms-excel#KBSearchData.xls">
+     <head>
+            <style type="text/css">
+                td, th { border: 1px solid; word-wrap: break-word;}
+                thead { background: #fc9; } 
+            </style>
+        </head>
+    <apex:pageBlock >
+    
+    
+    <table width="100%"  style="width:100%;margin: 1em;border: .5px solid;">
+                <tr>
+                    <th width="10%">Article Number</th>
+                    <th width="20%">Title</th>
+                    <th width="10%">Published Date</th>
+                    <th width="20%">Article Type</th>
+                    <th width="8%">Article Category</th>
+                    <th width="8%">Article Sub Category</th>
+                    <th width="10%">Release</th>
+                    <th width="10%">Service Pack(s)</th>
+                    <th width="10%">Target Release</th>
+                    <th width="8%">Patch Available</th>
+                </tr>
+                <apex:repeat value="{!kavWrapperListPDF}" var="listvar" rows="1000">
+                    <apex:repeat value="{!listvar}" var="k" rows="1000">
+                        <tr>
+                        
+                           
+                            <td><apex:outputLink value="https://blackboard.secure.force.com/btbb_articleview?id={!k.knowledgearticleId}" target="_blank">{!k.articleNumber}</apex:outputLink></td>
+                            <td>{!k.name}</td>
+                            <td>{!k.LastPublishedDate}</td>
+                            <td>{!k.articleType}</td>  
+                            <td>{!k.productPDF['ArticleCategory']}</td>
+                            <td>{!k.productPDF['ArticleSubCategory']}</td>
+                            <td>{!k.release}</td>
+                            <td>{!k.versionspdf}</td>              
+                            <td>{!k.targetRelease}</td>
+                            <td>{!k.patchAvailable}</td>                    
+                        </tr>
+                    </apex:repeat>
+                </apex:repeat>
+            </table> 
+         
+    </apex:pageBlock>  
+</apex:page>

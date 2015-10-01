@@ -1,0 +1,224 @@
+<apex:page standardcontroller="Survey__c" extensions="ViewSurveyController" cache="false" sidebar="false" showheader="false" action="{!redirect}">
+  <apex:composition template="btbb_template">
+    <apex:define name="head">
+        <style>
+        .newFlag{
+           background-image: none;
+            margin: 0;
+           margin-left: 5px;
+           padding: 0;
+           position: relative;
+           bottom: 2px;
+           color: red;
+           font-size: 01.2em;
+          font-weight: bold;
+          }
+        </style>
+        <apex:includeScript value="{!URLFOR($Resource.SurveyForce, 'jquery.js')}"/>
+        <script src="/soap/ajax/18.0/connection.js" type="text/javascript"></script>
+        <script src="/soap/ajax/18.0/apex.js" type="text/javascript"></script>
+        <script type="text/javascript">sforce.connection.sessionId = '{!$Api.Session_ID}'; </script>
+    </apex:define>
+        <apex:define name="nav"><c:btbb_auth_nav /></apex:define>
+        <apex:define name="topbar"><c:btbb_globalsearch /></apex:define>
+        <apex:define name="content">
+           <h2>{!Survey__c.Name}</h2><!--{!Survey__c.Name}-->
+           <b><apex:outputtext value="{!Survey__c.Survey_Header__c}"/></b><br/><br/>
+           <b><apex:outputtext value="{!Survey__c.Survey_Header2__c}" escape="false"/></b><br/><br/>
+           <apex:form >
+           <apex:commandButton value="{!Survey__c.NoThanksButton__c}"  action="{!searchredirect}"/>
+           </apex:form>
+    <div> <br/>
+        <div id="qList">
+             <apex:repeat value="{!aQuestion}" var="qPreview" id="aQPreview">
+                <div id="{!qPreview.id}">
+                  <apex:form id="questionsPreview">         
+                    <div id="pblock"> 
+                        <h4 class="question" style="background: none; color: #555;margin-bottom:7px;">
+                             <apex:outputpanel layout="inline"  styleclass="newFlag" rendered="{!qPreview.isNew}">{!Survey__c.NewText__c}!<br/></apex:outputpanel>
+                            <span style="font-size: 14px;">{!qPreview.orderNumber}. </span>
+                            <apex:outputText style="font-size:14px" value="{!qPreview.question}"></apex:outputText>
+                            <apex:outputPanel rendered="{!qPreview.required}" styleClass="requiredText">
+                            <apex:outputText style="font-size:14px;color:red;" value=" ({!Survey__c.RequiredText__c})"></apex:outputText>   
+                            </apex:outputPanel>    
+                        </h4>
+                     <div id="radio" style="margin-left:12px;"> 
+                      <apex:selectRadio layout="pageDirection" rendered="{!qPreview.renderSelectRadio}" style="margin-bottom:4px;"> 
+                        <apex:selectOptions value="{!qPreview.singleOptions}" />
+                      </apex:selectRadio>
+                    </div>
+                    <div id="checkbox">           
+                      <apex:selectCheckboxes layout="pageDirection" rendered="{!qPreview.renderSelectCheckboxes}" style="margin-bottom:4px;">
+                        <apex:selectOptions value="{!qPreview.multiOptions}"/>
+                      </apex:selectCheckboxes> 
+                    </div>
+                    <div id="text" style="margin-left: 12px; margin-top: 5px; margin-bottom: 5px;"> 
+                       <apex:inputTextArea cols="70" rows="10" rendered="{!qPreview.renderFreeText}" />  
+                    </div>
+                    <div id="row" style="margin-left: 12px; margin-top: 5px; margin-bottom: 5px;">
+                      <apex:selectRadio rendered="{!qPreview.renderSelectRow}">
+                        <apex:selectOptions value="{!qPreview.rowOptions}"/>
+                      </apex:selectRadio>
+                    </div>            
+                    <!-- IN ORDER TO ADD A QUESTION TYPE YOU MUST CHANG THE JAVASCRIPT BELOW AS WELL -->
+                    </div>   
+                </apex:form>
+            </div>  <!-- qPreview.id -->
+            
+            </apex:repeat>
+                         
+        </div> <!-- qList -->
+            
+    </div>
+    <apex:form >
+        <apex:commandButton value="{!Survey__c.SubmitButtonText__c}" reRender="seeSurvey" onclick="getResults()" style="margin-left: 12px;"/>
+     <!--   <a href="#" rel="#thankYou" id="thankYouLink" style="visibility: hidden; margin-left: 12px;" > &nbsp;</a> -->
+    </apex:form>
+
+
+
+<script type="text/javascript"> 
+
+      $(document).ready(function() {$("a[rel]").overlay({mask: {color: '#000',opacity: 0.9, zIndex:1000}, closeOnClick: false,
+            onLoad: function() {
+                if ($.browser.msie && $.browser.version == 7.0) {
+                    $('#exposeMask').hide();
+                }
+            }
+        });
+    });
+    
+    function gup(name){
+      name = name.replace(/[\[]/,"\\\[").replace(/[\]]/,"\\\]");
+      var regexS = "[\\?&]"+name+"=([^&#]*)";
+      var regex = new RegExp( regexS );
+      var results = regex.exec( window.location.href );
+      if( results == null )
+        return "";
+      else
+        return results[1];
+    }    
+    
+    function getResults() {
+        var results = new Array();
+        var question = document.getElementsByTagName("div");
+
+        var i=0;
+        var newResult;
+        var addResult;
+        for (var j=0; j < question.length; j++) {
+           
+        if (question[j].id == "radio" || question[j].id == "checkbox" || question[j].id == "text" || question[j].id == "row") {
+          newResult = "";
+          addResult = false;
+            if (question[j].id == "radio") {
+                var options = question[j].getElementsByTagName("input");
+                if (options[0] !=null) { // this is a singleSelect type of question
+                    addResult= true;
+                    for (var mn=0; mn<options.length; mn++)
+                        if (options[mn].checked)
+                          newResult = options[mn].value;
+                }
+            }
+         else if (question[j].id == "row") {
+            var options = question[j].getElementsByTagName("input");
+            if (options[0] !=null) { // this is a row type of question
+              addResult= true;
+              for (var gls=0; gls<options.length; gls++)
+                if (options[gls].checked)
+                  newResult = options[gls].value;
+            }
+          }
+         else if (question[j].id == "checkbox") {
+              var checkboxes = question[j].getElementsByTagName("input");
+              if (checkboxes[0] != null) {  // this is a multiSelect type of question
+                addResult= true;
+                for (var nb=0; nb <checkboxes.length; nb++) {
+                     if (checkboxes[nb].checked) {
+                    newResult += checkboxes[nb].value+"&@";
+                 }  
+              }  
+            if(newResult.length >1)  
+              newResult = newResult.substring(0,newResult.length-2);
+          }
+        }
+        else if (question[j].id == "text") {
+            var theTextResponse = question[j].getElementsByTagName("textarea");
+            if (theTextResponse[0] != null) {
+                addResult= true;
+                newResult=theTextResponse[0].value;
+            }   
+        }
+        if(addResult){ 
+           if(newResult == ""){
+             newResult = "NO RESPONSE";
+           }
+             
+           results[i] = newResult;
+           i++;
+        }
+       }
+    }
+    var username = gup("cId");
+    var surveyId = gup("id");
+    var csId     = gup("caId");
+   
+    /*var url = window.location.href;
+    var param1 = url.indexOf("id");
+    var param2 = url.indexOf("cId");
+    var param3 = url.indexOf("caId");
+    var username = url.substring(param2+"cId".length+1, param3-1);
+    var surveyId = url.substring(param1+"id".length+1, param2-1);
+    var csId     = url.substring(param3+"caId".length+1);
+    */
+    
+    if(csId == null || csId.length < 1){
+      csId = "NONE";
+    }
+        
+    results[i] = username;
+    results[i+1] = surveyId;
+    results[i+2]= csId;
+    //alert("the results total are: "+ results);
+    sforce.apex.execute(
+        "AddUsersController",
+        "addUser",
+        {userId: username,
+         sId: surveyId,
+         csId: csId}
+    );
+    // make a db call and check that all fields are fill out...
+    var ok = sforce.apex.execute(
+    "ViewSurveyController",
+    "getResponses",
+    {resp : results});
+    
+    if (ok == 'false') {
+        alert("Please fill out all required fields");
+    }
+    else if(ok=='contact'){
+      alert("CONTACT ISSUE"); 
+    }
+    else if(ok=='problem'){
+      alert("ERROR: Invalid Survey or Contact Id");
+    }
+    else if(ok=='verror')
+    {
+    alert("ERROR: Security Validation Error");
+    }
+    else{
+     parent.frames.location.replace("/apex/ThankYouPage?id="+surveyId);
+      
+    }
+}
+</script>
+
+<style>
+.close{display: none !important;}
+#labs_container{padding: 20px;}
+</style>
+
+ </apex:define>
+    </apex:composition>
+
+</apex:page>

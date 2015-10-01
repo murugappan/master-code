@@ -1,0 +1,67 @@
+<apex:page controller="ArticleListController">
+  <apex:pageMessages showDetail="false"/>
+    <apex:form >
+       <apex:pageBlock title="{!articleListType} Articles" Id="ArticleBlock">
+          <a id="Article_Link" href="/{!aId}"><font size ="2" color="blue">Go back to Article : {!SolutionNo}</font></a>       
+          <apex:pageBlockButtons location="bottom">
+              <apex:commandButton value="Previous" action="{!previousBtnClick}" disabled="{!previousButtonEnabled}" reRender="ArticleBlock" status="ArticleNext"></apex:commandButton>
+              <apex:commandButton value="Next" action="{!nextBtnClick}" reRender="ArticleBlock" disabled="{!nextButtonDisabled}" status="ArticleNext"></apex:commandButton>
+              <apex:actionStatus startText="" stopText="" id="ArticleNext">
+                    <apex:facet name="start" ><apex:image url="{!URLFOR($Resource.btbbLoader)}"/></apex:facet>
+              </apex:actionStatus>
+          </apex:pageBlockButtons>
+          <apex:pageBlockTable value="{!pageArticleList}" var="Article" id="Article_Table">
+                 
+                <apex:column width="30px" rendered="{!IF(RecType != 'RP','true','false')}" >                     
+                     <apex:facet name="header"><strong>Article Number</strong></apex:facet> 
+                    <a href="/apex/BBW_DetailArticleRediect?Id={!Article.articleId}">{!Article.SolutionNumber}</a>                                   
+                </apex:column>
+                
+              
+              <apex:column width="300px" rendered="{!IF(RecType == 'RP','true','false')}">                     
+                     <apex:facet name="header"><strong>Service Pack</strong></apex:facet> 
+                    <a href="/apex/BBW_DetailArticleRediect?Id={!Article.articleId}">{!Article.SolutionName}</a>                  
+               </apex:column>
+              
+                <apex:column rendered="{!IF(RecType != 'RP','true','false')}" >   
+                    <apex:facet name="header"><strong>Component</strong></apex:facet>
+                    {!Article.categoriesName}
+                </apex:column>
+                <apex:column rendered="{!IF(RecType == 'ST','true','false')}"> 
+                    <apex:facet name="header"><strong>Major Release</strong></apex:facet>  
+                    {!Article.Major}
+                </apex:column>
+                <apex:column rendered="{!IF(RecType != 'RP','true','false')}" > 
+                    <apex:facet name="header"><strong>Version</strong></apex:facet>  
+                    {!Article.Versions}
+                </apex:column>
+               
+                <apex:column rendered="{!IF(RecType == 'RP','true','false')}" > 
+                    <apex:facet name="header"><strong>Build Number</strong></apex:facet>  
+                    {!Article.Versions}
+                </apex:column>
+                
+                <apex:column rendered="{!IF(RecType == 'KI','true','false')}"> 
+                    <apex:facet name="header"><strong>Issue Description</strong></apex:facet> 
+                    {!Article.IssueDescription}
+                </apex:column>                    
+                <apex:column rendered="{!IF(RecType == 'KI','true','false')}">
+                    <apex:facet name="header"><strong>Target Fix Release</strong></apex:facet>
+                    {!Article.TargetFixRelease}
+                </apex:column>
+                <apex:column rendered="{!IF(RecType == 'KI','true','false')}">
+                    <apex:facet name="header"><strong>Patch Available</strong></apex:facet>
+                    {!Article.PatchAvailable}
+                </apex:column>
+               
+                <apex:column rendered="{!IF(RecType == 'RP','true','false')}" >
+                    <apex:facet name="header"><strong>Release Date</strong></apex:facet>
+                 <apex:outputText value="{0,date,MM/dd/yyyy}">  
+                           <apex:param value="{!Article.ReleaseDate}"/> 
+                        </apex:outputText>
+                </apex:column>
+                
+          </apex:pageBlockTable>          
+       </apex:pageBlock>
+    </apex:form>
+</apex:page>

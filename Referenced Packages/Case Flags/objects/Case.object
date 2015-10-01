@@ -1,0 +1,312 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<CustomObject xmlns="http://soap.sforce.com/2006/04/metadata">
+    <fields>
+        <fullName>CaseFlag__c</fullName>
+        <deprecated>false</deprecated>
+        <description>An image showing the flag defined in the Case Flag as defined in the Setup Wizard.</description>
+        <externalId>false</externalId>
+        <formula>IF((NOW() - ViewedFlag__c)*24 &gt; $Setup.FlagPref__c.TimeOffset3__c, 
+IMAGE( &quot;/servlet/servlet.FileDownload?flagsort=&quot; &amp; Case_Flag_Age_Text__c &amp; &quot;&amp;file=&quot; &amp; $Setup.FlagPref__c.Offset3Image__c, &quot;L3&quot;, 16, 16), 
+IF((NOW() - ViewedFlag__c)*24 &gt; $Setup.FlagPref__c.TimeOffset2__c, 
+IMAGE( &quot;/servlet/servlet.FileDownload?flagsort=&quot; &amp; Case_Flag_Age_Text__c &amp; &quot;&amp;file=&quot; &amp; $Setup.FlagPref__c.Offset2Image__c, &quot;L2&quot;, 16, 16), 
+IF((NOW() - ViewedFlag__c)*24 &gt; $Setup.FlagPref__c.TimeOffset1__c, 
+IMAGE( &quot;/servlet/servlet.FileDownload?flagsort=&quot; &amp; Case_Flag_Age_Text__c &amp; &quot;&amp;file=&quot; &amp; $Setup.FlagPref__c.Offset1Image__c, &quot;L1&quot;,16,16), 
+IMAGE( &quot;/servlet/servlet.FileDownload?flagsort=&quot; &amp; Case_Flag_Age_Text__c &amp; &quot;&amp;file=&quot; &amp; $Setup.FlagPref__c.BlankOffsetImage__c, &quot;L0&quot;,16,16)) 
+))</formula>
+        <formulaTreatBlanksAs>BlankAsZero</formulaTreatBlanksAs>
+        <label>Case Flag</label>
+        <required>false</required>
+        <trackHistory>false</trackHistory>
+        <type>Text</type>
+        <unique>false</unique>
+    </fields>
+    <fields>
+        <fullName>CaseFlagsBusinessHours__c</fullName>
+        <deleteConstraint>SetNull</deleteConstraint>
+        <deprecated>false</deprecated>
+        <description>Reference to the Case Flags Business Hours record used to determine the Case Flag Business Age.</description>
+        <externalId>false</externalId>
+        <label>Case Flags Business Hours</label>
+        <referenceTo>CaseFlagsBusinessHours__c</referenceTo>
+        <relationshipLabel>Cases</relationshipLabel>
+        <relationshipName>Cases</relationshipName>
+        <required>false</required>
+        <trackFeedHistory>false</trackFeedHistory>
+        <trackHistory>false</trackHistory>
+        <type>Lookup</type>
+    </fields>
+    <fields>
+        <fullName>Case_Flag_Age_Text__c</fullName>
+        <deprecated>false</deprecated>
+        <description>The Case Flag Age decimal rendered as a eight-digit string.</description>
+        <externalId>false</externalId>
+        <formula>LPAD(TEXT(ROUND(Case_Flag_Age__c*100,0)),8,&apos;0&apos;)</formula>
+        <formulaTreatBlanksAs>BlankAsZero</formulaTreatBlanksAs>
+        <label>Case Flag Age Text</label>
+        <required>false</required>
+        <trackHistory>false</trackHistory>
+        <type>Text</type>
+        <unique>false</unique>
+    </fields>
+    <fields>
+        <fullName>Case_Flag_Age__c</fullName>
+        <deprecated>false</deprecated>
+        <description>The total amount of time (in hours) that the current Case Flag has been active.</description>
+        <externalId>false</externalId>
+        <formula>(NOW() - ViewedFlag__c)*24</formula>
+        <formulaTreatBlanksAs>BlankAsZero</formulaTreatBlanksAs>
+        <label>Case Flag Age</label>
+        <precision>18</precision>
+        <required>false</required>
+        <scale>2</scale>
+        <trackHistory>false</trackHistory>
+        <type>Number</type>
+        <unique>false</unique>
+    </fields>
+    <fields>
+        <fullName>Case_Flag_Business_Age__c</fullName>
+        <deprecated>false</deprecated>
+        <description>The amount of time (in hours) that the current Case Flag has been active, filtered to Business Hours.</description>
+        <externalId>false</externalId>
+        <formula>IF(ISNULL(ViewedFlag__c),null,PreviousBusinessHours__c + CurrentBusinessHours__c)</formula>
+        <formulaTreatBlanksAs>BlankAsZero</formulaTreatBlanksAs>
+        <label>Case Flag Business Age</label>
+        <precision>18</precision>
+        <required>false</required>
+        <scale>2</scale>
+        <trackHistory>false</trackHistory>
+        <type>Number</type>
+        <unique>false</unique>
+    </fields>
+    <fields>
+        <fullName>Case_Flag_Business__c</fullName>
+        <deprecated>false</deprecated>
+        <description>An image showing the flag defined in the Case Flag as defined in the Setup Wizard, filtered by Business Hours.</description>
+        <externalId>false</externalId>
+        <formula>IF(ISNULL(ViewedFlag__c),null,
+IF(Case_Flag_Business_Age__c &gt; $Setup.FlagPref__c.TimeOffset3__c, 
+IMAGE( &quot;/servlet/servlet.FileDownload?flagsort=&quot; &amp; Case_Flag_Age_Text__c &amp; &quot;&amp;file=&quot; &amp; $Setup.FlagPref__c.Offset3Image__c, &quot;L3&quot;, 16, 16), 
+IF(Case_Flag_Business_Age__c &gt; $Setup.FlagPref__c.TimeOffset2__c, 
+IMAGE( &quot;/servlet/servlet.FileDownload?flagsort=&quot; &amp; Case_Flag_Age_Text__c &amp; &quot;&amp;file=&quot; &amp; $Setup.FlagPref__c.Offset2Image__c, &quot;L2&quot;, 16, 16), 
+IF(Case_Flag_Business_Age__c &gt;= $Setup.FlagPref__c.TimeOffset1__c, 
+IMAGE( &quot;/servlet/servlet.FileDownload?flagsort=&quot; &amp; Case_Flag_Age_Text__c &amp; &quot;&amp;file=&quot; &amp; $Setup.FlagPref__c.Offset1Image__c, &quot;L1&quot;,16,16), 
+IMAGE( &quot;/servlet/servlet.FileDownload?flagsort=&quot; &amp; Case_Flag_Age_Text__c &amp; &quot;&amp;file=&quot; &amp; $Setup.FlagPref__c.BlankOffsetImage__c, &quot;L0&quot;,16,16)) 
+)))</formula>
+        <formulaTreatBlanksAs>BlankAsZero</formulaTreatBlanksAs>
+        <label>Case Flag Business</label>
+        <required>false</required>
+        <trackHistory>false</trackHistory>
+        <type>Text</type>
+        <unique>false</unique>
+    </fields>
+    <fields>
+        <fullName>Case_Flag_Time_Days__c</fullName>
+        <deprecated>false</deprecated>
+        <description>Renders the days in Case Flag Age as &quot;xx Days&quot;.</description>
+        <externalId>false</externalId>
+        <formula>IF(ISNULL(ViewedFlag__c) || Case_Flag_Age__c &lt; 24, null, TEXT(FLOOR(Case_Flag_Age__c /24)) + &apos; Days&apos;)</formula>
+        <formulaTreatBlanksAs>BlankAsZero</formulaTreatBlanksAs>
+        <label>Case Flag Time Days</label>
+        <required>false</required>
+        <trackHistory>false</trackHistory>
+        <type>Text</type>
+        <unique>false</unique>
+    </fields>
+    <fields>
+        <fullName>Case_Flag_Time_Hours__c</fullName>
+        <deprecated>false</deprecated>
+        <description>Renders the hours in Case Flag Age as &quot;xx Hours&quot;.</description>
+        <externalId>false</externalId>
+        <formula>IF(ISNULL(ViewedFlag__c) || Case_Flag_Age__c &lt; 1, null, TEXT(FLOOR(MOD(Case_Flag_Age__c,24))) + &apos; Hours&apos;)</formula>
+        <formulaTreatBlanksAs>BlankAsZero</formulaTreatBlanksAs>
+        <label>Case Flag Time Hours</label>
+        <required>false</required>
+        <trackHistory>false</trackHistory>
+        <type>Text</type>
+        <unique>false</unique>
+    </fields>
+    <fields>
+        <fullName>Case_Flag_Time_Mins__c</fullName>
+        <deprecated>false</deprecated>
+        <description>Renders the minutes in Case Flag Age as &quot;xx Minutes&quot;.</description>
+        <externalId>false</externalId>
+        <formula>IF(ISNULL(ViewedFlag__c), null, TEXT(ROUND(MOD(Case_Flag_Age__c,1) * 60,0)) + &apos; Minutes&apos;)</formula>
+        <formulaTreatBlanksAs>BlankAsZero</formulaTreatBlanksAs>
+        <label>Case Flag Time Mins</label>
+        <required>false</required>
+        <trackHistory>false</trackHistory>
+        <type>Text</type>
+        <unique>false</unique>
+    </fields>
+    <fields>
+        <fullName>Case_Flag_Time__c</fullName>
+        <deprecated>false</deprecated>
+        <description>Renders the Case Flag Age as &quot;xx Days xx Hours xx Minutes&quot;.</description>
+        <externalId>false</externalId>
+        <formula>IF(ISNULL(Case_Flag_Time_Days__c), null, Case_Flag_Time_Days__c + &apos; &apos;) +
+IF(ISNULL(Case_Flag_Time_Hours__c), null, Case_Flag_Time_Hours__c + &apos; &apos;) +
+IF(ISNULL(Case_Flag_Time_Mins__c), null, Case_Flag_Time_Mins__c)</formula>
+        <formulaTreatBlanksAs>BlankAsZero</formulaTreatBlanksAs>
+        <label>Case Flag Time</label>
+        <required>false</required>
+        <trackHistory>false</trackHistory>
+        <type>Text</type>
+        <unique>false</unique>
+    </fields>
+    <fields>
+        <fullName>CurrentBusinessHours__c</fullName>
+        <deprecated>false</deprecated>
+        <description>The amount of business hours that have lapsed on the current day.</description>
+        <externalId>false</externalId>
+        <formula>IF(ISNULL(ViewedFlag__c), null, MAX(0,24 * 
+  IF(NOW() - ViewedFlag__c &gt;= 1, MIN(NOW() - CaseFlagsBusinessHours__r.TodayStartTime__c , CaseFlagsBusinessHours__r.TodayEndTime__c  - CaseFlagsBusinessHours__r.TodayStartTime__c ),
+    IF( ViewedFlag__c &lt;= CaseFlagsBusinessHours__r.TodayEndTime__c,
+  				 	IF(NOW() &lt; CaseFlagsBusinessHours__r.TodayEndTime__c , NOW(), CaseFlagsBusinessHours__r.TodayEndTime__c) 
+  				 	 - IF(ViewedFlag__c &gt;= CaseFlagsBusinessHours__r.TodayStartTime__c, ViewedFlag__c, CaseFlagsBusinessHours__r.TodayStartTime__c) ,
+  				 	0
+  				 )
+  )
+ )
+)</formula>
+        <formulaTreatBlanksAs>BlankAsZero</formulaTreatBlanksAs>
+        <label>Current Business Hours</label>
+        <precision>18</precision>
+        <required>false</required>
+        <scale>2</scale>
+        <trackHistory>false</trackHistory>
+        <type>Number</type>
+        <unique>false</unique>
+    </fields>
+    <fields>
+        <fullName>Initial_Response_Business_Hours__c</fullName>
+        <deprecated>false</deprecated>
+        <description>The business hours between Date/Time Opened and Initial Response, based on the business hours assigned to the case.</description>
+        <externalId>false</externalId>
+        <label>Initial Response Business Hours</label>
+        <precision>18</precision>
+        <required>false</required>
+        <scale>2</scale>
+        <trackFeedHistory>false</trackFeedHistory>
+        <trackHistory>false</trackHistory>
+        <type>Number</type>
+        <unique>false</unique>
+    </fields>
+    <fields>
+        <fullName>Initial_Response_Hours__c</fullName>
+        <deprecated>false</deprecated>
+        <description>The hours between Date/Time Opened and Initial Response.</description>
+        <externalId>false</externalId>
+        <formula>(Initial_Response__c - CreatedDate) * 24</formula>
+        <label>Initial Response Hours</label>
+        <precision>18</precision>
+        <required>false</required>
+        <scale>2</scale>
+        <trackHistory>false</trackHistory>
+        <type>Number</type>
+        <unique>false</unique>
+    </fields>
+    <fields>
+        <fullName>Initial_Response__c</fullName>
+        <deprecated>false</deprecated>
+        <description>Date/Time of Initial Response based on Case Flags configuration.</description>
+        <externalId>false</externalId>
+        <label>Initial Response</label>
+        <required>false</required>
+        <trackFeedHistory>false</trackFeedHistory>
+        <trackHistory>false</trackHistory>
+        <type>DateTime</type>
+    </fields>
+    <fields>
+        <fullName>PreviousBusinessHours__c</fullName>
+        <deprecated>false</deprecated>
+        <description>The amount of business hours that have lapsed prior to the current day.</description>
+        <externalId>false</externalId>
+        <label>Previous Business Hours</label>
+        <precision>18</precision>
+        <required>false</required>
+        <scale>2</scale>
+        <trackFeedHistory>false</trackFeedHistory>
+        <trackHistory>false</trackHistory>
+        <type>Number</type>
+        <unique>false</unique>
+    </fields>
+    <fields>
+        <fullName>ViewedFlag__c</fullName>
+        <deprecated>false</deprecated>
+        <description>The date and time that the current Case Flag was initiated.</description>
+        <externalId>false</externalId>
+        <label>Case Flag Date/Time</label>
+        <required>false</required>
+        <trackFeedHistory>false</trackFeedHistory>
+        <trackHistory>false</trackHistory>
+        <type>DateTime</type>
+    </fields>
+    <webLinks>
+        <fullName>Clear_Flag</fullName>
+        <availability>online</availability>
+        <displayType>button</displayType>
+        <height>600</height>
+        <linkType>page</linkType>
+        <masterLabel>Clear Flag</masterLabel>
+        <openType>sidebar</openType>
+        <page>FlagClear</page>
+        <protected>false</protected>
+    </webLinks>
+    <webLinks>
+        <fullName>Clear_Flags</fullName>
+        <availability>online</availability>
+        <displayType>massActionButton</displayType>
+        <linkType>javascript</linkType>
+        <masterLabel>Clear Flags</masterLabel>
+        <openType>onClickJavaScript</openType>
+        <protected>false</protected>
+        <requireRowSelection>true</requireRowSelection>
+        <url>{!REQUIRESCRIPT(&quot;/soap/ajax/22.0/connection.js&quot;)}
+{!REQUIRESCRIPT(&quot;/soap/ajax/22.0/apex.js&quot;)}
+
+var recs = {!GETRECORDIDS($ObjectType.Case)}.join(&apos;,&apos;);
+if(recs != &apos;&apos;) {
+
+sforce.apex.execute(&quot;FLAGS/GlobalUtil&quot;,&quot;clearFlags&quot;, {string:recs});
+
+for(var key in ListViewport.instances){
+ListViewport.instances[key].refreshList();
+}
+
+}</url>
+    </webLinks>
+    <webLinks>
+        <fullName>Set_Flag</fullName>
+        <availability>online</availability>
+        <displayType>button</displayType>
+        <height>600</height>
+        <linkType>page</linkType>
+        <masterLabel>Set Flag</masterLabel>
+        <openType>sidebar</openType>
+        <page>FlagNow</page>
+        <protected>false</protected>
+    </webLinks>
+    <webLinks>
+        <fullName>Set_Flags</fullName>
+        <availability>online</availability>
+        <displayType>massActionButton</displayType>
+        <linkType>javascript</linkType>
+        <masterLabel>Set Flags</masterLabel>
+        <openType>onClickJavaScript</openType>
+        <protected>false</protected>
+        <requireRowSelection>true</requireRowSelection>
+        <url>{!REQUIRESCRIPT(&quot;/soap/ajax/22.0/connection.js&quot;)}
+{!REQUIRESCRIPT(&quot;/soap/ajax/22.0/apex.js&quot;)}
+
+var recs = {!GETRECORDIDS($ObjectType.Case)}.join(&apos;,&apos;);
+if(recs != &apos;&apos;) {
+
+sforce.apex.execute(&quot;FLAGS/GlobalUtil&quot;,&quot;setFlags&quot;, {string:recs});
+
+for(var key in ListViewport.instances){
+ListViewport.instances[key].refreshList();
+}
+
+}</url>
+    </webLinks>
+</CustomObject>

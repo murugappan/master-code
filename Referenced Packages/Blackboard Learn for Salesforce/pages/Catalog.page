@@ -1,0 +1,107 @@
+<apex:page controller="bbl.CatalogController" tabstyle="bbl__Course__c">
+
+<link rel="stylesheet" type="text/css" href="{!URLFOR($Resource.ExtJS4, 'resources/css/ext-all.css')}" />
+<link rel="stylesheet" type="text/css" href="{!URLFOR($Resource.SalesforceJAR, 'css/salesforceStyles.css')}" />
+<link rel="stylesheet" type="text/css" href="{!URLFOR($Resource.GridCSS)}" />
+<link rel="stylesheet" type="text/css" href="{!URLFOR($Resource.CatalogCSS)}" />
+<link rel="stylesheet" type="text/css" href="{!URLFOR($Resource.LoaderCSS)}" />
+
+<script type="text/javascript" src="{!URLFOR($Resource.ExtJS4, 'bootstrap.js')}"></script>
+<script type="text/javascript" src="{!URLFOR($Resource.jQuery)}"></script>
+<script type="text/javascript" src="{!URLFOR($Resource.jqMetadata)}"></script>
+<script>
+	jQuery.noConflict();
+</script>
+<script type="text/javascript" src="{!URLFOR($Resource.CategoriesJS)}"></script>
+<script type="text/javascript" src="{!URLFOR($Resource.CatCrumbsJS)}"></script>
+<script type="text/javascript" src="{!URLFOR($Resource.CoursesJS)}"></script>
+<script type="text/javascript" src="{!URLFOR($Resource.SavedCourses)}"></script>
+
+<apex:form styleClass="pageForm">
+
+<apex:actionFunction name="saveCourse" action="{!saveCourse}" onComplete="reloadSavedCourses()" rerender="dummyPanel">
+	<apex:param name="csid" assignTo="{!courseID}" value="" />
+</apex:actionFunction>
+<apex:actionFunction name="unsaveCourse" action="{!unsaveCourse}" onComplete="reloadSavedCourses()" rerender="dummyPanel">
+	<apex:param name="csid" assignTo="{!courseID}" value="" />
+</apex:actionFunction>
+
+<apex:outputPanel id="dummyPanel"> 
+</apex:outputPanel>
+
+
+	<script type="text/javascript">
+    var __sfdcSessionId = '{!JSINHTMLENCODE(GETSESSIONID())}';
+    var __sfdcUserId = '{!JSINHTMLENCODE($User.Id)}'
+    var CourseCategoryMembershipAPI = '{!JSINHTMLENCODE(CourseCategoryMembershipAPI)}';
+	var CourseCategoryAPI = '{!JSINHTMLENCODE(CourseCategoryAPI)}';
+	var EnrollmentsAPI = '{!JSINHTMLENCODE(EnrollmentsAPI)}';
+	var CourseAPI = '{!JSINHTMLENCODE(CourseAPI)}';
+	var SavedCourseAPI = '{!JSINHTMLENCODE(SavedCourseAPI)}';
+    var prefix = '{!JSINHTMLENCODE(FieldPrefix)}';
+    </script>
+    <script src="../../soap/ajax/21.0/connection.js"
+          type="text/javascript"></script>
+    <script type="text/javascript" src="{!URLFOR($Resource.CatalogPageJS)}"></script>
+	
+	<div class="fullWidth paddedTop10">
+		<div class="bPageTitleSF">
+			<div class="line">
+				<div class="unit size3of5">
+					<div class="contentSF">
+						<img src="{!URLFOR($Resource.CatalogIcon)}" alt="Course" width="32" height="32" class="headerImage" title="Course" />
+						<div class="headerTitle">Training Catalog</div>
+						<div class="clearingBoxSF"></div>
+					</div>
+				</div>
+				<div class="unit size2of5">
+					<!-- Holds Saved Courses -->
+					<div id="enrollAll" class="buttonContainerSmall toTheRight">
+						<input type="button" class="btn btnPaddedLarge toTheRight" value="Enroll" onclick="enrollSaved();" />
+						<div class="clearingBoxSF"></div>
+					</div>
+					<div id="savedDD" class="drop toTheRight"></div>
+					<div class="clearingBoxSF"></div>
+				</div>
+			</div>
+			
+			<!-- Holds Bread Crumb -->
+			<div class="crumbs fullwidth">
+				<div id="catCrumbs" class="paddedOut5"></div>
+			</div>
+			<div class="clearingBoxSF"></div>
+			<!-- Holds the Category List -->
+			<div id="catHolder" class="metadataSF">
+				<div class="containerHeader">Browse by Category</div>
+				<div class="clearingBoxSF"></div>
+				
+				<div class="chatterexpandoSF">
+					<div id="categories" class="categoryList"></div>
+					<div class="clearingBoxSF"></div>
+				</div>
+				
+			</div>
+			
+		</div>
+		<div class="bPageBlockSF courseBackground">
+			<div class="line topeBg">
+				<div class="unit size3of5 tableBackground">
+					<div class="paddedOut10">
+						<div class="searchBoxLeft">&nbsp;</div>
+						<div id="searchBox" class="searchBox"></div>
+						<div class="searchBoxRight">&nbsp;</div>
+						<div class="clearingBoxSF"></div>
+						<div id="catalog" class="paddedTop10 courseTable"></div>
+					</div>
+				</div>
+				<div class="unit whiteSide size2of5">
+					<div class="paddedOut10">
+						<div id="courseDetails"></div>
+					</div>
+				</div>
+			</div>
+		</div>
+	</div>
+	
+</apex:form>
+</apex:page>

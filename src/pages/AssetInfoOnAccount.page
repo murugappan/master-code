@@ -1,0 +1,28 @@
+<apex:page standardController="Account" extensions="btbb_Sites_Summary_Controller">
+  <apex:form >         
+         <apex:pageblock >
+          <apex:pageblocksection columns="2" collapsible="false">
+            <apex:outputText value="{!Total_Purchased_Number_of_Users}" label="Total Purchased User Count"/>
+            <apex:outputText value="{!Total_Allocated_Disk_Storage}" label="Total Purchased Disk Storage (GB)"/>
+            <apex:outputText value="{!Total_Actual_Active_User_Count}" label="Total Actual User Count"/>
+            <apex:outputText value="{!Total_Actual_Disk_Usage}" label="Total Actual Disk Storage (GB)"/>
+          </apex:pageblocksection>
+          <br />
+          <apex:pageblocktable value="{!aList}" var="a" >
+            <apex:column headerValue="Name" value="{!a.Name}"/>
+            <apex:column headerValue="Site Url" value="{!a.Software_URL__c}" />
+            <apex:column headerValue="Purchased User Count">
+            <apex:outputText value="{0, number, integer}">
+              <apex:param value="{!a.User_Quantity__c}" />
+            </apex:outputText>
+            </apex:column>
+            <apex:column headerValue="Actual User Count" value="{!a.Actual_Active_Users_Count__c}" />
+            <apex:column headerValue="Purchased Disk Storage (GB)" value="{!a.Data_Storage_Quantity__c}" />
+            <apex:column headerValue="Actual Disk Storage (GB)" value="{!a.Actual_Disk_Usage_GB__c}"/>
+            <apex:column headerValue="Usage Snapshot Date" value="{!a.Usage_Snapshot_Date__c}"/>
+            <apex:column headerValue="Term Period End Date" value="{!a.CPQ_Contract_End_Date__c}"/>
+            <apex:column headerValue="Status" value="{!a.Status}"/>
+          </apex:pageblocktable> 
+         </apex:pageblock>
+    </apex:form>
+</apex:page>

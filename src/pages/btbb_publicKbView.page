@@ -1,0 +1,261 @@
+<apex:page standardController="Solution" extensions="articleViewController" action="{!redirectToPublicPage}" cache="false" id="ArticleView" standardStylesheets="false" showHeader="false" sidebar="false" contentType="text/html">
+    <title>{!Solution.solutionname} - Behind the Blackboard</title>
+    <apex:composition template="btbb_publictemplate">
+        <apex:define name="topbar"><c:btbb_unauthglobalsearch /></apex:define>
+        <apex:define name="nav"><c:btbb_unauth_nav /></apex:define>
+        <apex:define name="content">
+            <style>
+                input[type="radio"] { position: relative; top: 3px; }
+                .articleAttribute { margin-bottom: 10px; }
+            </style>
+            <apex:form style="width:900px;" >
+            <h2>{!Solution.SolutionName}</h2>
+                    
+                    <div class="btbbArticleViewData">
+                        <b>Date Published:</b> <apex:outputText value="{0,date,MMM dd,yyyy}">
+                        <apex:param value="{!DATEVALUE(Solution.LastModifiedDate)}"/> 
+                            </apex:outputText> &nbsp;&nbsp;
+                        <b>Category:</b> {!recordType}&nbsp;&nbsp;
+                        <b>Article No.:</b> {!Solution.SolutionNumber}
+                        <div id="searchresult" style="display:{!IF($CurrentPageReference.parameters.searchresult == 'true','block','none')};float:right"> 
+                        </div>
+                        <div id="homepage" style="display:{!IF($CurrentPageReference.parameters.homepage == 'true','block','none')};float:right"> 
+                        </div>
+                    </div>
+                    
+                    <a href="{!$Page.btbb_kbprint}?id={!id}" id="btbbArticlePrint" target="_blank"><apex:image value="{!URLFOR($Resource.BtBbStyles, '/includes/theme2011/img/icons/print.png')}" alt="Print article" title="Print article" /></a>
+                    
+                    <div id="btbbCaseStatus" style="margin-top: 20px;display:{!IF(NOT(ISNULL(caseId)),'block','none')}">
+               
+                        <div id="btbbCaseArticleHelp" style="width: 45%">
+                            
+                            <div id="SupportBulletin" class="articleAttribute" style="display:{!IF(recordType == 'Support Bulletin/Security Advisory','block','none')}">                          
+                                  <strong>Bulletin/Advisory Information:</strong>&nbsp;&nbsp;<apex:outputField value="{!Solution.Bulletin_Advisory_Information__c}"/>
+                            </div>                  
+                            <div class="articleAttribute"><strong>Article Title:</strong>&nbsp;&nbsp;<apex:outputField value="{!Solution.SolutionName}"/></div>
+                            <div id="Product" class="articleAttribute" style="display:{!IF(recordType == 'Troubleshooting/Informational' || recordType == 'Standard' || recordType == 'Known Issue' || recordType == 'Process/Procedure' || recordType == 'Product Documentation' || recordType == 'Release Homepage' || recordType == 'Support Bulletin/Security Advisory' || recordType == 'Supported Technologies Information' || recordType == 'Release Page','block','none')}">
+                                <strong>Product:</strong>&nbsp;&nbsp;<apex:outputField value="{!Solution.Product__c}"/>
+                            </div>  
+                            <div id="major" class="articleAttribute" style="display:{!IF(recordType == 'Troubleshooting/Informational' || recordType == 'Standard' || recordType == 'Known Issue' || recordType == 'Product Documentation' || recordType == 'Release Homepage' || recordType == 'Supported Technologies Information' || recordType == 'Release Page','block','none')}">
+                                <strong>Major Release:</strong>&nbsp;&nbsp;<apex:outputField value="{!Solution.Major_Release__c}"/>
+                            </div>  
+                            <div id="version" class="articleAttribute" style="display:{!IF(recordType == 'Troubleshooting/Informational' || recordType == 'Standard' || recordType == 'Known Issue' || recordType == 'Product Documentation' || recordType == 'Supported Technologies Information' || recordType == 'Release Page','block','none')}">
+                                <strong>Version:</strong>&nbsp;&nbsp;<apex:outputField value="{!Solution.Version_s__c}"/>
+                            </div>
+                            <!--<div id="SupportBulletin" style="display:{!IF(recordType == 'Support Bulletin/Security Advisory','block','none')}">
+                                <apex:pageBlockSection columns="1">
+                                <apex:pageBlockSectionItem >
+                                <apex:OutputLabel value="Bulletin/Advisory Information"/>
+                                <apex:OutputText value="{!Solution.Bulletin_Advisory_Information__c}" escape="false"/>
+                                    </apex:pageBlockSectionItem>
+                                    </apex:pageBlockSection>
+
+                                        </div>-->                            
+                            <!--
+                            <apex:commandbutton action="{!closeCase}" styleClass="button" value="Problem Solved, Close Case"/>
+                            <apex:commandbutton action="{!selArticle}" styleClass="button" value="Helpful, Keep Case Open"/>
+                            <apex:commandbutton action="{!notHelpful}" styleClass="button" value="Not Helpful"/>
+                            -->                                                
+                        </div>
+                        
+                        <div id="btbbCaseArticleNav">
+                            <br />
+                            <span style="display:block;font-weight:bold;font-size:14px;">Did this article help?&nbsp;<apex:outputLink style="font-size:11px;" value="{!$Page.btbb_caseRelevantArticles}?id={!caseId}">Go back to Relevant Articles</apex:outputLink></span>
+                            <apex:commandbutton action="{!closeCase}" styleClass="button" style="margin-right:10px;" title="Attach article as solution and close my case" value="Problem Solved!"/>
+                            <apex:commandbutton action="{!selArticle}" styleClass="button" title="Attach article to case, keep case open and return to relevant articles" value="Helpful" style="margin-right:10px;"/>
+                            <apex:commandbutton action="{!notHelpful}" styleClass="button" title="Return to relevant articles" value="Not Helpful"/>        
+                    </div>                      
+                    <div class="clear"></div>
+                    </div>
+                    
+                    <div id="btbbArticleViewBody">          
+                    <div id="articleDescription" >
+                              
+                             
+                     <div id="btbbarticledetail" style="margin-top: 20px;display:{!IF(ISNULL(caseId),'block','none')}">                   
+                            <p><strong>Article Title:</strong>&nbsp;&nbsp;<apex:outputField value="{!Solution.SolutionName}"/></p>                         
+                            <div id="Product" style="display:{!IF(recordType == 'Troubleshooting/Informational' || recordType == 'Standard' || recordType == 'Known Issue' || recordType == 'Process/Procedure' || recordType == 'Product Documentation' || recordType == 'Release Homepage' || recordType == 'Support Bulletin/Security Advisory' || recordType == 'Supported Technologies Information' || recordType == 'Release Page','block','none')}">
+                                <p><strong>Product:</strong>&nbsp;&nbsp;<apex:outputField value="{!Solution.Product__c}"/></p>                        
+                            </div>  
+                            <div id="major" style="display:{!IF(recordType == 'Troubleshooting/Informational' || recordType == 'Standard' || recordType == 'Known Issue' || recordType == 'Product Documentation' || recordType == 'Release Homepage'  || recordType == 'Supported Technologies Information' || recordType == 'Release Page','block','none')}">
+                                <p><strong>Major Release:</strong>&nbsp;&nbsp;<apex:outputField value="{!Solution.Major_Release__c}"/></p>                                           
+                            </div>  
+                            <div id="version" style="display:{!IF(recordType == 'Troubleshooting/Informational' || recordType == 'Standard' || recordType == 'Known Issue' || recordType == 'Product Documentation' || recordType == 'Supported Technologies Information' || recordType == 'Release Page','block','none')}">
+                                <p><strong>Version:</strong>&nbsp;&nbsp;<apex:outputField value="{!Solution.Version_s__c}"/></p>                          
+                            </div>
+                            <div id="SupportBulletin" style="display:{!IF(recordType == 'Support Bulletin/Security Advisory','block','none')}">                          
+                                  <p><strong>Bulletin/Advisory Information:</strong>&nbsp;&nbsp;<apex:outputField value="{!Solution.Bulletin_Advisory_Information__c}"/></p>                        
+                            </div>
+                      </div>  
+                                              
+                        <!--<apex:pageBlockSection columns="1">
+                                <apex:outputField value="{!Solution.status}"/></p>
+                            </apex:pageBlockSection>             -->
+                                                    
+                            <div id="Issue" style="display:{!IF(recordType == 'Known Issue' || recordType == 'Standard','block','none')}">
+                                <p><strong>Issue Description:</strong>&nbsp;&nbsp;<apex:outputField value="{!Solution.Issue_Description__c}"/></p>                                           
+                            </div>     
+                            
+                            <div id="DocumentType" style="display:{!IF(recordType == 'Product Documentation' || $Profile.Name == 'Product Documentation Team','block','none')}">
+                                <p><strong>Document Type:</strong>&nbsp;&nbsp;<apex:outputField value="{!Solution.Document_Type__c}"/></p>
+                            </div>     
+                              
+                            <div id="StepstoReproduce" style="display:{!IF(recordType == 'Known Issue' ,'block','none')}">
+                                <p><strong>Steps to Repeat:</strong>&nbsp;&nbsp;<apex:outputField value="{!Solution.Steps_to_Reproduce__c}"/></p>
+                             </div>                           
+                            
+                            <!--<div id="Known" style="display:{!IF(recordType == 'Standard' || recordType == 'Known Issue','block','none')}">
+                                <p><strong>Support Incident:</strong>&nbsp;&nbsp;<apex:outputField value="{!Solution.Support_Incident__c}"/></p><br/>
+                            </div>-->
+                            
+                            <div id="Process" style="display:{!IF(recordType == 'Process/Procedure','block','none')}">
+                                <p><strong>Team:</strong>&nbsp;&nbsp;<apex:outputField value="{!Solution.Team_s__c}"/></p>
+                            </div>
+                            
+                            <div id="ProDoc" style="display:{!IF(recordType == 'Product Documentation','block','none')}">
+                                <p><strong>Document Link:</strong>&nbsp;&nbsp;<apex:outputField value="{!Solution.Document_Link__c}"/></p>
+                            </div>                      
+                        </div>                    
+                        <div class="cleaner divider">&nbsp;</div>
+                        
+                        <div id="Otheresources" style="display:{!IF(recordType == 'Other Resource','block','none')}">
+                             <p><strong>ResourceType:</strong>&nbsp;&nbsp;<apex:OutputText value="{!Solution.ResourceType__c}" escape="false"/></p>
+                           <p><strong>Resource Description:</strong>&nbsp;&nbsp;<apex:OutputText value="{!Solution.Resource_Description__c}" escape="false"/></p>                    
+                           <p><strong>Important Information:</strong>&nbsp;&nbsp;<apex:OutputText value="{!Solution.Important_Information__c}" escape="false"/></p>                        
+                           <p><strong>Resource Link:</strong>&nbsp;&nbsp;<apex:OutputText value="{!Solution.Resource_Link__c}" escape="false"/></p>
+                       
+                        </div>  
+                        <div id="StandardAndKnownIssue" style="display:{!IF(recordType == 'Standard' || recordType == 'Known Issue','block','none')}">
+     
+                               
+                               <p><strong>Symptoms:</strong>&nbsp;&nbsp;<apex:OutputText value="{!Solution.Symptoms__c}" escape="false"/></p>                         
+                               <p><strong>Cause:</strong>&nbsp;&nbsp;<apex:OutputText value="{!Solution.Cause__c}" escape="false"/></p>
+                               <p><strong>Resolution/Workaround:</strong>&nbsp;&nbsp;<apex:OutputText value="{!Solution.Resolution_Workaround__c}" escape="false"/></p>
+                               <p><strong>Best Practice Info:</strong>&nbsp;&nbsp;<apex:OutputText value="{!Solution.Best_Practice_Information__c}" escape="false"/></p>  
+                        </div>    
+                        <div id="TSG" style="display:{!IF(recordType == 'Troubleshooting/Informational','block','none')}">
+                                           
+                            <p><strong>Introduction:</strong>&nbsp;&nbsp;<apex:OutputText value="{!Solution.How_is_the_component_designed_to_work__c}" escape="false"/></p>
+                            <p><strong>Functionality:</strong>&nbsp;&nbsp;<apex:OutputText value="{!Solution.Files_collection_to_troubleshoot_cpnent__c}" escape="false"/></p>                        
+                            <p><strong>Related System Information:</strong>&nbsp;&nbsp;<apex:OutputText value="{!Solution.Evaluation_of_logs_information__c}" escape="false"/></p>
+                            <p><strong>Evaluating Related System Information:</strong>&nbsp;&nbsp;<apex:OutputText value="{!Solution.Causes_of_the_common_issues_with_this_cp__c}" escape="false"/></p>
+                            <p><strong>Common Issues:</strong>&nbsp;&nbsp;<apex:OutputText value="{!Solution.Resources_use_to_troubleshoot_this_cp__c}" escape="false"/></p>
+                        </div>           
+                            
+                        <div id="ProcessProcedure" style="display:{!IF(recordType == 'Process/Procedure','block','none')}">
+                            <p><strong>Process Flow:</strong>&nbsp;&nbsp;<apex:OutputText value="{!Solution.Process_Flow__c}" escape="false"/></p>
+                            <p><strong>Process Detail:</strong>&nbsp;&nbsp;<apex:OutputText value="{!Solution.Process_Details__c}" escape="false"/></p>
+                              
+                        </div>
+                        <div id="ProductDoc" style="display:{!IF(recordType == 'Product Documentation','block','none')}">
+                         
+                            <p><strong>Document Summary:</strong>&nbsp;&nbsp;<apex:OutputText value="{!Solution.Document_Summary__c}" escape="false"/></p>                    
+                            <p><strong>Document Details:</strong>&nbsp;&nbsp;<apex:OutputText value="{!Solution.Document_Details__c}" escape="false"/></p>
+                        </div>        
+                        <div id="ProductRelease" style="display:{!IF(recordType == 'Release Homepage','block','none')}">
+                          
+                            
+                             <p><strong>Available Versions:</strong>&nbsp;&nbsp;<apex:OutputText value="{!Solution.Available_Versions__c}" escape="false"/></p>                       
+                             <p><strong>Upgrade Information:</strong>&nbsp;&nbsp;<apex:OutputText value="{!Solution.Upgrade_Information__c}" escape="false"/></p>                        
+                             <p><strong>Product Documentation:</strong>&nbsp;&nbsp;<apex:OutputText value="{!Solution.Product_Documentation__c}" escape="false"/></p>                        
+                             <p><strong>Support Policy:</strong>&nbsp;&nbsp;<apex:outputField value="{!Solution.Support_Policy__c}"/></p>
+                             <p><strong>Other Information:</strong>&nbsp;&nbsp;<apex:outputField value="{!Solution.Other_Information__c}"/></p>
+
+                              
+                      
+                        </div>                  
+                        <!--<div id="SupportBulletin" style="display:{!IF(recordType == 'Support Bulletin/Security Advisory','block','none')}">
+                            
+                               <p><strong>Important Information about the Issue:</strong>&nbsp;&nbsp;<apex:OutputText value="{!Solution.Important_Information_about_the_Issue__c}" escape="false"/></p><br/>
+                               <p><strong>Symptoms:</strong>&nbsp;&nbsp;<apex:OutputText value="{!Solution.Symptoms__c}" escape="false"/></p><br/>                                      
+                               <p><strong>Cause:</strong>&nbsp;&nbsp;<apex:OutputText value="{!Solution.Cause__c}" escape="false"/></p><br/>                                              
+                               <p><strong>Resolution/Workaround:</strong>&nbsp;&nbsp;<apex:OutputText value="{!Solution.Resolution_Workaround__c}" escape="false"/></p><br/>                            
+                        </div>-->     
+                            
+                        <div id="target" style="display:{!IF(recordType == 'Standard','block','none')}">
+                                       
+                              <p><strong>Target Release:</strong>&nbsp;&nbsp;<apex:outputField value="{!Solution.Target_Release_New__c}"/></p>
+                              <p><strong>Patch Available:</strong>&nbsp;&nbsp;<apex:outputField value="{!Solution.Patch_Available__c}"/></p>                                                              
+                              <!--<p><strong>Support Incident:</strong>&nbsp;&nbsp;<apex:outputField value="{!Solution.Support_Incident__c}"/></p><br/>
+                              <p><strong>Related Issue Key:</strong>&nbsp;&nbsp;<apex:outputField value="{!Solution.Number_of_Clients_Reporting__c}"/></p><br/>-->                      
+                        </div>  
+                        <div id="target" style="display:{!IF(recordType == 'Known Issue','block','none')}">
+                                       
+                              <p><strong>Target Release:</strong>&nbsp;&nbsp;<apex:outputField value="{!Solution.Target_Release_New__c}"/></p>
+                              <p><strong>Patch Available:</strong>&nbsp;&nbsp;<apex:outputField value="{!Solution.Patch_Available__c}"/></p>                                                               
+                              <p><strong>Patch Comments:</strong>&nbsp;&nbsp;<apex:outputField value="{!Solution.Patch_Comments__c}"/></p>       
+                         </div>
+                        <div id="Support Technology" style="display:{!IF(recordType == 'Supported Technologies Information','block','none')}">
+                        
+                            <p><strong>Platform Technology:</strong>&nbsp;&nbsp;<apex:OutputText value="{!Solution.Platform_Technologies__c}" escape="false"/></p>                        
+                            <p><strong>Client Technology:</strong>&nbsp;&nbsp;<apex:OutputText value="{!Solution.Client_Technologies__c}" escape="false"/></p>                        
+                            <p><strong>Upgrade Paths:</strong>&nbsp;&nbsp;<apex:OutputText value="{!Solution.Upgrade_Paths__c}" escape="false"/></p>                 
+                        </div>               
+                                      
+                        <div id="VersionInfo" style="display:{!IF(recordType == 'Release Page','block','none')}">
+                            
+                           <p><strong>Download:</strong>&nbsp;&nbsp;<apex:OutputText value="{!Solution.Download__c}" escape="false"/></p>                      
+                           <p><strong>Supported Technology:</strong>&nbsp;&nbsp;<apex:OutputText value="{!Solution.Supported_Technologies__c}" escape="false"/></p>                       
+                           <p><strong>Release Notes:</strong>&nbsp;&nbsp;<apex:OutputText value="{!Solution.Release_Notes__c}" escape="false"/></p>                       
+                           <p><strong>Known Issues:</strong>&nbsp;&nbsp;<apex:OutputText value="{!Solution.Known_Issues__c}" escape="false"/></p>                                         
+                           <p><strong>Resolved Issues:</strong>&nbsp;&nbsp;<apex:OutputText value="{!Solution.Resolved_Issues__c}" escape="false"/></p>
+                      </div>       
+                      <!--<div id="Disclaimer" style="display:{!IF(recordType == 'Troubleshooting/Informational' || recordType == 'Standard' || recordType == 'Known Issue','block','none')}">                       
+                        <p><strong>Disclaimer:</strong>&nbsp;&nbsp;This article was written and verified by Blackboard Support. It is approved for client use. If you have comments or questions, please email kb@blackboard.com.</p><br/>                     
+                      </div>-->     
+
+                    </div>
+                    <!--<div class="cleaner divider">&nbsp;</div>
+                    <div id="btbbArticleAttachment" style="dispay:{!IF(ISNULL(AttachmentList),'none','block')}">
+                    <apex:pageBlock title="Attachment" mode="detail" rendered="{!IF(ISNULL(AttachmentList), false, true)}">
+                        <apex:pageBlockTable value="{!AttachmentList}" var="attachment" id="AttachmentTable" border="20" frame="border">
+                
+                            <apex:column width="400px">
+                                 <apex:facet name="header"><strong>File Name</strong></apex:facet> 
+                                <a style="color:#0066CC;text-decoration:underline;" href="https://c.cs3.content.force.com/servlet/servlet.FileDownload?file={!attachment.Id}" target="_blank">{!attachment.Name}</a>                     
+                            </apex:column>                          
+                        </apex:pageBlockTable>                    
+                    </apex:pageBlock>
+                    </div>-->
+                    <br /><br />
+                    <div class="btbbCaseTab" title="Attachments">
+                                <h2>Attachments</h2>
+                                <table width="100%">
+                                    <tr class="nohover">
+                                        <th>Filename</th>
+                                        <th>Download Link</th>
+                                        <th>Last Updated</th>
+                                    </tr>
+                                    <apex:repeat value="{!ArticleAttach}" var="att">
+                                    <tr>
+                                        <td>{!att.File_Name__c}</td>
+                                        <td><a href="{!$Page.AttachmentRedirect}?bname={!att.Bucket_Name__c}&fname={!att.File_Name_URL__c}&aws={!as3.key}&sec={!as3.secret}&uval=article" target="_blank">View/Download</a></td>   
+                                        <td><apex:outputText value="{0,date,MMM dd,yyyy}"><apex:param value="{!DATEVALUE(att.CreatedDate)}" /></apex:outputText></td>
+                                    </tr>
+                                    </apex:repeat>
+                                </table> 
+           </div>
+                    
+                    <div class="cleaner divider">&nbsp;</div>
+                    
+                    <div id="btbbArticlefeedback" style="margin-top: 20px;display:{!IF(ISNULL(caseId)&& isFBExist == false,'block','none')}">
+                        <p><strong>Bb KB – Was this Article Helpful?</strong>&nbsp;&nbsp;</p><br/>
+                        <apex:selectRadio value="{!voteValue}">
+                            <apex:selectOptions value="{!items}"/>
+                        </apex:selectRadio><br/>                        
+                        <apex:commandButton value="Submit" action="{!addFeedback}" rerender="out" status="status" styleclass="btbbButton" title="Submit Feedback"/>
+                        <apex:outputPanel id="out">
+                            <apex:actionstatus id="status" startText="" stopText=""> 
+                                <apex:facet name="start"><apex:image url="{!URLFOR($Resource.btbbLoader)}"/></apex:facet>                               
+                            </apex:actionStatus>                
+                        </apex:outputPanel>
+                    </div>
+                    
+                    <div id="btbbArticlefeedbackvoted" style="margin-top: 20px;display:{!IF(ISNULL(caseId)&& isFBExist == false,'none;','block;')}">
+                        <p><strong>Thank you for submitting your feedback for this article.</strong></p>
+                    </div>
+                          
+            </apex:form>
+        </apex:define>
+    </apex:composition>
+</apex:page>

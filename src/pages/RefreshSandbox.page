@@ -1,0 +1,30 @@
+<apex:page showHeader="true" sidebar="true" controller="RefreshSandbox">
+	<apex:sectionHeader title="Refresh SandBox"  />
+	<apex:form >
+	<apex:pageBlock title="Login" rendered="{!NOT(islogin)}">
+	<apex:pageMessages />
+		<apex:outputPanel layout="block" rendered="{!NOT(islogin)}" style="border:1px solid;width:300px;Padding:10px;background: rgba(50, 100, 200, 0.3);">
+		<apex:panelGrid columns="2">
+			<apex:outputLabel for="src" value="Source"/>
+			<apex:selectList value="{!Source}" size="1">
+			<apex:selectOption itemValue="Sandbox" itemLabel="Sandbox" />
+			<apex:selectOption itemValue="Production" itemLabel="Production"/>
+			</apex:selectList> 
+			<apex:outputLabel for="uname" value="Username"/>
+			<apex:inputText id="uname" value="{!username}"/>
+			<apex:outputLabel for="pwd" value="Password"/>
+			<apex:inputSecret id="pwd" value="{!password}"/>
+ 		</apex:panelGrid>
+ 		<apex:commandButton value="Login" action="{!login}"/>
+		</apex:outputPanel>
+	</apex:pageBlock>
+	<apex:pageBlock title="Choose Operation" rendered="{!islogin}">
+	<apex:pageMessages />
+		<apex:panelGrid columns="2">
+		<apex:commandButton value="Copy Data" action="{!refresh}"/>
+		<apex:commandButton value="Delete Data" action="{!Deletedata}"/>
+ 		</apex:panelGrid>
+ 		
+	</apex:pageBlock>
+	</apex:form>
+</apex:page>

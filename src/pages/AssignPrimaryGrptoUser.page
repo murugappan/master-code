@@ -1,0 +1,15 @@
+<apex:page standardController="User" extensions="AssignPrimaryGrouptoUser">
+    <apex:form >
+       <apex:pageBlock tabStyle="User" title="Assign Primary Group">
+          <br/><br/>
+          <center>
+              <apex:outputLabel value="Select the Primary Group for the User : " for="prgrp"></apex:outputLabel>
+              <apex:selectList id="prgrp" value="{!prgrp}" size="1" multiselect="false">
+                  <apex:selectOptions value="{!Queues}">
+                  </apex:selectOptions>
+              </apex:selectList><br/><br/>
+               <apex:commandButton value="Select" action="{!assigntoUser}"/>
+          </center>
+      </apex:pageBlock>
+   </apex:form>   
+</apex:page>

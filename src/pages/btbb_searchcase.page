@@ -1,0 +1,43 @@
+<apex:page controller="searchcasecontroller" standardStylesheets="false" showHeader="false" sidebar="false" >
+ 
+<apex:composition template="btbb_publictemplate"> 
+
+<apex:define name="topbar"><c:btbb_unauthglobalsearch /></apex:define>
+        
+            <apex:define name="nav"><c:btbb_unauth_nav /></apex:define> 
+                
+                <apex:define name="content"> 
+                
+                
+                
+
+                <apex:define name="content"> 
+                <apex:form >
+                 {!aftersubmitText}<br/>
+                 
+                 <apex:outputtext rendered="{!NOT(brender)}" > Please enter your email address below to get a list of cases created by you in the past. </apex:outputtext> <br/><br/>
+                 
+                 <apex:outputPanel rendered="{!NOT(brender)}" >
+                 <apex:inputText size="50" value="{!inputstring}" id="inputTXT"  />
+                 <apex:commandButton id="cmd" value="Submit" action="{!submit}"   /><br/>
+                 <font color="red">{!errText}</font>
+                 {!nocases}
+                 {!novalidemailtext}
+                 </apex:outputPanel>
+                 
+                 
+             
+                
+                                
+                
+                </apex:form>
+                </apex:define> 
+
+
+
+  </apex:define>
+  </apex:composition>
+ 
+ 
+ 
+</apex:page>

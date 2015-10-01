@@ -1,0 +1,74 @@
+<apex:page showHeader="false" sidebar="false" standardStylesheets="false" cache="false">
+<head>
+<!--<script type='text/javascript' src='https://ajax.googleapis.com/ajax/libs/jquery/2.1.1/jquery.min.js'/>-->
+<script>
+//$GA=jQuery.noConflict();
+//alert('test1--'+window.parent.location.href);
+/*var script = document.createElement('script');
+script.src = "//ajax.googleapis.com/ajax/libs/jquery/2.1.1/jquery.min.js";
+document.getElementsByTagName('head')[0].appendChild(script);
+
+var script2 = document.createElement('script');
+script2.src = "/resource/1433862529000/GoogleAnalytics";
+document.getElementsByTagName('head')[0].appendChild(script2);*/
+
+
+/*$("h2:contains('Google Analytics')").parent().parent().hide();
+
+  // Check to skip emptyHtmlDoc, an iframe used by SFDC 
+  // for related lists on standard layouts
+  if (window.parent.location.href.indexOf("emptyHtmlDoc.html") == -1
+      && window.parent.location.href.indexOf("/apex") == -1
+    )
+      /* TODO: Add Prod detection code */
+
+ /* {
+    
+    (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
+    (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
+    m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
+    })(window,document,'script','//www.google-analytics.com/analytics.js','ga');
+
+    
+    ga('create', 'UA-43816855-3', 'auto', {
+      'allowLinker': true
+    });
+    ga('require', 'linkid', 'linkid.js');
+    ga('require', 'linker');
+    ga('linker:autoLink', [/blackboard(\.|--)(.)*\.(salesforce|force)\.com/]);
+   
+
+  // alert (window.location.pathname );
+
+    $.ajax({
+          type: 'GET',
+          url: '/services/apexrest/GARestCall?source_url='+encodeURIComponent(window.parent.location.href),
+          dataType: 'json',
+          beforeSend: function(request){ 
+            request.setRequestHeader(
+              "Authorization", "Bearer " + document.cookie.match('sid=([^;]*)')[1]);},
+          success: function(response) {
+            try{
+              var parsedJson = $.parseJSON(response);
+              $.each(parsedJson, function(key, value){
+                      ga('set', key, value);
+              });
+            }catch(err)
+            {
+                console.log (err);
+            }
+          
+            ga('send', 'pageview');
+
+          }
+
+          
+    });
+
+  }*/
+
+  alert('pathname--'+document.location.pathname);
+  alert('href--'+document.location.href);
+  </script>
+</head>	
+</apex:page>

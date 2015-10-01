@@ -1,0 +1,72 @@
+<apex:component access="global">
+<style>
+/**************************************************************/
+/* CSS for Header */
+/**************************************************************/
+#header
+{
+    clear: both;
+    position: relative;
+    width: 100%;
+    height: 40px;
+}
+#logo
+{
+    position: absolute;
+    top: 0px;
+    left: 0px;
+    width: 378px;
+    height: 38px;
+    background: url('{!URLFOR($Resource.BALINK1__balink, 'images/logo.gif')}') no-repeat left top;
+}
+#logo h1
+{
+    width: 191px;
+    height: 38px;
+    overflow: hidden;
+}
+#logo span
+{
+    text-indent: -9999px;
+}
+#logo a
+{
+    width: 191px;
+    height: 38px;
+    display: block;
+    overflow: hidden;
+    text-decoration: none;
+}
+
+#header div.top_links
+{
+    position: absolute;
+    top: 8px;
+    right: -5px;
+}
+#header div.top_links div
+{
+    float: left;
+    padding-right: 10px;
+}
+#header div.top_links a
+{
+    font-size: 12px;
+    font-weight: normal;
+    color: #4d4d4d;
+    text-decoration: none;
+}
+/**************************************************************/
+</style>
+<div id="header">
+    <div >
+        <h1 title="BaLink"><span><a href="http://www.balink.net" target="_blank">
+            <img src="{!URLFOR($Resource.BALINK1__balink, 'images/logo.jpg')}" height="38" width="104"/>
+            </a></span></h1>
+    </div>
+    <div class="top_links">
+        <div><a href="http://www.balink.net/index.php?page=contact_balink" target="_blank"><img src="{!URLFOR($Resource.BALINK1__balink, 'images/contact.gif')}" alt="" onmouseover="this.src='{!URLFOR($Resource.BALINK1__balink, 'images/contact_h.gif')}';" onmouseout="this.src='{!URLFOR($Resource.BALINK1__balink, 'images/contact.gif')}';"/></a></div>
+        <div><a href="http://www.balink.net/index.php?page=customer_support" target="_blank"><img src="{!URLFOR($Resource.BALINK1__balink, 'images/support.gif')}" alt="" onmouseover="this.src='{!URLFOR($Resource.BALINK1__balink, 'images/support_h.gif')}';" onmouseout="this.src='{!URLFOR($Resource.BALINK1__balink, 'images/support.gif')}';"/></a></div> 
+    </div>
+</div>
+</apex:component>

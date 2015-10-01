@@ -1,0 +1,125 @@
+<apex:page controller="BBW_CaseListGrabCase" tabStyle="Case">
+<apex:includeScript value="/support/console/22.0/integration.js"/>
+<script type="text/javascript">
+   
+     function View1(strId){       
+         
+        if (sforce.console.isInConsole()) {//For Console View
+            srcUp("/"+ strId+"?isdtp=vw"); 
+        } 
+        
+        else {   //For Salesforce
+          window.open("../"  + strId, "_parent");
+        }
+      
+     }
+     
+    
+        
+    
+    
+    
+    
+    
+    function dosort(sortval){
+       //alert(sortval);
+        sortdata(sortval);  
+     } 
+</script>
+    <apex:sectionHeader title="My Team Queue - {!curUserPrimaryGroup}" />
+    <apex:form >
+        <apex:pageBlock title="View All My Team Cases" id="thePageBlock">
+            <apex:pageMessages />
+           <!-- <apex:actionStatus id="status" startText=" Re-Assigning Selected Cases To You..." stopText=" " startStyle="font-size:14px; font-weight: bold; font-style="italic;" for="grabcases" />
+            <apex:actionFunction action="{!updatelist}" name="sortdata" reRender="caseList" status="processingStatus">
+                <apex:param name="firstParam" value="" />
+            </apex:actionFunction> -->
+            <apex:pageBlockButtons >
+            <apex:actionFunction action="{!updatelist}" name="sortdata" reRender="caseList" status="processingStatus">
+                <apex:param name="firstParam" value="" />
+            </apex:actionFunction>
+                            <apex:commandButton value="Grab Selected Cases" action="{!addSelectedCases}" rerender="caseList" status="status" id="grabcases"/>
+                            <apex:commandButton value="Default Sorting" action="{!updatelist}" rerender="caseList" onclick="dosort('def');"  />
+                            <apex:commandButton value="Refresh" action="{!buildCaseSelectList}" rerender="caseList" onclick="dosort('def');"  />
+            
+
+            </apex:pageBlockButtons>
+            <apex:pageBlockTable value="{!caseList}" var="aw" id="caseList">
+                <apex:column width="1px">
+                    <apex:inputCheckbox value="{!aw.selected}"/>
+                </apex:column>
+                <apex:column >
+                    <apex:facet name="header"><apex:outputLabel value="{!CaseNumber}" onclick="dosort('cas');" escape="false"/></apex:facet>
+                        <div> <a href="#" onClick="View1('{!aw.a.id}');" >{!aw.a.CaseNumber}</a>  
+                        
+                    </div>
+                </apex:column> 
+                <apex:column >
+                    <apex:facet name="header"><apex:outputLabel value="{!PsftCaseId}" onclick="dosort('psftcid');" escape="false"/></apex:facet>
+                   <apex:outputText value="{!aw.a.Psft_Case_Id__c}"></apex:outputText>
+                </apex:column> 
+
+                <apex:column >
+                    <apex:facet name="header"><apex:outputLabel value="{!OwnerName}" onclick="dosort('acc');" escape="false"/></apex:facet>
+                   <apex:outputText value="{!aw.a.Owner.Name}"></apex:outputText>
+                </apex:column> 
+                <apex:column >
+                    <apex:facet name="header"><apex:outputLabel value="{!AccName}" onclick="dosort('acn');" escape="false"/></apex:facet>
+                    <apex:outputText value="{!aw.a.account.Name}"></apex:outputText>
+                </apex:column>
+                <apex:column >
+                    <apex:facet name="header"><apex:outputLabel value="{!subject}" onclick="dosort('sub');" escape="false"/></apex:facet>
+                    <apex:outputText value="{!aw.a.subject}"></apex:outputText>
+                </apex:column> 
+
+                <apex:column >
+
+                    <apex:facet name="header"><apex:outputLabel value="{!Severity}" onclick="dosort('sev');" escape="false"/></apex:facet>
+                    <apex:outputText value="{!aw.a.Case_Severity__c}"></apex:outputText><apex:image id="theImage" value="{!aw.background}" rendered="{!if(OR(aw.a.Case_Severity__c =='1',aw.a.Case_Severity__c =='2'),'true','false')}"/>
+                </apex:column> 
+                
+                <apex:column >
+                    <apex:facet name="header"><apex:outputLabel value="{!CoreLicense}" onclick="dosort('sev');" escape="false"/></apex:facet>
+                    <apex:outputField value="{!aw.a.Core_License__c}"></apex:outputField>
+                </apex:column>
+                <apex:column >
+                    <apex:facet name="header"><apex:outputLabel value="{!CreatedDate}" onclick="dosort('crdt');" escape="false"/></apex:facet>
+                    <apex:outputField value="{!aw.a.CreatedDate}" />
+                </apex:column> 
+                <apex:column >
+                <apex:facet name="header"><apex:outputLabel value="{!LastModifiedDate}" onclick="dosort('lmdt');" escape="false"/></apex:facet>
+                <apex:outputField value="{!aw.a.LastModifiedDate}"/>
+                </apex:column>
+                                <apex:column >
+                    <apex:facet name="header"><apex:outputLabel value="{!status}" onclick="dosort('sta');" escape="false"/></apex:facet>
+                    <apex:outputText value="{!aw.a.status}"></apex:outputText> </apex:column>
+                <apex:column >
+    <apex:facet name="header"><apex:outputLabel value="{!Age}" onclick="dosort('age');" escape="false"/></apex:facet>
+    <apex:outputText value="{!aw.a.Case_Age__c}"></apex:outputText>
+</apex:column>
+<apex:column >
+    <apex:facet name="header"><apex:outputLabel value="{!Event_Type}" onclick="dosort('evt');" escape="false"/></apex:facet>
+    <apex:outputtext value="{!aw.a.responsiveness__r[0].Start_Event__c}" rendered="{!if(aw.a.responsiveness__r.size >0,'true','false')}"></apex:outputtext>
+</apex:column>
+<apex:column >
+    <apex:facet name="header"><apex:outputLabel value="{!SLA_Expiry_time}" onclick="dosort('sla');" escape="false"/></apex:facet>
+    <apex:outputtext value="{!aw.SLAdatetime}" rendered="{!if(aw.a.responsiveness__r.size >0,'true','false')}"></apex:outputtext>
+</apex:column>
+<apex:column >
+    <apex:facet name="header"><apex:outputLabel value="{!Time_left_for_SLA_Expiry}" onclick="dosort('tsla');" escape="false"/></apex:facet>
+    <apex:outputtext value="{!aw.a.responsiveness__r[0].Time_left_for_SLA_Expiry__c * 24}" rendered="{!if(aw.a.responsiveness__r.size >0,'true','false')}"></apex:outputtext>
+</apex:column>
+
+<!-- <apex:column >
+    <apex:facet name="header"><apex:outputLabel value="{!CLAtime}" onclick="dosort('cla');" escape="false"/></apex:facet>
+    <apex:outputtext value="{!aw.timeremain}" rendered="{!if(aw.a.casemilestones.size>0,'true','false')}"></apex:outputtext>
+</apex:column> -->
+    
+                    
+             
+                              <apex:column rendered="True" />
+            <apex:actionSupport action="{!addSelectedCases}" reRender="opp-table" status="status"/>
+            </apex:pageBlockTable>
+        </apex:pageBlock>
+    </apex:form>
+</apex:page>

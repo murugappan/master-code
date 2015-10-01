@@ -1,0 +1,123 @@
+<apex:page standardController="learnJIRA__c" extensions="changeSIdetailsforlearnController">
+
+<apex:sectionHeader title="Change SI Details" subtitle="{!supportIncident.Name}" />
+    
+    <apex:form >
+        <apex:pageBlock mode="edit">
+         <apex:pageMessages /> 
+            <apex:pageBlockButtons >
+                <apex:commandButton value="Save" action="{!s}" />
+                <apex:commandButton value="Cancel" action="{!Cancel}" />
+             </apex:pageBlockButtons>
+        
+        
+        
+        <apex:pageBlockSection title="Update Support Incident Details" id="section1" columns="2">
+        <apex:outputField value="{!supportIncident.Name}"  /> 
+        <apex:inputField value="{!supportIncident.OwnerId}"  /> 
+    
+        
+        <apex:inputField value="{!supportIncident.Summary__c}"  />  
+         &nbsp;  
+       
+        <apex:inputField value="{!supportIncident.Severity__c}" />  
+         &nbsp;     
+        <apex:inputField value="{!supportIncident.Priority__c}" />  
+         &nbsp; 
+        <apex:inputField value="{!supportIncident.Duplicate_Of__c}"/><br/>
+        <apex:inputField value="{!supportIncident.Issue_Segment__c}"/>
+        </apex:pageBlockSection>
+        
+        <apex:pageBlockSection title="Product Details" id="section2" columns="2">
+        <apex:outputField value="{!supportIncident.Product_ID__c}"/>
+        <!-- <apex:inputField value="{!supportIncident.Module__c}"/> -->
+        
+        <apex:pageblockSectionItem >Issue Topic
+         <apex:selectList value="{!module }" size="1" id="module" style="margin-right:1px" >
+         <apex:actionSupport event="onchange" rerender="functionalarea,category" status="mStatus"/>
+         <apex:selectOptions value="{!modules}" />
+         </apex:selectList>
+        </apex:pageblockSectionItem>
+        
+        
+        
+       <!-- <apex:inputField value="{!supportIncident.Reported_In_Version__c}"/>-->
+         <apex:pageblockSectionItem >Reported In Version
+         <apex:selectList value="{!jirasourcebuild}" size="1" style="margin-right:1px" >
+         <apex:selectOptions value="{!sblist}" />
+         </apex:selectList>
+         </apex:pageblockSectionItem>
+       
+       
+        <!-- <apex:inputField value="{!supportIncident.Functional_Area__c}"/> -->
+        
+        
+        <apex:pageblockSectionItem >Functional Area
+        <apex:selectList value="{!functionalarea }" size="1" id="functionalarea" style="margin-right:1px" >
+        <apex:actionSupport event="onchange" rerender="category" status="faStatus"/>
+        <apex:selectOptions value="{!functionalareas }" />
+        </apex:selectList>
+        </apex:pageblockSectionItem>
+        
+        
+        <apex:inputTextarea value="{!supportIncident.Client_Information_HTML__c}" richText="true"/>
+        <!-- <apex:inputField value="{!supportIncident.Category__c}"/> -->
+        
+        
+        <apex:pageblockSectionItem >Category
+        <apex:selectList value="{!category }" size="1" style="margin-right:1px" id="category"  >
+        <apex:actionSupport event="onchange" rerender="category" status="caStatus" />
+        <apex:selectOptions value="{!categories }" />
+        </apex:selectList>
+        </apex:pageblockSectionItem>
+        
+        
+        
+        
+        <apex:inputTextarea value="{!supportIncident.Access_Information_HTML__c}" richText="true"/>
+           
+        </apex:pageBlockSection>
+        
+        <apex:pageBlockSection title="SI Description" id="section3" columns="2">
+        <apex:inputField value="{!supportIncident.Tier_2_Assessment__c}"/>&nbsp;
+        <apex:inputTextarea value="{!supportIncident.Description_HTML__c}" richText="true"/>
+        <apex:inputTextarea value="{!supportIncident.Workaround_HTML__c}" richText="true"/>
+        <apex:inputTextarea value="{!supportIncident.Steps_to_Replicate_HTML__c}" richText="true"/>
+        <apex:inputTextarea value="{!supportIncident.Steps_to_Replicate__c}" richText="true"/>
+        
+        </apex:pageBlockSection>
+          
+        <apex:pageBlockSection title="System Information" id="section4" columns="2">
+        <apex:inputField value="{!supportIncident.Secutity_Issue__c}"/>&nbsp;
+        <apex:inputField value="{!supportIncident.Do_Not_Publish__c}"/>&nbsp;
+        <apex:inputField value="{!supportIncident.Has_Workaround__c}"/>&nbsp;
+        <apex:inputField value="{!supportIncident.Insufficient_Information__c}"/>&nbsp;
+        <apex:inputTextarea value="{!supportIncident.Insufficient_Information_Description__c}" richText="true" />  
+        </apex:pageBlockSection> 
+        
+        <!--  <apex:pageBlockSection title="Patch Request Details" id="section5" columns="2">
+        <apex:inputField value="{!supportIncident.Patch_Requested__c}" />&nbsp;
+        <apex:inputTextarea value="{!supportIncident.Patch_Request_Comments__c}" richText="true" />&nbsp;
+        <apex:inputTextarea value="{!supportIncident.Additional_Justification_HTML__c}" richText="true"/>&nbsp;
+        <apex:inputTextarea value="{!supportIncident.Business_Reasons_HTML__c}" richText="true"/>
+        </apex:pageBlockSection>  --> <!-- TP 5059 -->
+      
+        
+        
+        
+        
+        
+        
+       </apex:pageBlock>
+        
+        
+        
+        
+        
+        
+   </apex:form>
+   <!-- <apex:relatedList list="Related_Bugs__r"/> 
+   <apex:relatedList list="Cases__r"/> 
+   <apex:relatedList list="Case_Attachment__r"/> 
+   <apex:relatedList list="Notes__r"/>  -->
+</apex:page>

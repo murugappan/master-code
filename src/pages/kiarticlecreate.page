@@ -1,0 +1,5 @@
+<apex:page standardController="learnJIRA__c" extensions="kiarticlecreate" action="{!autorun}" >
+
+  
+  
+</apex:page>

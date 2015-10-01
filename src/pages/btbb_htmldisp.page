@@ -1,0 +1,22 @@
+<apex:page id="page" controller="btbb_htmldisp" showheader="false" sidebar="false" standardStylesheets="false" cache="false" >
+
+   <apex:composition template="btbb_publictemplate">  
+   <apex:define name="topbar"><c:btbb_unauthglobalsearch /></apex:define>
+   <apex:define name="nav"><c:btbb_unauth_nav /></apex:define>
+   <apex:define name="content"> 
+
+<apex:form >
+
+<i><b>My Institution Help Desk</b></i><br/><br/>
+<i><u>{!htmldisplay.Account__r.Name}</u></i><br/><br/> 
+<apex:outputText value="{!htmldisplay.HTML_Text__c}" escape="false">
+</apex:outputText>
+
+
+
+</apex:form>
+</apex:define>
+</apex:composition>
+
+  
+</apex:page>

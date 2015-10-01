@@ -1,0 +1,12 @@
+<apex:page showHeader="false" sidebar="false">
+<p><b>Partner Support:</b></p>
+Reports<br></br>
+Territory Changes<br></br>
+Opportunity Changes<br></br>
+Channel Partner Changes<br></br>
+
+<p><b>Salesforce Support:</b></p>
+Login Issues<br></br>
+Permission Problems<br></br>
+
+</apex:page>

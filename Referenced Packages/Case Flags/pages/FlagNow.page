@@ -1,0 +1,3 @@
+<apex:page standardController="case" extensions="FLAGS.CaseFlags" action="{!nowFlag}">
+<apex:pageMessages />
+</apex:page>

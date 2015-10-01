@@ -1,0 +1,115 @@
+<apex:page standardController="Case" title="Case: {!Case.CaseNumber}" >
+
+    <apex:detail oncomplete="changeClickEvent();" relatedList="true" showChatter="true" inlineEdit="true"></apex:detail>
+    
+    <apex:includeScript value="/support/console/20.0/integration.js"/>
+    
+    <script language="javascript"> 
+    //console start
+    var isConsole = false;
+    
+    if(typeof srcUp == 'function') { 
+        isConsole = true;
+    }
+    
+    var qryParam = '';
+    var tabId;
+    
+    if(isConsole){
+        qryParam = '&isdtp=vw'; //mn?
+        sforce.console.setTabTitle('Case: {!Case.CaseNumber}');
+
+        //var closeSubtab = function closeSubtab(result) {
+        //    tabId = result.id;
+        //    changeClickEvent();
+        //};
+        
+    }
+    //console end
+    
+    //console tabs start
+   
+    function OpenCmtSubtab() {
+        //find the id of the primary tab to put the new subtab in
+        sforce.console.getEnclosingPrimaryTabId(openSubtab);
+    }
+    
+    var openSubtab = function openSubtab(result) {
+        var url = '\/apex\/E2CP__New_Comment?id={!Case.Id}&scontrolCaching=1&core.apexpages.devmode.url=1' + qryParam;
+        var primaryTabId = result.id;
+        sforce.console.openSubtab(primaryTabId, url, true, 'New Comment', null, openSuccess);
+    };
+    
+    var openSuccess = function openSuccess(result) {
+        //Report whether we succeeded in opening the subtab
+        if (result.success == true) {
+            //alert('subtab successfully opened');
+        } else {
+            //alert('subtab cannot be opened');
+        }
+    };
+
+    //console tabs end
+
+
+    function changeClickEvent(){
+    
+        var overrideClick = true;
+
+        if (overrideClick) {
+            //capture clicks for standard new comment button and the btn in the related list hover
+            
+            var cmntBtn = document.getElementsByName("newComment");
+            cmntBtn[0].onclick = function() { 
+                
+                if(!isConsole){
+                    try { eval('var myURL=\'\/apex\/E2CP__New_Comment?id={!Case.Id}&scontrolCaching=1&core.apexpages.devmode.url=1' + qryParam + '\';\r\nvar qs=window.location.search.substring(1);\r\nif (qs.indexOf(\'isdtp=mn\')!=-1)\r\nlocation=myURL+\'&isdtp=mn\';\r\nelse\r\nlocation=myURL;') } catch (e) { alert('A problem with the OnClick JavaScript for this button or link was encountered:\n\n' + (e.message ? e.message : e)) }
+                }
+                else {
+                    //try { eval('var myURL=\'\/apex\/E2CP__New_Comment?id={!Case.Id}&scontrolCaching=1&core.apexpages.devmode.url=1' + qryParam + '\';\r\nvar qs=window.location.search.substring(1);\r\nif (qs.indexOf(\'isdtp=mn\')!=-1)\r\nlocation=myURL+\'&isdtp=mn\';\r\nelse\r\nlocation=myURL;') } catch (e) { alert('A problem with the OnClick JavaScript for this button or link was encountered:\n\n' + (e.message ? e.message : e)) }
+                    OpenCmtSubtab();
+                }
+            };
+    
+            RelatedListPanel.prototype.showRL=function(rlId,forceResize){this.clearhidemenu();if(rlId!=this.currentListId){return;}var panelShadowNode=this.getPanelShadowNode();if(!panelShadowNode){return;}var panelFrameNode=this.getIFrameNode();var linkletNode=getElementByIdCS(this.getLinkId(rlId));var relatedListNode=DomUtil.findDescendantWithClassName(getElementByIdCS(rlId),"bPageBlock");if(!(panelFrameNode&&linkletNode)){return;}if(linkletNode.className.indexOf("linkletOn")>0&&(!forceResize)){return;}panelShadowNode.style.top=(linkletNode.offsetTop+linkletNode.offsetHeight)+"px";if(this.isConsole){panelShadowNode.style.left=(getObjX(this.getHoverableLinksNode())-4)+"px";panelShadowNode.style.width=(relatedListNode.offsetWidth-3)+"px";}else{panelShadowNode.style.left=(getObjX(this.getHoverableLinksNode())-14)+"px";panelShadowNode.style.width=(relatedListNode.offsetWidth+13)+"px";}panelFrameNode.style.height=(relatedListNode.offsetHeight+5)+"px";panelShadowNode.style.display="block";linkletNode.className+=" linkletOn";
+                var iframeWin=this.getIFrameNode().contentWindow;
+                var cmntBtn=iframeWin.document.getElementsByName("newComment");
+                if (cmntBtn[0]) {
+                    cmntBtn[0].onclick = function() { 
+                        try { eval('var myURL=\'\/apex\/E2CP__New_Comment?id={!Case.Id}&scontrolCaching=1&core.apexpages.devmode.url=1' + qryParam + '\';\r\nvar qs=window.location.search.substring(1);\r\nif (qs.indexOf(\'isdtp=mn\')!=-1)\r\nlocation=myURL+\'&isdtp=mn\';\r\nelse\r\nlocation=myURL;') } catch (e) { alert('A problem with the OnClick JavaScript for this button or link was encountered:\n\n' + (e.message ? e.message : e)) }
+                    };
+                };
+            };
+        
+        };
+    }//changeClickEvent
+    
+    changeClickEvent();
+    
+    
+    //fixing private/public toggle overriding the click override
+    var alinks = getElementsByClassName('actionLink');
+    var alink;
+    for(var i = 0; (alink = alinks[i]) != null; i++) {
+        if(alink.href.substr(0,11) == 'javascript:') alink.href = alink.href + ';changeClickEvent();' 
+    }
+    
+    //helper for getting elements by CSS style
+    function getElementsByClassName(className) {
+        var hasClassName = new RegExp("(?:^|\\s)" + className + "(?:$|\\s)");
+        var allElements = document.getElementsByTagName("*");
+        var results = [];
+    
+        var element;
+        for (var i = 0; (element = allElements[i]) != null; i++) {
+            var elementClass = element.className;
+            if (elementClass && elementClass.indexOf(className) != -1 && hasClassName.test(elementClass))
+                results.push(element);
+        }
+    
+        return results;
+    }
+    
+    </script> 
+
+</apex:page>

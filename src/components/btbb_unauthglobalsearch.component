@@ -1,0 +1,28 @@
+<apex:component id="globalsearchComponent" controller="UnauthGlobalSearchController">
+<apex:form >
+<div id="global-nav">
+    
+                    <div id="global-nav-inner">
+                                                
+                        <ul id="global-list">
+                        
+                            <li>&nbsp;</li>
+                        
+                        </ul>
+
+                        <div id="search">
+                            
+                            <div id="ctl00_header_pnlSearch" class="search">
+                                
+                                <apex:InputText styleClass="txt" title="Enter your search term(s)" onFocus="this.value=''" value="{!SearchText}"/>
+                                <apex:commandButton value="ctl00$header$ibSearch" title="Run search" styleClass="btn" action="{!SearchArticle}"/>
+                               
+                            </div>    
+                        
+                        </div><!-- /#search -->                    
+    
+                    </div><!-- /#global-nav-inner -->
+    
+                </div><!-- /#global-nav -->
+            </apex:form>
+</apex:component>

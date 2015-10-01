@@ -1,0 +1,636 @@
+<apex:page controller="publiccaseviewcontroller" cache="false" id="CaseView" standardStylesheets="false" showHeader="false" sidebar="false" >        
+
+<!-- <apex:composition template="btbb_publictemplate"> -->
+<apex:composition template="btbb_publictemplate">
+
+<apex:define name="topbar"><c:btbb_unauthglobalsearch /></apex:define>
+
+<apex:define name="nav"><c:btbb_unauth_nav /></apex:define>
+
+<apex:define name="js">
+    
+    <style type="text/css" title="currentStyle"> 
+        @import "{!URLFOR($Resource.BTBB_CaseView, 'media/css/btbb_caseactivity.css')}";
+        textarea {background-color:#FFFFFF;}
+        ol {margin-left: 40px;line-height: 10px;}
+        ul {margin-left: 40px;line-height: 10px;}
+        div.activityDetails {padding: 0px;margin: 15px;}
+        div.innerDetails {padding:10px;margin:0px;}
+        .btbbCommonButton {cursor:pointer;*cursor:pointer;}
+        #addCommentButton { margin-right: 3px; }
+        #addCommentButton:hover, #CloseCaseButton:hover, #ReopenButton:hover, #cancelComment:hover { text-decoration: none; }
+        #addCommentForm { display: none; clear: both; border: 2px solid #999; padding: 10px; background-color: #F9F9F9; }
+        #CloseCaseForm { display: none; clear: both; border: 2px solid #999; padding: 10px; background-color: #F9F9F9; }
+        #ReopenForm { display: none; clear: both; border: 2px solid #999; padding: 10px; background-color: #F9F9F9; }
+        #AcceptForm { display: none; clear: both; border: 2px solid #999; padding: 10px; background-color: #F9F9F9;}
+        #DeclineForm { display: none; clear: both; border: 2px solid #999; padding: 10px; background-color: #F9F9F9;}
+        #commentButtonContainer { position: relative; top: -20px; }
+        .cke_skin_sfdc .cke_contents { height: 100px !important; }
+        span.cke_skin_sfdc { border: 1px solid #bbb !important; background-color: #fff; }
+         #drilldown #content ol li {
+                list-style:inherit;
+                padding: 5px 0;
+             }
+    </style>
+    
+    <link rel="stylesheet" href="{!URLFOR($Resource.ModalBox, 'js/jquery.fancybox-1.3.4.css')}" media="screen" />
+    <script type="text/javascript" charset="utf-8" src="{!URLFOR($Resource.ModalBox, 'js/jquery.mousewheel-3.0.4.pack.js')}" />
+    <script type="text/javascript" charset="utf-8" src="{!URLFOR($Resource.ModalBox, 'js/jquery.fancybox-1.3.4.pack.js')}"/> 
+    <script type="text/javascript" charset="utf-8" src="{!URLFOR($Resource.BTBB_CaseView, 'media/js/jquery.dataTables.min.js')}" /> 
+    <script type="text/javascript" charset="utf-8" src="{!URLFOR($Resource.BTBB_CaseView, 'media/js/ColumnFilterWidgets.js')}" />
+    <!-- Added By Nikhil -->
+   <!-- <apex:includeScript value="{!URLFOR($Resource.ckeditor , 'ckeditor/ckeditor.js')}"/> -->
+     <apex:includeScript value="{!URLFOR($Resource.ckeditorNew , 'ckeditor/ckeditor.js')}"/>
+
+<script type="text/javascript" charset="utf-8">   
+        document.title = "Case Comment";
+        CKEDITOR.replaceAll({toolbar : 'MyToolbar'});
+        CKEDITOR.config.enterMode = CKEDITOR.ENTER_BR;
+        CKEDITOR.config.shiftEnterMode = CKEDITOR.ENTER_P;
+        function refrshpage(){refreshatt();}
+        function delAttach(x){ deleteatt(x);}
+        function solutionAcceptClick(elementid){
+         $('#DeclineForm').slideUp(340); 
+         $('#div'+elementid).html('');
+         $('#div'+elementid).html($("#Acceptcontainer").html());
+         $("#AcceptForm").slideDown(340);
+         /*   $.fancybox({
+                'overlayOpacity'    : '.8',
+                'transitionIn'      : 'elastic',
+                'transitionOut'     : 'elastic',
+                'autoDimensions'    : true,
+                'overlayColor'      : '#000000',
+                'href'              : '#AcceptForm',
+                'type'              : 'inline'
+                });*/
+            return false;   
+        }
+        
+        function solutionDeclineClick(elementid){
+        $("#AcceptForm").slideUp(340);
+        $('#div'+elementid).html('');
+         $('#div'+elementid).html($("#Declinecontainer").html());
+        $('#DeclineForm').slideDown(340); 
+         /*   $.fancybox({
+                'overlayOpacity'    : '.8',
+                'transitionIn'      : 'elastic',
+                'transitionOut'     : 'elastic',
+                'autoDimensions'    : true,
+                'overlayColor'      : '#000000',
+                'href'              : '#DeclineForm',
+                'type'              : 'inline'
+                });*/
+            return false;  
+        }
+        
+    
+        
+        
+$(document).ready(function() {
+    var tableContent = $('#casehistorymetatable').html();
+        $('#casehistorymetatable').html('');
+      $('#datatableset').html('<table cellpadding="0" cellspacing="0" border="0" class="display" id="casehistorytable" >'+tableContent+'</table>');
+     var anOpen = [];
+    
+       var oTable = $('#casehistorytable').dataTable({
+        "sDom": '<"clear">;Wfrtip',
+        "aaSorting": [[1, "desc"]],
+        /* - Callback for Redraw - */
+        "sPaginationType": "full_numbers",
+        "iDisplayLength": 10,
+        "bAutoWidth": false,
+        "aoColumnDefs": [
+            {"bSortable": false,"aTargets": [0, 2, 3]},
+            {"sWidth": "80%","aTargets": [0]},
+            {"sWidth": "20%","aTargets": [1]}
+            ],
+        "oColumnFilterWidgets": 
+            {"aiExclude": [0, 1, 3]}
+       });
+    
+    oTable.fnSetColumnVis(2, false);
+    oTable.fnSetColumnVis(3, false);
+
+    $('#casehistorytable tbody tr.caseRow').live('click',
+    function() {
+        var nTr = this;
+        var i = $.inArray(nTr, anOpen);
+
+        if (i === -1) {
+            var nDetailsRow = oTable.fnOpen(nTr, fnFormatDetails(oTable, nTr), 'details');
+            $(nDetailsRow).addClass("openRow");
+            $(this).children(":first").addClass("active").removeClass("hidden");
+            $('div.innerDetails', nDetailsRow).slideDown(200);
+            anOpen.push(nTr);
+        }
+        else {
+            $(this).children(":first").removeClass("active").addClass("hidden");
+            $('div.innerDetails', $(nTr).next()[0]).slideUp(200,
+            function() {
+                oTable.fnClose(nTr);
+                anOpen.splice(i, 1);
+            });
+        }
+    });
+
+
+    var container = $("#CaseInfoPanelContainer");
+    $("#triggerCaseInfo").click(function(event) {
+        event.preventDefault();
+
+        if (container.is(":visible")) {
+            container.slideUp(200);
+            $('#btbbCaseStatus').removeClass("expanded");
+            $('#triggerCaseInfo').removeClass("infoopen").addClass("infoclosed");
+        }
+        else {
+            $('#btbbCaseStatus').addClass("expanded");
+            $('#triggerCaseInfo').removeClass("infoclosed").addClass("infoopen");
+            container.slideDown(200);
+        }
+    }
+    );
+    
+    function form_init()
+    {
+    if($("#addCommentForm").css('display') != 'none')
+    $("#addCommentForm").slideUp(340);
+    if($("#CloseCaseForm").css('display') != 'none')
+    $("#CloseCaseForm").slideUp(340);
+    if($("#ReopenForm").css('display') != 'none')
+    $("#ReopenForm").slideUp(340);
+    }
+    
+    $("#CloseCaseButton").click(function() {
+    form_init();
+        $("#CloseCaseForm").slideDown(340);
+    });
+    
+     $("#cancelcloseCase").click(function() {
+        $("#CloseCaseForm").slideUp(340);
+    });
+    
+    $("#ReopenButton").click(function() {
+    form_init();
+        $("#ReopenForm").slideDown(340);
+    });
+    
+     $("#cancelReopenCase").click(function() {
+        $("#ReopenForm").slideUp(340);
+    });
+    
+    $("#addCommentButton").click(function() {
+    form_init();
+        $("#addCommentForm").slideDown(340,function()
+        {
+          $("#attachmentlink").focus();
+        });
+        
+    });
+    
+    $("#cancelComment").click(function() {
+        $("#addCommentForm").slideUp(340);
+    });
+    
+   
+    $("#descriptionHeading").click(function(event) {
+        $("#descriptionHeading").toggleClass("expandedIconDescription");
+        $("#descriptionPanel").toggle('fast');
+    });
+    $("#stepsHeading").click(function(event) {
+        $("#stepsHeading").toggleClass("expandedIconSteps");
+        $("#stepsPanel").toggle('fast');
+    });
+    $("#editAsset").fancybox({
+                'transitionIn'      : 'elastic',
+                'transitionOut'     : 'elastic',
+                'overlayOpacity'    : '.7',
+                'autoDimensions'    : true,
+                'overlayColor'      : '#000000'
+    });    
+   /* $("#CloseCaseButton").fancybox({
+                'transitionIn'      : 'elastic',
+                'transitionOut'     : 'elastic',
+                'overlayOpacity'    : '.7',
+                'autoDimensions'    : true,
+                'overlayColor'      : '#000000'
+            });   
+    $("#ReopenButton").fancybox({
+                'transitionIn'      : 'elastic',
+                'transitionOut'     : 'elastic',
+                'overlayOpacity'    : '.7',
+                'autoDimensions'    : true,
+                'overlayColor'      : '#000000'
+            });    */
+                                       
+        });
+        
+
+
+function fnFormatDetails(oTable, nTr) {
+            var aData = oTable.fnGetData(nTr);
+            if(aData != null) {
+                var sOut = '<div class="innerDetails">';
+                sOut += '<div class="activityDetails">' + aData[3] + '</div>';
+                sOut += '</div>';
+            }
+            return sOut;
+    }
+
+</script>
+
+</apex:define>
+<apex:define name="content">
+
+    <div class="caseBox_top">
+    <apex:outputlink value="{!$Page.btbb_caseprint}?id={!aCase.id}" type="image/png" target="_blank" title="Print Case Details" id="print" style="float:right">
+                            <apex:image id="PrintImage" value="{!URLFOR($Resource.BtBbStyles, '/includes/theme2011/img/icons/print.png')}"/>
+                        </apex:outputlink>       
+       <!--  <div class="caseTitle_top">Case #{!aCase.CaseNumber} - {!aCase.Subject}</div> -->
+       <div class="caseTitle_top">Case #{!aCase.CaseNumber} - {!LEFT(aCase.Subject, 75)}{!IF(LEN(aCase.Subject)>75,"...","")} </div> 
+        <span style="font-size:11px;font-weight:bold;color:#454545;">
+        Severity: {!aCase.Case_Severity__c}<br/>Date Opened:<apex:outputText value=" {0,date,EEE, MMM d, yyyy, HH:mm:ss z}"><apex:param value="{!DATETIMEVALUE(aCase.CreatedDate)}"/></apex:outputText>
+        </span>
+        
+    </div>
+    <div id="btbbCaseStatus">
+        <b>Status:</b> {!aCase.Customer_Portal_Status__c}<br/> 
+        <!-- <span style="display:{!if(aCase.Customer_Portal_Status__c='Closed - Pending Release','block','none')}"><b>Fixed in Version:</b>{!aCase.Fix_Version__c}<br/></span> -->
+        <!-- <b>Next Action:</b> {!aCase.Portal_Next_Action__c} -->
+    </div>
+    <div id="CaseInfoPanel">
+        
+        <div id="CaseInfoPanelContainer" style="display:none;">
+            
+                    <div style="width:35%;float:left;display:inline;">
+                        
+                        <apex:outputPanel rendered="{!endusercase}">
+                        
+                        <b>Case Details:</b><br />
+                        <!-- <b>Contact Name:</b> {!aCase.Contact.Name}<br /> -->
+                        
+                        <b><apex:outputLabel: value="Contact: " rendered="{!endusercase}"/></b>
+                        <apex:outputText value="{!aCase.End_User__r.Name}" rendered="{!endusercase}"/><br/>
+                        
+                        <b>Assigned To:</b> {!aCase.Owner.Name}<br />
+                        
+                        
+                        
+                        <b><apex:outputLabel: value="Product: " rendered="{!endusercase}"/></b>
+                        <apex:outputText value="{!aCase.End_User_Product__c}" rendered="{!endusercase}"/><br/>
+                        
+                        
+                        
+                        <b>Issue Topic: </b> {!aCase.Module_Name__c}<br />
+                        <b>Functional Area:</b> {!aCase.Functional_Area_Name__c}<br />
+                        <!-- <b>Category:</b> {!aCase.Category__r.Name}<br /> -->
+                        <b><apex:outputLabel: value="Category:" rendered="{!NOT(moodleroom)}"/></b>
+                        <apex:outputText value="{!aCase.Category__r.Name}"/><br/> 
+                        
+                        
+                        <b><apex:outputLabel: value="User Role: " rendered="{!endusercase}"/></b>
+                        <apex:outputText value="{!aCase.User_Role__c}" rendered="{!endusercase}"/><br/>
+                        
+                        <b><apex:outputLabel: value="Client OS: " rendered="{!endusercase}"/></b>
+                        <apex:outputText value="{!aCase.Client_OS__c}" rendered="{!endusercase}"/><br/>
+                        
+                        <b><apex:outputLabel: value="Client OS Version: " rendered="{!endusercase}"/></b>
+                        <apex:outputText value="{!aCase.Client_OS_Version__c}" rendered="{!endusercase}"/><br/>
+                        
+                        <b><apex:outputLabel: value="Browser: " rendered="{!endusercase}"/></b>
+                        <apex:outputText value="{!aCase.Browser__c}" rendered="{!endusercase}"/><br/> 
+                        
+                        <b><apex:outputLabel: value="Browser Version: " rendered="{!endusercase}"/></b>
+                        <apex:outputText value="{!aCase.Browser_Version__c}" rendered="{!endusercase}"/><br/>
+                        
+                        <b><apex:outputLabel: value="Java Version: " rendered="{!endusercase}"/></b>
+                        <apex:outputText value="{!aCase.Java_Version__c}" rendered="{!endusercase}"/><br/>
+                        
+                        
+                        
+                        <b><apex:outputLabel: value="CMS/LMS:" rendered="{!endusercase}"/></b>
+                        <apex:outputText value="{!aCase.CMS_LMS__c}" rendered="{!endusercase}"/><br/>
+                        
+                        <b><apex:outputLabel: value="CMS / LMS URL:" rendered="{!endusercase}"/></b>
+                         <apex:outputText value="{!aCase.CMS_LMS_URL__c}" rendered="{!endusercase}"/><br/>
+                        
+                        <b><apex:outputLabel: value="URL Accessed: " rendered="{!endusercase}"/></b>
+                        <apex:outputText value="{!aCase.URL_Access__c}"  rendered="{!endusercase}"/><br/>
+                        
+                        </apex:outputPanel>
+                        
+                        <apex:outputPanel rendered="{!NOT(endusercase)}">
+                        
+                        <b>Case Details:</b><br />
+                        <b>Contact Name:</b> {!aCase.Contact.Name}<br />
+                        <b>Assigned To:</b> {!aCase.Owner.Name}<br />
+                        <b>Issue Topic: </b> {!aCase.Module_Name__c}<br />
+                        <b>Functional Area:</b> {!aCase.Functional_Area_Name__c}<br />
+                        <!-- <b>Category:</b> {!aCase.Category__r.Name}<br /> -->
+                        <b><apex:outputLabel: value="Category:" rendered="{!NOT(moodleroom)}"/></b>
+                        <apex:outputText value="{!aCase.Category__r.Name}"/><br/> 
+                        
+                        
+                        
+                        <b><apex:outputLabel: value="Version for Case:" rendered="{!AND(NOT(moodleroom), NOT(endusercase))}"/> </b> {!aCase.Version_on_Case__c}<br />
+                        <!-- <b>Source Build for Case: </b> {!aCase.Source_Build_on_Case__c}<br/> -->
+                        <b><apex:outputLabel: value="Source Build for Case:" rendered="{!AND(NOT(moodleroom), NOT(endusercase))}"/></b>
+                        <apex:outputText value="{!aCase.Source_Build_on_Case__c}" rendered="{!NOT(moodleroom)}"/><br/> 
+                        <!-- <b>Premium Support: </b> <apex:outputField value="{!aCase.Invoke_Premium_Support__c}"/> <br/><br/> -->
+                        <b><apex:outputLabel: value="Premium Support:" rendered="{!AND(NOT(moodleroom), NOT(endusercase))}"/></b>
+                        <apex:outputField value="{!aCase.Invoke_Premium_Support__c}" rendered="{!AND(NOT(moodleroom), NOT(endusercase))}"/><br/> 
+                        <b><apex:outputLabel: value="Environment Information:" rendered="{!AND(NOT(moodleroom), NOT(endusercase))}"/></b><br/>
+                        <!-- <b>Nickname:</b> {!aCase.Asset.Nickname__c}<br/> -->
+                        <b><apex:outputLabel: value="Nickname:" rendered="{!AND(NOT(moodleroom), NOT(endusercase))}"/></b>
+                        <apex:outputText value="{!aCase.Asset.Nickname__c}" rendered="{!AND(NOT(moodleroom), NOT(endusercase))}"/><br/> 
+                        <b><apex:outputLabel: value="Version:" rendered="{!AND(NOT(moodleroom), NOT(endusercase))}"/></b> {!aCase.Asset.Version__c}<br/>
+                        <b><apex:outputLabel: value="Source Build:" rendered="{!AND(NOT(moodleroom), NOT(endusercase))}"/></b> {!aCase.Asset.Version_Build__c}<br/>
+                        <b><apex:outputLabel: value="URL:" rendered="{!AND(NOT(moodleroom), NOT(endusercase))}"/></b> {!aCase.Asset.Software_URL__c}<br/>
+                        <!-- <b><apex:outputLabel: value="Client OS: " rendered="{!AND(NOT(moodleroom), NOT(endusercase))}"/></b>
+                        <apex:outputText value="{!aCase.Client_OS__c}" rendered="{!AND(NOT(moodleroom), NOT(endusercase))}"/><br/> -->
+                        
+                        <!-- <b><apex:outputLabel: value="MR Case Type: " rendered="{!moodleroom}"/></b>
+                        <apex:outputText value="{!aCase.MR_Case_Type__c}"/><br/> --> 
+                        <!-- <b><apex:outputLabel: value="URL Accessed: " rendered="{!moodleroom}"/></b>
+                        <apex:outputText value="{!aCase.URL_Access__c}"/><br/> --> 
+                        <!-- <b>Application Server OS:</b> {!aCase.Asset.Application_Server_OS__c}<br/> -->
+                        <!-- <b>Database:</b> {!aCase.Asset.Database__c}<br/> -->
+                        <!-- <b>Database Server OS:</b> {!aCase.Asset.Database_Server_OS__c}<br/> -->                        
+                        <!-- <b>JDK Version:</b> {!aCase.Asset.JDK_Version__c}<br/> -->
+                        <b><apex:outputLabel: value="Application Server OS:" rendered="{!AND(NOT(moodleroom), NOT(endusercase))}"/></b>
+                        <apex:outputText value="{!aCase.Asset.Application_Server_OS__c}" rendered="{!NOT(endusercase)}"/><br/> 
+                        <b><apex:outputLabel: value="Database:" rendered="{!AND(NOT(moodleroom), NOT(endusercase))}"/></b>
+                        <apex:outputText value="{!aCase.Asset.Database__c}" rendered="{!AND(NOT(moodleroom), NOT(endusercase))}"/><br/> 
+                        <b><apex:outputLabel: value="Database Server OS:" rendered="{!AND(NOT(moodleroom), NOT(endusercase))}"/></b>
+                        <apex:outputText value="{!aCase.Asset.Database_Server_OS__c}" rendered="{!AND(NOT(moodleroom), NOT(endusercase))}"/><br/> 
+                        <b><apex:outputLabel: value="JDK Version:" rendered="{!AND(NOT(moodleroom), NOT(endusercase))}"/></b>    
+                        <apex:outputText value="{!aCase.Asset.JDK_Version__c}" rendered="{!AND(NOT(moodleroom), NOT(endusercase))}"/><br/>   
+                       
+                       </apex:outputPanel>
+                                      
+                        <apex:outputPanel rendered="{!(NOT(isCLB))}" >
+                        <apex:outputPanel rendered="{!IF(isManagedHosting == true || showeditassetlink == true, false, true)}" style="margin-top:7px;display:block;padding-top:5px;">
+                        <a id="editAsset" href="#editEnvironmentInformation">Edit Environment Information</a>
+                        </apex:outputPanel>
+                        </apex:outputPanel>
+                    </div>
+                    
+                    <div style="width:60%;float:right;display:inline;">
+                       
+                       <h3 id="descriptionHeading" class="expandingSectionHeaderDescription">Description</h3>
+                                <div style="border:0px" id="descriptionPanel" class="ui-icon-circle-arrow-e">
+                                    <p><apex:outputfield value="{!aCase.Description}"></apex:outputfield></p>
+                                </div>
+                       <br/>     
+                       <h3 id="stepsHeading" class="expandingSectionHeaderSteps">Steps to Repeat</h3>
+                                <div style="border:0px;" id="stepsPanel">
+                                    <p><apex:outputfield value="{!aCase.Steps_to_Replicate__c}"></apex:outputfield></p>
+                                </div>
+                                
+                    </div><!--/END #CaseInfoPanelContent -->
+            
+            <div class="cleaner">&nbsp;</div>
+        
+        </div><!--/END #CaseInfoPanelContainer -->
+        
+        <div id="triggerCaseInfo" class="infoclosed">Case Details</div><!--/END .triggerCaseInfo -->
+    
+    </div><!--/END #CaseInfoPanel -->
+    
+    <div class="cleaner">&nbsp;</div>
+    <div id="btbbCaseButtons" style="display:{!IF(NOT(collabendusercase) ,'block','none')}" >  
+        <span class="buttonContainer">         
+                <apex:form >                       
+                <a id="addCommentButton" href=""><input type="button" class="btbbCommonButton" style="{!IF(NOT(isMLAAdmin) && aCase.IsClosed = false, ' ', 'display:none;')};margin: 7px 0px 0px 0px;" value="Add Comment" /></a>
+                <apex:commandButton action="{!relevantArticles}" value="Relevant Articles" styleClass="btbbCommonButton"/>
+                <a id="CloseCaseButton" style="visibility:{!IF((!aCase.IsClosed && aCase.Customer_Portal_Status__c != 'Solution Suggested' && NOT(isMLAAdmin)), 'visible;', 'hidden;')}"  href=""><input class="btbbCommonButton" type="button" value="Close Case"/></a>
+                <a id="ReopenButton" style="{!IF((aCase.IsClosed && aCase.Customer_Portal_Status__c != 'Solution Suggested' && NOT(isMLAAdmin) && (NOW() - aCase.ClosedDate) < 60), '', 'display:none;')}" href=""><input class="btbbCommonButton" type="button" value="Reopen"/></a>
+                </apex:form>
+        </span>
+    </div>
+
+    <div>
+    <div id="addCommentForm">
+        <apex:form >
+            <apex:actionFunction name="refreshatt" reRender="attachsec"/>
+            <apex:actionFunction action="{!deleteatt1}" name="deleteatt" reRender="attachsec">
+                <apex:param name="attachid" value=""/>
+            </apex:actionFunction>
+            <apex:inputtextarea id="commentbox" value="{!aNote.Details__c}" styleClass="ckeditor" richText="false" rows="15" cols="140"  /><br/><br/>
+             <p /> 
+          -->
+            <apex:outputText value="Attachments:" styleClass="formlabel"/>&nbsp;&nbsp;<apex:outputLink style="float:right;" value="#" id="attachmentlink" onclick="window.open('/apex/btbb_fileupload?cid={!aCase.ID}','Add_Attachment','resizable=yes,status=no,menubar=no,location=yes,width=600,height=200,top=277,left=162,scrollbars=no'); return false">Add Attachment(s)</apex:outputLink><hr/><br/>
+            <apex:outputpanel id="attachsec">
+                <apex:repeat value="{!CaseNoteAttachments}" var="attachment">
+                    <apex:outputLink value="#" onclick="delAttach('{!attachment.ID}');"><apex:image value="{!URLFOR($Resource.SupportIcons, 'icons/16x16/delete.png')}" style="float:left;clear:none;"/></apex:outputLink><span style="color:#454545;font-weight:bold;">- {!attachment.File_Name__c}</span><br/><br/>
+                </apex:repeat>
+            </apex:outputpanel>
+           
+            <div id="commentButtonContainer">
+                <div id="commentbutton">
+                <apex:commandButton value="Submit Comment"  action="{!addNote}" id="addComment" styleClass="btbbCommonButton" style="float:right;" />
+                </div>
+                <a id="cancelComment" href="" style="margin-right: 3px; float: right;"><input type="button" class="btbbCommonButton" value="Cancel" /></a>
+            </div>
+        </apex:form>
+    </div>  
+    </div>
+    
+ <!-- Close Case Form -->
+   <div id="CloseCaseForm"> 
+        <div  style="padding:10px;background:#fff;">
+        <div style="margin-bottom:7px">
+             <apex:form >
+               <apex:outputText value="Close Case" styleClass="formtitle"/><br/><br/>
+               <apex:outputText value="Details:" styleClass="formlabel"/><br /><br />
+               <apex:inputTextarea value="{!closecomments}" rows="7" cols="70"/>
+               <apex:commandButton value="Submit" action="{!closecase}" id="closeCase" styleClass="btbbCommonButton" style="float:right;" />
+               <a id="cancelcloseCase" href="" style="margin-right: 3px; float: right;"><input type="button" class="btbbCommonButton" value="Cancel" /></a>
+             </apex:form>
+           </div>
+       </div>
+   </div>    
+<!-- End of Close Case --> 
+
+<!-- ReOpen Form -->
+   <div id="ReopenForm"> 
+        <div  style="padding:10px;background:#fff;">
+        <div style="margin-bottom:7px">
+             <apex:form id="formreopen">
+               <apex:outputText value="Reopen Case :" styleClass="formtitle"/><br/><br/>
+               <apex:outputText value="Reason for Reopen :" styleClass="formlabel"/><br /><br />
+               <apex:inputField value="{!aCase.Reason_for_Reopen__c}" required="true"/><br/><br/>
+               <apex:outputText value="Comments:" styleClass="formlabel"/><br /><br />
+               <apex:inputTextarea value="{!reopencomments}" rows="7" cols="70"/>
+               <apex:commandButton value="Reopen" action="{!reopen}" id="closeCase" styleClass="btbbCommonButton" style="float:right;"  rerender="formreopen"/>
+               <a id="cancelReopenCase" href="" style="margin-right: 3px; float: right;" onclick="$('#ReopenForm').slideUp(340);"><input type="button" class="btbbCommonButton" value="Cancel" /></a>
+             </apex:form>
+               </div>
+       </div>
+   </div>    
+<!-- End of ReOpen -->    
+<!--TABLE-->
+ <apex:form >
+    <apex:pageBlock id="ActivityTable">
+   
+      <div id="datatableset" style="display:{!IF(NOT(collabendusercase) ,'block','none')}" >       
+        </div>
+     <table  id="casehistorymetatable" style="diaplay:none">
+            <thead>
+                <tr>
+                    <th class="left" style="padding-left:25px;">Activity Details</th> <!-- [0] -->
+                    <th class="right">Created Date</th><!-- [1] -->
+                    <th>Type</th><!-- [2] **HIDDEN** -->
+                    <th style="border-right: 1px solid #93CE37;">Details</th> <!-- [3] **HIDDEN** -->
+                </tr>
+            </thead>
+
+            <tbody>
+                <apex:repeat value="{!CHIlist}" var="list">
+                    <script type="text/javascript">
+                        $(document).ready(function(){
+                        var str = $('#{!list.mainId}').text();
+                        str = str.replace(/&(lt|gt);/g, function (strMatch, p1){
+                            return (p1 == "lt")? "<" : ">";
+                        });
+                        var strTagStrippedText = str.replace(/<\/?[^>]+(>|$)/g, "");
+                         $('#{!list.mainId}').html(strTagStrippedText);
+                         });
+                    </script>
+                    <tr class="caseRow">
+                        <!-- Row [0] Visible (Subject) -->
+                        <td valign="center" style="padding-left: 20px; border-left: 1px solid #D0D0D0;" class="hidden">
+                            <apex:image id="aTypeIcon" value="{!list.itemType}" width="24px" height="22px" style="float:left;margin-right:10px;"/> <apex:outputText escape="false" value="{!list.Subject}" styleClass="activitySubject"/>
+                            <div id="{!list.mainId}" style="margin-top:3px;margin-left:10px;color:#787878;font-weight:bolder;display:inline;font-style:italic;"><apex:outputText escape="true" value="{!LEFT(list.Summary, 75)}{!IF(LEN(list.Summary)>75,"...","")}"/></div>
+                        </td>
+                        <!-- Row [1] Visible (createdDateFix) -->
+                        <td style="border-right: 1px solid #D0D0D0;padding-left:15px;" align="left" valign="center">
+                               <apex:outputText value="{!list.createDateFix}" />
+                        </td>
+                        <!-- Row[2] **HIDDEN** (itemTypeName) -->
+                        <td>
+                                <apex:outputText value="{!list.itemTypeName}"/>
+                        </td>
+                        <!-- Row [3] **HIDDEN** (Details) -->
+                        <td>
+                            <apex:outputText value="{!list.Details}" escape="false"/>
+                            <apex:outputPanel rendered="{!IF(list.itemTypeName == 'Solution' && (list.SolutionStatus == 'In Consideration' || list.SolutionStatus == 'In-Consideration'), true, false)}" style="float:right;margin-bottom:15px;">
+                                  <a id="solutionAccept"  href="" onclick="solutionAcceptClick('{!list.mainId}');"><input type="button" class="btbbCommonButton" style="margin:0px 10px 15px; 0px;" value="Accept" /></a>
+                                  <a id="solutionDecline"  href="" onclick="solutionDeclineClick('{!list.mainId}');"><input type="button" class="btbbCommonButton"  style="margin:0px 15px 15px 0px;" value="Decline" /></a>
+                            </apex:outputPanel>
+                           <div id="div{!list.mainId}" ></div>
+   
+                        </td>
+                    </tr>
+                </apex:repeat>
+            </tbody>
+        </table>  
+       
+    </apex:PageBlock>
+
+<!-- Hidden Div's for Modal Windows -->
+                       <!-- Accept Solution Form -->   
+                       <div id="Acceptcontainer" style="display:none">                        
+                            <div id="AcceptForm"> 
+                       <div  id="AcceptInnerform" style="padding:10px;background:#fff;">
+                    <div style="margin-bottom:7px">
+                    <apex:actionfunction name="solution_accepted" action="{!solutionaccepted}"></apex:actionfunction>
+                     <apex:outputText value="Accept Solution" styleClass="formtitle"/><br/><br/>
+                <apex:outputText value="Details:" styleClass="formlabel"/><br /><br />
+                <apex:inputTextarea value="{!acceptedcomments}" rows="7" cols="70"/>
+               <apex:commandButton value="Submit" action="{!solutionaccepted}" id="acceptCase" styleClass="btbbCommonButton" style="float:right;" />
+               <a id="cancelacceptform" href="" onclick="$('#AcceptForm').slideUp(340);" style="margin-right: 3px; float: right;"><input type="button" class="btbbCommonButton" value="Cancel" /></a>
+              </div> 
+            </div>
+            </div>  
+            </div>
+                 <!-- End of Accept Solution Form-->     
+                     <!-- Decline Solution Form -->
+                     <div id="Declinecontainer" style="display:none">   
+               <div id="DeclineForm" > 
+               <div id="DeclineInnerform" style="padding:10px;background:#fff;">
+                  <div style="margin-bottom:7px">
+               <apex:outputText value="Decline Solution" styleClass="formtitle"/><br/><br/>
+               <apex:outputText value="Details:" styleClass="formlabel"/><br /><br />
+               <apex:inputTextarea value="{!declinedcomments}" rows="7" cols="70"/>
+               <div style="position: relative; top: -5px;">
+              <apex:commandButton value="Submit" action="{!solutiondeclined}" id="declineCase" styleClass="btbbCommonButton" style="float:right;" />     
+               <a id="canceldeclineform" href="" onclick="$('#DeclineForm').slideUp(340);" style="margin-right: 3px; float: right;"><input type="button" class="btbbCommonButton" value="Cancel" /></a>
+               </div>
+               </div>
+                           </div>  
+            </div>
+      </div>
+<!-- End of Decline Solution Form-->         
+
+ </apex:form>  
+
+    
+
+
+
+
+                        <div style="display:none;">
+                        <div id="editEnvironmentInformation" style="padding:10px;background:#fff;width:400px;height:auto;">
+                                        <apex:form >
+                                                <table cellspacing="10" cellpadding="10">
+                                                    <tr style="margin-bottom:10px;padding-bottom:10px;">
+                                                        <b>You may update information about your Bb environment here. These changes will be reflected in the My Environments area of your Institution Profile.</b><br/><br/>
+                                                    </tr>
+                                                    <tr style="margin-bottom:10px;padding-bottom:10px;padding-top:10px;">
+                                                        <td style="text-align:right;padding-right:10px;">Nickname:</td>
+                                                        <td><apex:inputText value="{!nickName}" style="width:230px;"/></td>
+                                                    </tr>
+                                                    <tr style="margin-bottom:10px;padding-bottom:10px;">
+                                                        <td style="text-align:right;padding-right:10px;">Version:</td>
+                                                        <td><apex:selectList value="{!version}" styleClass="select" size="1">
+                                                        <apex:selectOptions value="{!versions}" id="versionList" />
+                                                        <apex:actionSupport event="onchange" reRender="sb"/>                                                         
+                                                        </apex:selectList></td>
+                                                    </tr>
+                                                    <tr>
+                                                        <td style="text-align:right;padding-right:10px;">Source Build:</td><!--disabled="{!ISNULL(version)}"-->
+                                                        <td><apex:selectList value="{!build}" size="1" id="sb" styleClass="select" >
+                                                        <apex:selectOptions value="{!sblist}" /></apex:selectList></td>
+                                                    </tr>
+                                                    <tr style="margin-bottom:10px;padding-bottom:10px;padding-top:10px;">
+                                                        <td style="text-align:right;padding-right:10px;">URL:</td>
+                                                        <td><apex:inputText value="{!URL1}" style="width:230px;"/></td>
+                                                    </tr>
+                                                    <tr>
+                                                        <td style="text-align:right;padding-right:10px;">Application Server OS:</td><!--disabled="{!ISNULL(version)}"-->
+                                                        <td><apex:selectList value="{!applicationServerOS}" size="1" styleClass="select" >
+                                                        <apex:selectOptions value="{!applServerOS}" /></apex:selectList></td>
+                                                    </tr>
+                                                    <tr>
+                                                        <td style="text-align:right;padding-right:10px;">Database:</td><!--disabled="{!ISNULL(version)}"-->
+                                                        <td><apex:selectList value="{!database}" size="1" styleClass="select" >
+                                                        <apex:selectOptions value="{!databaseList}" /></apex:selectList></td>
+                                                    </tr>
+                                                    <tr>
+                                                        <td style="text-align:right;padding-right:10px;">Database Server OS:</td>
+                                                        <td><apex:selectList value="{!databaseServerOS}" size="1" styleClass="select" >
+                                                        <apex:selectOptions value="{!DbServerOS}" /></apex:selectList></td>
+                                                    </tr>
+                                                    <tr>
+                                                        <td style="text-align:right;padding-right:10px;">JDK Version:</td><!--disabled="{!ISNULL(version)}"-->
+                                                        <td><apex:selectList value="{!jdkVersion}" size="1" styleClass="select" >
+                                                        <apex:selectOptions value="{!JDKVersionList}" /></apex:selectList></td>
+                                                    </tr>
+                                                    
+                                                </table>
+                                                <apex:outputPanel style="float:right;">
+                                                    <apex:actionFunction action="{!SaveAsset}" name="saveasset1" />
+                                                    <apex:inputHidden value="{!aCase.IsClosedByRelevantArticle__c}"/>
+                                                    <apex:commandButton value="Submit" action="{!SaveAsset}" styleClass="btbbCommonButton"/>
+                                                </apex:outputPanel>
+                                    </apex:form>
+                                    </div>
+                                    </div>
+<!-- End Hidden Div's for Modal Windows -->
+    
+</apex:define>
+
+</apex:composition>
+
+</apex:page>

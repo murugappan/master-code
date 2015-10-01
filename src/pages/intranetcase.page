@@ -1,0 +1,125 @@
+<apex:page Controller="intranetcase" cache="false" id="NewCase" standardStylesheets="false" showHeader="false" sidebar="false" contentType="text/html" >
+<apex:composition template="btbb_publictemplate">
+
+        <apex:define name="js">
+        <script type="text/javascript">
+        function changeEdit(){changeedit1();}
+        function changeVersion(x){
+            var val = document.getElementById(x).value;
+            changeversion1(val);}
+        function changemodule(x){
+            var val = document.getElementById(x).value;
+            changemodule1(val);}
+            
+            function closeWindow() {
+                 window.open('','_parent','');
+                   window.close();
+              }
+        </script>
+        </apex:define>
+        
+
+
+           
+        <apex:define name="content">     
+        
+<style type="text/css">
+.label { white-space:nowrap;
+ width: 150px; margin-left: 160px; font-weight: bold; line-height: 30px; font-size: 12px; color: #444;}
+.field { margin-left: 60px; line-height: 30px; clear:none; font-size: 12px; width: 300px; color: #343434;}
+.pagebuttons { float:right; margin-right: 50px; margin-top: 20px; margin-bottom: 20px;  }
+.pagebuttons input[type="submit"] {
+    background: url({!URLFOR($Resource.BtBbStyles,'/includes/images/button_bg.gif')}) repeat-x top left;
+    height: 24px;   
+    color: #FFF;
+    border: 1px solid #CCC;
+    font-weight: bold;
+    margin: 0 5px 0 0;
+}
+@-moz-document url-prefix() { .pagebuttons input[type="submit"] { padding-bottom: 4px; } }
+input[type="radio"] { position: relative; top: 3px; }
+
+.updateassettext {float:left; margin-left: 60px; margin-right: 5px; clear:none; color: #343434; border-top: 2px solid #F0B10B; border-right: 2px solid #F0B10B; border-left: 2px solid #F0B10B; padding: 8px 8px 8px 50px;
+        background: #FFFCF6 url({!URLFOR($Resource.BtBbStyles,'/includes/theme2011/img/icons/warning.png')}) no-repeat 8px 8px;
+        width:500px;
+        position: relative; left: -150px;
+}
+
+.updateassetlink {float:left; margin-left: 60px; margin-right: 5px; clear:none; color: #343434; border-bottom: 2px solid #F0B10B; border-right: 2px solid #F0B10B; border-left: 2px solid #F0B10B; padding: 8px 8px 8px 50px;
+        background: #FFFCF6;
+        width:500px;
+        position: relative; left: -150px;
+}
+</style>       
+    
+        <apex:form > 
+    
+        <apex:pageBlock title="Submit a New Support Case" id="thePageBlock">
+        
+             
+        
+        <apex:pageBlockSection id="errormessages">
+            <apex:pageMessages />
+                 <apex:outputPanel id="errorPanel" style="color:red;">
+                     <apex:pageMessage escape="false" summary="{!errorTitle}-{!errorMessage}" severity="{!errorSeverity}" rendered="{!errorShow}" />
+                 </apex:outputPanel>
+                 <apex:outputtext id="message" style="color:red" value="{!message}" rendered="{!NOT(ISNULL(message))}" />
+        </apex:pageBlockSection>
+        
+        
+        <apex:pageBlockSection id="corefields" columns="2" showHeader="false">
+        
+                       <apex:pageBlockSectionItem >
+                            <apex:outputLabel value="Name:" styleClass="label"/>
+                        </apex:pageBlockSectionItem>
+                             
+                         <apex:pageBlockSectionItem >
+                           <apex:inputText value="{!name}"  id="name" styleClass="field" />
+                         </apex:pageBlockSectionItem>
+                         
+                       <apex:pageBlockSectionItem >
+                            <apex:outputLabel value="Email:" styleClass="label"/>
+                        </apex:pageBlockSectionItem>
+                             
+                         <apex:pageBlockSectionItem >
+                           <apex:inputText value="{!email}"  id="email" styleClass="field" />
+                         </apex:pageBlockSectionItem>    
+    
+
+                     
+    
+                                           
+    </apex:pageBlockSection>
+     
+ <!--   <apex:pageBlockSection showHeader="false" collapsible="false" columns="2">-->
+                      
+            
+                   
+                     
+                    <span style="display:block;margin-top:25px;margin-left:160px;font-weight:bold;color:#343434;margin-bottom:8px;">Subject:</span>
+                    <apex:inputText value="{!Subject}"  style="padding: 3px 0 3px 0;display:block;width:100%;margin-left:160px;" maxlength="255" label=""/>
+                   
+                    <span style="display:block;margin-top:10px;margin-left:160px;font-weight:bold;color:#343434;margin-bottom:8px;">Description:</span>
+                    <apex:inputTextarea value="{!Description}" id="description" style="display:block;margin-left:160px;width:100%;height:150px;"  label=""/>
+
+                   
+
+                    
+                   
+     
+        <apex:outputPanel styleClass="pagebuttons" id="NewCaseFormButtons" layout="Block" >
+            <apex:commandButton value="Create New Case" action="{!Save}" styleClass="caseActionButton"/>
+      <!--      <apex:commandButton value="Close" onclick="closeWindow();" styleClass="caseActionButton"  /> -->
+        </apex:outputPanel>
+     
+  <!--   </apex:pageBlockSection> -->
+     
+</apex:pageBlock>    
+
+</apex:form><!--/END OF NEW CASE FORM/-->
+    
+</apex:define><!--/END CONTENT DEFINE/-->
+
+</apex:composition><!--/END COMPOSITION/-->
+
+</apex:page><!--/END OF NEW CASE PAGE/-->

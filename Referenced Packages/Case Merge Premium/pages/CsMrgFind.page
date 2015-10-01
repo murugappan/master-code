@@ -1,0 +1,168 @@
+<apex:page title="Merge Cases" controller="csmrgp.CsMrgFindCtrl" tabStyle="Case_Merge_Premium__tab">
+    <script type="text/javascript">
+        function clearInput(caller, iid) {
+            if(caller.checked) {
+                document.getElementById(iid).value='';
+                document.getElementById(iid).disabled=true;
+            } else {
+                document.getElementById(iid).disabled=false;
+            }
+        }
+    </script>
+    <apex:form >
+        <apex:pageBlock title="{!IF(SET_DUPE_CRIT, 'Configure Duplicate Case Criteria', 'Find Cases')}" id="searchFilter">
+
+            <apex:pageBlockButtons >
+                <apex:commandButton rendered="{!NOT(SET_DUPE_CRIT)}" value="Find" action="{!find}" rerender="opResults" status="findStatus"/>
+                <apex:commandButton rendered="{!NOT(SET_DUPE_CRIT)}" value="Reset" action="{!cancel}" rerender="searchFilter, searchResult"/>
+                <apex:commandButton rendered="{!SET_DUPE_CRIT}" value="Save Criteria" action="{!saveDupeCrit}" /> 
+            </apex:pageBlockButtons>
+        
+            <apex:pageMessages /> 
+            
+            <apex:pageBlockSection title="Directions" columns="1" collapsible="false" rendered="{!SET_DUPE_CRIT}">
+               <apex:outputPanel id="opDirections">
+                    <ul>
+                        <li>Enter the default criteria for finding duplicate cases. To always use a specific value, enter it in the Value field. To use the value from the case you are searching against, mark the Use Case Value check box.   Do not enter both a Value and check the Use Case Value box for the same Field.</li>
+                        <li>Cases must meet ALL specified default criteria to be found on the initial search.  Users may alter the search criteria after the initial search using the default criteria.  To supply additional default criteria, click the Add Row button.</li>
+<!--                        <li>To find cases that have virtually the same Subject,&nbsp;<apex:outputLink value="http://ic.force.com/cmpsubjconvprod" target="_blank">click here to install the package into production,</apex:outputLink> or&nbsp;<apex:outputLink value="http://ic.force.com/cmpsubjconvsb" target="_blank">here to install into a sandbox,</apex:outputLink>&nbsp;to create a formula field that trims common email prefixes (Re, Fwd, etc.) from the subject.</li> -->
+                        <li>To find cases that have virtually the same Subject, in the Field Picklist below, choose Subject Conversation, which is a formula field. The field trims common email prefixes (Re, Fwd, etc.) from the subject.</li>
+                        <li>Click the "Save Criteria" button when finished.</li>
+                    </ul>
+                </apex:outputPanel>
+            </apex:pageBlockSection>
+            
+            <apex:pageBlockSection title="Examples" columns="1" collapsible="false" rendered="{!SET_DUPE_CRIT}">
+               <apex:outputPanel id="opExamples">
+                   <ul>
+                        <li>To find cases associated with the same Account as the case where you clicked Find Duplicates, select "Account ID" for Field, "equals" for Operator, leave Value blank, and check Use Case Value.</li>
+                        <li>To find only cases that are not closed, select "Closed" for Field, "equals" for Operator, enter "false" for Value, and leave Use Case Value unchecked.</li>
+                   </ul>
+               </apex:outputPanel>
+            </apex:pageBlockSection>
+            
+            <apex:pageBlockSection columns="1">
+                <apex:outputpanel id="opCriteria">
+                    <table cellspacing="5">
+                        <tr>
+                            <td style="font-weight:bold">Field</td>
+                            <td style="font-weight:bold;" width="135px">Operator</td>
+                            <td style="font-weight:bold">Value</td>
+                            <td style="font-weight:bold"><apex:outputText rendered="{!SET_DUPE_CRIT}">Use Case Value</apex:outputText></td>
+                            <td width="200px"></td>
+                        </tr>
+                       
+                        
+                        <apex:repeat value="{!criteria}" var="cr" id="rptCriteria">
+                        
+                        <tr>
+                            <td>
+                                <apex:selectList value="{!cr.field}" size="1">
+                                    <apex:selectOptions value="{!fields}"/>
+                                    <apex:actionSupport event="onchange" action="{!cr.refreshOps}" rerender="opCriteria" status="refStat" />
+                                </apex:selectList>
+                            </td>
+                            <td width="135px">
+                                <apex:outputPanel id="opOprs">
+                                    <apex:actionStatus id="refStat">
+                                        <apex:facet name="start">
+                                            <apex:outputtext value="(loading operators...)"/> 
+                                        </apex:facet>
+                                        <apex:facet name="stop">
+                                            <apex:selectList value="{!cr.operator}" size="1">
+                                                <apex:selectOptions value="{!cr.opers}"/>
+                                            </apex:selectList>
+                                        </apex:facet>
+                                    </apex:actionStatus>
+                                </apex:outputPanel>
+                            </td>
+                            <td><apex:inputText value="{!cr.inputValue}" id="itValue" /></td>
+                            <td><apex:inputCheckbox value="{!cr.useCaseValue}" id="ckUseCase" rendered="{!SET_DUPE_CRIT}" onClick="clearInput(this, '{!$Component.itValue}');" /></td>
+                            <td><apex:outputText value="AND" rendered="false"/></td>
+                        </tr>
+                        </apex:repeat>
+                        <tr>
+                            <td>
+                            <apex:commandbutton value="Add Row" action="{!Add}" rerender="opCriteria" />
+                            </td>
+                            <td width="135px">&nbsp;</td>
+                            <td></td>
+                            <td></td>
+                        </tr>
+                    </table>
+  
+                </apex:outputpanel>
+            
+            </apex:pageBlockSection>
+
+            <apex:pageBlockSection rendered="{!NOT(SET_DUPE_CRIT)}">
+                <apex:outputPanel >
+                    <apex:outputLabel value="Number of results " style="font-weight:normal"/>
+                    <apex:selectList value="{!recordLimit}" size="1">
+                        <apex:selectOption itemLabel="10" itemValue="10"/>
+                        <apex:selectOption itemLabel="25" itemValue="25"/>
+                        <apex:selectOption itemLabel="50" itemValue="50"/>
+                        <apex:selectOption itemLabel="100" itemValue="100"/>
+                        <apex:selectOption itemLabel="200" itemValue="200"/>
+                    </apex:selectList>
+                </apex:outputPanel>
+            </apex:pageBlockSection>
+            
+        </apex:pageBlock>
+    </apex:form>
+    
+    <apex:form >
+        <apex:outputpanel id="opResults">
+            <apex:pageBlock title="Matching Cases" id="searchResult"  rendered="{!showResults}">
+            
+                <apex:pageBlockButtons >
+                    <apex:commandButton value="Next" action="{!next}" rendered="{!results.size != 0}"/>
+                </apex:pageBlockButtons>
+            
+                <apex:pageBlockSection columns="1">
+                    <apex:outputPanel >
+                        <apex:actionStatus id="findStatus">
+                            <apex:facet name="start">
+                                <apex:outputtext value="(searching...)"/> 
+                            </apex:facet>
+                            <apex:facet name="stop">
+                                <apex:outputText value="displaying {!results.size} of {!trueCount} record{!IF(results.size == 1,'','s')} found" style="color:red"/>
+                            </apex:facet>
+                        </apex:actionStatus>
+                    </apex:outputPanel>
+                    <apex:outputText value="Please select the records that you wish to merge into one." rendered="{!results.size != 0}"/>
+                </apex:pageBlockSection>
+    
+    
+                <apex:pageBlockSection columns="1">
+                                        
+                    <apex:pageBlockTable styleClass="tableClass" value="{!results}" var="r" rendered="{!results.size != 0}" width="100%">
+                        <apex:column >
+                            <apex:facet name="header">Select</apex:facet>
+                            <apex:inputCheckbox value="{!r.selected}" />
+                        </apex:column>
+                        
+                        <apex:repeat value="{!$ObjectType.Case.FieldSets.csmrgp__Case_Merge_Find}" var="f">
+                        
+                            <apex:column rendered="{!f != 'CaseNumber'}">
+                                <apex:facet name="header">
+                                    <Apex:outputText value="{!$ObjectType.Case.Fields[f].label}" />
+                                </apex:facet>
+                                <apex:outputField value="{!r.cs[f]}"/>
+                            </apex:column>
+                            
+                            <apex:column rendered="{!f = 'CaseNumber'}"> 
+                                <apex:facet name="header">Case Number</apex:facet>
+                                <apex:outputLink value="/{!r.cs.id}">{!r.cs.casenumber}</apex:outputLink>
+                            </apex:column>
+                            
+                        </apex:repeat>
+                        
+                    </apex:pageBlockTable>
+                    
+                </apex:pageBlockSection>
+                  
+            </apex:pageBlock>
+        </apex:outputpanel>
+    </apex:form>
+</apex:page>

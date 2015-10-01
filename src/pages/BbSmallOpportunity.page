@@ -1,0 +1,110 @@
+<apex:page standardController="Opportunity" extensions="BbSmallOpportunityExt" sidebar="false" showHeader="false">
+    <apex:tabPanel switchType="client" selectedTab="intgr" id="theTabPanel">
+        <apex:tab label="[LaL]Testing" name="test" id="test" rendered="{!$User.LastName == 'Lal'}"/>
+        
+            
+        <apex:tab label="Details" name="detail" id="detail">
+            <apex:pageBlock >
+				<apex:pageBlockSection columns="1">
+             		<apex:outputField value="{!opportunity.name}"/>
+             		<apex:outputField value="{!opportunity.account.name}"/>
+                </apex:pageBlockSection>   
+                <apex:pageBlockSection columns="2">
+            		<apex:outputText label="Owner" value="{!opportunity.Owner.Name}"/>
+            		<apex:outputField value="{!opportunity.Type}"/>
+           		</apex:pageBlockSection>      
+        	</apex:pageBlock>
+        </apex:tab>
+        <apex:tab label="Forecast Information" name="fore" id="fore" rendered="false"/>
+        <apex:tab label="Opportunity Value" name="val" id="val"  rendered="false"/>
+        <apex:tab label="Contract Attibutes" name="attr" id="attr"  rendered="false"/>
+        <apex:tab label="Contract Information" name="cinfo" id="cinfo"  rendered="false"/>
+        <apex:tab label="Financial Information" name="finfo" id="finfo"  rendered="false"/>
+        
+        
+        <apex:tab label="Assets"  name="ra" id="ra">
+            
+        	<apex:pageBlock title="This Opp's Assets">
+	        		<apex:pageBlockTable var="a" value="{!opprAssets}">
+					
+    	                <apex:column headerValue="Asset Name">
+                            <apex:outputLink value="/{!a.Id}" target="_new" >{!a.Name}</apex:outputLink>
+                		</apex:column>
+			    		<apex:column value="{!a.Product2.ProductCode}"/>
+                        <apex:column value="{!a.Status}"/>
+                        <apex:column value="{!a.CPQ_Contract_Start_Date__c}"/> 
+                        <apex:column value="{!a.CPQ_Contract_End_Date__c}"/> 
+                        <apex:column headerValue="Previous Opp">
+                            <apex:outputLink value="/{!a.CPQ_Previous_Opportunity_ID__c}" target="_new" >{!a.CPQ_Previous_Opportunity_ID__c}</apex:outputLink>
+                		</apex:column>
+                        <apex:column headerValue="Current Opp">
+                            <apex:outputLink value="/{!a.CPQ_Current_Opportunity_ID__c}" target="_new" >{!a.CPQ_Current_Opportunity_ID__c}</apex:outputLink>
+                		</apex:column>
+                        <apex:column value="{!a.CPQ_LineIdentifier__c}"/>
+                        <apex:column value="{!a.CreatedDate}"/> 
+                      
+                        
+					</apex:pageBlockTable>
+                
+          	</apex:pageBlock>            
+            
+        	<apex:pageBlock title="All {!opportunity.account.name}  Assets">
+	        		<apex:pageBlockTable var="a" value="{!relatedAssets}">
+					
+    	                <apex:column headerValue="Asset Name">
+                            <apex:outputLink value="/{!a.Id}" target="_new" >{!a.Name}</apex:outputLink>
+                		</apex:column>
+			    		<apex:column value="{!a.Product2.ProductCode}"/>
+                        <apex:column value="{!a.Status}"/>
+                        <apex:column value="{!a.CPQ_Contract_Start_Date__c}"/> 
+                        <apex:column value="{!a.CPQ_Contract_End_Date__c}"/> 
+                        <apex:column headerValue="Previous Opp">
+                            <apex:outputLink value="/{!a.CPQ_Previous_Opportunity_ID__c}" target="_new" >{!a.CPQ_Previous_Opportunity_ID__c}</apex:outputLink>
+                		</apex:column>
+                        <apex:column headerValue="Current Opp">
+                            <apex:outputLink value="/{!a.CPQ_Current_Opportunity_ID__c}" target="_new" >{!a.CPQ_Current_Opportunity_ID__c}</apex:outputLink>
+                		</apex:column>
+                        <apex:column value="{!a.CPQ_LineIdentifier__c}"/>
+                        <apex:column value="{!a.CreatedDate}"/> 
+                      
+                        
+					</apex:pageBlockTable>
+                
+          	</apex:pageBlock>
+        </apex:tab>
+        
+        
+        
+        <apex:tab label="Integration" name="intgr" id="intgr">
+        	<apex:pageBlock >
+            	<apex:form id="intgrForm">  
+					<apex:pageBlockSection columns="1">
+             			<apex:inputField value="{!opportunity.Psft_Integration_Stage__c}"/>
+             			<apex:inputTextArea cols="80" rows="1" value="{!opportunity.Psft_Integration_Message__c}"/>
+                        <apex:inputField value="{!opportunity.PS_Opp_ID__c}" 	>&nbsp;
+                        	<apex:commandLink value="Save" action="{!doSave}" rerender="theTabPanel" target="_top" />
+                        </apex:inputField>
+                     </apex:pageBlockSection>
+                     <apex:pageBlockSection columns="3">   
+                        
+            			<apex:OutputField style="text-align: left;" value="{!opportunity.PFIN_Intgr_Business_Unit__c}"/>
+            			<apex:OutputField style="text-align: left;" value="{!opportunity.PFIN_Intgr_Ca_Status__c}"/>
+            			<apex:OutputField style="text-align: left;" value="{!opportunity.PFIN_Intgr_Condition__c}"/>
+            			<apex:OutputField style="text-align: left;" value="{!opportunity.PFIN_Intgr_Contract_Num__c}"/>
+            			<apex:OutputField style="text-align: left;" value="{!opportunity.PFIN_Intgr_Contract_Type__c}"/>
+            			<apex:OutputField style="text-align: left;" value="{!opportunity.PFIN_Intgr_Message_Sent__c}"/>
+            			<apex:OutputField style="text-align: left;" value="{!opportunity.PFIN_Intgr_Payment_Terms__c}"/>
+            			<apex:OutputField style="text-align: left;" value="{!opportunity.PFIN_Intgr_Record_Type__c}"/>
+            			<apex:OutputField style="text-align: left;" value="{!opportunity.PFIN_Intgr_Status_Msg__c}"/>
+            			<apex:OutputField style="text-align: left;" value="{!opportunity.PFIN_Intgr_Sync_Time__c}"/>
+            			<apex:OutputField style="text-align: left;" value="{!opportunity.PFIN_Contract_Number__c}"/>
+                                             
+            		</apex:pageBlockSection>      
+                </apex:form>    
+        	</apex:pageBlock>
+        
+        </apex:tab>
+    
+    
+    </apex:tabPanel>
+</apex:page>

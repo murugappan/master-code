@@ -1,0 +1,61 @@
+<apex:component id="globalsearchComponent" controller="GlobalSearchController">
+<apex:form >
+<div id="global-nav">
+    
+                    <div id="global-nav-inner">
+                        
+                        <ul id="home-list">
+                           
+                           <!-- <li><a href="http://ssodev.blackboard.com:8080/nidp/app/logout" title="Logout">Logout</a></li>-->
+                                <li><apex:commandLink action="{!logout}" value="Logout" title="Logout" id="logoutLink"/></li>
+                            <li><a>My Account</a>
+                                <ul>
+                                    <li><a href="{!$Page.btbb_myprofile}?id={!MyId}">My Profile</a></li>
+                                    <li><a href="{!$Page.btbb_myinstitution}?cid={!UserContactId}">My Institution</a></li>
+                                    <li class="last"><a href="{!$Page.btbb_mysubscriptions}">My Subscriptions</a></li>
+                                </ul>
+                            </li>  
+                                                      
+           <li style="{!IF(isTransactUser == true && isXythosOnly == true, '', 'display: none;')}"><a href="{!$Page.btbb_home}" class="productSelect">Bb Learn</a>
+                <!--  <ul><li style="{!IF(isTransactUser = True, '', 'display: none;')}" class="last"><a style="text-transform: none;" href="https://behind.blackboard.com/s/sysadmincs">Bb TRANSACT</a></li></ul>    -->  
+                      <ul><li style="{!IF(isTransactUser = True, '', 'display: none;')}" class="last"><a style="text-transform: none;" href="{!$PAGE.canvaspage}">Bb TRANSACT</a></li></ul>   --> 
+           </li>
+           
+          <!--  <li style="{!IF(isTransactUser == false && isXythosOnly == true, '', 'display: none;')}"><a href="{!$Page.btbb_home}">Bb Learn</a></li> -->  <!--// muru c  -->                          
+          
+          <li style="{!IF(isTransactUser == true && isXythosOnly == false, '', 'display: none;')}"><a href="{!$Page.btbb_home}" class="productSelect">Bb Learn</a>
+                <!--  <ul><li style="{!IF(isTransactUser == True, '', 'display: none;')}" class="last"><a style="text-transform: none;" href="https://behind.blackboard.com/s/sysadmincs">Bb TRANSACT</a></li></ul>   -->    
+                    <ul><li style="{!IF(isTransactUser == True, '', 'display: none;')}" class="last"><a style="text-transform: none;"  href="{!$PAGE.canvaspage}">Bb TRANSACT</a></li></ul>   -->
+          </li> 
+           
+          <!-- <li style="{!IF(isTransactUser == false && isXythosOnly == false, '', 'display: none;')}"><a href="{!$Page.btbb_home}">Bb Learn</a></li> -->  <!--// muru c  -->                          
+                        
+                        </ul>
+                        
+                        <ul id="global-list">
+                        
+                            <li>&nbsp;</li>
+                        
+                        </ul>
+<!-- #search -->
+
+                        <div id="search">
+                            
+                            <div id="ctl00_header_pnlSearch" class="search">
+                                
+                                <!--Added by Shirish 0n 8th June for global search -->
+                                <apex:InputText styleClass="txt" title="Enter your search term(s)" onFocus="this.value=''" value="{!SearchText}"/>
+                                <apex:commandButton value="ctl00$header$ibSearch" title="Run search" styleClass="btn" action="{!SearchArticle}" accesskey="enter"/>
+                                <!--End of Added by Shirish 0n 8th June for global search -->
+                                <!--<input type="text" title="Enter your search term(s)" class="txt" onFocus="this.value=''" value="Search" />
+                                <input type="submit" name="ctl00$header$ibSearch" value=""  title="Run search" class="btn" />-->
+                            
+                            </div>    
+                        
+                        </div><!-- /#search -->                    
+    
+                    </div><!-- /#global-nav-inner -->
+    
+                </div><!-- /#global-nav -->
+            </apex:form>
+</apex:component>

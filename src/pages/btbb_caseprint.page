@@ -1,0 +1,86 @@
+<apex:page readonly="true" controller="caseViewController" cache="false" id="CaseView" showHeader="false" sidebar="false"  standardStylesheets="false" > 
+<head>
+<style type="text/css" title="currentStyle"> 
+        @import "{!URLFOR($Resource.BTBB_CaseView, 'media/css/btbb_caseactivity.css')}";       
+    </style>
+</head>
+
+<div class="caseBox_top">
+        <div class="caseTitle_top">Case #{!aCase.CaseNumber} - {!aCase.Subject}</div>
+        <span style="font-size:12px;font-weight:bold;color:#454545;">
+        Severity: {!aCase.Case_Severity__c}<br/>Date Opened:<apex:outputText value=" {0,date,EEE, MMM d, yyyy, HH:mm:ss z}"><apex:param value="{!DATEVALUE(aCase.CreatedDate)}"/></apex:outputText>
+        </span>
+    </div>
+    <div  id="btbbCaseStatus" style="border:2px solid;height:100%">
+        <b>Status:</b> {!aCase.Customer_Portal_Status__c}<br/> 
+        <b>Next Action:</b> {!aCase.Portal_Next_Action__c}<br/><br/>
+                  
+                        <b>Case Details:</b><br />
+                        <table><tr><td>
+                        <b>Contact Name:</b> {!aCase.Contact.Name}<br/>
+                        <b>Assigned To:</b> {!aCase.Owner.Name}<br/>
+                        <b>Issue Topic: </b> {!aCase.Module_Name__c}<br />
+                        <b>Functional Area:</b> {!aCase.Functional_Area_Name__c}<br />
+                        <b>Category:</b> {!aCase.Category__r.Name}<br />
+                        <b>Version for Case: </b> {!aCase.Version_on_Case__c}<br />
+                        <b>Source Build for Case: </b> {!aCase.Source_Build_on_Case__c}<br/>
+                        <b>Premium Support: </b> <apex:outputField value="{!aCase.Invoke_Premium_Support__c}"/> <br/><br/>
+                        <b>Environment Information:</b><br/>
+                        <b>Nickname:</b> {!aCase.Asset.Nickname__c}<br/>
+                        <b>Version:</b> {!aCase.Asset.Version__c}<br/>
+                        <b>Source Build:</b> {!aCase.Asset.Version_Build__c}<br/>
+                        <b>URL:</b> {!aCase.Asset.Software_URL__c}<br/>
+                        <b>Application Server OS:</b> {!aCase.Asset.Application_Server_OS__c}<br/>
+                        <b>Database:</b> {!aCase.Asset.Database__c}<br/>
+                        <b>Database Server OS:</b> {!aCase.Asset.Database_Server_OS__c}<br/>                        
+                        <b>JDK Version:</b> {!aCase.Asset.JDK_Version__c}<br/>                        
+                        <apex:outputPanel rendered="{!IF(isManagedHosting == true, false, true)}" style="margin-top:7px;display:block;padding-top:5px;">
+                        
+                        </apex:outputPanel>
+                
+                    </td>
+                    <td style="width:60%;float:right;">
+                       
+                       <b id="descriptionHeading" >Description</b>
+                                <div style="border:0px" id="descriptionPanel" >
+                                    <p><apex:outputfield value="{!aCase.Description}"></apex:outputfield></p>
+                                </div>
+                       <br/>     
+                       <b id="stepsHeading" >Steps to Repeat</b>
+                                <div style="border:0px;" >
+                                    <p><apex:outputfield value="{!aCase.Steps_to_Replicate__c}"></apex:outputfield></p>
+                                </div>
+                                
+                                
+                    </td></tr>
+                    </table> 
+    </div>
+  <br/><br/> 
+<table cellpadding="0" cellspacing="0" border="0"   style="width:100%;border:1px solid gray;font-size:13px">
+            <thead>
+                <tr>
+                    <th  style="padding-left:25px;margin-top:3px">Activity Details</th> 
+                    <th  >Created Date</th>                           
+                </tr>
+            </thead>
+
+            <tbody>
+                <apex:repeat value="{!CHIlist}" var="list">                  
+                    <tr  style="background-color:LightGrey;">                      
+                        <td valign="center" style="padding-left: 20px;" class="hidden">
+                            <apex:image id="aTypeIcon" value="{!list.itemType}" width="24px" height="22px" style="float:left;margin-right:10px;"/> <apex:outputText escape="false" value="{!list.Subject}" styleClass="activitySubject"/>
+                            <div id="{!list.mainId}" style="color:#787878;font-weight:bolder;display:inline;font-style:italic;"><apex:outputText escape="true" value="{!LEFT(list.Summary, 75)}{!IF(LEN(list.Summary)>75,"...","")}"/></div>
+                        </td>                      
+                         
+                        <td style="padding-left:15px;" align="left" valign="center">
+                               <apex:outputText value="{!list.createDateFix}" />
+                        </td>                        
+                    </tr>
+                   <tr style="background-color:white;"><td>
+                            <apex:outputText value="{!list.Details}" escape="false"/><br/>                            
+                        </td></tr> 
+                </apex:repeat>
+            </tbody>
+        </table>   
+   
+</apex:page>

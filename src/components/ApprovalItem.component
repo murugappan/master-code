@@ -1,0 +1,6 @@
+<apex:component controller="ApprovalItemController" access="global">
+    <apex:attribute assignTo="{!RecordId }" name="objId" description="ID" type="ID" />
+        <apex:outputText value="{!stepname}" rendered="{!stepname!=null}"/>
+    <apex:attribute assignTo="{!relatedRecordId }" name="stepId" description="ID" type="ID" />
+        <apex:outputLink value="{!urlStr}" rendered="{!urlstr!=null}">Click Here</Apex:outputLink>
+</apex:component>

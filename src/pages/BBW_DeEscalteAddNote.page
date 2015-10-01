@@ -1,0 +1,60 @@
+<apex:page standardController="Case" extensions="BBW_DeEscalteAddNote" sidebar="false"  showHeader="false">
+
+<script> 
+
+    function closeWindow() {
+        //opener.location.reload();
+        window.close();
+    }
+
+</script>
+    <apex:form >
+        <apex:pageBlock >
+            <apex:sectionHeader title="Case" subtitle="De-Escalate"/>
+        </apex:pageBlock>
+        <apex:outputPanel id="errorPanel">
+        <apex:pageMessage strength="2" title="{!errorTitle}" summary="{!errorMessage}" severity="{!errorSeverity}" rendered="{!errorShow}" />
+    </apex:outputPanel>  
+        <apex:pageblock >
+        <apex:pageBlockButtons >
+            <apex:commandButton action="{!DeEscalateInfo}" value="De-Escalate" status="processingStatus"/>            
+            <apex:commandbutton value="Cancel" onclick="javascript:window.parent.close()"></apex:commandbutton>
+        </apex:pageBlockButtons>
+        <apex:messages id="error"/>
+       
+         <apex:actionStatus id="processingStatus" startText="(In Process...)"  /> 
+        <table>
+            <tr>
+                <td>
+                    <apex:outputLabel value="Subject"/>
+                </td>
+                <td>
+                    <apex:inputText id="UserSubject" value="{!SubjectValue}"/>
+                </td>
+            </tr>
+            <tr>
+                <td>
+                    <apex:outputLabel value="User Comment"/>
+                </td>
+                <td>
+                    <apex:inputTextarea id="UserComment" value="{!UserComment}" rows="4" style="width:400px" />
+                </td>
+            </tr>
+            <tr>
+                
+                
+            </tr>
+        </table>
+      <apex:inputHidden value="{!closeWin}" id="closeWinAdmin" /> 
+        </apex:pageblock>
+        
+    </apex:form>
+   <script language='javascript'>      
+        var closeWinVal = document.getElementById('j_id0:j_id2:j_id19:closeWinAdmin');
+        
+    if(closeWinVal.value=="true")    {
+       parent.window.opener.location.reload();
+       window.parent.close();
+    }
+    </script> 
+</apex:page>

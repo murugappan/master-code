@@ -1,0 +1,348 @@
+<apex:page standardController="Account" extensions="AssignQueuestoAccount">
+<head>
+<style>
+    .colon{
+    margin-top:5px;
+    margin-left:5px
+    } 
+    .picklist{ 
+    margin-top:5px;
+    margin-left:5px
+    }
+    .buttonclass{
+    margin-top:5px;
+    margin-left:5px
+    }
+</style>
+</head>
+    <apex:form >
+       <apex:pageBlock tabStyle="Account" title="Assign Account Queue" id="pageblock">
+              <apex:outputPanel > 
+                   <apex:actionStatus id="processing" StartText="Processing..." StopText=""> 
+                   </apex:actionStatus>
+              </apex:outputPanel> <br/>  
+              
+            <table>
+             
+             <apex:outputPanel id="learn" layout="none">
+                
+                  <apex:outputPanel rendered="{!learnassignuser}" layout="none">
+                  <tr><td><b>Select Learn Queue </b></td><td><span class="colon"><b>:</b></span></td>
+                          <td><apex:selectList style="width:250px" styleclass="picklist" rendered="{!learnassignuser}" id="learnq" value="{!learnq}" size="1" multiselect="false" >
+                              <apex:selectOptions value="{!LearnList}">
+                              </apex:selectOptions>
+                          </apex:selectList>&nbsp;&nbsp;</td>
+                          <td><apex:commandButton status="processing" rendered="{!learnassignuser}" value="Select User" reRender="pageblock" action="{!learnselectuser}" styleclass="buttonclass"/>
+                          </td></tr>                     
+                  </apex:outputPanel>           
+            
+                  <apex:outputPanel rendered="{!learnassignqueue}" layout="none">
+                        <tr><td> <b>Select Learn User</b></td><td><span class="colon"><b>:</b></span></td>  
+                             <td><apex:selectList style="width:250px" styleclass="picklist" rendered="{!learnassignqueue}" id="learnu" value="{!learnq}" size="1" multiselect="false">
+                              <apex:selectOptions value="{!Users}">
+                              </apex:selectOptions>
+                          </apex:selectList>&nbsp;&nbsp;</td>
+                          <td><apex:commandButton status="processing" rendered="{!learnassignqueue}" value="Select Queue" reRender="pageblock" action="{!learnselectqueue}" styleclass="buttonclass"/>
+                           </td></tr>
+                  </apex:outputPanel>
+              </apex:outputPanel>
+
+            <!--Learn SAAS-->
+
+            <apex:outputPanel id="learnsaas" layout="none">
+                
+                  <apex:outputPanel rendered="{!learnsaasassignuser}" layout="none">
+                  <tr><td><b>Select Learn SaaS Queue </b></td><td><span class="colon"><b>:</b></span></td>
+                          <td><apex:selectList style="width:250px" styleclass="picklist" rendered="{!learnsaasassignuser}" id="learnsaasq" value="{!learnsaasq}" size="1" multiselect="false" >
+                              <apex:selectOptions value="{!learnsaaslist}">
+                              </apex:selectOptions>
+                          </apex:selectList>&nbsp;&nbsp;</td>
+                          <td><apex:commandButton status="processing" rendered="{!learnsaasassignuser}" value="Select User" reRender="pageblock" action="{!learnsaasselectuser}" styleclass="buttonclass"/>
+                          </td></tr>                     
+                  </apex:outputPanel>           
+            
+                  <apex:outputPanel rendered="{!learnsaasassignqueue}" layout="none">
+                        <tr><td> <b>Select Learn SaaS User</b></td><td><span class="colon"><b>:</b></span></td>  
+                             <td><apex:selectList style="width:250px" styleclass="picklist" rendered="{!learnsaasassignqueue}" id="learnsaasu" value="{!learnsaasq}" size="1" multiselect="false">
+                              <apex:selectOptions value="{!Users}">
+                              </apex:selectOptions>
+                          </apex:selectList>&nbsp;&nbsp;</td>
+                          <td><apex:commandButton status="processing" rendered="{!learnsaasassignqueue}" value="Select Queue" reRender="pageblock" action="{!learnsaasselectqueue}" styleclass="buttonclass"/>
+                           </td></tr>
+                  </apex:outputPanel>
+              </apex:outputPanel>
+             
+              <!--END of Learn SAAS-->
+               <apex:outputPanel id="learnhosted" layout="none">
+                  
+                  <apex:outputPanel rendered="{!learnhostedassignuser}" layout="none">
+                     <tr><td><b> Select Learn Hosted Queue </b></td><td><span class="colon"><b>:</b></span></td>
+                      <td><apex:selectList style="width:250px"  styleclass="picklist" id="learnhq" value="{!learnhq}" size="1" multiselect="false">
+                          <apex:selectOptions value="{!LearnHList}">
+                          </apex:selectOptions>
+                      </apex:selectList>&nbsp;&nbsp;</td>
+                      <td><apex:commandButton status="processing" value="Select User" reRender="pageblock" action="{!learnhostedselectuser}" styleclass="buttonclass"/>&nbsp;&nbsp;
+                     </td></tr>
+                  </apex:outputPanel>           
+            
+                  <apex:outputPanel rendered="{!learnhostedassignqueue}" layout="none">
+                     <tr><td> <b>Select Learn Hosted User</b></td><td><span class="colon"><b>:</b></span></td>
+                      <td><apex:selectList style="width:250px"  styleclass="picklist" id="learnhu" value="{!learnhq}" size="1" multiselect="false">
+                          <apex:selectOptions value="{!Users}">
+                          </apex:selectOptions>
+                      </apex:selectList>&nbsp;&nbsp;</td>
+                      <td><apex:commandButton status="processing" value="Select Queue" reRender="pageblock" action="{!learnhostedselectqueue}" styleclass="buttonclass"/>
+                       </td></tr>
+                 </apex:outputPanel>
+              </apex:outputPanel>
+              
+              
+               <apex:outputPanel id="learncomplex" layout="none">
+                  
+                  <apex:outputPanel rendered="{!learncompassignuser}" layout="none">
+                    <tr><td>  <b>Select Learn Complex Queue</b></td><td><span class="colon"><b>:</b></span></td>
+                      <td><apex:selectList style="width:250px"  styleclass="picklist" id="learncq" value="{!learncq}" size="1" multiselect="false">
+                          <apex:selectOptions value="{!LearnCList}">
+                          </apex:selectOptions>
+                      </apex:selectList>&nbsp;&nbsp;</td>
+                      <td><apex:commandButton status="processing" value="Select User" reRender="pageblock" action="{!learncompselectuser}" styleclass="buttonclass"/>&nbsp;&nbsp;
+                    </td></tr>
+                  </apex:outputPanel>           
+            
+                  <apex:outputPanel rendered="{!learncompassignqueue}" layout="none">
+                    <tr><td>  <b>Select Learn Complex User</b></td><td><span class="colon"><b>:</b></span></td>
+                      <td><apex:selectList style="width:250px" styleclass="picklist" id="learncu" value="{!learncq}" size="1" multiselect="false">
+                          <apex:selectOptions value="{!Users}">
+                          </apex:selectOptions>
+                      </apex:selectList>&nbsp;&nbsp;</td>
+                      <td><apex:commandButton status="processing" value="Select Queue" reRender="pageblock" action="{!learncompselectqueue}" styleclass="buttonclass"/>
+                       </td></tr>
+                 </apex:outputPanel>
+              </apex:outputPanel>
+              
+              <apex:outputPanel id="cevista" layout="none">
+                  
+                  <apex:outputPanel rendered="{!cevistassignuser}" layout="none">
+                     <tr><td> <b> Select CE/Vista Queue  </b></td><td><span class="colon"><b>:</b></span></td>
+                      <td><apex:selectList style="width:250px" styleclass="picklist" id="cevq" value="{!cevistaq}" size="1" multiselect="false">
+                          <apex:selectOptions value="{!CEList}">
+                          </apex:selectOptions>
+                      </apex:selectList>&nbsp;&nbsp;</td>
+                      <td><apex:commandButton status="processing" value="Select User" reRender="pageblock" action="{!cevistaselectuser}" styleclass="buttonclass"/>&nbsp;&nbsp;
+                         </td></tr> 
+                  </apex:outputPanel>           
+            
+                  <apex:outputPanel rendered="{!cevistassignqueue}" layout="none">
+                     <tr><td> <b>Select CE/Vista User</b></td><td><span class="colon"><b>:</b></span></td>
+                      <td><apex:selectList style="width:250px" styleclass="picklist" id="cevu" value="{!cevistaq}" size="1" multiselect="false">
+                          <apex:selectOptions value="{!Users}">
+                          </apex:selectOptions>
+                      </apex:selectList>&nbsp;&nbsp;</td>
+                      <td><apex:commandButton status="processing" value="Select Queue" reRender="pageblock" action="{!cevistaselectqueue}" styleclass="buttonclass"/>
+                       </td></tr>
+                 </apex:outputPanel>
+              </apex:outputPanel>
+              
+              
+              <apex:outputPanel id="cevistah" layout="none">
+                  
+                  <apex:outputPanel rendered="{!cevistahostedassignuser}" layout="none">
+                     <tr><td> <b>Select CE/Vista Hosted Queue</b></td><td><span class="colon"><b>:</b></span></td>
+                      <td><apex:selectList style="width:250px" styleclass="picklist" id="cevhq" value="{!cevistah}" size="1" multiselect="false">
+                          <apex:selectOptions value="{!CEHList}">
+                          </apex:selectOptions>
+                      </apex:selectList>&nbsp;&nbsp;</td>
+                      <td><apex:commandButton status="processing" value="Select User" reRender="pageblock" action="{!cevistahostedselectuser}" styleclass="buttonclass"/>&nbsp;&nbsp;
+                       </td></tr>
+                  </apex:outputPanel>           
+            
+                  <apex:outputPanel rendered="{!cevistahostedassignqueue}" layout="none">
+                     <tr><td> <b>Select CE/Vista Hosted User</b></td><td><span class="colon"><b>:</b></span></td>
+                      <td><apex:selectList style="width:250px" styleclass="picklist" id="cevhu" value="{!cevistah}" size="1" multiselect="false">
+                          <apex:selectOptions value="{!Users}">
+                          </apex:selectOptions>
+                      </apex:selectList>&nbsp;&nbsp;</td>
+                      <td><apex:commandButton status="processing" value="Select Queue" reRender="pageblock" action="{!cevistahostedselectqueue}" styleclass="buttonclass"/>
+                       </td></tr>
+                 </apex:outputPanel>
+              </apex:outputPanel>
+              
+              <apex:outputPanel id="Analytics" layout="none">
+                  <apex:outputPanel rendered="{!Analyticsassignuser}" layout="none">
+                     <tr><td> <b>Select Analytics Queue</b></td><td><span class="colon"><b>:</b></span></td>
+                      <td><apex:selectList style="width:250px" styleclass="picklist" id="Analyticsq" value="{!Analyticsq}" size="1" multiselect="false">
+                          <apex:selectOptions value="{!AnalyticsList}">
+                          </apex:selectOptions>
+                      </apex:selectList>&nbsp;&nbsp;</td>
+                      <td><apex:commandButton status="processing" rendered="{!Analyticsassignuser}" value="Select User" reRender="pageblock" action="{!Analyticsselectuser}" styleclass="buttonclass" />&nbsp;&nbsp;
+                         </td></tr> 
+                  </apex:outputPanel>
+                  
+                  <apex:outputPanel rendered="{!Analyticsassignqueue}" layout="none">
+                     <tr><td> <b>Select Analytics User</b></td><td><span class="colon"><b>:</b></span></td>
+                      <td><apex:selectList style="width:250px" styleclass="picklist" id="Analyticsu" value="{!Analyticsq}" size="1" multiselect="false">
+                          <apex:selectOptions value="{!Users}">
+                          </apex:selectOptions>
+                      </apex:selectList>&nbsp;&nbsp;</td>
+                      <td><apex:commandButton status="processing" value="Select Queue" reRender="pageblock" action="{!Analyticsselectqueue }" styleclass="buttonclass"/>
+                       </td></tr>
+                  </apex:outputPanel>
+              </apex:outputPanel>
+
+
+
+              <apex:outputPanel id="angel" layout="none">
+    
+                   <apex:outputPanel rendered="{!angelassignuser}" layout="none">
+                     <tr><td>  <b>Select ANGEL Queue</b></td><td><span class="colon"><b>:</b></span></td>
+                       <td><apex:selectList style="width:250px" styleclass="picklist" id="angelq" value="{!angelq}" size="1" multiselect="false">
+                       <apex:selectOptions value="{!AngelList}">
+                           </apex:selectOptions>
+                           </apex:selectList>&nbsp;&nbsp;</td>
+                       <td><apex:commandButton status="processing" rendered="{!angelassignuser}" value="Select User" reRender="pageblock" action="{!angelselectuser}" styleclass="buttonclass"/>&nbsp;&nbsp;
+                     </td></tr> 
+                   </apex:outputPanel>
+                   
+                   <apex:outputPanel rendered="{!angelassignqueue}" layout="none">
+                     <tr><td>  <b>Select ANGEL User</b></td><td><span class="colon"><b>:</b></span></td>
+                       <td><apex:selectList style="width:250px"  styleclass="picklist" id="angelu" value="{!angelq}" size="1" multiselect="false">
+                       <apex:selectOptions value="{!Users}">
+                           </apex:selectOptions>
+                           </apex:selectList>&nbsp;&nbsp;</td>
+                       <td><apex:commandButton status="processing" rendered="{!angelassignqueue}" value="Select Queue" reRender="pageblock" action="{!angelselectqueue}" styleclass="buttonclass"/>
+                        </td></tr>
+                    </apex:outputPanel>
+              </apex:outputPanel>
+              <!-- Collab Code -->
+              
+              <apex:outputPanel id="collab" layout="none">
+                  <apex:outputPanel rendered="{!collabassignuser}" layout="none">
+                     <tr><td> <b>Select Collaborate Queue</b></td><td><span class="colon"><b>:</b></span></td>
+                      <td><apex:selectList style="width:250px" styleclass="picklist" id="collabq" value="{!collabq}" size="1" multiselect="false">
+                          <apex:selectOptions value="{!CollabList}">
+                          </apex:selectOptions>
+                      </apex:selectList>&nbsp;&nbsp;</td>
+                      <td><apex:commandButton status="processing" rendered="{!collabassignuser}" value="Select User" reRender="pageblock" action="{!collabselectuser}" styleclass="buttonclass" />&nbsp;&nbsp;
+                     </td></tr> 
+                  </apex:outputPanel>
+                  
+                  <apex:outputPanel rendered="{!collabassignqueue}" layout="none">
+                     <tr><td> <b>Select Collaborate User</b></td><td><span class="colon"><b>:</b></span></td>
+                      <td><apex:selectList style="width:250px"  styleclass="picklist" id="collabu" value="{!collabq}" size="1" multiselect="false">
+                          <apex:selectOptions value="{!Users}">
+                          </apex:selectOptions>
+                      </apex:selectList>&nbsp;&nbsp;</td>
+                      <td><apex:commandButton status="processing" value="Select Queue" reRender="pageblock" action="{!collabselectqueue }" styleclass="buttonclass"/>
+                       </td></tr>
+                  </apex:outputPanel>
+              </apex:outputPanel> 
+              <!-- End Collab Code -->                     
+              
+               <apex:outputPanel id="Moodlerooms" layout="none">
+                  <apex:outputPanel rendered="{!Moodleroomsassignuser}" layout="none">
+                     <tr><td> <b>Select Moodlerooms Queue</b></td><td><span class="colon"><b>:</b></span></td>
+                      <td><apex:selectList style="width:250px" styleclass="picklist" id="Moodleroomsq" value="{!Moodleroomsq}" size="1" multiselect="false">
+                          <apex:selectOptions value="{!MoodleroomsList}">
+                          </apex:selectOptions>
+                      </apex:selectList>&nbsp;&nbsp;</td>
+                      <td><apex:commandButton status="processing" rendered="{!Moodleroomsassignuser}" value="Select User" reRender="pageblock" action="{!Moodleroomsselectuser}" styleclass="buttonclass" />&nbsp;&nbsp;
+                         </td></tr> 
+                  </apex:outputPanel>
+                  
+                  <apex:outputPanel rendered="{!Moodleroomsassignqueue}" layout="none">
+                     <tr><td> <b>Select Moodlerooms User</b></td><td><span class="colon"><b>:</b></span></td>
+                      <td><apex:selectList style="width:250px" styleclass="picklist" id="Moodleroomsu" value="{!Moodleroomsq}" size="1" multiselect="false">
+                          <apex:selectOptions value="{!Users}">
+                          </apex:selectOptions>
+                      </apex:selectList>&nbsp;&nbsp;</td>
+                      <td><apex:commandButton status="processing" value="Select Queue" reRender="pageblock" action="{!Moodleroomsselectqueue }" styleclass="buttonclass"/>
+                       </td></tr>
+                  </apex:outputPanel>
+              </apex:outputPanel>    
+              <apex:outputPanel id="trans" layout="none">
+               
+                  <apex:outputPanel rendered="{!transassignuser}" layout="none">
+                     <tr><td> <b>Select Transact Queue</b></td><td><span class="colon"><b>:</b></span></td>
+                      <td><apex:selectList style="width:250px" styleclass="picklist" rendered="{!transassignuser}" id="transq" value="{!transq}" size="1" multiselect="false">
+                          <apex:selectOptions value="{!TransList}">
+                          </apex:selectOptions>
+                      </apex:selectList>&nbsp;&nbsp;</td>
+                      <td><apex:commandButton status="processing" rendered="{!transassignuser}" value="Select User" reRender="pageblock" action="{!transselectuser}" styleclass="buttonclass"/>&nbsp;&nbsp;
+                     </td></tr>
+                  </apex:outputPanel>              
+              
+                  <apex:outputPanel rendered="{!transassignqueue}" layout="none">
+                     <tr><td> <b>Select Transact User</b></td><td><span class="colon"><b>:</b></span></td>
+                      <td><apex:selectList style="width:250px" styleclass="picklist" rendered="{!transassignqueue}" id="transu" value="{!transq}" size="1" multiselect="false">
+                          <apex:selectOptions value="{!Users}">
+                          </apex:selectOptions>
+                      </apex:selectList>&nbsp;&nbsp;</td>
+                      <td><apex:commandButton status="processing" rendered="{!transassignqueue}" value="Select Queue" reRender="pageblock" action="{!transselectqueue}" styleclass="buttonclass"/> 
+                       </td></tr>   
+                  </apex:outputPanel> 
+              
+              </apex:outputPanel>
+              <!--xpLor   -->
+              <apex:outputPanel id="xpLor" layout="none">
+               
+                  <apex:outputPanel rendered="{!xplorassignuser}" layout="none">
+                     <tr><td> <b>Select xpLor Queue</b></td><td><span class="colon"><b>:</b></span></td>
+                      <td><apex:selectList style="width:250px" styleclass="picklist" rendered="{!xplorassignuser}" id="xpLorq" value="{!xpLorq}" size="1" multiselect="false">
+                          <apex:selectOptions value="{!xpLorList}">
+                          </apex:selectOptions>
+                      </apex:selectList>&nbsp;&nbsp;</td>
+                      <td><apex:commandButton status="processing" rendered="{!xplorassignuser}" value="Select User" reRender="pageblock" action="{!xpLorselectuser}" styleclass="buttonclass"/>&nbsp;&nbsp;
+                     </td></tr>
+                  </apex:outputPanel>              
+              
+                  <apex:outputPanel rendered="{!xplorassignqueue}" layout="none">
+                     <tr><td> <b>Select xpLor User</b></td><td><span class="colon"><b>:</b></span></td>
+                      <td><apex:selectList style="width:250px" styleclass="picklist" rendered="{!xplorassignqueue}" id="xpLoru" value="{!xpLorq}" size="1" multiselect="false">
+                          <apex:selectOptions value="{!Users}">
+                          </apex:selectOptions>
+                      </apex:selectList>&nbsp;&nbsp;</td>
+                      <td><apex:commandButton status="processing" rendered="{!xplorassignqueue}" value="Select Queue" reRender="pageblock" action="{!xpLorselectqueue}" styleclass="buttonclass"/> 
+                       </td></tr>   
+                  </apex:outputPanel> 
+              
+              </apex:outputPanel>
+              <!--xpLor End-->
+              <apex:outputPanel id="xythos" layout="none">
+                  <apex:outputPanel rendered="{!xythosassignuser}" layout="none">
+                     <tr><td> <b>Select Xythos Queue</b></td><td><span class="colon"><b>:</b></span></td>
+                      <td><apex:selectList style="width:250px" styleclass="picklist" id="xythosq" value="{!xythosq}" size="1" multiselect="false">
+                          <apex:selectOptions value="{!XythosList}">
+                          </apex:selectOptions>
+                      </apex:selectList>&nbsp;&nbsp;</td>
+                      <td><apex:commandButton status="processing" rendered="{!xythosassignuser}" value="Select User" reRender="pageblock" action="{!xythoselectuser}" styleclass="buttonclass"/>&nbsp;&nbsp;
+                         </td></tr>
+                  </apex:outputPanel>
+                  
+                  <apex:outputPanel rendered="{!xythosassignqueue}" layout="none">
+                     <tr><td> <b>Select Xythos User</b></td><td><span class="colon"><b>:</b></span></td>
+                      <td><apex:selectList style="width:250px" styleclass="picklist" id="xythosu" value="{!xythosq}" size="1" multiselect="false">
+                          <apex:selectOptions value="{!Users}">
+                          </apex:selectOptions>
+                      </apex:selectList>&nbsp;&nbsp;</td>
+                      <td><apex:commandButton status="processing" value="Select Queue" reRender="pageblock" action="{!xythoselectqueue }" styleclass="buttonclass"/>
+                       </td></tr>
+                  </apex:outputPanel>
+              </apex:outputPanel>
+                            
+              <apex:outputPanel layout="none">
+                     <tr><td> <b>Select Complex Hosting </b></td><td><span class="colon"><b>:</b></span></td>
+                     <td> <apex:inputCheckbox value="{!complexhosting}" styleclass="picklist"/>
+                      &nbsp;&nbsp;</td>  
+                      </tr>                       
+                  </apex:outputPanel> 
+                  
+              </table>
+              <br/><br/><br/>
+
+           
+            &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; &nbsp; &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;  &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<apex:commandButton value="Assign" action="{!assigntoAccount}"/>
+<apex:commandButton value="Cancel" action="{!Cancel}" />
+
+      </apex:pageBlock>
+   </apex:form>   
+</apex:page>

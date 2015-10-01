@@ -1,0 +1,569 @@
+<apex:page standardController="Case" extensions="createCase" id="AssetOnCase" label="AssetOnCase" cache="true"  >
+<apex:includeScript value="/support/console/22.0/integration.js"/>
+<script>
+
+var i=0;
+    function removeerromsg(inti){
+var errorId=document.getElementsByTagName('div');
+//errorId[123].className="hidden";
+//errorId[130].className="hidden";
+for(var i=0;i<errorId.length;i++){
+if(errorId[i].className=='errorMsg')
+{
+errorId[i].className="hidden";
+break;
+}
+if(errorId[i].className=='message errorM3')
+{
+errorId[i].className="hidden";
+
+}
+methodOneInJavascript();
+
+}
+
+}
+
+function CloseCurrentTab() {
+//First find the ID of the current tab to close it
+sforce.console.getEnclosingTabId(closeSubtab);
+}
+var closeSubtab = function closeSubtab(result) {
+
+var tabId = result.id;
+sforce.console.closeTab(tabId);
+};
+
+
+function OpenPrimaryCaseTab(caseid) {
+
+//Open a new primary tab with the salesforce.com home page in it
+sforce.console.openPrimaryTab(null, '/'+caseid+'?isdtp=vw', true,
+'', openSuccess, 'Case');
+}
+var openSuccess = function openSuccess(result) {
+//Report whether opening the new tab was successful
+
+};
+
+function CloseAndRedirect(caseid){    
+                var loc = String(parent.location.href); 
+                if (sforce.console.isInConsole()) {
+               OpenPrimaryCaseTab(caseid);
+                CloseCurrentTab();                                 
+                } 
+              else {
+              window.location.href = '/'+caseid;
+              
+              }
+               }
+</script>
+
+<script>
+    var isClicked = false;
+    function checkDoubleSubmit(obj){
+                if (isClicked) {
+                    return false;
+                }else {
+                    isClicked = true;
+                    obj.className = 'btnDisabled';//only shows the button as disabled.
+                    return true;
+                }
+     }
+
+
+</script>
+
+<apex:outputpanel id="JSpanel" rendered="{!JSpanel}">
+<script>
+CloseAndRedirect('{!cas.id}');    //TP 2914
+</script>
+</apex:outputpanel>
+<apex:form prependid="false">
+<apex:pageBlock title="Create a New Support Case" mode="edit" id="thePageBlock">
+
+                 <!-- <apex:actionstatus id="status">
+                  <apex:facet name="start">
+                <div class="waitingSearchDiv" id="el_loading" style="background-color: #fbfbfb;
+                       height: 100%;opacity:0.65;filter:Alpha(opacity=65);width:100%;"> 
+                    <div class="waitingHolder" style="top: 150px; width: 100px;">
+                        <img class="waitingImage" src="/img/loading.gif" title="Please Wait..." />
+                        <span class="waitingDescription">Loading...</span>
+                    </div>
+               </div>
+                 </apex:facet>
+               </apex:actionstatus> -->
+                
+
+    <apex:pageBlockButtons >
+        <!-- <apex:commandButton value="Create New Case" action="{!Save}" timeout="900" status="status"/> -->
+        <apex:commandButton value="Create New Case" action="{!Save}" onclick="return checkDoubleSubmit(this)"  />
+        <apex:commandButton value="Create and Grab Case" action="{!saveandgrab}" onclick="return checkDoubleSubmit(this)"/>
+        <apex:commandButton value="Cancel" action="{!Cancel}" /> 
+       
+    </apex:pageBlockButtons>
+    <apex:pageMessages />
+     <apex:outputPanel id="errorPanel">
+        <apex:pageMessage strength="2" title="{!errorTitle}" summary="{!errorMessage}" severity="{!errorSeverity}" rendered="{!errorShow}" />
+    </apex:outputPanel>  
+    <apex:actionFunction name="methodOneInJavascript"  status="assetStatus"/>
+    <apex:pageBlockSection title="Account and Contact Information" columns="2">        
+        <apex:pageBlockSectionItem id="accountpageBlockSectionItem">
+        <apex:outputLabel value="Account:"></apex:outputLabel>
+        <apex:outputPanel >           
+              <apex:image url="{!$Resource.redbar1}"/>
+            <apex:inputfield onchange="removeerromsg(i+1)" value="{!case.accountid}" id="account">
+            <!--<apex:actionSupport event="onchange" rerender="asset, contact" status="assetStatus" />-->
+            </apex:inputfield>
+            </apex:outputPanel>
+                    </apex:pageBlockSectionItem>
+        
+        <apex:pageBlockSectionItem >
+            <apex:actionStatus startText=" Retreiving Account Information" stopText=" " id="assetStatus"/>
+        </apex:pageBlockSectionItem>
+        
+        <apex:pageblockSectionItem id="contactsection">
+            <apex:outputLabel value="Contact:" for="contact"/>
+            <apex:outputPanel id="contactpanel">           
+              <apex:image url="{!$Resource.redbar1}"/>
+
+                           <apex:selectList value="{!contact}" size="1" id="contactpick"  disabled="{!ISNULL(case.accountid)}">
+                    <apex:selectOptions value="{!contacts}"/>                    
+                </apex:selectList>           
+                </apex:outputPanel>
+               
+        </apex:pageblockSectionItem>   
+        <apex:pageblockSectionItem >
+        <apex:outputpanel >
+       <div style="display:{!if(OR(shownextcontacts,showPreviousContacts),'block','none')}">
+                 Click below link to view more contacts. <apex:commandlink action="{!previouscontacts}"  style="display:{!if(showPreviousContacts,'block','none')}">&lt;&lt;Previous</apex:commandlink><apex:commandlink action="{!nextcontacts}" style="display:{!if(showNextContacts,'block','none')}" >Next>></apex:commandlink>
+                 </div> 
+         </apex:outputpanel>        
+        </apex:pageblockSectionItem>              
+       <apex:pageblockSectionItem >
+       <apex:outputpanel >   
+       <apex:outputLabel value="Cc" />(Max 5 emails):
+       </apex:outputpanel> 
+       <apex:outputpanel >
+       <apex:inputtext value="{!ccemail}" size="50" />(Emails to be separated by ;)
+       </apex:outputpanel>
+       </apex:pageblocksectionItem>
+        
+        </apex:pageBlockSection>
+        
+            
+        
+         
+    <apex:pageBlockSection title="Installed Product Information" columns="2">
+
+<!-- ASSET//Core License Picklist -->        
+        <apex:pageblockSectionItem >
+            <apex:outputLabel value="Installed Product:" for="asset" />
+            <apex:outputPanel >           
+              <apex:image url="{!$Resource.redbar1}"/>
+                <apex:selectList value="{!asset}" size="1" id="asset" disabled="{!ISNULL(case.accountid)}" >
+                    <apex:selectOptions value="{!assets}"/>
+                    <apex:actionSupport event="onchange" action="{!InstanceDisplay}" rerender="thePageBlock,InsOL,InsIF,module, version, errorPanel, sourcebuild" status="clStatus"/>
+                </apex:selectList>
+                </apex:outputPanel>
+        </apex:pageblockSectionItem>
+        
+        <!-- AJAX RERENDER STATUS FOR ONCHANGE OF ASSET -->
+        <apex:pageBlockSectionItem >
+            <apex:actionStatus startText=" Fetching Asset Information" stopText=" " id="clStatus"/>
+        </apex:pageBlockSectionItem>
+    
+         
+         <apex:pageBlockSectionItem >
+          <apex:outputLabel id="theId" value="Hot Notes:" />
+          <apex:outputtext id="theId1" value="{!hotnote}" style="padding:1px; width: 50%" />
+         </apex:pageBlockSectionItem> 
+         <apex:pageBlockSectionItem >
+         </apex:pageblocksectionitem>
+         
+       <apex:pageBlockSectionItem rendered="{!temp_flag}">
+            <apex:outputLabel value="Instance:" id="InsOL" rendered="{!temp_flag}"  />
+            <apex:inputField value="{!Case.Instance__c}" id="InsIF" rendered="{!temp_flag}"  style="margin-left:10px" />
+        </apex:pageBlockSectionItem>
+         <apex:pageBlockSectionItem rendered="{!temp_flag}" />
+         
+        
+        <apex:pageblockSectionItem rendered="{!NOT(moodleroom) && NOT(collab) && NOT(isxplor)}">
+         <!--   <apex:outputLabel value="Version On Case:" for="version" rendered="{!NOT(moodleroom)&&NOT(collab)&&NOT(isAnalytics)}" />--> 
+            <apex:outputLabel value="{!IF(isAnalytics,'ERP Platform','Version On Case')}" for="version"/>
+            <!--<apex:outputPanel >-->           
+                              <apex:selectList value="{!version}" size="1" id="version" disabled="{!ISNULL(asset)}" style="margin-left:10px" rendered="{!NOT(moodleroom)&&NOT(collab)}"  >
+                    <apex:selectOptions value="{!versions}" rendered="{!NOT(moodleroom)&&NOT(collab)}"  />
+                    <apex:actionSupport action="{!clearsb}" event="onchange" rerender="sourcebuild" status="sbstatus"/>
+                </apex:selectList>
+                <!--</apex:outputPanel>-->
+        </apex:pageblockSectionItem>
+
+        <apex:pageBlockSectionItem rendered="{!NOT(moodleroom)&&NOT(collab) && NOT(isxplor)}" >
+            <apex:actionStatus startText=" Finding Source Build..." stopText=" " id="sbstatus"/>
+        </apex:pageBlockSectionItem>
+        
+    <apex:pageblockSectionItem rendered="{!NOT(moodleroom)&&NOT(collab) && NOT(isxplor)}" >
+<!--     <apex:outputLabel value="Source Build On Case:" for="sourcebuild" rendered="{!NOT(moodleroom)&&NOT(collab)}" />-->
+         <apex:outputLabel value="{!IF(isAnalytics,'Version','Source Build On Case')}"  for="sourcebuild" />          
+                  <apex:selectList value="{!sourcebuild}" size="1" id="sourcebuild" disabled="{!ISNULL(asset)}" style="margin-left:10px" rendered="{!NOT(moodleroom)&&NOT(collab)}" >
+                      <apex:selectOptions value="{!sblist}"  />
+                   </apex:selectList>
+               
+        </apex:pageblockSectionItem>
+        <apex:pageblocksectionitem rendered="{!NOT(moodleroom)&& NOT(collab) && NOT(isxplor)}" />
+     <!--    AJAX RERENDER STATUS FOR ONCHANGE OF ASSET 
+        <apex:pageBlockSectionItem  >
+            <apex:actionStatus startText=" Finding Issue Topics..." stopText=" " id="claStatus"/>
+        </apex:pageBlockSectionItem> -->
+
+        <apex:pageblockSectionItem >
+            <apex:outputLabel value="Issue Topic:" for="Issue Topic"/>
+            <apex:outputPanel >           
+              <apex:image url="{!$Resource.redbar1}"/>
+                <apex:selectList value="{!module}" size="1" id="module" disabled="{!ISNULL(asset)}">   
+                    <apex:selectOptions value="{!modules}"/>
+                    <apex:actionSupport event="onchange" rerender="functionalarea,category,errorPanel" status="mStatus"/>
+                </apex:selectList>
+                </apex:outputPanel>
+        </apex:pageblockSectionItem>
+        
+        <!-- AJAX RERENDER STATUS FOR MODULE -->
+        <apex:pageBlockSectionItem >
+            <apex:actionStatus startText=" Finding Related Problem Areas..." stopText=" " id="mStatus"/>
+        </apex:pageBlockSectionItem>
+        
+
+<!-- Functional Area Picklist -->    
+        <apex:pageblockSectionItem rendered="{!NOT(isxplor)}">
+                <apex:outputLabel value="Functional Area:" for="functionalarea"/>
+                    <apex:selectList value="{!functionalarea}" size="1" id="functionalarea" disabled="{!ISNULL(module) || displayfuncarea}" style="margin-left:10px">   
+                        <apex:selectOptions value="{!functionalareas}"/>
+                        <apex:actionSupport event="onchange" rerender="category,errorPanel" status="faStatus"/>
+                    </apex:selectList>
+        </apex:pageblockSectionItem>
+        
+        <!-- AJAX RERENDER STATUS FOR FUNCTIONAL AREA -->
+        <apex:pageBlockSectionItem rendered="{!NOT(isxplor)}">
+            <apex:actionStatus startText=" Finding Related Categories..." stopText=" " id="faStatus"/>
+        </apex:pageBlockSectionItem>
+
+<!-- Category Picklist -->    
+        <apex:pageblockSectionItem rendered="{!Not(moodleroom)&&Not(isAnalytics) && NOT(isxplor)}" >
+                <apex:outputLabel value="Category:" for="category"/>
+                    <apex:selectList value="{!category}" size="1" id="category" disabled="{!ISNULL(functionalarea) || displaycategory}" style="margin-left:10px">   
+                        <apex:selectOptions value="{!categories}"/>
+                    </apex:selectList>
+        </apex:pageblockSectionItem>
+
+        <apex:pageblockSectionItem rendered="{!Not(moodleroom)&&Not(isAnalytics) && NOT(isxplor)}" >
+         </apex:pageblockSectionItem>
+
+     <!-- Analytics -->
+
+      <apex:pageblockSectionItem rendered="{!isAnalytics}" >
+            <apex:outputLabel value="Pyramid Version:"  />
+                <apex:outputPanel >
+                <apex:selectList value="{!Pyramidversion}" rendered="{!isAnalytics}" size="1"  >
+                <apex:selectOptions value="{!Pyramidversions}"/>
+                </apex:selectList>
+             </apex:outputPanel>            
+       </apex:pageBlockSectionItem> 
+
+       <apex:pageblockSectionItem rendered="{!isAnalytics}" >
+          </apex:pageblockSectionItem>  
+
+     <!-- Xplor -->
+     <apex:pageblockSectionItem rendered="{!isxplor}" >
+                  <apex:outputLabel value="CMS/ LMS:"  />
+                    <apex:outputPanel >
+                    <apex:image url="{!$Resource.redbar1}"/> 
+                    <apex:inputfield value="{!case.CMS_LMS__c}"/>
+                   </apex:outputPanel>
+          </apex:pageBlockSectionItem>
+
+         <apex:pageblockSectionItem rendered="{!isxplor}" >
+          </apex:pageblockSectionItem>  
+
+     <apex:pageblockSectionItem rendered="{!isxplor}" >
+            <apex:outputLabel value="Site URL:"  /> 
+                <apex:outputPanel >
+                    <apex:image url="{!$Resource.redbar1}" rendered="{!isxplor}"/>
+                    <apex:inputField value="{!Case.Site_URL__c}"  rendered="{!isxplor}"/> 
+                </apex:outputPanel> 
+        
+     </apex:pageblockSectionItem>
+
+     <apex:pageblockSectionItem rendered="{!isxplor}" >
+          </apex:pageblockSectionItem>
+
+      <apex:pageblockSectionItem rendered="{!isxplor}" >
+            <apex:outputLabel value="Course ID:"  /> 
+                <apex:outputPanel >
+                    <apex:inputField value="{!Case.Course_ID__c}" style="margin-left:10px;padding:1px; width: 35%;" rendered="{!isxplor}"/> 
+                </apex:outputPanel> 
+        
+     </apex:pageblockSectionItem>
+                         
+          <apex:pageblockSectionItem rendered="{!collab}" >
+            <apex:outputLabel value="Instance:"  />
+                <apex:outputPanel >
+                <apex:image url="{!$Resource.redbar1}"/>
+                <apex:selectList value="{!instancevalue}" rendered="{!collab}" size="1"  >
+                <apex:selectOptions value="{!instanceoptions}"/>
+                </apex:selectList>
+             </apex:outputPanel>            
+       </apex:pageBlockSectionItem>     
+        
+         <apex:pageblockSectionItem rendered="{!collab}" >
+         </apex:pageblockSectionItem> 
+        
+     
+<!--Added by Murugappan for Collab -->
+           
+           
+           <apex:pageblockSectionItem rendered="{!collab}"  >
+             <apex:outputLabel value="User Role:"  />
+                <apex:outputPanel >
+                <apex:image url="{!$Resource.redbar1}"/> 
+                <apex:selectList value="{!usrrolevalue}" rendered="{!collab}" size="1"  >
+                <apex:selectOptions value="{!usrroleoptions}"/>
+                </apex:selectList>
+                </apex:outputPanel>
+      
+         </apex:pageBlockSectionItem>   
+        
+         <apex:pageblockSectionItem rendered="{!collab}" >
+         </apex:pageblockSectionItem> 
+        
+          <apex:pageblockSectionItem rendered="{!collab}"  >
+                <apex:outputLabel value="Client OS:"  />
+                    <apex:outputPanel >
+                    <apex:image url="{!$Resource.redbar1}"/>
+                    <apex:selectList value="{!clvalues}" rendered="{!collab}" size="1" >
+                    <apex:selectOptions value="{!clos}"/>
+                    </apex:selectList>
+                    </apex:outputPanel>
+                                
+          </apex:pageBlockSectionItem>     
+        
+        
+         <apex:pageblockSectionItem rendered="{!collab}" >
+         </apex:pageblockSectionItem> 
+         
+         
+           
+       <apex:pageblockSectionItem rendered="{!collab}" >
+            <apex:outputLabel value="Client OS Version:"  /> 
+                <apex:outputPanel >
+                    <apex:inputField value="{!Case.Client_OS_Version__c}" style="margin-left:10px;padding:1px; width: 35%;" rendered="{!collab}"/> 
+                </apex:outputPanel> 
+        
+       </apex:pageblockSectionItem>    
+          
+          
+       <apex:pageblockSectionItem rendered="{!collab}" >
+       </apex:pageblockSectionItem> 
+       
+       <apex:pageblockSectionItem rendered="{!collab}"  >
+                    <apex:outputLabel value="Browser:" />
+                        <apex:outputPanel >
+                        <apex:image url="{!$Resource.redbar1}"/> 
+                        <apex:selectList value="{!browservalues}" rendered="{!collab}" size="1"  >
+                        <apex:selectOptions value="{!browsop}"/>
+                        </apex:selectList>
+                        </apex:outputPanel>
+          </apex:pageBlockSectionItem> 
+           
+  
+          <apex:pageblockSectionItem rendered="{!collab}" >
+          </apex:pageblockSectionItem> 
+          
+          
+          <apex:pageblockSectionItem rendered="{!collab}"  >
+            <apex:outputLabel value="Browser Version:"  /> 
+                <apex:outputPanel >
+                    <apex:inputField value="{!Case.Browser_Version__c}" style="margin-left:10px;padding:1px; width: 35%;" rendered="{!collab}"/> 
+                </apex:outputPanel> 
+        </apex:pageblockSectionItem>     
+   
+        <apex:pageblockSectionItem rendered="{!collab}" >
+        </apex:pageblockSectionItem> 
+        
+        
+              
+        <apex:pageblockSectionItem rendered="{!collab}"  >
+                <apex:outputLabel value="Java Version:" /> 
+                    <apex:outputPanel >
+                        <apex:inputField value="{!Case.Java_Version__c}" style="margin-left:10px;padding:1px; width: 35%;" rendered="{!collab}"/> 
+                    </apex:outputPanel> 
+            
+                </apex:pageblockSectionItem>    
+          
+          
+        <apex:pageblockSectionItem rendered="{!collab}" >
+        </apex:pageblockSectionItem> 
+        
+            
+        
+          <apex:pageblockSectionItem rendered="{!collab}" >
+                   <apex:outputLabel value="CMS/ LMS:"  />
+                    <apex:outputPanel >
+                    <apex:image url="{!$Resource.redbar1}"/> 
+                    <apex:selectList value="{!cmsvalue}" rendered="{!collab}" size="1"  >
+                    <apex:selectOptions value="{!cmsoptions}"/>
+                    </apex:selectList>
+                    </apex:outputPanel>
+          </apex:pageBlockSectionItem> 
+   
+  
+          <apex:pageblockSectionItem rendered="{!collab || isxplor}" >
+          </apex:pageblockSectionItem> 
+        
+        
+         <apex:pageblockSectionItem rendered="{!collab}" >
+            <apex:outputLabel value="CMS/ LMS URL:"  /> 
+                <apex:outputPanel >
+                    <apex:inputField value="{!Case.CMS_LMS_URL__c}" style="margin-left:10px;padding:1px; width: 35%;" rendered="{!collab}"/> 
+                </apex:outputPanel> 
+        
+        </apex:pageblockSectionItem>    
+          
+          
+       <apex:pageblockSectionItem rendered="{!collab}" >
+       </apex:pageblockSectionItem> 
+        
+      
+   
+      <apex:pageblockSectionItem rendered="{!collab}" >
+            <apex:outputLabel value="URL Accessed:"  /> 
+                <apex:outputPanel >
+                    <apex:inputField value="{!Case.URL_Access__c}" style="margin-left:10px;padding:1px; width: 35%;" rendered="{!collab}"/> 
+                </apex:outputPanel> 
+        
+     </apex:pageblockSectionItem>   
+          
+          
+       <apex:pageblockSectionItem rendered="{!collab}" >
+       </apex:pageblockSectionItem> 
+       
+ <!-- //End Added by Murugappan for Collab -->  
+ 
+<!--   <apex:pageblockSectionItem rendered="{!moodleroom}" >
+       </apex:pageblockSectionItem> -->
+
+
+
+
+ <apex:pageblockSectionItem >
+  <apex:outputLabel value="Client OS:" rendered="{!moodleroom}" />
+      <apex:selectList value="{!clvalues}" rendered="{!moodleroom}" size="1" style="margin-left:10px" >
+            <apex:selectOptions value="{!clos}"/>
+        </apex:selectList>
+                        
+  </apex:pageBlockSectionItem>     
+        
+        
+         <apex:pageblockSectionItem rendered="{!moodleroom}" >
+              
+        </apex:pageblockSectionItem>
+ <apex:pageblockSectionItem >
+               <apex:outputLabel value="Browser:" for="browser" rendered="{!moodleroom}"/>
+               <!-- <apex:inputField value="{!Case.Browser__c}" style="margin-left:10px" rendered="{!moodleroom}"/> -->
+               <apex:selectList value="{!browservalues}" rendered="{!moodleroom}" size="1" style="margin-left:10px" >
+            <apex:selectOptions value="{!browsop}"/>
+        </apex:selectList>
+
+        </apex:pageblockSectionItem>
+  <apex:pageblockSectionItem rendered="{!moodleroom}" >
+              
+        </apex:pageblockSectionItem>
+ <apex:pageblockSectionItem >
+               <apex:outputLabel value="MR Case Type:" rendered="{!moodleroom}"/> 
+<apex:outputPanel >
+<apex:image url="{!$Resource.redbar1}" rendered="{!Mrcasetype}"/> 
+<!-- <apex:inputField value="{!Case.MR_Case_Type__c}" style="margin-left:10px" rendered="{!moodleroom}" /> -->
+<apex:selectList value="{!mrcasetypevalues}" rendered="{!moodleroom}" size="1" style="margin-left:10px" >
+            <apex:selectOptions value="{!mrcsop}"/>
+        </apex:selectList>
+
+</apex:outputPanel>
+        </apex:pageblockSectionItem>
+ <apex:pageblockSectionItem rendered="{!moodleroom}" >
+              
+        </apex:pageblockSectionItem>
+ <apex:pageblockSectionItem >
+               <apex:outputLabel value="URL Accessed" rendered="{!moodleroom}"/> 
+<apex:outputPanel >
+ <apex:image url="{!$Resource.redbar2}" style="vertical-align:top" rendered="{!moodleroom}"/> 
+<apex:inputField value="{!Case.URL_Access__c}" style="padding:3px; width: 35%;" rendered="{!moodleroom}"/>
+</apex:outputPanel>
+       
+        </apex:pageblockSectionItem> 
+          
+     
+       </apex:pageBlockSection>   
+        
+
+<apex:pageBlockSection columns="1" title="Problem Information">
+
+<!--added by Avik-->
+
+
+<apex:pageblockSectionItem >
+               <apex:outputLabel value="Severity Level" for="SeverityLevel"/>
+               <apex:selectList value="{!SeverityLevelvalues}"  size="1" style="margin-left:10px" >
+            <apex:selectOptions value="{!SeverityLevelop}"/>
+        </apex:selectList>
+
+        </apex:pageblockSectionItem>
+
+<apex:pageBlockSectionItem rendered="{!temp_flag1}">
+<strong>Premium Support</strong>
+<apex:inputField value="{!Case.Invoke_Premium_Support__c}" style="margin-left:10px" />
+</apex:pageBlockSectionItem>
+
+<apex:pageBlockSectionItem >
+<apex:outputLabel value="Subject"/> 
+<apex:outputPanel >
+<apex:image url="{!$Resource.redbar1}" /> 
+<apex:inputField value="{!Case.Subject}" style="padding:3px; width: 35%;" />
+</apex:outputPanel>
+</apex:pageBlockSectionItem>
+<apex:pageBlockSectionItem dataStyle="height: 175px;">
+<!--<apex:pageBlockSectionItem >-->
+<strong>Description</strong>
+<apex:outputPanel >
+<apex:image url="{!$Resource.redbar2}" style="vertical-align:top"/> 
+<apex:inputField value="{!Case.Description}"  style="width:75%; height:150px;" />
+</apex:outputPanel>
+
+</apex:pageBlockSectionItem>
+
+<apex:pageBlockSectionItem dataStyle="height: 175px;"><!--/DESCRIPTION TEXT AREA/-->
+                <strong>Steps to Replicate</strong>
+                    <apex:inputField value="{!Case.Steps_to_Replicate__c}"  style="margin-left:10px; width:75%; height:150px;" />
+            </apex:pageBlockSectionItem>
+            
+            
+<!-- <apex:pageBlockSectionItem dataStyle="height: 175px;" rendered="{!collab}">
+
+<strong>Chat Transcript</strong>
+<apex:inputField value="{!Case.Chat_Transcript__c}"  style="margin-left:10px; width:75%; height:150px;"  />
+
+</apex:pageBlockSectionItem>   -->          
+                        
+
+<apex:pageBlockSectionItem >
+<strong>Case Origin:</strong>
+<apex:inputField value="{!Case.Origin}" id="origin" style="margin-left:10px"/>
+</apex:pageBlockSectionItem>
+
+</apex:pageBlockSection>
+
+</apex:pageBlock>
+
+
+</apex:form>
+
+</apex:page>

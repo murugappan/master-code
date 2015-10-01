@@ -1,0 +1,29 @@
+<apex:page showHeader="true" sidebar="true" standardController="Asset" extensions="ServiceNowFulfillment">
+	<apex:sectionHeader title="Request ServiceNow Fulfillment" subtitle="ServiceNow Fulfillment" />
+	<apex:form >
+	<apex:pageBlock title="Asset:{!currentasset.name} Opportunity Id:{!currentAsset.CPQ_Current_Opportunity_ID__c} ">
+	<apex:messages />
+		<apex:pageBlockButtons location="both">
+			<apex:commandbutton value="Confirm" action="{!Confirm}"  />
+			<apex:commandbutton value="Cancel" action="{!cancel}"  />
+		</apex:pageBlockButtons>
+		<apex:pageblocktable value="{!assetlist}" var="ast">
+		 <apex:column value="{!ast.name}" />
+		 <apex:column value="{!ast.CPQ_Current_Opportunity_ID__c}" headerValue="Opportunity Id" />
+		 <apex:column value="{!ast.Top_Level_Asset__c}"/>
+		 <apex:column value="{!ast.Prior_Top_Level_Asset__c}" />
+		 <apex:column value="{!ast.Fulfillment_Action__c}"/>
+		 <apex:column value="{!ast.Fulfillment_Action_Date__c}" />
+		 <apex:column value="{!ast.Fulfillment_Action_Counter__c}"/>
+		 <apex:column value="{!ast.FulFillment_Prior_Action__c}" />
+		 <apex:column value="{!ast.Fulfillment_Request_Notes__c}"/>
+		 <apex:column value="{!ast.Fulfillment_Last_Requested_Date__c}"/>
+		 <apex:column value="{!ast.Fulfillment_Request_Counter__c}"/>
+		 <apex:column value="{!ast.First_Fulfillment_Requested_Date__c}"/>
+		 <apex:column value="{!ast.CPQ_Contract_Start_Date__c}"/>
+		 <apex:column value="{!ast.CPQ_Contract_End_Date__c}"/>
+		</apex:pageblocktable>
+		
+	</apex:pageBlock>
+	</apex:form>
+</apex:page>

@@ -1,0 +1,168 @@
+<apex:page standardController="Solution" extensions="articleViewController" action="{!redirect}" cache="false" id="ArticleView" standardStylesheets="false" showHeader="false" sidebar="false" contentType="text/html">
+    
+<title>{!Solution.solutionname} - Behind the Blackboard</title>
+    <apex:composition template="btbb_template">
+        
+        <apex:define name="topbar"><c:btbb_globalsearch /></apex:define>
+        <apex:define name="nav"><c:btbb_auth_nav /></apex:define>
+        <apex:define name="content">
+            
+            <style>
+                input[type="radio"] { position: relative; top: 3px; }
+                ol li {list-style: numeric !important;}
+                .articleAttribute { margin-bottom: 10px; }
+                p {margin-top:7px;margin-bottom:7px;}
+                table { border-collapse:collapse;margin-top:7px;margin-bottom:7px;}
+                table, td {border:1px solid #757575;padding:5px;}
+                th {font-weight:bold;border:1px solid #757575;padding:5px;}
+                #btbbArticlefeedback td {border:none;}
+                #main li {margin-left:30px;}
+                pre {
+                      font-family: courier, fixed-width;
+                      white-space: pre-wrap;       /* css-3 */
+                      white-space: -moz-pre-wrap;  /* Mozilla, since 1999 */
+                      white-space: -pre-wrap;      /* Opera 4-6 */
+                      white-space: -o-pre-wrap;    /* Opera 7 */
+                      word-wrap: break-word;       /* Internet Explorer 5.5+ */
+                    }
+            </style>
+            
+            <apex:form >
+            
+            <h2>{!Solution.SolutionName}</h2>
+                    
+                    <div class="btbbArticleViewData">
+                          <b>Date Published:</b> <apex:outputText value="{0,date,MMM dd,yyyy}">
+                        <apex:param value="{!Solution.Published_Date__c}"/> 
+                        </apex:outputText>
+                        <apex:outputpanel rendered="{!IF(AND(NOT(ISNULL(Solution.Last_Updated__c)),(Solution.Status == 'Published')),'true','false')}">
+                        <b>Last Updated:</b> <apex:outputText value="{0,date,MMM dd,yyyy}">
+                        <apex:param value="{!Solution.Last_Updated__c}"/> 
+                        </apex:outputText></apex:outputpanel>
+                        <b>Category:</b> {!categories}&nbsp;&nbsp;
+                        <b>Article No.:</b> {!Solution.SolutionNumber}
+                        <div id="homepage" style="{!IF($CurrentPageReference.parameters.homepage == 'true','','display:none;')};float:right"> 
+                        <a href="{!$Page.btbb_home}" title="Back to home page">Back to home page</a>                        
+                        </div>
+                    </div>
+                    
+                    <a href="{!$Page.btbb_kbprint}?id={!id}" id="btbbArticlePrint" target="_blank"><apex:image value="{!URLFOR($Resource.BtBbStyles, '/includes/theme2011/img/icons/print.png')}" alt="Print article" title="Print article" /></a>
+                    
+                    <div id="btbbCaseStatus" style="margin-top: 20px;{!IF(NOT(ISNULL(caseId)),'','display:none;')}">
+               
+                        <div id="btbbCaseArticleHelp" style="width: 45%">
+                            
+                            <div id="Product" class="articleAttribute" style="display:{!IF(Solution.Product__c != Null,'','display:none;')}">
+                                <strong>Product:</strong>&nbsp;&nbsp;<apex:outputText escape="false" value="{!Solution.Product__c}"/>
+                            </div>  
+                            
+                            <div id="major" class="articleAttribute" style="{!IF(Solution.Major_Release__c != Null,'','display:none;')}">
+                                <strong>Major Release:</strong>&nbsp;&nbsp;<apex:outputText escape="false" value="{!Solution.Major_Release__c}"/>
+                            </div>  
+                            
+                            <div id="version" class="articleAttribute" style="{!IF(Solution.Version_s__c != Null,'','display:none;')}">
+                                <strong>Version:</strong>&nbsp;&nbsp;<apex:outputText escape="false" value="{!Solution.Version_s__c}"/>
+                            </div>
+                                     
+                        </div>
+                        
+                        <div id="btbbCaseArticleNav">
+                            <br />
+                            <span style="display:block;font-weight:bold;font-size:14px;">Did this article help?&nbsp;<apex:outputLink style="font-size:11px;" value="{!$Page.btbb_caseRelevantArticles}?id={!caseId}">Go back to Relevant Articles</apex:outputLink></span>
+                            <apex:commandbutton action="{!closeCase}" styleClass="button" style="margin-right:10px;" title="Attach article as solution and close my case" value="Problem Solved!"/>
+                            <apex:commandbutton action="{!selArticle}" styleClass="button" title="Attach article to case, keep case open and return to relevant articles" value="Helpful" style="margin-right:10px;"/>
+                            <apex:commandbutton action="{!notHelpful}" styleClass="button" title="Return to relevant articles" value="Not Helpful"/>        
+                        </div>                      
+                    
+                    <div class="clear"></div>
+                    
+                    </div>
+                    
+                    <div id="btbbArticleViewBody">          
+                        
+                        <div id="articleDescription">                             
+                            
+                            <div id="btbbarticledetail" style="margin-top: 20px;{!IF(ISNULL(caseId),'','display:none;')}">                   
+                        
+                            <div id="Product" style="{!IF(Solution.Product__c != Null,'','display:none;')}">
+                        
+                                <p><strong>Product:</strong>&nbsp;&nbsp;<apex:outputText escape="false" rendered="{!IF(Solution.Product__c != Null, True, False)}" value="{!Solution.Product__c}"/></p>                        
+                        
+                            </div>  
+                        
+                            <div id="major" style="{!IF(Solution.Major_Release__c != Null ,'','display:none;')}">
+                        
+                                <p><strong>Release:</strong>&nbsp;&nbsp;<apex:outputText escape="false" rendered="{!IF(Solution.Major_Release__c != Null, True, False)}" value="{!Solution.Major_Release__c}"/></p>                                           
+                        
+                            </div>  
+                        
+                            <div id="version" style="{!IF(Solution.Version_s__c != Null,'','display:none;')}">
+                        
+                                <p><strong>Service Pack:</strong>&nbsp;&nbsp;<apex:outputText escape="false" rendered="{!IF(Solution.Version_s__c != Null, True, False)}" value="{!Solution.Version_s__c}"/></p>                          
+                        
+                            </div>
+                      
+                      </div>  
+                   </div>                    
+                        
+                   <div class="cleaner divider">&nbsp;</div>
+                                          
+                        <div id="TSG">
+                                           
+                            <apex:outputText style="font-weight:bold;" rendered="{!IF(Solution.How_is_the_component_designed_to_work__c != Null, True, False)}" value="Introduction:"/>&nbsp;&nbsp;<apex:OutputText rendered="{!IF(Solution.How_is_the_component_designed_to_work__c != Null, True, False)}" value="{!Solution.How_is_the_component_designed_to_work__c}" escape="false"/>
+                            <apex:outputText style="font-weight:bold;" rendered="{!IF(Solution.Files_collection_to_troubleshoot_cpnent__c != Null, True, False)}" value="Functionality:"/>&nbsp;&nbsp;<apex:OutputText rendered="{!IF(Solution.Files_collection_to_troubleshoot_cpnent__c != Null, True, False)}" value="{!Solution.Files_collection_to_troubleshoot_cpnent__c}" escape="false"/>                      
+                            <apex:outputText style="font-weight:bold;" rendered="{!IF(Solution.Evaluation_of_logs_information__c != Null, True, False)}" value="Related System Information:"/>&nbsp;&nbsp;<apex:OutputText rendered="{!IF(Solution.Evaluation_of_logs_information__c != Null, True, False)}" value="{!Solution.Evaluation_of_logs_information__c}" escape="false"/>
+                            <apex:outputText style="font-weight:bold;" rendered="{!IF(Solution.Causes_of_the_common_issues_with_this_cp__c != Null, True, False)}" value="Evaluating Related System Information:"/>&nbsp;&nbsp;<apex:OutputText rendered="{!IF(Solution.Causes_of_the_common_issues_with_this_cp__c != Null, True, False)}" value="{!Solution.Causes_of_the_common_issues_with_this_cp__c}" escape="false"/>
+                            <apex:outputText style="font-weight:bold;" rendered="{!IF(Solution.Resources_use_to_troubleshoot_this_cp__c != Null, True, False)}" value="Common Issues:"/>&nbsp;&nbsp;<apex:OutputText rendered="{!IF(Solution.Resources_use_to_troubleshoot_this_cp__c != Null, True, False)}" value="{!Solution.Resources_use_to_troubleshoot_this_cp__c}" escape="false"/>
+                        
+                        </div>           
+                        
+                    </div>
+                    
+                    <p style="font-size:85%;text-align:center;">The information contained in the Knowledge Base was written and/or verified by Blackboard Support. It is approved for client use.  Nothing in the Knowledge Base shall be deemed to modify your license in any way to any Blackboard product. If you have comments, questions, or concerns, please send an email to <a href = " mailto:kb@blackboard.com">kb@blackboard.com</a>. © &nbsp; <apex:outputText value="{!YEAR(TODAY())}"/> Blackboard Inc.  All rights reserved</p>
+                    <br/><br/>
+                  
+                    <div class="btbbCaseTab" title="Attachments" style="{!IF(size != 0, 'display:block;', 'display:none;')}">
+
+                                <h2>Attachments</h2>
+                                
+                                <table width="100%" style="border:none;">
+                                    <tr class="nohover" style="border:none;">
+                                        <th style="border:none;">Filename</th>
+                                        <th style="border:none;">Notes</th>
+                                        <th style="border:none;">Last Updated</th>
+                                    </tr>
+                                    <apex:repeat value="{!ArticleAttach}" var="att">
+                                    <tr>                                        
+                                        <td style="border:none;"><a href="{!$Page.AttachmentRedirect}?bname={!att.Bucket_Name__c}&fname={!att.File_Name_URL__c}&aws={!as3.key}&sec={!as3.secret}&uval=article" target="_blank"><apex:outputField value="{!att.File_Name__c}" /></a></td>
+                                        <td style="border:none;"><apex:outputText value="{0,date,MMM dd,yyyy}"><apex:param value="{!DATEVALUE(att.CreatedDate)}" /></apex:outputText></td>
+                                    </tr>
+                                    </apex:repeat>
+                                </table> 
+               </div>
+                    
+                    <div class="cleaner divider">&nbsp;</div>
+                    
+                    <div id="btbbArticlefeedback" style="margin-top: 20px;display:{!IF(ISNULL(caseId)&& isFBExist == false,'block','none')}">
+                        <p><strong>Bb KB – Was this Article Helpful?</strong>&nbsp;&nbsp;</p>
+                        <apex:selectRadio value="{!voteValue}" style="border:none;">
+                            <apex:selectOptions value="{!items}"/>
+                        </apex:selectRadio><br/>                        
+                        <apex:commandButton value="Submit" action="{!addFeedback}" rerender="out" status="status" styleclass="btbbButton" title="Submit Feedback"/>
+                        <apex:outputPanel id="out">
+                            <apex:actionstatus id="status" startText="" stopText=""> 
+                                <apex:facet name="start"><apex:image url="{!URLFOR($Resource.btbbLoader)}"/></apex:facet>                               
+                            </apex:actionStatus>                
+                        </apex:outputPanel>
+                    </div>
+                    
+                    <div id="btbbArticlefeedbackvoted" style="margin-top: 20px;display:{!IF(ISNULL(caseId)&& isFBExist == false,'none;','block;')}">
+                        <p><strong>Thank you for submitting your feedback for this article.</strong></p>
+                    </div>
+                 <apex:inputHidden value="{!Solution.Product__c}"/>
+        <apex:inputHidden value="{!Solution.Major_Release__c }"/>
+        <apex:inputHidden value="{!Solution.Version_s__c  }"/>         
+            </apex:form>
+        </apex:define>
+    </apex:composition>
+</apex:page>

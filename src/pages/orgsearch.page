@@ -1,0 +1,4 @@
+<apex:page controller="orgsearchcontroller" action="{!parseJson}" 
+contentType="application/x-JavaScript; charset=utf-8" showHeader="false" standardStylesheets="false" sidebar="false">
+{!text}
+</apex:page>

@@ -1,0 +1,123 @@
+<apex:page controller="ServicesForecastController">
+    <style type='text/css'>
+  .servicesTrakerMatrix, .servicesTrakerHeaders{
+    border-bottom-color:#E23D28;
+    border-bottom-style:inset;
+    border-bottom-width:1px;
+    width:90%;
+  }
+  .servicesTrakerMatrix{
+    height:45px;
+  }
+  
+  .servicesTrakerHeaders{
+    height:25px;
+   }
+  .servicesTrakerMatrix ul {
+  list-style-type: none;
+  text-align: left;
+  padding-left:15em;
+  margin-top:-30px;
+  }
+
+  .servicesTrakerHeaders ul {
+  list-style-type: none;
+  text-align: left;
+  }
+  .servicesTrakerMatrix li, .servicesTrakerHeaders li {
+  text-align: center;
+  float: left;
+  list-style: none;
+  width:5em;
+  }
+    </style>
+    <apex:form id="ServicesForecastForm" >
+        <apex:pageBlock title="Services Tracker" id="ServicesForecastReportBlock">
+            <apex:repeat value="{!ServicesForecastPeriods}" var="forecastPeriod" rows="1">
+                <div class="servicesTrakerHeaders">
+                    <apex:outputText style="display:block;float:left;width:15em;text-align:center" value="Bb Collab Staff"/>
+                    <apex:dataList value="{!forecastPeriod.ServicesForecastMonths}" var="forecastMonth" style="list-style-type: none;">
+                        <apex:outputText value="{!forecastMonth.MonthName}" style="font-weight: bold;"/>
+                    </apex:dataList>
+                    <br/>
+                </div>
+            </apex:repeat>
+            <apex:repeat value="{!ServicesForecastPeriods}" var="forecastPeriod">
+                <div class="servicesTrakerMatrix">
+                    <apex:outputText style="clear:both;font-weight:bold;display:block;width:15em;" value="{!forecastPeriod.WimbaStaff.Name}"/>
+                    <apex:outputText value="Dollar Value" style="display:block;width:15em;color:#99908C;font-style:oblique;"/>
+                    <apex:outputText value="Nb of Ongoing Projects" style="display:inline;width:15em;color:#99908C;font-style:oblique;"/>
+                    <apex:dataList value="{!forecastPeriod.ServicesForecastMonths}" var="forecastMonth" >
+                        <apex:outputText value="{!forecastMonth.DollarValue}" style="display:block;" rendered="{!forecastMonth.DollarValue==0}"/>
+                        <apex:commandLink action="{!displayServicesEngagements}" style="{!IF(forecastMonth.DollarValue >30000,'background-color:red;','')}display:block;" rendered="{!forecastMonth.DollarValue >0}" value="{!forecastMonth.DollarValue}" rerender="ServicesEngagementsResultPanel,ServicesResultPanel">
+                            <apex:param name="userid" value="{!forecastPeriod.WimbaStaff.Id}"/>
+                            <apex:param name="period" value="{!forecastMonth.MonthName}"/>
+                        </apex:commandLink>
+                        <apex:outputText value="{!forecastMonth.servicesProjects.size}" rendered="{!forecastMonth.servicesProjects.size==0}"/>
+                        <apex:commandLink action="{!displayServices}" style="{!IF(forecastMonth.servicesProjects.size > 15,'background-color:red;','')}" rendered="{!forecastMonth.servicesProjects.size>0}" value="{!forecastMonth.servicesProjects.size}" rerender="ServicesResultPanel,ServicesEngagementsResultPanel">
+                            <apex:param name="userid" value="{!forecastPeriod.WimbaStaff.Id}"/>
+                            <apex:param name="period" value="{!forecastMonth.MonthName}"/>
+                        </apex:commandLink>
+                    </apex:dataList>
+                    <br/>
+                </div>
+            </apex:repeat>
+        </apex:pageBlock>
+        <apex:pageBlock id="ServicesResultPanel" title="In-Progess Services " rendered="{!ServicesProjects.size > 0}">
+            <apex:pageBlockTable value="{!ServicesProjects}" var="Service" id="theTable" rowClasses="odd,even">
+                <apex:column style="width:40%;">
+                    <apex:facet name="header">Name</apex:facet>
+                    <apex:commandLink value="{!Service.Name}" action="/{!Service.Id}" target="_blank"/>
+                </apex:column>
+                <apex:column style="width:20%;">
+                    <apex:facet name="header">Amount</apex:facet>
+                    <apex:outputText value="{!Service.CurrencyIsoCode} {!Service.Total_Amount__c}"/>
+                </apex:column>
+                <apex:column style="width:10%;">
+                    <apex:facet name="header">Start Date</apex:facet>
+                    <apex:outputField value="{!Service.Start_Date__c}"/>
+                </apex:column>
+                <apex:column style="width:10%;">
+                    <apex:facet name="header">End Date</apex:facet>
+                    <apex:outputField value="{!Service.End_Date__c}"/>
+                </apex:column>
+                <apex:column style="width:10%;">
+                    <apex:facet name="header">Allocated Amount</apex:facet>
+                    <apex:outputField value="{!Service.Allocated_Amount__c}"/>
+                </apex:column>
+                <apex:column style="width:10%;">
+                    <apex:facet name="header">Delivered Amount</apex:facet>
+                    <apex:outputField value="{!Service.Delivered_Amount__c}"/>
+                </apex:column>
+            </apex:pageBlockTable>
+        </apex:pageBlock>
+        <apex:pageBlock id="ServicesEngagementsResultPanel" title="In-Progess Services Engagements" rendered="{!ServicesEngagements.size > 0}">
+            <apex:pageBlockTable value="{!ServicesEngagements}" var="ServicesEngagement" id="theTable" rowClasses="odd,even">
+                <apex:column style="width:40%;">
+                    <apex:facet name="header">Name</apex:facet>
+                    <apex:commandLink value="{!ServicesEngagement.Name}" action="/{!ServicesEngagement.Id}" target="_blank"/>
+                </apex:column>
+                <apex:column style="width:20%;">
+                    <apex:facet name="header">Amount</apex:facet>
+                    <apex:outputText value="{!ServicesEngagement.CurrencyIsoCode} {!ServicesEngagement.Dollar_Value__c}"/>
+                </apex:column>
+                <apex:column style="width:10%;">
+                    <apex:facet name="header">Delivery Date</apex:facet>
+                    <apex:outputField value="{!ServicesEngagement.Delivery_Date__c}"/>
+                </apex:column>
+                <apex:column style="width:10%;">
+                    <apex:facet name="header">Start Date</apex:facet>
+                    <apex:outputField value="{!ServicesEngagement.Start_Date__c}"/>
+                </apex:column>
+                <apex:column style="width:10%;">
+                    <apex:facet name="header">End Date</apex:facet>
+                    <apex:outputField value="{!ServicesEngagement.End_Date__c}"/>
+                </apex:column>
+                <apex:column style="width:20%;">
+                    <apex:facet name="header">Bb Collab Staff</apex:facet>
+                    <apex:commandLink value="{!ServicesEngagement.Trainer__r.Name}" action="/{!ServicesEngagement.Trainer__c}" target="_blank"/>
+                </apex:column>
+            </apex:pageBlockTable>
+        </apex:pageBlock>
+    </apex:form>
+</apex:page>

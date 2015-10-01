@@ -1,0 +1,42 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<Package xmlns="http://soap.sforce.com/2006/04/metadata">
+    <fullName>Reference View</fullName>
+    <types>
+        <members>Spotlight_Activity__c.Assets_viewed__c</members>
+        <members>Spotlight_Activity__c.Invitee__c</members>
+        <members>Spotlight_Activity__c.Opportunity__c</members>
+        <members>Spotlight_Activity__c.Spotlight_Name__c</members>
+        <members>Spotlight_Activity__c.Visit_Date__c</members>
+        <members>Spotlight_Activity__c.Visited__c</members>
+        <members>Spotlight_Activity__c.ipsID__c</members>
+        <name>CustomField</name>
+    </types>
+    <types>
+        <members>Spotlight_Activity__c</members>
+        <name>CustomObject</name>
+    </types>
+    <types>
+        <members>Reference_View</members>
+        <name>CustomTab</name>
+    </types>
+    <types>
+        <members>Spotlight_Activity__c-Spotlight Activity Layout</members>
+        <name>Layout</name>
+    </types>
+    <types>
+        <members>Customers</members>
+        <members>Find_Reference_SW</members>
+        <members>Find_an_Asset_SW</members>
+        <members>Nominate_As_Reference_Same_Win</members>
+        <members>RV_Utils_for_Portal_Users</members>
+        <members>ReferenceViewTabUtils</members>
+        <members>Send_a_Spotlight_SW</members>
+        <name>Scontrol</name>
+    </types>
+    <types>
+        <members>Opportunity.SSP</members>
+        <members>Spotlight_Activity__c.Send_a_Spotlight</members>
+        <name>WebLink</name>
+    </types>
+    <version>26.0</version>
+</Package>

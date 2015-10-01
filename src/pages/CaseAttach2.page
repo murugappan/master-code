@@ -1,0 +1,126 @@
+<apex:page standardController="Case_Attachment__c" extensions="S3FormController1">
+
+   <script type="text/javascript">
+        function display(x){
+            var y = document.getElementById(x).value;
+             filename(y);
+        }
+        
+        function delcase(){
+            deletecase();
+        }
+        function updatechn(){
+
+            var y = document.getElementById('j_id0:j_id2:entirepage:selectbucket:j_id24:note1').value;
+            var z = document.getElementById('j_id0:j_id2:entirepage:selectbucket:j_id27:selval').value;
+            var x = document.getElementById('j_id0:j_id2:entirepage:selectbucket:j_id32:relsin').value;
+            updchnage(y,z,x);
+        }
+        
+        function updatechn1(){
+            var y = document.getElementById('j_id0:j_id2:entirepage:selectbucket:j_id24:note1').value;
+            var z = document.getElementById('j_id0:j_id2:entirepage:selectbucket:j_id27:selval').value;
+            var x = document.getElementById('j_id0:j_id2:entirepage:selectbucket:j_id32:relsin').value;
+            var a = document.getElementById('j_id0:j_id2:entirepage:selectbucket:j_id21:selectBucketToUploadId').value;
+            updchnage1(y,z,x,a);        
+        }
+   
+        
+   </script>
+    
+    <apex:form >
+        <apex:pageBlock title="New Case Attachment" id="entirepage" tabStyle="Case">  
+        <apex:pageBlockSection columns="1" title="Create a Bucket" rendered="{!admininfo}">
+            <apex:pageBlockSectionItem >
+            </apex:pageBlockSectionItem>
+            <apex:pageBlockSectionItem >
+                    <apex:outputLabel for="bucketNameToCreateId" value="Enter Bucket Name here:"/>
+                    <apex:inputText id="bucketNameToCreateId" value="{!bucketNameToCreate}"/>
+                </apex:pageBlockSectionItem>
+            <apex:pageBlockSectionItem >
+               &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; <apex:commandButton id="createbucketButton" rerender="entirepage" action="{!createBucket}" value="Create Bucket" status="statusForCreateBucket"/> 
+            </apex:pageBlockSectionItem>
+            <apex:actionStatus startText="Creating Bucket.." StopText="" id="statusForCreateBucket"></apex:actionStatus>
+        </apex:pageBlockSection>
+
+        <apex:actionStatus id="noteupd" startText="Updating Note.." stopText="" ></apex:actionStatus>
+        <apex:actionFunction action="{!updatefileinfo}" name="filename" status="stat" immediate="true" reRender="fileinfo">
+                 <apex:param name="flname" value="" />
+        </apex:actionFunction>
+        <apex:actionFunction action="{!delCaseAttach}" name="deletecase" immediate="true">
+        </apex:actionFunction>
+        <apex:actionFunction action="{!updatechange}" name="updchnage" immediate="true" reRender="fileinfo">
+             <apex:param name="note1" value="" />
+             <apex:param name="selv" value="" />
+             <apex:param name="relsi" value="" />
+         </apex:actionFunction>
+         
+         <apex:actionFunction action="{!updatechange1}" name="updchnage1" immediate="true" reRender="fileinfo">
+             <apex:param name="note1" value="" />
+             <apex:param name="selv" value="" />
+             <apex:param name="relsi" value="" />
+             <apex:param name="buck" value=""/>
+         </apex:actionFunction>
+
+        
+         <apex:pageBlockSection id="selectbucket" columns="1" title="Attachment Information">
+             <apex:pageBlockSectionItem rendered="{!admininfo}" >
+                 <apex:outputLabel for="selectBucketToUploadId" value="Select Bucket to Upload to:   "/>
+                    <apex:selectList size="1" id="selectBucketToUploadId" value="{!bucketToUploadObject}" multiselect="false" onchange="updatechn1()" >
+                        <apex:selectOptions value="{!BucketNames}"/>
+                     </apex:selectList>
+             </apex:pageBlockSectionItem>
+             <apex:pageBlockSectionItem >
+                 <apex:outputLabel value="Notes"></apex:outputLabel>  
+                 <apex:inputTextarea id="note1" cols="100" rows="5" value="{!note}"  onchange="updatechn()"/>
+             </apex:pageBlockSectionItem><br/>
+             <apex:pageBlockSectionItem >   
+                     <apex:outputLabel value="Internal only Attachment "></apex:outputLabel>
+                     <apex:selectList id="selval" value="{!internalonly}" size="1" onchange="updatechn()" >
+                             <apex:selectOption itemValue="Yes"></apex:selectOption>
+                             <apex:selectOption itemValue="No"></apex:selectOption>
+                         </apex:selectList>   
+             </apex:pageBlockSectionItem> <br/>
+             
+             <apex:pageBlockSectionItem >   
+                     <apex:outputLabel value="Relate Attachment to SI "></apex:outputLabel>
+                     <apex:selectList id="relsin" value="{!relatetoSI}" size="1" onchange="updatechn()" >
+                             <apex:selectOption itemValue="Yes"></apex:selectOption>
+                             <apex:selectOption itemValue="No"></apex:selectOption>
+                         </apex:selectList>   
+             </apex:pageBlockSectionItem> 
+         </apex:pageBlockSection>
+      </apex:pageBlock>
+    </apex:form> 
+
+    <apex:outputPanel id="attachsec">
+     <form action="https://s3.amazonaws.com/{!bucketToUploadObject}" method="post" enctype="multipart/form-data">
+           <apex:pageBlock id="fileinfo" tabStyle="Case">
+               <apex:actionStatus id="stat" startText="Fetching Document..." stopText=""></apex:actionStatus> 
+                <apex:outputPanel rendered="{!showAttSec}">
+                <input type="hidden" name="key" value="{!record.File_Name_w_ext__c}" />
+                <input type="hidden" name="AWSAccessKeyId" value="{!key}" />
+                <input type="hidden" name="policy" value="{!policy}" />
+                <input type="hidden"  name="signature" value="{!signedPolicy}" />
+                <input type="hidden"  name="acl" value="{!record.Access__c}" /> 
+               <!-- <input type="hidden"  name="aws:Referer" value="http://btbb.sit.cs3.force.com/*" /> -->
+                <input type="hidden"  name="Content-Type" value="{!record.Content_Type__c}" /> 
+                <input type="hidden" name="success_action_redirect" value="{!URLred}" /> 
+                </apex:outputPanel>
+            </apex:pageBlock>
+                <apex:pageBlock mode="edit" tabStyle="Case" > 
+                 <apex:pageBlockButtons location="bottom" >
+                     <input class="btn" type="submit" value="Attach to Case" />
+                     <input class="btn" type="button" value="Cancel" onclick="delcase()" />
+                 </apex:pageBlockButtons>
+                
+                    <apex:pageBlockSection columns="1" title="Attach File" >
+                     <apex:pageBlockSectionItem >
+                        <apex:outputLabel value="File to upload" />
+                            <input id="fname" type="file" size="50" name="file" onchange="display(this.id)"/> 
+                        </apex:pageBlockSectionItem>
+                    </apex:pageBlockSection>
+                 </apex:pageBlock>
+        </form><br/>   
+    </apex:outputPanel>                      
+</apex:page>

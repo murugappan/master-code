@@ -1,0 +1,149 @@
+<apex:page standardController="Solution" extensions="BBW_CreateArticle">
+  
+ <!-- <apex:includeScript value="{!URLFOR($Resource.ArticleEditor , 'ckeditor/ckeditor.js')}"/>    -->
+       <apex:includeScript value="{!URLFOR($Resource.ArticleEditor1 , 'ckeditor/ckeditor.js')}"/>
+  <apex:form >
+  <apex:sectionHeader title="Article - {!recordType}" subtitle="{!Solution.SolutionName}"/>
+        
+      
+          <apex:pageBlock title="Article Detail" mode="edit" tabStyle="Solution">
+              <apex:pageBlockButtons >
+                <apex:commandButton action="{!saveArticle}" value="Save" onClick=""/>
+                <apex:commandButton action="{!cancel}" value="Cancel"/>
+                <apex:pageMessages />
+                <apex:outputPanel id="errorPanel">
+                    <apex:pageMessage strength="2" title="{!errorTitle}" summary="{!errorMessage}" severity="{!errorSeverity}" rendered="{!errorShow}" />
+                </apex:outputPanel>
+                    
+              </apex:pageBlockButtons> 
+                
+              <apex:pageBlockSection columns="1" rendered="{!IF(NOT(ISNULL(solution.ParentId__c)),true,false)}">
+                    <apex:pageBlockSectionItem >
+                       <apex:OutputLabel value="Published Article :"/>
+                       <a id="publishArticle" href="/{!solution.ParentId__c}">Published Article Link</a>
+                    </apex:pageBlockSectionItem>
+                </apex:pageBlockSection>
+              
+               
+              <apex:pageBlockSection columns="1">
+                <apex:inputField value="{!Solution.SolutionName}" required="{!IF(recordType == 'Known Issue',true,false)}" Id="ArticleName" style="width:590px;"/>
+              </apex:pageBlockSection>    
+              
+                <apex:pageBlockSection columns="1">
+                    <apex:inputField value="{!Solution.Product__c}" id="product" required="{!IF(recordType == 'Troubleshooting/Informational' || recordType == 'Standard' || recordType == 'Question/Answer' || recordType == 'Known Issue' || (recordType == 'Product Documentation' || $Profile.Name == 'SRV - Product Documentation Team') || recordType == 'Release Homepage' || (recordType == 'Support Bulletin/Security Advisory' || $Profile.Name == 'SRV - SBSA Authors') || recordType == 'Supported Technologies Information' || recordType == 'Release Page'|| recordType == 'Announcement',true,false)}"/>
+                </apex:pageBlockSection>
+              
+                <apex:pageBlockSection columns="1">                 
+                    <apex:inputField value="{!Solution.Major_Release__c}" id="majRelease" required="{!IF(recordType == 'Troubleshooting/Informational' || recordType == 'Standard' || recordType == 'Question/Answer' || recordType == 'Known Issue' || (recordType == 'Product Documentation' || $Profile.Name == 'SRV - Product Documentation Team') || recordType == 'Release Homepage' ||recordType == 'Supported Technologies Information' || recordType == 'Release Page',true,false)}"/>                 
+                </apex:pageBlockSection>
+              
+                <apex:pageBlockSection columns="1">
+                    <apex:inputField value="{!Solution.Version_s__c}" id="version"/>
+                </apex:pageBlockSection>
+              
+              <apex:pageBlockSection columns="1">
+                  <apex:inputField value="{!Solution.Issue_Description__c}" required="{!IF(recordType == 'Known Issue' || recordType == 'Standard',true,false)}" style="width:590px;height:100px"/>                  
+              </apex:pageBlockSection>
+            
+                <apex:pageBlockSection columns="1">
+                    <apex:pageBlockSectionItem >
+                         <apex:OutputLabel value="Steps to Replicate"/>
+                         <apex:inputTextArea styleClass="ckeditor" value="{!Solution.Steps_to_Reproduce__c}" />
+                     </apex:pageBlockSectionItem>   
+                </apex:pageBlockSection>
+              
+                <apex:pageBlockSection columns="1" rendered="{!IF($Profile.Name == 'System Administrator' ||$Profile.Name == 'SRV System Administrator' || $Profile.Name == 'SRV - KM Administrators' || $Profile.Name == 'SRV - APAC User - KM',true,false)}">
+                 <apex:pageBlockSectionItem >   
+                    <apex:outputLabel value="Status" style="color:green" rendered="{!IF(solution.Id == null, 'false', 'true')}"/>
+                    <apex:inputField value="{!Solution.Status}" id="status" required="{!IF(recordType == 'Known Issue',false,true)}"  rendered="{!IF(solution.Id == null, 'false', 'true')}"/>
+                </apex:pageBlockSectionItem>
+                </apex:pageBlockSection>
+               
+               
+                <apex:pageBlockSection columns="1">
+                <apex:inputField value="{!Solution.summary__c}" id="Summary" style="width:590px;height:100px" required="{!IF(recordType == 'Known Issue',true,false)}"/>
+               </apex:pageBlockSection>
+               
+              <apex:pageBlockSection columns="1">
+                <apex:pageBlockSectionItem >
+                <apex:OutputLabel value="Visible in Customer Portal" style="color:green"/>             
+                <apex:inputField value="{!Solution.Visible_in_Customer_Portal__c}" id="visCustPortal"/>
+              </apex:pageBlockSectionItem>  
+                <apex:pageBlockSectionItem >
+                <apex:OutputLabel value="Visible in Partner Portal" style="color:green"/>         
+                <apex:inputField value="{!Solution.Visible_in_Partner_Portal__c}" id="visPartPortal"/>
+                </apex:pageBlockSectionItem> 
+                <apex:pageBlockSectionItem >
+                <apex:OutputLabel value="Visible in Public KnowledgeBase" style="color:green"/>         
+                <apex:inputField value="{!Solution.IsPublishedInPublicKb}" id="visPubKnwBase"/>
+                </apex:pageBlockSectionItem>
+              </apex:pageBlockSection>      
+              
+                <apex:pageBlockSection columns="1">                                     
+                    <apex:pageBlockSectionItem >
+                         <apex:OutputLabel value="Symptoms"/>
+                         <apex:inputTextArea styleClass="ckeditor" value="{!Solution.Symptoms__c}" />
+                       
+                     </apex:pageBlockSectionItem>
+                     <apex:pageBlockSectionItem >
+                         <apex:OutputLabel value="Cause"/>
+                         <apex:inputTextArea styleClass="ckeditor" value="{!Solution.Cause__c}" />
+                       
+                     </apex:pageBlockSectionItem>
+                     <apex:pageBlockSectionItem > 
+                         <apex:OutputLabel value="Resolution/Workaround"/>
+                         <apex:inputTextArea styleClass="ckeditor" value="{!Solution.Resolution_Workaround__c}" />
+                       
+                     </apex:pageBlockSectionItem>
+                     <apex:pageBlockSectionItem >
+                         <apex:OutputLabel value="Best Practice Information"/>
+                         <apex:inputTextArea styleClass="ckeditor" value="{!Solution.Best_Practice_Information__c}" />
+                       
+                     </apex:pageBlockSectionItem>                     
+                </apex:pageBlockSection> 
+           
+               
+                <apex:pageBlockSection columns="1">  
+                   <apex:pageBlockSectionItem >
+                         <apex:OutputLabel value="Internal Only Notes" style="color:green"/>
+                         <apex:inputTextArea styleClass="ckeditor" value="{!Solution.Internal_Only_Notes__c}" />
+                   </apex:pageBlockSectionItem>
+                </apex:pageBlockSection>  
+            
+            
+                <apex:pageBlockSection columns="1">            
+                    <apex:pageBlockSectionItem >
+                        <apex:OutputLabel value="Support Incident" style="color:green"/>
+                        <apex:inputField value="{!Solution.Support_Incident__c}" id="supporInc"/>
+                    </apex:pageBlockSectionItem>
+                </apex:pageBlockSection>      
+           
+                <apex:pageBlockSection columns="1">                  
+                 <apex:inputField value="{!Solution.Patch_Available__c}" required="true">
+                                                           
+                </apex:inputField>
+                
+                </apex:pageBlockSection>
+                <apex:pageBlockSection columns="1">
+                    <apex:inputField value="{!Solution.Patch_Versions__c}" id="Patch_version"/>
+                </apex:pageBlockSection>
+                 <apex:pageBlockSection columns="1" id="PatchComment">                                                                  
+                   <apex:pageBlockSectionItem >
+                             <apex:OutputLabel value="Patch Information"/>
+                             <apex:inputTextArea styleClass="ckeditor" value="{!Solution.Patch_Comments__c}" />                         
+                   </apex:pageBlockSectionItem>              
+                 </apex:pageBlockSection>  
+
+                      
+               <!-- <apex:pageBlockSection columns="1">
+          
+                   <apex:pageBlockSectionItem>
+                             <apex:OutputLabel value="Patch Comments"/>
+                             <apex:inputTextArea styleClass="ckeditor"value="{!Solution.Patch_Comments__c}" />                         
+                   </apex:pageBlockSectionItem>
+               </apex:pageBlockSection>-->               
+                        
+        </apex:pageBlock>
+   
+  </apex:form>
+</apex:page>

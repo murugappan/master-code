@@ -1,0 +1,29 @@
+<apex:page standardStylesheets="false" showHeader="false" sidebar="false" contentType="text/html" cache="false" controller="renewalOppDetail" >
+    <apex:composition template="btbb_publictemplate" > 
+        <apex:define name="content" > 
+        
+        
+            <apex:form id="formid">
+            
+            <apex:pageBlock title="Payment Options"  id="pageblockid">
+            
+            How would you like to pay?<br/><br/>
+            
+            
+            <apex:selectRadio value="{!isPaymentTypeSelected}" layout="pageDirection" >
+                <apex:selectOptions value="{!PaymentOptionsValues}"/>
+            </apex:selectRadio> <br/>
+            
+            <apex:commandButton value="Continue" action="{!doContinue}" style="background-color:#E8E8E8;background-image:none;;width: 6em;  height: 1.95em; " tabindex="1"/>
+            
+            
+            </apex:pageBlock>
+        
+        
+        
+        
+            </apex:form>
+        </apex:define>
+    </apex:composition>
+ 
+</apex:page>

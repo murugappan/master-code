@@ -1,0 +1,64 @@
+<apex:page controller="btbb_udh" standardStylesheets="false" showheader="false" sidebar="false" >
+<script>
+function confirmMsg()
+{
+var c = confirm("Are you sure, you want to delete profile?");
+if (c==true)
+  {
+  deactive();
+  }
+  
+  else
+  {
+  }
+
+} 
+</script> 
+
+        <apex:composition template="btbb_template">
+                <apex:define name="topbar"><c:btbb_globalsearch /></apex:define>
+                <apex:define name="nav"><c:btbb_auth_nav /></apex:define>
+                <apex:define name="content">
+                        <h2>My Institution Help Desk </h2>
+                        
+                        Please Select the type of profile which you wish to setup. You may choose to enter a link for an existing support page that is publicly accessible or enter the help text into our system directly. <br/> <br/>
+                        <apex:form id="theform" >
+                          <apex:actionFunction name="deactive" action="{!deactiprof}" />
+                                <apex:pageMessages ></apex:pageMessages>
+                                <apex:outputText style="font-style:italic" value="{!errorText}" rendered="{!NOT(isAccountValid)}" /> 
+                                <apex:outputpanel layout="block" rendered="{!isAccountValid}" > 
+                                        <apex:selectradio value="{!store}">
+                                                <apex:actionSupport event="onchange" />
+                                                <apex:selectOptions value="{!items}"/ >
+                                        </apex:selectradio><p/>
+                                        <apex:outputPanel layout="block" rendered="{!store == 'Provide link'}" >
+                                                <tr>
+                                                <td> <apex:inputText value="{!univsnames.Website__c}" style="width: 211px; height: 20px"/> </td><br/><b>Example:(http://www.yourdomain.com)</b><font color="red"><br/>{!errorTxt}{!dText}</font> <br/><br/>
+                                             
+                                                </tr>
+                                                <!-- <apex:outputPanel rendered="{!checkvalid}"> -->
+                                                <apex:commandButton value="Save" action="{!savemeth}"> or <a href="/apex/btbb_updatedirecthelpprofile?id={!a.id}">cancel and return</a> 
+                                                </apex:commandButton> <br/>
+                                                <!-- </apex:outputPanel> -->
+                                                <!-- <apex:outputPanel rendered="{!NOT(checkvalid)}"> -->
+                                                <apex:commandButton value="Delete Profile" onclick="confirmMsg();">
+                                                </apex:commandButton> 
+                                                <!-- </apex:outputPanel> -->
+                                                
+                                        </apex:outputPanel>
+                                        <apex:outputPanel layout="block" rendered="{!store == 'Provide help text'}">  
+                                                <apex:inputTextarea value="{!univsnames.HTML_Text__c}" style="textarea" richText="true" /> <br/> <br/>
+                                                <!-- <apex:outputPanel rendered="{!checkvalid}"> -->
+                                                <apex:commandButton value="Save" action="{!savemeth}"> or <a href="/apex/btbb_updatedirecthelpprofile?id={!a.id}">cancel and return</a>
+                                                </apex:commandButton><br/>
+                                               <!-- </apex:outputPanel> -->
+                                                <!-- <apex:outputPanel rendered="{!NOT(checkvalid)}"> -->
+                                                <!-- <apex:commandButton value="Delete Profile" action="{!deactiprof}" /> -->
+                                                <apex:commandButton value="Delete Profile" onclick="confirmMsg();" />
+                                                <!-- </apex:outputPanel> -->
+                                        </apex:outputPanel>
+                               </apex:outputpanel> 
+                        </apex:form>
+                </apex:define>
+        </apex:composition>
+</apex:page>

@@ -1,0 +1,43 @@
+<apex:page controller="btbb_articleviewController" cache="false" id="ArticleView" standardStylesheets="false" applyhtmltag="false"  showHeader="false" sidebar="false"  name="{!mainArticle.name} - BtBb KB Print" action="{!redirect}" renderas="pdf">
+    <head>
+        <style>
+            p {margin-top:7px;margin-bottom:4px;}
+            table { border-collapse:collapse; width:50%; margin: .1em;}
+            td {border:0.2px solid #757575;padding:0.8px;font-size:10px; text-align:left;}
+            th {border:0.2px solid #757575;padding:0.8px; font-size:11px;}
+            #btbbArticlefeedback td {border:none;}
+            @page {
+            size:A4 landscape;
+            margin:0.06in;
+            }
+           
+        </style>
+    </head>
+    <body>
+        <div class="mainpdf" style="font-family:arial,helvetica,sans-serif;font-size:85%;margin-left:2%;margin-right:2%;display:block;">
+            <apex:image style="margin-top:2%;height:80px%;width:80px;" alt="{!mainArticle.name}" value="{!URLFOR($Resource.BtBbKBPrint, '/Bb_Logo.jpg')}" /><br/><br />
+            <span style="background: transparent url('{!URLFOR($Resource.BtBbKBPrint, '/yellow_gray_blocks.jpg')}') repeat x;clear:none;">&nbsp;</span>
+            <div class="btbbArticleViewData">
+                <apex:outputText style="font-weight:bold;font-size:15px;" value="{!mainArticle.name}"/><br /><br />
+                <b>Date Published:</b>
+                <apex:outputText value=" {0,date,MMM dd,yyyy}">
+                    <apex:param value="{!DATEVALUE(btbbController.mainArticle.lastPublishedDate)}"/> 
+                </apex:outputText>
+                <b>Category:</b> {!btbbController.mainArticle.dataCategories}&nbsp;&nbsp;
+                <b>Article No.:</b> {!btbbController.mainArticle.ArticleNumber}
+            </div>
+            <c:btbbAnnouncementView btbbController="{!btbbController}" showBackLinks="false" rendered="{!mainArticle.articleType == 'Announcement'}" />
+            <c:btbbKnownIssueView btbbController="{!btbbController}" showBackLinks="false" rendered="{!mainArticle.articleType == 'Known Issue'}" />
+            <c:btbbOtherResourcesView btbbController="{!btbbController}" showBackLinks="false" rendered="{!mainArticle.articleType == 'Other Resource'}" />
+            <c:btbbProductDocumentationView btbbController="{!btbbController}" showBackLinks="false" rendered="{!mainArticle.articleType == 'Product Documentation'}" />
+            <c:btbbQuestionAnswerView btbbController="{!btbbController}" showBackLinks="false" rendered="{!mainArticle.articleType == 'Question/Answer'}" />
+            <c:btbbReleaseView btbbController="{!btbbController}" showBackLinks="false" rendered="{!mainArticle.articleType == 'Release'}" />
+            <c:btbbMaintenanceReleaseView btbbController="{!btbbController}" showBackLinks="false" rendered="{!mainArticle.articleType == 'Maintenance Release'}" />
+            <c:btbbGeneralArticleView btbbController="{!btbbController}" showBackLinks="false" rendered="{!mainArticle.articleType == 'General Article'}" />
+            <c:btbbSupportBulletinView btbbController="{!btbbController}" showBackLinks="false" rendered="{!mainArticle.articleType == 'Support Bulletin/Security Advisory'}" />
+            <c:btbbSupportedTechnologiesView btbbController="{!btbbController}" showBackLinks="false" rendered="{!mainArticle.articleType == 'Supported Technologies'}" />
+            <c:btbbTroubleshootingInformationalView btbbController="{!btbbController}" showBackLinks="false" rendered="{!mainArticle.articleType == 'Troubleshooting/Informational'}" />
+            <c:btbbBlackboardClientProgramView btbbController="{!btbbController}" showBackLinks="false" rendered="{!mainArticle.articleType == 'Blackboard Client Program'}" />
+        </div>
+    </body>
+</apex:page>

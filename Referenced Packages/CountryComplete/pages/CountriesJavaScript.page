@@ -1,0 +1,66 @@
+<apex:page controller="pw_cc.StaticCountries" sidebar="false" showHeader="false" contentType="application/javascript" cache="true" expires="86400">
+var pw_cc_countries = new Object();
+
+pw_cc_countries.countries = {
+{!CountryList}
+};
+
+pw_cc_countries.Iso31662Codes = {
+{!Iso_2_CodeList}
+};
+
+pw_cc_countries.Iso31663Codes = {
+{!Iso_3_CodeList}
+};
+
+pw_cc_countries.checkCountry = function(country) {
+	var sbs = pw_cc_countries.countries[country] || pw_cc_countries.Iso31662Codes[country] || pw_cc_countries.Iso31663Codes[country];
+	return sbs != undefined;
+}
+
+pw_cc_countries.getCountryNames = function() {
+	var a = new Array();
+	for (var prop in pw_cc_countries.countries) {
+		a.push(prop);
+	}
+	return a;
+}
+
+pw_cc_countries.getSubCountryNames = function(country) {
+	var sbs = pw_cc_countries.countries[country];
+	if (sbs == undefined)
+		sbs = pw_cc_countries.Iso31662Codes[country];
+	if (sbs == undefined)
+		sbs = pw_cc_countries.Iso31663Codes[country];
+	if (sbs == undefined)
+		return new Array();
+	return sbs;
+}
+
+pw_cc_countries.getAllSubCountryNames = function() {
+	var a = new Array();
+	for (var c in pw_cc_countries.countries) {
+		var subcountries = pw_cc_countries.countries[c];
+		for (var i = 0; i < subcountries.length; i++) {
+			a.push(subcountries[i]);
+		}
+	}
+	return a;
+}
+
+pw_cc_countries.getCountryBySubCountry = function(subcountry) {
+	for (var c in pw_cc_countries.countries) {
+		var subcountries = pw_cc_countries.countries[c];
+		for (var i = 0; i < subcountries.length; i++) {
+			if (subcountries[i] == subcountry)
+				return c;
+		}
+	}
+	return "";
+}
+
+pw_cc_countries.countryFieldIds = [{!CountryFieldIdList}];
+pw_cc_countries.stateFieldIds = [{!StateFieldIdList}];
+
+pw_cc_countries.IsLoaded = true;
+</apex:page>

@@ -1,0 +1,170 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<CustomObject xmlns="http://soap.sforce.com/2006/04/metadata">
+    <customSettingsType>Hierarchy</customSettingsType>
+    <customSettingsVisibility>Public</customSettingsVisibility>
+    <description>Cameleon-cloud CPQ settings</description>
+    <enableEnhancedLookup>false</enableEnhancedLookup>
+    <enableFeeds>false</enableFeeds>
+    <fields>
+        <fullName>CPQMappingSet__c</fullName>
+        <deprecated>false</deprecated>
+        <description>Quote Mapping Set</description>
+        <externalId>false</externalId>
+        <label>CPQ Mapping Set Name</label>
+        <length>25</length>
+        <required>false</required>
+        <type>Text</type>
+        <unique>false</unique>
+    </fields>
+    <fields>
+        <fullName>CPQServer_EndpointURL__c</fullName>
+        <deprecated>false</deprecated>
+        <description>The Cameleon-cloud CPQ server URL</description>
+        <externalId>false</externalId>
+        <inlineHelpText>https://&lt;hostname&gt;[:port]</inlineHelpText>
+        <label>CPQ Server Url</label>
+        <length>255</length>
+        <required>false</required>
+        <type>Text</type>
+        <unique>false</unique>
+    </fields>
+    <fields>
+        <fullName>CPQSession_AuthPwd__c</fullName>
+        <defaultValue>&quot;your_cameleon_org_password&quot;</defaultValue>
+        <deprecated>false</deprecated>
+        <description>CPQ authentication password</description>
+        <externalId>false</externalId>
+        <label>CPQ Auth. Password</label>
+        <length>40</length>
+        <required>false</required>
+        <type>Text</type>
+        <unique>false</unique>
+    </fields>
+    <fields>
+        <fullName>CPQSession_AuthUser__c</fullName>
+        <defaultValue>&quot;your_cameleon_org_user&quot;</defaultValue>
+        <deprecated>false</deprecated>
+        <description>CPQ authentication user name</description>
+        <externalId>false</externalId>
+        <label>CPQ Auth. User</label>
+        <length>40</length>
+        <required>false</required>
+        <type>Text</type>
+        <unique>false</unique>
+    </fields>
+    <fields>
+        <fullName>CPQSession_EmptyQuoteQuickAction__c</fullName>
+        <defaultValue>&quot;&quot;</defaultValue>
+        <deprecated>false</deprecated>
+        <description>The name of the quote model action that will be triggered at the begining of a CPQ session, before the display of quote UI.</description>
+        <externalId>false</externalId>
+        <inlineHelpText>This setting allows CPQ  to immediately start a predefined Configuration Service when creating a new quote. 
+Syntax :  [Action name:Service name] 
+Example: ConfList:CONF_SUBSCRIPT_SRV</inlineHelpText>
+        <label>CPQ Session Empty Quote Quick Action</label>
+        <length>255</length>
+        <required>false</required>
+        <type>Text</type>
+        <unique>false</unique>
+    </fields>
+    <fields>
+        <fullName>CPQSession_Layout__c</fullName>
+        <defaultValue>&quot;cpqUI_FORCE&quot;</defaultValue>
+        <deprecated>false</deprecated>
+        <description>Name of the CPQ Layout used to open a session from Salesforce.com</description>
+        <externalId>false</externalId>
+        <label>CPQ Session UI Layout</label>
+        <length>25</length>
+        <required>false</required>
+        <type>Text</type>
+        <unique>false</unique>
+    </fields>
+    <fields>
+        <fullName>CPQSession_OverviewSyncAction__c</fullName>
+        <defaultValue>&quot;Synchronize&quot;</defaultValue>
+        <deprecated>false</deprecated>
+        <description>The name of the action in CPQ Quote Model used to synchronize CPQ content when Overview tab is selected within the Cameleon Quote panel</description>
+        <externalId>false</externalId>
+        <label>CPQ Synchronize Action</label>
+        <length>100</length>
+        <required>false</required>
+        <type>Text</type>
+        <unique>false</unique>
+    </fields>
+    <fields>
+        <fullName>CPQSession_QuoteModel_Name__c</fullName>
+        <defaultValue>&quot;CPQModel_FORCE_2012&quot;</defaultValue>
+        <deprecated>false</deprecated>
+        <description>The name of the CPQ quote model used to open a session from Salesforce.com</description>
+        <externalId>false</externalId>
+        <label>CPQ Quote Model Name</label>
+        <length>25</length>
+        <required>false</required>
+        <type>Text</type>
+        <unique>false</unique>
+    </fields>
+    <fields>
+        <fullName>CPQSession_QuoteModel_Release__c</fullName>
+        <defaultValue>1</defaultValue>
+        <deprecated>false</deprecated>
+        <description>The release number of the CPQ quote model used to open a session from Salesforce.com</description>
+        <externalId>false</externalId>
+        <label>CPQ Quote Model Release</label>
+        <precision>2</precision>
+        <required>false</required>
+        <scale>0</scale>
+        <type>Number</type>
+        <unique>false</unique>
+    </fields>
+    <fields>
+        <fullName>CPQSession_RefreshAction__c</fullName>
+        <defaultValue>&quot;RefreshQuote&quot;</defaultValue>
+        <deprecated>false</deprecated>
+        <description>The name of the action of the CPQ Quote Model that is triggered when the Refresh button is pressed on Cameleon Quote overview tab</description>
+        <externalId>false</externalId>
+        <label>CPQ Refresh Action</label>
+        <length>100</length>
+        <required>false</required>
+        <type>Text</type>
+        <unique>false</unique>
+    </fields>
+    <fields>
+        <fullName>CPQSession_Theme__c</fullName>
+        <defaultValue>&quot;cameleon2011&quot;</defaultValue>
+        <deprecated>false</deprecated>
+        <description>Name of the CPQ Theme</description>
+        <externalId>false</externalId>
+        <label>CPQ Session Quote UI Theme</label>
+        <length>25</length>
+        <required>false</required>
+        <type>Text</type>
+        <unique>false</unique>
+    </fields>
+    <fields>
+        <fullName>ProductMgtPolicy__c</fullName>
+        <defaultValue>2</defaultValue>
+        <deprecated>false</deprecated>
+        <description>Code that determines the Management Policy for Products</description>
+        <externalId>false</externalId>
+        <inlineHelpText>1 = [Re-Use Only], 
+2 = [Allow Creation Or Re-Use Existing]
+3 = [Re-Use Existing And Update]
+4 = [Re-Use (or Create if necessary) and Update]</inlineHelpText>
+        <label>Product Management Policy</label>
+        <precision>1</precision>
+        <required>false</required>
+        <scale>0</scale>
+        <type>Number</type>
+        <unique>false</unique>
+    </fields>
+    <fields>
+        <fullName>StdTrigger_Enabled__c</fullName>
+        <defaultValue>true</defaultValue>
+        <deprecated>false</deprecated>
+        <description>Specify if the trigger that populates quote entity fields must be launched after synchronization of cart content</description>
+        <externalId>false</externalId>
+        <label>Enable standard trigger</label>
+        <type>Checkbox</type>
+    </fields>
+    <label>Cameleon CPQ settings</label>
+</CustomObject>

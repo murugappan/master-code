@@ -1,0 +1,41 @@
+<apex:component selfClosing="true" controller="btbbAuthNavController">
+<ul id="primary-nav">
+
+    
+     
+    <li class="CMSListMenuLIfirst">
+        <a href="{!IF(isXythosOnly == true, $Page.btbb_home, $Page.btbb_home)}" class="{!IF($CurrentPage.Name='btbb_home' || $CurrentPage.Name='btbb_home','CMSListMenuLinkHighlighted','CMSListMenuLink')}" title="Home">Home</a>
+    </li>
+    
+    <li class="CMSListMenuLI">
+        <a href="{!IF(isXythosOnly == true, $Page.btbb_selfservice, $Page.btbb_selfservice)}" class="{!IF($CurrentPage.Name='btbb_articlesearch' || $CurrentPage.Name='btbb_articleview' || $CurrentPage.Name='btbb_selfservice' || $CurrentPage.Name='btbb_xythosselfservice','CMSListMenuLinkHighlighted','CMSListMenuLink')}" title="Self Service">Self Service</a>
+        <ul class="CMSListMenuUL">
+        <apex:repeat value="{!btbbServicelinks}" var="k">
+            <li class="{!IF(k.order__c == 1,'CMSListMenuLIfirst',if(k.order__c<btbbServicelinks.size,'CMSListMenuLI','CMSListMenuLIlast'))}"><a href="{!k.URL__c}" target="{!k.target__c}">{!k.NAME}</a></li>
+            </apex:repeat>
+        </ul> 
+    </li>
+    
+    <li class="CMSListMenuLI">
+        <a href="{!IF(isXythosOnly == true, $Page.btbb_community, $Page.btbb_community)}" class="{!IF($CurrentPage.Name='btbb_community' || $CurrentPage.Name='btbb_xythoscommunity','CMSListMenuLinkHighlighted','CMSListMenuLink')}" title="Community Resources">Community Resources</a>
+        <ul class="CMSListMenuULWide">
+           <apex:repeat value="{!btbbCommunitylinks}" var="k">
+            <li class="{!IF(k.order__c == 1,'CMSListMenuLIfirstWide',if(k.order__c<btbbCommunitylinks.size,'CMSListMenuLIWide','CMSListMenuLIlastWide'))}"><a href="{!k.URL__c}" target="{!k.target__c}">{!k.NAME}</a></li>
+            </apex:repeat>
+        </ul>  
+    </li>
+    
+    <li class="CMSListMenuLIlast" >
+        <a href="{!$Page.btbb_casesearch}" class="{!IF($CurrentPage.Name='btbb_casesearch' || $CurrentPage.Name='btbb_caseview' || $CurrentPage.Name='btbb_newcase' || $CurrentPage.Name='btbb_caseConfirmation' || $CurrentPage.Name='btbb_caseRelevantArticles' || $CurrentPage.Name='TakeSurvey' || $CurrentPage.Name='ThankYou' || $CurrentPage.Name='btbb_enduserdownload' ,'CMSListMenuLinkHighlighted','CMSListMenuLink')}" title="Support">Support</a>
+        <ul class="CMSListMenuUL">
+            <li class="CMSListMenuLIfirst" style="display:{!IF(NOT(isreadonly) ,'block','none')}"><a href="{!$Page.btbb_newcase}">Create a Case</a></li>
+            <li class="CMSListMenuLI" style="display:{!if(isCollabAdmin,'block','none')}" ><a href="{!$Page.btbb_enduserdownload}">End User Cases</a></li>
+            <li class="CMSListMenuLIlast"><a href="{!$Page.btbb_casesearch}">Search Cases</a></li>
+        </ul>    
+    </li>
+    
+  <div style="float:right;margin:0px 17px; width:120px; height:50px; line-height:40px; vertical-align: middle; text-align: center; border: 0px solid; border-top-left-radius: 8px; border-top-right-radius: 8px; background:#FFFFFF; font-family:Cambria; font-size: 17px; color:#1C1C1C;"> <b>{!logoclass} </b></div>  
+        
+</ul>
+
+</apex:component>

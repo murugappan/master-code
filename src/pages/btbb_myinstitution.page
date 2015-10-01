@@ -1,0 +1,311 @@
+<apex:page standardStylesheets="false" showHeader="false" sidebar="false" contentType="text/html" cache="false" controller="btbbInstitutionController"  action="{!Redirect}">
+    <apex:composition template="btbb_template">
+    <apex:define name="head">
+        <style>
+            h3 {margin-top:5px;}
+            .AssetEditLink {font-weight:normal;font-size:12px;}
+            .AssetEditLink a {color:#00838A;text-decoration:none;}
+            .AssetEditLink a:hover {color:#00838A;text-decoration:underline;}
+            .HelpDeskEditLink {font-weight:normal;font-size:12px;float:right;}
+            .HelpDeskEditLink a {color:#00838A;text-decoration:none;} 
+            .HelpDeskEditLink a:hover {color:#00838A;text-decoration:underline;}
+            .envLabel {padding-left: 10px; padding-top:5px;}
+            .envEntry {padding-left: 10px; padding-top:5px;}
+        </style>
+    </apex:define>
+    <apex:define name="topbar"><c:btbb_globalsearch /></apex:define>
+    <apex:define name="nav"><c:btbb_auth_nav /></apex:define>
+        <apex:define name="content">
+        <h2>My Institution</h2>
+                  
+                     <div id="revContentLeft">
+                     
+                     <div id="btbbAccountLeftCol">
+                        <ul>
+                            <li><a href="{!$Page.btbb_myprofile}?id={!UserId}">My Profile</a></li>
+                            <li>My Institution</li>
+                            <li><a href="{!$Page.btbb_mysubscriptions}" title="My Subscriptions">My Subscriptions</a></li>
+                        </ul>
+                    </div>     
+                   <div class="cleaner">&nbsp;</div>  
+             <apex:pageBlock id="accounts" >
+                     <div id="contentTitleContainer">
+                        <div class="contentTitle" style ="word-wrap:break-word;"><br /><span class="Agenda" style="font-size:19px;clear:none;float:left;position:relative;top:-15px;">{!AccountName} - {!AccPSCompId}</span></div> 
+                    </div><br/>   
+             </apex:pageBlock>
+                     <apex:form >
+                     <apex:selectList value="{!AcctId}" styleClass="select" size="1" multiselect="false" style="width:250px;" 
+                     rendered="{!accstat}">
+                            <apex:selectOptions value="{!Accounts}"></apex:selectOptions>
+                            <apex:actionSupport event="onchange" action="{!selectAccount}" rerender="accounts,contacts,asset"/>
+                        </apex:selectList><br />
+                     </apex:form>
+                  
+                    <apex:pageBlock id="contacts">
+                    <apex:form >
+                      
+                        <apex:repeat value="{!ContactData}" var="Contacta" id="theRepeat1">
+                            <table class="btbbContacts">
+                                <tr>
+                                    <td>
+                                        <p>&nbsp;</p> 
+                                        <b><apex:outputLabel value="{!Contacta.a}"/></b>
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td>
+                                        <apex:repeat value="{!Contacta.listContact}" var="Name" id="theRepeat" >
+                                             <table>
+                                                 <tr>
+                                                    <td>
+                                                        <apex:outputLabel value="{!Name}"/>
+                                                    </td>
+                                                </tr>
+                                             </table>
+                                        </apex:repeat>                                        
+                                    </td>
+                                </tr>
+                           </table>
+                        </apex:repeat>
+                        </apex:form>
+                        </apex:pageBlock>
+                        
+                    </div>
+                    
+                    <div id="revContentRight">
+                        <apex:form >                        
+                        
+                        <apex:pageblock Id="asset">
+                        
+                        <h3 style="text-transform:none;{!IF(BbAccountReps != Null, '', 'display:none;')}">Bb ACCOUNT TEAM</h3>
+                        <div class="revContentBoxRight" style="{!IF(BbAccountReps != Null, '', 'display:none;')}">
+                            <apex:repeat value="{!BbAccountReps}" var="rep">
+                            <p><strong>{!rep.Name}:</strong> {!rep.Member__c}</p>
+                            </apex:repeat>
+                            <apex:outputText value="Complex Hosting Manager:" style="font-weight:bold;" rendered="{!IF(ComplexHostingRep != Null, True, False)})"/> <span>{!ComplexHostingRep}</span>
+                        </div>
+                       
+                        <h3 style="display:{!IF(NOT(isDeveloper) ,'none','block')}">Developer Tools &amp; Membership Renewal</h3><!--THIS WILL CONDITIONALLY DISPLAY IF A USER HAS A ROLE OF Bb - Learn Developer and will not display if the user does not have the role-->
+                        
+                            <div class="revContentBoxRight" style="display:{!IF(NOT(isDeveloper) ,'none','block')}">
+                                <p><a style="color:#00838A;" href="https://behind.blackboard.com/System-Administrator/Learn/Downloads/Bb-Learn/License-Key-Options.aspx">Request License Key</a></p>
+                                <p><a style="color:#00838A;" href="https://behind.blackboard.com/Developer/BbDN-Subscription/">Renew Membership</a></p>
+                      
+                            </div>
+                        
+                        <h3 style="display:{!IF(isAdmin,'block','none')}">My Institution Help Desk</h3>
+                        
+                            <div class="revContentBoxRight" style="display:{!IF(isAdmin,'block','none')}">
+                                
+                                <apex:outputLink rendered="{!IF(isAdmin, true, false)}" style="color:#00838A;" value="/apex/btbb_updatedirecthelpprofile?id={!Acctid}">View/Update Your Institution Help Desk Information</apex:outputlink>
+                                
+                            </div>
+                        
+                        <h3>My Environments</h3> 
+                        
+                        <div class="revContentBoxRight"> 
+                            
+                            <apex:repeat value="{!AssetData}" var="AssetVal" id="theRepeat2" rendered="{!IF(NOT(isAccontSel) && NOT(isEditMode), true, false)}">                                          
+                                    
+                                    <apex:outputPanel rendered="{!NOT(contains(AssetVal.CoreLicense,  'Collaborate')) && NOT(contains(AssetVal.CoreLicense,  'Moodlerooms')) && NOT(contains(AssetVal.CoreLicense,  'Analytics')) && NOT(contains(AssetVal.CoreLicense,  'xpLor'))}">
+                                    <div class="caseTitle">{!AssetVal.Name}&nbsp;&nbsp;<span class="AssetEditLink"><apex:outputText value="[" rendered="{!IF(NOT(isMLAAdmin) && NOT(isAccontSel) && NOT(isEditMode)&& AssetVal.isadmin && NOT(CONTAINS(AssetVal.coreliscenseproduct,'Learn SAAS')) && (ISNULL(AssetVal.ManageHosting) || (NOT(CONTAINS(AssetVal.ManageHosting,'Managed Hosting'))) ), true, false)}"/>&nbsp;<apex:commandLink value="Edit" action="{!EditAsset}" rerender="asset" style="color:#00838A;" rendered="{!IF(NOT(isMLAAdmin) && NOT(isAccontSel) && NOT(isEditMode) &&AssetVal.isadmin && NOT(CONTAINS(AssetVal.coreliscenseproduct,'Learn SAAS')) && (ISNULL(AssetVal.ManageHosting) || (NOT(CONTAINS(AssetVal.ManageHosting,'Managed Hosting')))), true, false)}">
+                                    <apex:param name="AssetUpdate" value="{!AssetVal.asstId}"/>
+                                    </apex:commandLink>&nbsp;
+                                    <apex:outputText value="]" rendered="{!IF(NOT(isMLAAdmin) && NOT(isAccontSel) && NOT(isEditMode)&&AssetVal.isadmin && NOT(CONTAINS(AssetVal.coreliscenseproduct,'Learn SAAS')) && (ISNULL(AssetVal.ManageHosting) || (NOT(CONTAINS(AssetVal.ManageHosting,'Managed Hosting')))), true, false)}"/></span></div>            
+                                    
+                                    
+                                    <div class="revContentSec"> 
+                                    
+                                         <p><strong>Environment Nickname:</strong> {!AssetVal.Nickname}</p> 
+                                         <!--<p style="display:{!IF((ISNULL(AssetVal.ManageHosting) || (NOT(CONTAINS(AssetVal.ManageHosting,'Managed Hosting')))), 'block','none' )}"><strong>Installed Product ID:</strong>&nbsp;{!AssetVal.Product_ID}</p> -->
+                                         <p style="display:{!IF((ISNULL(AssetVal.ManageHosting) || (NOT(CONTAINS(AssetVal.ManageHosting,'Managed Hosting')))), 'block','none' )}"><strong>Database : </strong> {!AssetVal.Database}</p> 
+                                         <p style="display:{!IF((ISNULL(AssetVal.ManageHosting) || (NOT(CONTAINS(AssetVal.ManageHosting,'Managed Hosting')))), 'block','none' )}"><strong>Application Server OS : </strong>&nbsp;{!AssetVal.Application_Server_OS}</p>
+                                         <p><strong>Managed Hosting : </strong>&nbsp;{!AssetVal.ManageHosting}</p> 
+                                         <p><strong>URL : </strong>&nbsp;<a href="#">{!AssetVal.Software_URL}</a></p> 
+                                         
+                                     </div> 
+                                     <div class="revContentSec"> 
+                                         <div class="contentInputRight"></div>
+                                         <p><strong>Software Version : </strong>{!AssetVal.Version}</p> 
+                                         <p><strong>Version Build : </strong>{!AssetVal.Version_Build}</p> 
+                                         <p><strong>Installed Product : </strong>&nbsp;{!AssetVal.Product}</p> 
+                                         <!--<p style="display:{!IF((ISNULL(AssetVal.ManageHosting) || (NOT(CONTAINS(AssetVal.ManageHosting,'Managed Hosting')))), 'block','none' )}"><strong>Database:</strong> {!AssetVal.Database}</p> -->
+                                         <p style="display:{!IF((ISNULL(AssetVal.ManageHosting) || (NOT(CONTAINS(AssetVal.ManageHosting,'Managed Hosting')))), 'block','none' )}"><strong>Database Server OS : </strong> {!AssetVal.Database_Server_OS}</p>
+                                         <p style="display:{!IF((ISNULL(AssetVal.ManageHosting) || (NOT(CONTAINS(AssetVal.ManageHosting,'Managed Hosting')))), 'block','none' )}"><strong>JDK Version : </strong> {!AssetVal.JDK_Version}<br />&nbsp;</p><br />       
+                                     </div> 
+                                     </apex:outputPanel>
+                                     
+                                     <apex:outputPanel rendered="{!contains(AssetVal.CoreLicense,  'Collaborate')}">
+                                     
+                                     <div class="caseTitle">{!AssetVal.Name}&nbsp;&nbsp;</div>            
+                                    
+                                    <div class="revContentSec">
+                                     <p><strong>External Description : </strong>&nbsp;{!AssetVal.externaldesciption}</p>
+                                     <!-- <p><strong>External Desctiption : </strong>&nbsp;{!AssetVal.externaldesciption}</p> -->
+                                    </div>
+                                     
+                                     
+                                     <div class="revContentSec">
+                                     
+                                     <p><strong>Product Suite : </strong>&nbsp;{!AssetVal.coreliscenseproduct}</p><br/><br/>
+                                     </div>
+                                     </apex:outputPanel>
+                                     
+                                     <apex:outputPanel rendered="{!(contains(AssetVal.CoreLicense, 'Moodlerooms'))}">
+                                     <div class="caseTitle">{!AssetVal.Name}&nbsp;&nbsp;</div>
+                                     
+                                     <div class="revContentSec"> 
+                                     
+                                        <p><strong>Environment Nickname:</strong> {!AssetVal.Nickname}</p>
+                                        <p><strong>URL : </strong>&nbsp;<a href="#">{!AssetVal.Software_URL}</a></p>  
+                                     
+                                     </div>
+                                      
+                                     <div class="revContentSec"> 
+                                         <div class="contentInputRight"></div>
+                                         
+                                          <p><strong>Software Version : </strong>{!AssetVal.Version}</p>
+                                          <p><strong>Installed Product : </strong>&nbsp;{!AssetVal.Product}</p><br/><br/>
+                                     </div>
+                                      
+                                     </apex:outputPanel>
+
+                                     <apex:outputPanel rendered="{!(contains(AssetVal.CoreLicense, 'xpLor'))}">
+                                     
+                                     <div class="caseTitle"><apex:outputLabel rendered="{!(contains(AssetVal.CoreLicense, 'xpLor'))}">{!AssetVal.productname}&nbsp;&nbsp;
+                                     </apex:outputLabel></div>
+                                     
+                                     <br/>
+                                    </apex:outputPanel>
+
+                                    
+                                     <!--Analytics -->
+                                         <apex:outputPanel rendered="{!(contains(AssetVal.CoreLicense, 'Analytics'))}">
+                                     <div class="caseTitle">{!AssetVal.Name}&nbsp;&nbsp;<span class="AssetEditLink"><apex:outputText value="[" rendered="{!AND(contains(AssetVal.CoreLicense, 'Analytics'),
+                                     (ISNULL(AssetVal.ManageHosting)))}"/>&nbsp;<apex:commandLink value="Edit" action="{!EditAsset}" rerender="asset" style="color:#00838A;" rendered="{!AND(contains(AssetVal.CoreLicense, 'Analytics'),(ISNULL(AssetVal.ManageHosting)))}">
+                                     <apex:param name="AssetUpdate" value="{!AssetVal.asstId}"/></apex:commandLink>&nbsp;<apex:outputText value="]" rendered="{!AND(contains(AssetVal.CoreLicense, 'Analytics'),
+                                     (ISNULL(AssetVal.ManageHosting)))}"/></span></div>
+                                     
+                                     <div class="revContentSec"> 
+                                     
+                                          <p><strong>ERP Platform : </strong> {!AssetVal.Version}</p>
+                                     
+                                     </div>
+                                      
+                                     <div class="revContentSec"> 
+                                         <div class="contentInputRight"></div>
+                                         
+                                           <p><strong>Version : </strong>{!AssetVal.Version_Build}</p><br/>
+                                     </div>
+                                      
+                                     </apex:outputPanel>
+
+
+                                     <!--  End Analytics-->
+
+                                     
+                                                     
+                            </apex:repeat>
+                           
+                           <div style="display:{!IF(isEditMode, 'block;', 'none;')}" class="caseFieldGroup">
+                           
+                                <div class="caseTitle" style="margin-left:10px;">{!assetName}</div><br/>
+
+                                    <table>
+                                        <tr>
+                                            <td class="envLabel"><strong>
+                                             <apex:outputLabel: value="Environment Nickname" rendered="{!NOT(contains(corelicenses,'Analytics'))}" /></strong></td>
+                                            <td class="envEntry">
+                                            <apex:inputText value="{!nickName}" rendered="{!NOT(contains(corelicenses,'Analytics'))}"/></td>
+                                        </tr>
+                                        
+                                        <tr>
+                                            <td class="envLabel"><strong>
+                                      <apex:outputLabel: value="{!IF(contains(corelicenses,'Analytics'),'ERP Platform','Version')} " />
+                                            </strong></td>
+                                            <td class="envEntry">
+                                                <apex:selectList value="{!version}" styleClass="select" size="1">
+                                                    <apex:selectOptions value="{!versions}" id="versionList" />
+                                                        <apex:actionSupport event="onchange" reRender="sb"/>                                                         
+                                                </apex:selectList>
+                                            </td>
+                                        </tr>
+                                        <tr>
+                                            <td class="envLabel"><strong>
+                                         <apex:outputLabel: value="{!IF(contains(corelicenses,'Analytics'),'Version','Build')} " />
+
+                                            </strong></td>
+                                            <td class="envEntry">
+                                                <apex:selectList value="{!build}" size="1" id="sb" styleClass="select"  >
+
+                                                    <apex:selectOptions value="{!sblist}" />
+                                                    <apex:actionSupport action="{!clearsb}" event="onchange" rerender="build" status="sbstatus"/>                                                
+                                                </apex:selectList>
+                                             </td>
+                                        </tr>
+                                        <tr>
+                                            <td class="envLabel"><strong>
+                                            <apex:outputLabel: value="URL" rendered="{!NOT(contains(corelicenses,'Analytics'))}" />
+                                            </strong></td>
+                                            <td class="envEntry"><apex:inputText value="{!softURL}" rendered="{!NOT(contains(corelicenses,'Analytics'))}"/></td>
+                                        </tr>
+                                        <tr>
+                                            <td class="envLabel"><strong>
+                                            <apex:outputLabel: value="Application Server OS" rendered="{!NOT(contains(corelicenses,'Analytics'))}" />
+                                            </strong></td>
+                                            <td class="envEntry">
+                                                <apex:selectList value="{!appServerOS}" size="1" styleClass="select" rendered="{!NOT(contains(corelicenses,'Analytics'))}">
+                                                    <apex:selectOptions value="{!applServerOS}" />
+                                                </apex:selectList>
+                                            </td>
+                                        </tr>
+                                        <tr>
+                                            <td class="envLabel"><strong>
+                                            <apex:outputLabel: value="Database" rendered="{!NOT(contains(corelicenses,'Analytics'))}" />
+                                            </strong></td>
+                                            <td class="envEntry">
+                                                <apex:selectList value="{!database}" size="1" styleClass="select" rendered="{!NOT(contains(corelicenses,'Analytics'))}"  >
+                                                    <apex:selectOptions value="{!databaseList}" />
+                                                </apex:selectList>
+                                             </td>
+                                        </tr>
+                                        <tr>
+                                            <td class="envLabel"><strong>
+                                             <apex:outputLabel: value="Database Server OS" rendered="{!NOT(contains(corelicenses,'Analytics'))}" />
+                                            </strong></td>
+                                            <td class="envEntry">
+                                                <apex:selectList value="{!dbServerOS}" size="1" styleClass="select" rendered="{!NOT(contains(corelicenses,'Analytics'))}" >
+                                                    <apex:selectOptions value="{!DbServerOS1}" />
+                                                </apex:selectList>
+                                             </td>
+                                        </tr>
+                                        <tr>
+                                            <td class="envLabel"><strong>
+                                            <apex:outputLabel: value="JDK Version" rendered="{!NOT(contains(corelicenses,'Analytics'))}" />
+                                            </strong></td>
+                                            <td class="envEntry">
+                                                <apex:selectList value="{!jdkVersion}" size="1" styleClass="select" rendered="{!NOT(contains(corelicenses,'Analytics'))}">
+                                                    <apex:selectOptions value="{!JDKVersionList}" />  
+                                                </apex:selectList>
+                                            </td>
+                                        </tr>
+                                        <tr>
+                                            <td class="envLabel">&nbsp;</td>
+                                            <td class="envEntry">
+                                                <apex:commandButton action="{!SaveAsset}" styleClass="button" value="Save" rerender="asset" rendered="{!IF(isEditMode, true, false)}"/>
+                                                <apex:commandButton action="{!CancelAsset}" styleClass="button" value="Cancel" rerender="asset" rendered="{!IF(isEditMode, true, false)}"/>
+                                            </td>
+                                        </tr>
+                                    </table>
+                                </div>
+                            <div class="cleaner">&nbsp;</div>                                       
+                        </div>                         
+                        <p>&nbsp;</p> 
+                        <div class="cleaner">&nbsp;</div>
+                    </apex:pageblock>
+                    </apex:form>       
+                    </div>
+                    
+        </apex:define>
+    </apex:composition>
+</apex:page>

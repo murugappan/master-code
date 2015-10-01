@@ -1,0 +1,47 @@
+<apex:component allowDML="true">
+    <apex:attribute name="btbbController" type="publickbarticleview" required="true" description="handle to the btbb article view controller" />
+    <apex:attribute name="showBackLinks" type="Boolean" required="true" description="flag to indicate if 'back to...' buttons should be shown" />
+    <div id="btbbArticleViewBody">          
+        <div id="articleDescription">                             
+            <apex:outputPanel layout="block" id="btbbarticledetail" style="margin-top: 20px;" rendered="{!btbbController.caseId == null}">                   
+                <apex:outputPanel layout="block" id="Product" rendered="{!btbbController.mainArticle.product != null}">
+                    <p>
+                        <strong>Product:</strong>
+                        <apex:outputText escape="false" value="  {!btbbController.mainArticle.product}"/>
+                    </p>                        
+                </apex:outputPanel>  
+                <apex:outputPanel layout="block" id="major" rendered="{!btbbController.mainArticle.release != null}">
+                    <p>
+                        <strong>Release:</strong>
+                        <apex:outputText escape="false" value="  {!btbbController.mainArticle.release}"/>
+                    </p>                                           
+                </apex:outputPanel>
+                <apex:outputPanel layout="block" id="version" rendered="{!btbbController.mainArticle.servicePacks != null}">
+                    <p>
+                        <strong>Service Pack:</strong>
+                        <apex:outputText escape="false" value="  {!btbbController.mainArticle.servicePacks}"/>
+                    </p>                          
+                </apex:outputPanel>
+            </apex:outputPanel>
+            <apex:outputPanel layout="block" id="DocumentType" rendered="{!btbbController.mainArticle.documentType != null}">
+                <p>
+                    <strong>Document Type:</strong>
+                    <apex:outputText escape="false" value="  {!btbbController.mainArticle.documentType}"/>
+                </p>
+            </apex:outputPanel>                              
+        </div>                    
+        <div id="ProductDoc" style="overflow: auto;width: 100%">
+            <apex:outputText style="font-weight:bold;" rendered="{!btbbController.mainArticle.documentSummary != null}" value="Document Summary:  " />
+            <apex:outputText rendered="{!btbbController.mainArticle.documentSummary != null}" value="{!btbbController.mainArticle.documentSummary}" escape="false" /><br />                    
+            <apex:outputText style="font-weight:bold;" rendered="{!btbbController.mainArticle.documentDetail != null}" value="Document Details:  " />
+            <apex:outputText rendered="{!btbbController.mainArticle.documentDetail != null}" value="{!btbbController.mainArticle.documentDetail}" escape="false" /><br />
+            <apex:outputText style="font-weight:bold;" rendered="{!btbbController.mainArticle.documentLink != null}" value="Document Link:  " />
+            <apex:outputText rendered="{!btbbController.mainArticle.documentLink != null}" value="{!btbbController.mainArticle.documentLink}" escape="false" />
+        </div>        
+    </div> 
+    <br />
+    <c:btbbArticleTerms />
+    <br />
+    <c:publicarticleattachment btbbController="{!btbbController}" rendered="{!btbbController.hasAttachments}" />
+    <br />        
+</apex:component>

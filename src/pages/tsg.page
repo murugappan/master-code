@@ -1,0 +1,29 @@
+<apex:page standardController="Bb_Tsg_Link__c" recordSetVar="links" sidebar="true"  tabStyle="CHIRP_Ticket__c" extensions="Bb_Tsg_Link_Extension">
+
+   <apex:form >
+        <apex:pageBlock id="Container" >
+
+             <apex:outputPanel id="sectionheader">    
+                <apex:sectionHeader id="sectionview" title="Salesforce Links" subtitle="Use these links to jump directly to some frequently used pages!" rendered="true"/>              
+            </apex:outputPanel>
+            
+            <apex:PageBlockSection id="linksSection" >
+            <style>.tenpix {height: 10px; margin: 0px; padding: 0px;"}</style>
+            <table id="linkTable">
+            <tr ><th>Available Pages</th></tr>
+            
+                <apex:repeat var="l" value="{!TsgLinks}">
+                    <tr class="tenpix"><td class="tenpix"><a href="{!l.URI__c}">{!l.Name}</a></td></tr> 
+                
+                
+                </apex:repeat>
+            
+            
+            
+            </table>
+            
+            </apex:PageBlockSection>
+            
+    </apex:pageBlock>
+</apex:form>
+</apex:page>

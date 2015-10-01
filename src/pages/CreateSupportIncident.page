@@ -1,0 +1,128 @@
+<apex:page standardController="learnJIRA__c" tabStyle="learnJIRA__c" extensions="CreateSupportIncidentController" title="Create Support Incident">
+    <apex:sectionHeader title="Create Support Incident" />
+    <apex:form >
+    
+        <apex:pagemessages />
+        <apex:pageBlock title="Create New Support Incident" mode="edit" rendered="{!NOT(hasError)}">
+            <apex:pageBlockButtons >
+                <apex:commandButton value="Save" action="{!doSave}" />
+                <apex:commandButton value="Cancel" action="{!doCancel}" immediate="true" />
+            </apex:pageBlockButtons>
+
+            <apex:pageBlockSection >
+                <apex:pageBlockSectionItem id="Summary">
+                    <apex:outputLabel >Summary </apex:outputLabel>
+                    <apex:outputPanel layout="block" styleClass="requiredInput">
+                        <apex:outputPanel layout="block" styleClass="requiredBlock"/>
+                        <apex:inputText label="Summary" id="Summary" value="{!supportIncident.Summary__c}" size="60" required="true" />
+                    </apex:outputPanel>
+                </apex:pageBlockSectionItem>
+                
+                <apex:pageBlockSectionItem rendered="{!$CurrentPage.parameters.cid == null}">
+                
+                </apex:pageBlockSectionItem>
+                
+                <apex:pageBlockSectionItem rendered="{!$CurrentPage.parameters.cid == null}">
+                <apex:outputLabel >Business Unit</apex:outputLabel>
+               
+                
+                <apex:actionRegion >
+                <apex:inputField id="BusinessUnit" value="{!supportIncident.Business_Unit__c}" required="true" rendered="{!$CurrentPage.parameters.cid == null}" >
+                        
+                        <apex:actionSupport id="BType" event="onchange" action="{!setBType}" rerender="TInfo" />
+                </apex:inputfield>
+                </apex:actionRegion>
+                </apex:pageBlockSectionItem>
+                
+                <apex:pageBlockSectionItem rendered="{!$CurrentPage.parameters.cid == null}">
+                
+                </apex:pageBlockSectionItem>
+                
+              <apex:pageBlockSectionItem rendered="{!$CurrentPage.parameters.cid == null }" >
+                 <apex:outputLabel >Tier 2 Assessment</apex:outputLabel>
+                 <apex:inputField value="{!supportIncident.Tier_2_Assessment__c}" required="true" id="TInfo"/>
+                </apex:pageBlockSectionItem> 
+                
+                <apex:pageBlockSectionItem rendered="{!NOT(isCollab)}" >
+                <apex:outputLabel value="{!IF(isAnalytics,'ERP Platform','Version On Case')}"></apex:outputLabel>
+                <apex:inputText id="VOC" value="{!version}" disabled="true" size="10"/>
+                </apex:pageBlockSectionItem>
+
+            <!-- <apex:pageblockSectionItem >
+            <apex:outputLabel value="Version On Case:" for="version" />
+            <apex:selectList value="{!version}" size="1" id="version" style="margin-left:10px" >
+            <apex:selectOptions value="{!versions}" />
+            <apex:actionSupport action="{!clearsb}" event="onchange" rerender="sourcebuild" status="sbstatus"/>
+            </apex:selectList>
+            
+               
+        </apex:pageblockSectionItem> -->
+                <!-- <apex:pageBlockSectionItem >
+                <apex:outputLabel >Reported In Version</apex:outputLabel>
+                <apex:inputText id="JSB" value="{!jirasourcebuild}" size="35"  />
+                </apex:pageBlockSectionItem> -->
+
+            <!-- <apex:pageblockSectionItem rendered="{!NOT(isCollab)&&NOT(isMoodle)}" >
+            <apex:outputLabel value = "{!IF(isAnalytics,'Version','Source Build On Case')}" for="sourcebuild" />
+            <apex:selectList value="{!jirasourcebuild}" size="1" id="sourcebuild" style="margin-right:1px" >
+            <apex:selectOptions value="{!sblist}" />
+            </apex:selectList>
+            </apex:pageblockSectionItem> -->
+
+            <apex:pageblockSectionItem rendered="{!NOT(isCollab)&&NOT(isMoodle)&&NOT(isAnalytics)}" >
+            <apex:outputLabel value="Reported In Version" for="sourcebuild" />
+            <apex:selectList value="{!jirasourcebuild}" size="1" id="sourcebuild" style="margin-right:1px" >
+            <apex:selectOptions value="{!sblist}" />
+            </apex:selectList>
+            </apex:pageblockSectionItem>
+
+            <apex:inputField id="Tier2Assessment" value="{!supportIncident.Tier_2_Assessment__c}" required="true" rendered="{!$CurrentPage.parameters.cid != null }" />
+
+            <apex:pageBlockSectionItem rendered="{!isAnalytics}" >
+            <apex:outputLabel value="Version"></apex:outputLabel>
+            <apex:inputText value="{!jirasourcebuild}" disabled="true" size="10"/> 
+            </apex:pageBlockSectionItem>
+
+            <apex:inputField id="Type" value="{!supportIncident.Type__c}" required="true" rendered="{!((isMoodle) || (isAnalytics))&&NOT(isCollab)}" />
+
+            <apex:pageBlockSectionItem rendered="{!isAnalytics}" >
+            <apex:outputLabel >Issue Topic </apex:outputLabel>
+            <apex:inputText value="{!Issuetopic}" disabled="true" size="15" />
+            </apex:pageBlockSectionItem>
+
+            <apex:inputField id="Reproduced" value="{!supportIncident.Reproduced__c}" required="true" rendered="{!isMoodle || isAnalytics}" />
+
+            <apex:pageBlockSectionItem rendered="{!isAnalytics}" >
+            <apex:outputLabel >Functional Area </apex:outputLabel>
+            <apex:inputText value="{!Functionalarea}" disabled="true" size="15" />
+            </apex:pageBlockSectionItem>
+
+            <apex:inputField id="HasWorkaround" value="{!supportIncident.Has_Workaround__c}" required="false" rendered="{!(isMoodle) || (isAnalytics)}" /> 
+
+            <apex:pageBlockSectionItem rendered="{!isAnalytics}" >
+            <apex:outputLabel >Hosting Type </apex:outputLabel>
+            <apex:inputText value="{!Hostingtype}" disabled="true" size="20" />
+            </apex:pageBlockSectionItem>
+
+                <apex:inputField id="IssueSegment" value="{!supportIncident.Issue_Segment__c}" required="true" rendered="{!NOT(isCollab)&&NOT(isMoodle)&&NOT(isAnalytics)}"/>
+                <apex:inputField id="ExternalURL" value="{!supportIncident.External_URL__c}" required="false" rendered="{!isMoodle}" />
+                <apex:inputField id="Module" value="{!supportIncident.Module_moodlerooms__c}" required="true" rendered="{!(isMoodle)&&NOT(isCollab)}" />            
+                <apex:inputField id="Source" value="{!supportIncident.Source__c}" required="true" rendered="{!isMoodle}" />
+                
+               
+             <!-- <apex:inputField id="ReportedInVersion" value="{!supportIncident.Reported_In_Version__c}" required="true" rendered="{!$CurrentPage.parameters.cid == null}" /> -->
+            </apex:pageBlockSection>
+            
+            <apex:pageBlockSection columns="1">
+              <apex:inputTextarea id="Description" label="Description" richText="true" value="{!supportIncident.Private_Description__c}" rows="15" required="true" style="width:400px;" /> 
+            </apex:pageBlockSection>
+            
+            <apex:pageBlockSection columns="1">
+                <apex:inputTextarea id="WorkaroundHTML" label="Workaround HTML" richText="true"  value="{!supportIncident.Workaround_HTML__c}" rows="15" required="false" rendered="{!isMoodle}" style="width:400px;"/>
+            </apex:pageBlockSection>
+            
+           
+            
+        </apex:pageBlock>
+    </apex:form>
+</apex:page>

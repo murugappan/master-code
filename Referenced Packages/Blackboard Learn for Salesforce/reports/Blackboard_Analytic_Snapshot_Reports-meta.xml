@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<ReportFolder xmlns="http://soap.sforce.com/2006/04/metadata">
+    <accessType>Shared</accessType>
+    <name>Blackboard Analytic Snapshot Reports</name>
+    <publicFolderAccess>ReadWrite</publicFolderAccess>
+    <sharedTo>
+        <role>LearnProEdCorporateNationalSalesDir</role>
+        <role>LearnProEdCorporateRSM</role>
+        <role>LearnProEdForProfitRSM</role>
+        <role>LearnProEdForProfitRVP</role>
+        <role>LearnProEdForProfitSM</role>
+        <role>LearnProEdGovernmentRSM</role>
+        <role>LearnProEdGovernmentRVP</role>
+        <role>LearnProEdOperations</role>
+        <role>LearnProEdPresident</role>
+        <role>LearnProEdSolutionsEngineer</role>
+        <role>LearnProEdSrDirectorofServices</role>
+        <role>LearnProEdVPSales</role>
+        <role>LearnProEdXythosRSM</role>
+    </sharedTo>
+</ReportFolder>

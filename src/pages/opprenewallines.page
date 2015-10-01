@@ -1,0 +1,25 @@
+<apex:page standardController="Opportunity">
+  <!-- Begin Default Content REMOVE THIS -->
+    <apex:form >          
+        <apex:pageBlock mode="maindetail">
+                <apex:pageBlockTable value="{!Opportunity.opportunityLineItems}" var="oppLineItems" id="opp_LineItem_table">                                    
+                    <apex:column headerValue="Product Name" value="{!oppLineItems.PricebookEntry.Product2.Name}"/>
+                    <apex:column headerValue="Product Code" value="{!oppLineItems.PricebookEntry.Product2.ProductCode}"/> 
+                    <apex:column headerValue="Quantity" value="{!oppLineItems.Renewal_Quantity__c}"/>
+                    <apex:column headerValue="Multi-Year" value="{!oppLineItems.MultiYearFlag__c}"/>
+                    <!-- Added BY Nikhil As per Eva Request(Start)-->
+                    <apex:column headerValue="Start Date" value="{!oppLineItems.CPQ_Product_Start_Date__c}"/>
+                    <apex:column headerValue="End Date" value="{!oppLineItems.CPQ_Product_End_Date__c}"/>
+                    <!-- END -->
+                    <apex:column headerValue="Prior Year Price" value="{!oppLineItems.PriorYearPrice__c}"/>
+                    <apex:column headerValue="Line Value" value="{!oppLineItems.Custom_Price__c}"/>
+                    <apex:column headerValue="Sales Value" value="{!oppLineItems.TotalPrice}"/>
+                    <apex:column headerValue="Proposed Price" value="{!oppLineItems.Proposed_Price__c}"/> 
+                    <apex:column headerValue="Drop Product?" value="{!oppLineItems.Drop_Product__c}"/>
+                    <apex:column headerValue="Proposed Price %" value="{!oppLineItems.Proposed_Price_Percentage__c}"/>
+                    <apex:column headerValue="Contract Status" value="{!oppLineItems.CA_Line_Status__c}"/>
+                    <apex:column headerValue="PFIN Hold Code" value="{!oppLineItems.FinanceHoldReason__c}"/>              
+                </apex:pageBlockTable>                               
+        </apex:pageBlock>                       
+    </apex:form> 
+</apex:page>

@@ -1,0 +1,3 @@
+<apex:page standardController="Opportunity" extensions="createKSO" action="{!autorun}" >
+
+</apex:page>

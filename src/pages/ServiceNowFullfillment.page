@@ -1,0 +1,131 @@
+<apex:page showHeader="true" sidebar="true" standardController="Asset" extensions="ServiceNowFulfillment">
+   
+   
+<script type="text/javascript">
+                function blank(astID,url){       
+                   
+                    if (typeof(srcUp) == 'function') {
+                        srcUp(url+"/"+astID+"?isdtp=vw"); 
+                    } 
+                    else{  
+                        window.open(url+"/"+astID,"_blank");
+                      }
+                   }
+             </script>
+    
+    <apex:sectionHeader title="ServiceNow Fulfillment" subtitle="Asset -- {!Asset.Name}" />
+    <apex:form >
+    <apex:pageBlock title="Asset -- {!Asset.Name}">
+    
+    <apex:pageMessages />
+        <apex:pageBlockButtons location="both">
+            <apex:commandbutton value="Submit" action="{!Submit}" rendered="{!(editmode)}" id="sub" />
+            <script>document.getElementById('{!$Component.sub}').disabled = {!disableInput}; </script>
+            
+            <apex:commandbutton value="Cancel" action="{!cancel}" rendered="{!editmode}"/>
+            <apex:commandbutton Value="Save" action="{!save}" rendered="{!NOT(editmode)}"/>
+            <apex:commandbutton value="Cancel" action="{!cancelsubmit}" rendered="{!NOT(editmode)}"/>
+        </apex:pageBlockButtons>
+        <apex:pageblocktable value="{!Assetlist}" var="ast" rendered="{!editmode}" id="table1">
+        <!--  <apex:column headerValue="Asset Name">
+            <apex:outputLink target="_blank" value="/{!ast.id}" >{!ast.name}</apex:outputLink>
+         </apex:column> -->
+         
+         <apex:column >
+         <apex:facet name="header">   
+           <apex:commandLink action="{!ViewData}" value="Asset Name{!IF(sortExpression=='name',IF(sortDirection='ASC','▼','▲'),'')}" id="cmdSort">
+             <apex:param value="name" name="column" assignTo="{!sortExpression}"></apex:param>
+           </apex:commandLink>
+         </apex:facet>
+         <apex:outputLink onClick="blank('{!ast.ID}','{!instanceURL}')" value="#">{!ast.Name}</apex:outputLink>
+       </apex:column>
+         
+         
+        <!--<apex:column value="{!ast.CPQ_Current_Opportunity_ID__c}" headerValue="Opportunity Id" />-->
+        
+        <apex:column value="{!ast.CPQ_Current_Opportunity_ID__c}" headerValue="Opportunity Id">
+         <apex:facet name="header">
+           <apex:commandLink action="{!ViewData}" value="Opportunity Id{!IF(sortExpression=='CPQ_Current_Opportunity_ID__c',IF(sortDirection='ASC','▼','▲'),'')}" >
+             <apex:param value="CPQ_Current_Opportunity_ID__c" name="column" assignTo="{!sortExpression}" ></apex:param>
+           </apex:commandLink>
+         </apex:facet>
+       </apex:column>
+       
+         <apex:column headervalue="Top Level Asset" >
+            <apex:selectList value="{!ast.Top_Level_Asset__c}" size="1" multiselect="false" id="toplevel">
+                <apex:selectOptions value="{!TopLevelAssets}"/> 
+            </apex:selectList>
+         <script>document.getElementById('{!$Component.toplevel}').disabled = {!disableInput}; </script>
+            
+         </apex:column>
+         <apex:column value="{!ast.Prior_Top_Level_Asset__c}" />
+         <apex:column headerValue="Fulfillment Action">
+            <apex:inputField value="{!ast.Fulfillment_Action__c}" id="fulfill" />
+          <script>document.getElementById('{!$Component.fulfill}').disabled = {!disableInput}; </script>
+         
+         </apex:column>
+         
+         <apex:column value="{!ast.Status}" headerValue="Asset Status">
+         <apex:facet name="header">
+           <apex:commandLink action="{!ViewData}" value="Asset Status{!IF(sortExpression=='Status',IF(sortDirection='ASC','▼','▲'),'')}" >
+             <apex:param value="Status" name="column" assignTo="{!sortExpression}" ></apex:param>
+           </apex:commandLink>
+         </apex:facet>
+       </apex:column>
+         <apex:column value="{!ast.Fulfillment_Action_Date__c}" />
+         <apex:column value="{!ast.Fulfillment_Action_Counter__c}"/>
+         <!-- <apex:column value="{!ast.Status}" headerValue="Asset Status"/>-->
+         
+         <apex:column value="{!ast.FulFillment_Prior_Action__c}" />
+         <apex:column value="{!ast.Fulfillment_Request_Notes__c}"/>
+         <apex:column value="{!ast.Fulfillment_Last_Requested_Date__c}"/>
+         <apex:column value="{!ast.Fulfillment_Request_Counter__c}"/>
+         <apex:column value="{!ast.First_Fulfillment_Requested_Date__c}"/>
+         <apex:column value="{!ast.CPQ_Contract_Start_Date__c}"/>
+         <apex:column value="{!ast.CPQ_Contract_End_Date__c}"/>
+        </apex:pageblocktable>
+
+        <apex:pageblocktable value="{!updatelist}" var="ast" rendered="{!Not(editmode)}">
+         <apex:column >
+         <apex:facet name="header">   
+           <apex:commandLink action="{!ViewData}" value="Asset Name{!IF(sortExpression=='name',IF(sortDirection='ASC','▼','▲'),'')}" >
+             <apex:param value="name" name="column" assignTo="{!sortExpression}"></apex:param>
+           </apex:commandLink>
+         </apex:facet>
+         <apex:outputLink onClick="blank('{!ast.ID}','{!instanceURL}')" value="#">{!ast.Name}</apex:outputLink>
+       </apex:column>
+         
+         <apex:column value="{!ast.CPQ_Current_Opportunity_ID__c}" headerValue="Opportunity Id">
+         <apex:facet name="header">
+           <apex:commandLink action="{!ViewData}" value="Opportunity Id{!IF(sortExpression=='CPQ_Current_Opportunity_ID__c',IF(sortDirection='ASC','▼','▲'),'')}" >
+             <apex:param value="CPQ_Current_Opportunity_ID__c" name="column" assignTo="{!sortExpression}" ></apex:param>
+           </apex:commandLink>
+         </apex:facet>
+       </apex:column>
+       
+         <apex:column value="{!ast.Top_Level_Asset__c}"/>
+        <apex:column value="{!ast.Prior_Top_Level_Asset__c}" />
+         <apex:column value="{!ast.Fulfillment_Action__c}"/>
+         <apex:column value="{!ast.Status}" headerValue="Asset Status">
+         <apex:facet name="header">
+           <apex:commandLink action="{!ViewData}" value="Asset Status{!IF(sortExpression=='Status',IF(sortDirection='ASC','▼','▲'),'')}" >
+             <apex:param value="Status" name="column" assignTo="{!sortExpression}" ></apex:param>
+           </apex:commandLink>
+         </apex:facet>
+       </apex:column>
+         
+         <apex:column value="{!ast.Fulfillment_Action_Date__c}" />
+         <apex:column value="{!ast.Fulfillment_Action_Counter__c}"/>
+        
+         <apex:column value="{!ast.FulFillment_Prior_Action__c}" />
+         <apex:column value="{!ast.Fulfillment_Request_Notes__c}"/>
+         <apex:column value="{!ast.Fulfillment_Last_Requested_Date__c}"/>
+         <apex:column value="{!ast.Fulfillment_Request_Counter__c}"/>
+         <apex:column value="{!ast.First_Fulfillment_Requested_Date__c}"/>
+         <apex:column value="{!ast.CPQ_Contract_Start_Date__c}"/>
+         <apex:column value="{!ast.CPQ_Contract_End_Date__c}"/>
+        </apex:pageblocktable>
+        
+    </apex:pageBlock>
+    </apex:form>
+</apex:page>

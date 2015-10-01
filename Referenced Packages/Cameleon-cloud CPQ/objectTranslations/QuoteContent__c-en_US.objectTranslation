@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<CustomObjectTranslation xmlns="http://soap.sforce.com/2006/04/metadata">
+    <caseValues>
+        <plural>false</plural>
+        <value>Cameleon Quote Content</value>
+    </caseValues>
+    <caseValues>
+        <plural>true</plural>
+        <value>Cameleon Quote Contents</value>
+    </caseValues>
+    <fields>
+        <label><!-- QuoteId --></label>
+        <name>QuoteId__c</name>
+        <relationshipLabel><!-- Cameleon Quote Contents --></relationshipLabel>
+    </fields>
+    <nameFieldLabel>Cameleon Quote Content Name</nameFieldLabel>
+    <startsWith>Consonant</startsWith>
+</CustomObjectTranslation>

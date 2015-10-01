@@ -1,0 +1,23 @@
+<apex:page standardController="learnJIRA__c" extensions="ManageMasterCaseOnSIController" showHeader="false" sidebar="false">
+	<script>
+	    function closeWindow() 
+	    {  
+	        opener.location.reload();
+	        window.close();
+	    }
+	</script>
+	<apex:sectionHeader title="Manage Master Case for {!supportIncident.Name}" />
+	<apex:form >
+		<apex:pageBlock title="Select Case">
+			<apex:pageBlockButtons location="top">
+				<apex:commandButton value="Cancel" onClick="window.close()" />
+			</apex:pageBlockButtons>
+			<apex:pageBlockTable value="{!wrappedCaseList}" var="w">
+				<apex:column >
+					<apex:commandLink value="Select" action="{!w.doSelect}" onComplete="closeWindow()" />
+				</apex:column>
+				<apex:column value="{!w.caseObj.CaseNumber}" />
+			</apex:pageBlockTable>
+		</apex:pageBlock>
+	</apex:form>
+</apex:page>

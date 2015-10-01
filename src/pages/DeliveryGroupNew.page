@@ -1,0 +1,6 @@
+<apex:page standardController="KimbleOne__DeliveryGroup__c">
+  <h1>New Delivery Engagement</h1>
+  <br/>
+  <br/>
+  You must create Delivery Engagements from within a Sales Opportunity. If you do not have access to Sales Opportunities, then please refer to your Kimble Administrator.
+</apex:page>

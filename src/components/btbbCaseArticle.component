@@ -1,0 +1,34 @@
+<apex:component allowDML="true">
+	<apex:attribute name="btbbController" type="btbb_articleviewController" required="true" description="handle to the btbb article view controller" />
+	<apex:outputPanel layout="block" id="btbbCaseStatus" style="margin-top:20px;" rendered="{!btbbController.caseId != null}">
+    	<div id="btbbCaseArticleHelp" style="width: 45%">
+        	<apex:outputPanel layout="block" id="SupportBulletin" styleClass="articleAttribute" 
+        		rendered="{!btbbController.mainArticle.articleType == 'Support Bulletin/Security Advisory' && btbbController.mainArticle.bulletinAdvisoryInformation != null}">                          
+        		<strong>Bulletin/Advisory Information:</strong>
+        		<apex:outputText escape="false" value="  {!btbbController.mainArticle.bulletinAdvisoryInformation}"/>
+           	</apex:outputPanel>
+        	<apex:outputPanel layout="block" id="caseProduct" styleClass="articleAttribute" rendered="{!btbbController.mainArticle.product != null}">
+           		<strong>Product:</strong>&nbsp;&nbsp;<apex:outputText escape="false" value="{!btbbController.mainArticle.product}"/>
+           	</apex:outputPanel> 
+          	<apex:outputPanel layout="block" id="caseMajor" styleClass="articleAttribute" rendered="{!btbbController.mainArticle.release != null}">
+           		<strong>Major Release:</strong>&nbsp;&nbsp;<apex:outputText escape="false" value="{!btbbController.mainArticle.release}"/>
+          	</apex:outputPanel>
+          	<apex:outputPanel layout="block" id="caseVersion" styleClass="articleAttribute" rendered="{!btbbController.mainArticle.versions != null}">
+            	<strong>Version:</strong>&nbsp;&nbsp;<apex:outputText escape="false" value="{!btbbController.mainArticle.versions}"/>
+           	</apex:outputPanel>
+      	</div>
+       	<div id="btbbCaseArticleNav">
+    		<br />
+      		<span style="display:block;font-weight:bold;font-size:14px;">
+      			Did this article help?&nbsp;
+      			<apex:outputLink style="font-size:11px;" value="{!$Page.btbb_caseRelevantArticles}?id={!btbbController.caseId}">
+      				Go back to Relevant Articles
+      			</apex:outputLink>
+      		</span>
+          	<apex:commandbutton action="{!btbbController.closeCase}" styleClass="button" style="margin-right:10px;" title="Attach article as solution and close my case" value="Problem Solved!"/>
+          	<apex:commandbutton action="{!btbbController.attachArticle}" styleClass="button" title="Attach article to case, keep case open and return to relevant articles" value="Helpful" style="margin-right:10px;"/>
+           	<apex:commandbutton action="{!btbbController.rejectArticle}" styleClass="button" title="Return to relevant articles" value="Not Helpful"/>       
+       	</div>                      
+       	<div class="clear"></div>
+   	</apex:outputPanel>
+</apex:component>

@@ -1,0 +1,366 @@
+<apex:page standardController="Opportunity" extensions="OpportunityReviewController" title="{!opp.Name} - Opportunity Review">
+    <style type="text/css" title="currentStyle"> 
+           @import "{!URLFOR($Resource.Datatables19, 'datatables-1.9.0/media/css/demo_page.css')}";
+           @import "{!URLFOR($Resource.Datatables19, 'datatables-1.9.0/media/css/demo_table.css')}";
+           @import "{!URLFOR($Resource.Datatables19, 'datatables-1.9.0/media/css/casesearch.css')}";
+           @import "{!URLFOR($Resource.Datatables19, 'datatables-1.9.0/media/css/ColReorder.css')}";
+           @import "{!URLFOR($Resource.Datatables19, 'datatables-1.9.0/media/css/ColVis.css')}";
+           @import "{!URLFOR($Resource.Datatables19, 'datatables-1.9.0/media/css/TableTools.css')}";
+           @import "{!URLFOR($Resource.Datatables19, 'datatables-1.9.0/media/css/ColumnFilterWidgets.css')}";
+           tr.selected {background-color: red !important;}
+           .dataTables_filter input[type="text"] { font-size:11px;font-weight:bold;color:#767676;padding-left:7px; }
+           .fullContent { margin-top: 10px; }
+       </style>
+       <script type="text/javascript" charset="utf-8" src="{!URLFOR($Resource.Datatables19, 'datatables-1.9.0/media/js/jquery.js')}"></script> 
+       <script type="text/javascript" charset="utf-8" src="{!URLFOR($Resource.Datatables19, 'datatables-1.9.0/media/js/jquery.dataTables.js')}"></script> 
+       <script type="text/javascript" charset="utf-8" src="{!URLFOR($Resource.Datatables19, 'datatables-1.9.0/media/js/ColReorder.js')}"></script>
+       <script type="text/javascript" charset="utf-8" src="{!URLFOR($Resource.Datatables19, 'datatables-1.9.0/media/js/ColVis.js')}"></script> 
+       <script type="text/javascript" charset="utf-8" src="{!URLFOR($Resource.Datatables19, 'datatables-1.9.0/media/js/ZeroClipboard.js')}"></script> 
+       <script type="text/javascript" charset="utf-8" src="{!URLFOR($Resource.Datatables19, 'datatables-1.9.0/media/js/TableTools.js')}"></script>
+       <script type="text/javascript" charset="utf-8" src="{!URLFOR($Resource.Datatables19, 'datatables-1.9.0/media/js/ColumnFilterWidgets.js')}"></script>
+       <link rel="stylesheet" href="http://code.jquery.com/ui/1.9.0/themes/base/jquery-ui.css" />
+    <script src="http://code.jquery.com/jquery-1.8.2.js"></script>
+    <script src="http://code.jquery.com/ui/1.9.0/jquery-ui.js"></script>
+    <!--<link rel="stylesheet" href="/resources/demos/style.css" />-->
+       <script type="text/javascript" charset="utf-8">
+        jQuery.noConflict();
+        $(document).ready(function() {
+            $('.dataTable').dataTable({
+                "bPaginate": true,
+                "bLengthChange": true,
+                "bFilter": true,
+                "bSort": true,
+                "bInfo": true,
+                "bAutoWidth": true,
+                "oLanguage": {
+                    "sEmptyTable": "No products have been added to this Opportunity"
+                }
+            });
+            //$(function() {
+                //$("li").click(function(e) {
+                  //e.preventDefault();
+                  //$("li").removeClass("selected");
+                  //$(this).addClass("selected");
+                //});
+            //});
+        });
+    </script>
+    <apex:sectionHeader title="Opportunity Review" subtitle="{!opp.Name}" />
+    <apex:pageMessages />
+    <apex:form rendered="{!NOT(hasErrors || isEdit)}">
+        <apex:pageBlock mode="view">
+            <apex:pageBlockButtons >
+                <apex:commandButton action="{!doEdit}" value="Edit" />
+                <apex:commandButton action="{!cancel}" value="Return to {!opp.Name}" immediate="true" />
+            </apex:pageBlockButtons>
+            <apex:pageBlockSection collapsible="false" title="Pre-Contracting Review Fields" columns="1">
+                <apex:pageBlockSection collapsible="false" title="Related Contacts" columns="1">
+                    <apex:outputPanel layout="block">
+                        <table width="100%">
+                            <tr>
+                                <th>Contact Name</th>
+                                <th>Contact Address</th>
+                                <th>Contact PS Person Id</th>
+                                <th>Contact Email</th>
+                                <th>Contact Role</th>
+                            </tr>
+                            <apex:repeat value="{!fullContactRoleList}" var="f">
+                                <tr>
+                                    <td>
+                                        <apex:outputField value="{!f.Contact_Role__r.Contact__r.Name}" />
+                                    </td>
+                                    <td>
+                                        <apex:outputField value="{!f.Contact_Role__r.Contact_Role_Address__c}" />
+                                    </td>
+                                    <td>
+                                        <apex:outputField value="{!f.Contact_Role__r.Contact__r.PS_Person_Id__c}" />
+                                    </td>
+                                    <td>
+                                        <apex:outputField value="{!f.Contact_Role__r.Contact__r.Email}" />
+                                    </td>
+                                    <td>
+                                        <apex:outputField value="{!f.Contact_Role__r.Role__c}" />
+                                    </td>
+                                </tr>
+                            </apex:repeat>
+                        </table>
+                        <apex:outputPanel layout="block">
+                            <apex:outputText value="No Primary Sales Contact Selected" rendered="{!NOT(hasPCs)}" style="font-style:italic; color:red;" />
+                        </apex:outputPanel>
+                        <apex:outputPanel layout="block">
+                            <apex:outputText value="No Primary Sales Technical Contact Selected" rendered="{!NOT(hasSAs)}" style="font-style:italic; color:red;" />
+                        </apex:outputPanel>
+                    </apex:outputPanel>
+                </apex:pageBlockSection>
+                <apex:pageBlockSection collapsible="false" title="Partner Information" columns="1">
+                    <apex:outputPanel layout="block">
+                        <table width="100%">
+                            <tr>
+                                <th>Account Name</th>
+                                <th>Account PS Id</th>
+                                <th>Account Role</th>
+                                <th>Is Primary</th>
+                            </tr>
+                            <apex:repeat value="{!partnerList}" var="p">
+                                <tr>
+                                    <td>
+                                        <apex:outputField label="Account Name" value="{!p.AccountTo.Name}" />
+                                    </td>
+                                    <td>
+                                        <apex:outputField value="{!p.AccountTo.PS_Company_Id__c}" />
+                                    </td>
+                                    <td>
+                                        <apex:outputField value="{!p.Role}" />
+                                    </td>
+                                    <td>
+                                        <apex:outputField value="{!p.IsPrimary}" />
+                                    </td>
+                                </tr>
+                            </apex:repeat>
+                        </table>
+                    </apex:outputPanel>
+                </apex:pageBlockSection>
+                <apex:pageBlockSection collapsible="false" title="General Information">
+                    <apex:outputField value="{!opp.CPQ_Consortium_Buying_Agreement__c}" />
+                    <apex:outputField value="{!opp.Account.Industry}" />
+                    <apex:outputField value="{!opp.CPQ_Payment_Terms__c}" />
+                    <apex:outputField value="{!opp.Comments_for_Finance__c}" />
+                    <apex:outputField value="{!opp.CPQ_Partner_Billing_Instructions__c}" />
+                    <apex:outputField value="{!opp.CPQ_Reseller_New_Software_Commission__c}" />
+                    <apex:outputField value="{!opp.CPQ_Reseller_New_Services_MH_Commission__c}" />
+                    <apex:outputField value="{!opp.CPQ_Reseller_Renewal_Commission__c}" />
+                    <apex:outputField value="{!opp.VAT_ID_Number__c}" />
+                </apex:pageBlockSection>
+                <apex:pageBlockSection collapsible="false" title="Required Addresses" columns="1">
+                    <apex:outputPanel layout="block">
+                        <table width="100%" border="0" cellpadding="0" cellspacing="0">
+                            <thead>
+                                <tr>
+                                    <td width="33%" style="font-weight:700; font-style:italic; border-bottom:1px dotted black;">Bill To</td>
+                                    <td width="33%" style="font-weight:700; font-style:italic; border-bottom:1px dotted black;">Ship To</td>
+                                    <td width="33%" style="font-weight:700; font-style:italic; border-bottom:1px dotted black;">Sold To</td>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr>
+                                    <td style="padding-top:5px;">
+                                        <apex:outputPanel >
+                                            <apex:outputField value="{!opp.CPQ_Bill_To_Account_Name__c}" /><br />
+                                            <apex:outputText value="PS Company Id: " style="font-weight:600;" />
+                                            <apex:outputField value="{!opp.CPQ_Bill_To_Account_Name__r.PS_Company_Id__c}" /><br />
+                                            <apex:outputField value="{!opp.CPQ_Bill_To_Account_Name__r.BillingStreet}" /><br />
+                                            <apex:outputField value="{!opp.CPQ_Bill_To_Account_Name__r.BillingCity}" />
+                                            <apex:outputText value=", {!opp.CPQ_Bill_To_Account_Name__r.BillingState} " rendered="{!opp.CPQ_Bill_To_Account_Name__r.BillingState != null}" />
+                                            <apex:outputField value="{!opp.CPQ_Bill_To_Account_Name__r.BillingPostalCode}" />
+                                        </apex:outputPanel>
+                                    </td>
+                                    <td style="padding-top:5px;">
+                                        <apex:outputPanel >
+                                            <apex:outputField value="{!opp.CPQ_Ship_To_Account_Name__c}" /><br />
+                                            <apex:outputText value="PS Company Id: " style="font-weight:600;" />
+                                            <apex:outputField value="{!opp.CPQ_Ship_To_Account_Name__r.PS_Company_Id__c}" /><br />
+                                            <apex:outputField value="{!opp.CPQ_Ship_To_Account_Name__r.ShippingStreet}" /><br />
+                                            <apex:outputField value="{!opp.CPQ_Ship_To_Account_Name__r.ShippingCity}" />
+                                            <apex:outputText value=", {!opp.CPQ_Ship_To_Account_Name__r.ShippingState} " rendered="{!opp.CPQ_Ship_To_Account_Name__r.ShippingState != null}" />
+                                            <apex:outputField value="{!opp.CPQ_Ship_To_Account_Name__r.ShippingPostalCode}" />
+                                        </apex:outputPanel>
+                                    </td>
+                                    <td style="padding-top:5px;">
+                                        <apex:outputPanel >
+                                            <apex:outputField value="{!opp.AccountId}" /><br />
+                                            <apex:outputText value="PS Company Id: " style="font-weight:600;" />
+                                            <apex:outputField value="{!opp.Account.PS_Company_Id__c}" /><br />
+                                            <apex:outputField value="{!opp.Account.BillingStreet}" /><br />
+                                            <apex:outputField value="{!opp.Account.BillingCity}" />
+                                            <apex:outputText value=", {!opp.Account.BillingState} " rendered="{!opp.Account.BillingState != null}" />
+                                            <apex:outputField value="{!opp.Account.BillingPostalCode}" />
+                                        </apex:outputPanel>
+                                    </td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </apex:outputPanel>
+                </apex:pageBlockSection>
+                <apex:pageBlockSection title="Product Information" collapsible="false">
+                    <apex:outputField value="{!opp.CurrencyIsoCode}" />
+                    <apex:pageBlockSectionItem >
+                        <apex:outputText value="Sales Amount" />
+                        <apex:outputText value="{0, number, ###,###,##0.00}">
+                            <apex:param value="{!opp.Amount}" />
+                        </apex:outputText>
+                    </apex:pageBlockSectionItem>
+                    <apex:outputField value="{!opp.Multi_Year_Deal__c}" />
+                    <apex:pageBlockSectionItem rendered="{!hasYear2}">
+                        <apex:outputText value="Year 2 Amount" />
+                        <apex:outputText value="{0, number, ###,###,##0.00}">
+                            <apex:param value="{!opp.Year_2_Amount__c}" />
+                        </apex:outputText>
+                    </apex:pageBlockSectionItem>
+                    <apex:pageBlockSectionItem rendered="{!hasYear3}">
+                        <apex:outputText value="Year 3 Amount" />
+                        <apex:outputText value="{0, number, ###,###,##0.00}">
+                            <apex:param value="{!opp.Year_3_Amount__c}" />
+                        </apex:outputText>
+                    </apex:pageBlockSectionItem>
+                    <apex:pageBlockSectionItem rendered="{!hasYear4}">
+                        <apex:outputText value="Year 4 Amount" />
+                        <apex:outputText value="{0, number, ###,###,##0.00}">
+                            <apex:param value="{!opp.Year_4_Amount__c}" />
+                        </apex:outputText>
+                    </apex:pageBlockSectionItem>
+                    <apex:pageBlockSectionItem rendered="{!hasYear5}">
+                        <apex:outputText value="Year 5 Amount" />
+                        <apex:outputText value="{0, number, ###,###,##0.00}">
+                            <apex:param value="{!opp.Year_5_Amount__c}" />
+                        </apex:outputText>
+                    </apex:pageBlockSectionItem>
+                </apex:pageBlockSection>
+                <apex:pageBlockSection collapsible="false" columns="1">
+                    <apex:outputPanel layout="block" style="width:100%">
+                        <table cellpadding="0" cellspacing="0" border="0" id="dataTable1" class="dataTable" width="100%">
+                            <thead>
+                                <tr>
+                                    <th>Product Name</th><!-- [0] -->
+                                    <th>Delivery Date</th><!-- [1] -->
+                                    <th>Product Status</th><!-- [2] -->
+                                    <th>Unit Price</th><!--[3]-->
+                                    <th>Quantity</th><!--[4]-->
+                                    <th>Total Price</th><!--[5]-->
+                                </tr> 
+                            </thead>
+                            <tbody>
+                                <apex:repeat value="{!lineItemList}" var="l">
+                                    <tr style="padding: 5px 0 5px 0;">
+                                        <td>
+                                            <apex:outputField value="{!l.PricebookEntry.Name}" />
+                                        </td>
+                                        <td>
+                                            <apex:outputText value="{0,date,MMM dd, yyyy}">
+                                                <apex:param value="{!l.CPQ_Delivery_Date__c}" />
+                                            </apex:outputText>
+                                        </td>
+                                        <td>
+                                            <apex:outputText value="{!l.CPQ_Product_Status__c}" />
+                                        </td>
+                                        <td>
+                                            <apex:outputText value="{0, number, ###,###,##0.00}">
+                                                <apex:param value="{!l.UnitPrice}" />
+                                            </apex:outputText>
+                                        </td>
+                                        <td>
+                                            <apex:outputText value="{0, number, ###,###,##0.00}">
+                                                <apex:param value="{!l.Quantity}" />
+                                            </apex:outputText>
+                                        </td>
+                                        <td>
+                                            <apex:outputText value="{0, number, ###,###,##0.00}">
+                                                <apex:param value="{!l.TotalPrice}" />
+                                            </apex:outputText>
+                                        </td>
+                                    </tr>
+                                </apex:repeat>
+                            </tbody>        
+                        </table>
+                    </apex:outputPanel>
+                </apex:pageBlockSection>
+            </apex:pageBlockSection>
+            <apex:pageBlockSection collapsible="false" title="Closed Won Review Fields" columns="1">
+                <apex:outputText value="{!poMessage}" style="color:red;" rendered="{!poMessage != null && poMessage != ''}" />
+            </apex:pageBlockSection>
+            <apex:pageBlockSection collapsible="false">
+                <apex:outputField value="{!opp.CPQ_PO_Required__c}" />
+                <apex:outputField value="{!opp.CPQ_PO_Received__c}" />
+                <apex:outputField value="{!opp.CPQ_PO_Validated__c}" />
+                <apex:outputField value="{!opp.CPQ_Approval_to_Invoice_wo_PO_Attached__c}" />
+                <apex:outputField value="{!opp.CPQ_PO_Number__c}" />
+                <apex:outputField value="{!opp.Account.CPQ_Tax_Exempt_Status__c}" />
+                <apex:outputField value="{!opp.Account.CPQ_Tax_Certificate_ID__c}" />
+                <apex:outputField value="{!opp.Account.CPQ_AR_Past_Due_60_days__c}" />
+                <apex:outputField value="{!opp.Account.CPQ_Credit_Risk_Score__c}" />
+                <apex:outputField value="{!opp.Account.CPQ_Web_Portal_Billing_Required__c}" />
+                <apex:outputField value="{!opp.Customer_Requested_Prod_Delivery_Date__c}" />
+                <apex:outputField value="{!opp.CPQ_Requires_Special_PFIN_Setup__c}" />
+                <apex:outputField value="{!opp.CPQ_NonBinding_MultiYear__c}" />
+            </apex:pageBlockSection>
+        </apex:pageBlock>
+    </apex:form>
+    <apex:form rendered="{!NOT(hasErrors) && isEdit}">
+        <apex:pageBlock mode="edit" id="editBlock">
+            <apex:pageBlockButtons >
+                <apex:commandButton action="{!doSave}" value="Save" />
+                <apex:commandButton action="{!doCancel}" value="Cancel" immediate="true" />
+            </apex:pageBlockButtons>
+            <apex:pageBlockSection collapsible="false" title="Pre-Contracting Review Fields">
+                <apex:inputField value="{!opp.CPQ_Bill_To_Account_Name__c}" />
+                <apex:inputField value="{!opp.CPQ_Ship_To_Account_Name__c}" />
+                <apex:inputField value="{!opp.AccountId}" rendered="{!$Profile.Name != 'Bb - Sales User - CPQ'}" />
+                <apex:outputField value="{!opp.AccountId}" rendered="{!$Profile.Name == 'Bb - Sales User - CPQ'}" />
+                <apex:inputField value="{!opp.CPQ_Consortium_Buying_Agreement__c}" rendered="{!$Profile.Name != 'Bb - Sales User - CPQ'}"/>
+                <apex:outputField value="{!opp.CPQ_Consortium_Buying_Agreement__c}" rendered="{!$Profile.Name == 'Bb - Sales User - CPQ'}"/>
+                <apex:inputField value="{!opp.CPQ_Reseller_New_Software_Commission__c}" />
+                <apex:inputField value="{!opp.CPQ_Reseller_New_Services_MH_Commission__c}" />
+                <apex:inputField value="{!opp.CPQ_Reseller_Renewal_Commission__c}" />
+            </apex:pageBlockSection>
+            <apex:pageBlockSection columns="1">
+                <apex:inputField value="{!opp.CPQ_Payment_Terms__c}" />
+                <apex:inputField value="{!opp.Comments_for_Finance__c}" />
+            </apex:pageBlockSection>
+            <apex:pageBlockSection collapsible="false" title="Closed Won Review Fields" columns="1">
+                <apex:outputText value="{!poMessage}" style="color:red;" rendered="{!poMessage != null && poMessage != ''}" />
+            </apex:pageBlockSection>
+            <apex:pageBlockSection collapsible="false">
+                <apex:actionStatus startText=" (loading...)" id="poLoadingStatus" />
+            </apex:pageBlockSection>
+            <apex:pageBlockSection collapsible="false">
+                <apex:inputField required="true" value="{!opp.CPQ_PO_Required__c}" >
+                    <apex:actionSupport event="onchange" action="{!loadAttachments}" rerender="editBlock" status="poLoadingStatus" />
+                </apex:inputField>
+                <apex:inputField value="{!opp.CPQ_PO_Received__c}" rendered="{!opp.CPQ_PO_Required__c == 'Yes'}" />
+                <apex:inputField value="{!opp.CPQ_PO_Validated__c}" rendered="{!opp.CPQ_PO_Required__c == 'Yes'}" />
+                <apex:inputField value="{!opp.CPQ_Approval_to_Invoice_wo_PO_Attached__c}" rendered="{!opp.CPQ_PO_Required__c == 'No'}" />
+                <apex:inputField value="{!opp.CPQ_PO_Number__c}" rendered="{!opp.CPQ_PO_Required__c == 'Yes'}" />
+                <apex:inputField value="{!opp.Customer_Requested_Prod_Delivery_Date__c}" />
+                <apex:inputField value="{!opp.CPQ_Requires_Special_PFIN_Setup__c}" />
+                <apex:inputField value="{!opp.CPQ_NonBinding_MultiYear__c}" />
+            </apex:pageBlockSection>
+        </apex:pageBlock>
+    </apex:form>
+    <apex:form rendered="{!NOT(hasErrors || isEdit)}">
+        <apex:pageBlock mode="edit">
+            <apex:pageBlockSection collapsible="false" columns="1" title="Attachments">
+                <apex:pageBlockSectionItem >
+                    <apex:outputText value="Attach New File: " />
+                    <apex:outputPanel >
+                        <apex:inputFile value="{!attachObj.Body}" fileName="{!attachObj.Name}" fileSize="{!fileSize}" size="40" />
+                        <apex:outputText value="  Type: " />
+                        <apex:selectList multiselect="false" size="1" value="{!selectedAttachmentType}">
+                            <apex:selectOption itemValue="" itemLabel="--None--" />
+                            <apex:selectOption itemValue="Customer Billing Information" itemLabel="Customer Billing Information" />
+                            <apex:selectOption itemValue="SOW" itemLabel="SOW" />
+                            <apex:selectOption itemValue="Hosting Specs" itemLabel="Hosting Specs" />
+                            <apex:selectOption itemValue="Purchase Order" itemLabel="Purchase Order" />
+                            <apex:selectOption itemValue="Purchase Order Exemption" itemLabel="Purchase Order Exemption" />
+                        </apex:selectList>
+                        <apex:commandButton action="{!uploadFile}" value="Upload" />
+                    </apex:outputPanel>
+                </apex:pageBlockSectionItem>
+                <apex:outputPanel layout="block">
+                    <apex:pageBlockTable value="{!attachmentList}" var="a">
+                        <apex:facet name="header">
+                            <apex:outputText value="Attachment List" />
+                        </apex:facet>
+                        <apex:column >
+                            <apex:outputLink value="/servlet/servlet.FileDownload?file={!a.Id}" target="_blank">
+                                <apex:outputText value="{!a.Name}" />
+                            </apex:outputLink>
+                        </apex:column>
+                        <apex:column value="{!a.Description}" />
+                        <apex:column value="{!a.ContentType}" />
+                        <apex:column value="{!a.CreatedDate}" />
+                        <apex:column headerValue="Created By" value="{!a.CreatedBy.Name}" />
+                    </apex:pageBlockTable>
+                </apex:outputPanel>
+            </apex:pageBlockSection>
+        </apex:pageBlock>
+    </apex:form>
+</apex:page>

@@ -1,0 +1,385 @@
+<apex:page standardController="Opportunity" extensions="feildReview"  > 
+
+<apex:includeScript value="//ajax.googleapis.com/ajax/libs/jquery/1.11.1/jquery.min.js" />>
+<apex:includeScript value="//cdnjs.cloudflare.com/ajax/libs/jquery.tablesorter/2.17.8/js/jquery.tablesorter.min.js" />
+<apex:stylesheet value="//cdnjs.cloudflare.com/ajax/libs/jquery.tablesorter/2.17.8/css/theme.blue.css" />
+<apex:stylesheet value="//cdnjs.cloudflare.com/ajax/libs/jquery.tablesorter/2.23.1/css/theme.green.min.css" />
+
+
+
+<script>
+  $(document).ready(function()
+  {
+    $("[id$='accsTable']").tablesorter({theme: 'blue', dateFormat : "dd/mm/yyyy"});
+  });
+</script>
+
+
+
+<style>
+.pbSubheader{
+background-color: #99bfe6 !important;
+border-color: none !important;
+}
+</style>
+
+
+
+<apex:sectionHeader title="Field Review" subtitle="{!opp.Name}" />
+    <apex:pageMessages />
+    
+    <apex:form >
+    <apex:pageBlock >
+            <apex:pageBlockButtons >
+                <apex:commandButton action="{!cancel}" value="Back to Opportunity" immediate="true" />
+                <apex:commandButton action="{!saveMethod}" value="Save"  />
+            </apex:pageBlockButtons>
+            
+            
+             
+             
+             <apex:pageBlockSection title="Product Information" collapsible="true">
+                    <apex:outputField value="{!opp.CurrencyIsoCode}" />
+                    <apex:pageBlockSectionItem >
+                        <apex:outputText value="Sales Amount" />
+                        <apex:outputText value="{0, number, ###,###,##0.00}">
+                            <apex:param value="{!opp.Amount}" />
+                        </apex:outputText>
+                    </apex:pageBlockSectionItem>
+                    
+                    <apex:outputField value="{!opp.Multi_Year_Deal__c}" />
+                    <apex:pageBlockSectionItem rendered="{!hasYear2}">
+                        <apex:outputText value="Year 2 Amount" />
+                        <apex:outputText value="{0, number, ###,###,##0.00}">
+                            <apex:param value="{!opp.Year_2_Amount__c}" />
+                        </apex:outputText>
+                    </apex:pageBlockSectionItem>
+                    
+                    <apex:pageBlockSectionItem rendered="{!hasYear3}">
+                        <apex:outputText value="Year 3 Amount" />
+                        <apex:outputText value="{0, number, ###,###,##0.00}">
+                            <apex:param value="{!opp.Year_3_Amount__c}" />
+                        </apex:outputText>
+                    </apex:pageBlockSectionItem>
+                    
+                    <apex:pageBlockSectionItem rendered="{!hasYear4}">
+                        <apex:outputText value="Year 4 Amount" />
+                        <apex:outputText value="{0, number, ###,###,##0.00}">
+                            <apex:param value="{!opp.Year_4_Amount__c}" />
+                        </apex:outputText>
+                    </apex:pageBlockSectionItem>
+                    
+                    <apex:pageBlockSectionItem rendered="{!hasYear5}">
+                        <apex:outputText value="Year 5 Amount" />
+                        <apex:outputText value="{0, number, ###,###,##0.00}">
+                            <apex:param value="{!opp.Year_5_Amount__c}" />
+                        </apex:outputText>
+                    </apex:pageBlockSectionItem>
+                    
+           </apex:pageBlockSection>
+                
+       
+       <!-- second section -->
+       <apex:datatable value="{!lineItemList}" var="acc" id="accsTable" styleclass="tablesorter">
+             
+              <apex:column headerValue="Product Name">
+                <apex:outputField value="{!acc.PricebookEntry.Name}" />
+              </apex:column>
+              
+              <apex:column headerValue="Product Status">
+              <apex:outputText value="{!acc.CPQ_Product_Status__c}" />
+              </apex:column>
+              
+              <apex:column headerValue="Unit Price">
+              <apex:outputText value="{0, number, ###,###,##0.00}">
+              <apex:param value="{!acc.UnitPrice}" />
+              </apex:outputText>
+              </apex:column>
+              
+              <apex:column headerValue="Quantity">
+              <apex:outputText value="{0, number, ###,###,##0.00}">
+              <apex:param value="{!acc.Quantity}" />
+              </apex:outputText>
+              </apex:column>
+              
+              <apex:column headerValue="Total Price">
+              <apex:outputText value="{0, number, ###,###,##0.00}">
+              <apex:param value="{!acc.TotalPrice}" />
+              </apex:outputText>
+              </apex:column>
+              
+              <apex:column headerValue="Discount">
+              <apex:outputText value="{0, number, ###,###,##0.00}">
+              <apex:param value="{!acc.Discount_Value__c}" />
+              </apex:outputText>%
+              </apex:column>
+              
+              <apex:column headerValue="Platform">
+              <apex:outputText value="{!acc.CPQ_Platform__c}" />
+              </apex:column>
+                
+              <apex:column headerValue="Product Family">  
+              <apex:outputText value="{!acc.Type__c}" />
+              </apex:column>
+              
+              <apex:column headerValue="ACCT Product Type">   
+              <apex:outputText value="{!acc.ACCT_Product_Type__c}" />
+              </apex:column>
+                                            
+                                            
+             
+              
+        </apex:datatable>
+           
+       <!-- end second section -->
+       
+       
+       
+       
+       
+             
+             
+             
+             
+             
+             
+             
+             
+             
+             
+             
+             
+             
+             
+             
+             
+             
+             
+             
+             
+             
+             
+             
+             
+             
+             
+             
+             
+             
+             
+             <apex:pageBlockSection collapsible="true" title=" Platform Quota Credit Allocation" columns="2">
+             
+             
+             
+             <apex:pageblockSectionItem >Learn Quota New Sales Credit
+                 <apex:outputText value="{0, number, ###,###,###,##0.00}"> 
+                     <apex:param value="{!opp.Learn_New_Sales_Value__c}" /> 
+                 </apex:outputText>
+             </apex:pageblockSectionItem>
+             
+              <apex:pageblockSectionItem >Learn Quota Renewal Credit
+                 <apex:outputText value="{0, number, ###,###,###,##0.00}"> 
+                     <apex:param value="{!opp.Learn_Renewal_Value__c}" /> 
+                 </apex:outputText>
+             </apex:pageblockSectionItem>
+             
+              <apex:pageblockSectionItem >Mobile Quota New Sales Credit
+                 <apex:outputText value="{0, number, ###,###,###,##0.00}"> 
+                     <apex:param value="{!opp.Mobile_New_Sales_Value__c}" /> 
+                 </apex:outputText>
+             </apex:pageblockSectionItem>
+             
+              <apex:pageblockSectionItem >Mobile Quota Renewal Credit
+                 <apex:outputText value="{0, number, ###,###,###,##0.00}"> 
+                     <apex:param value="{!opp.Mobile_Renewal_Value__c}" /> 
+                 </apex:outputText>
+             </apex:pageblockSectionItem>
+             
+             
+             
+             
+             <apex:pageblockSectionItem >Analytics Quota New Sales Credit
+                 <apex:outputText value="{0, number, ###,###,###,##0.00}"> 
+                     <apex:param value="{!opp.Analytics_New_Sales_Value__c}" /> 
+                 </apex:outputText>
+             </apex:pageblockSectionItem>
+             
+              <apex:pageblockSectionItem >Analytics Quota Renewal Credit
+                 <apex:outputText value="{0, number, ###,###,###,##0.00}"> 
+                     <apex:param value="{!opp.Analytics_Renewal_Value__c}" /> 
+                 </apex:outputText>
+             </apex:pageblockSectionItem>
+             
+             <apex:pageblockSectionItem >Collaborate Quota New Sales Credit
+                 <apex:outputText value="{0, number, ###,###,###,##0.00}"> 
+                     <apex:param value="{!opp.Collaborate_New_Sales_Value__c}" /> 
+                 </apex:outputText>
+             </apex:pageblockSectionItem>
+             
+              <apex:pageblockSectionItem >Collaborate Quota Renewal Credit
+                 <apex:outputText value="{0, number, ###,###,###,##0.00}"> 
+                     <apex:param value="{!opp.Collaborate_Renewal_Value__c}" /> 
+                 </apex:outputText>
+             </apex:pageblockSectionItem>
+             
+              
+              <apex:pageblockSectionItem >Moodlerooms Quota New Sales Credit
+                 <apex:outputText value="{0, number, ###,###,###,##0.00}"> 
+                     <apex:param value="{!opp.Moodlerooms_New_Sales_Value__c}" /> 
+                 </apex:outputText>
+             </apex:pageblockSectionItem>
+             
+              <apex:pageblockSectionItem >Moodlerooms Quota Renewal Credit
+                 <apex:outputText value="{0, number, ###,###,###,##0.00}"> 
+                     <apex:param value="{!opp.Moodlerooms_Renewal_Value__c}" /> 
+                 </apex:outputText>
+             </apex:pageblockSectionItem>
+             
+             <!-- 18 -->
+             
+              <apex:pageblockSectionItem >Connect Quota New Sales Credit
+                 <apex:outputText value="{0, number, ###,###,###,##0.00}"> 
+                     <apex:param value="{!opp.Connect_New_Sales_Value__c}" /> 
+                 </apex:outputText>
+             </apex:pageblockSectionItem>
+             
+              <apex:pageblockSectionItem >Connect Quota Renewal Credit
+                 <apex:outputText value="{0, number, ###,###,###,##0.00}"> 
+                     <apex:param value="{!opp.Connect_Renewal_Value__c}" /> 
+                 </apex:outputText>
+             </apex:pageblockSectionItem>
+             
+             
+             <apex:pageblockSectionItem >Student Srvices Quota New Sales Credit
+                 <apex:outputText value="{0, number, ###,###,###,##0.00}"> 
+                     <apex:param value="{!opp.Student_Services_New_Sales_Value__c}" /> 
+                 </apex:outputText>
+             </apex:pageblockSectionItem>
+             
+              <apex:pageblockSectionItem >Student Services Quota Renewal Credit
+                 <apex:outputText value="{0, number, ###,###,###,##0.00}"> 
+                     <apex:param value="{!opp.Student_Services_Renewal_Value__c}" /> 
+                 </apex:outputText>
+             </apex:pageblockSectionItem>
+             
+             
+             
+              <apex:pageblockSectionItem >Educational Svcs Quota New Sales Credit
+                 <apex:outputText value="{0, number, ###,###,###,##0.00}"> 
+                     <apex:param value="{!opp.Educational_Services_New_Sales_Value__c}" /> 
+                 </apex:outputText>
+             </apex:pageblockSectionItem>
+             
+              <apex:pageblockSectionItem >Educational Svcs Quota Renewal Credit
+                 <apex:outputText value="{0, number, ###,###,###,##0.00}"> 
+                     <apex:param value="{!opp.Educational_Services_Renewal_Value__c}" /> 
+                 </apex:outputText>
+             </apex:pageblockSectionItem>
+             
+             
+             
+              <apex:pageblockSectionItem >Engage Services Quota New Sales Credit
+                 <apex:outputText value="{0, number, ###,###,###,##0.00}"> 
+                     <apex:param value="{!opp.Engage_Services_New_Sales_Value__c}" /> 
+                 </apex:outputText>
+             </apex:pageblockSectionItem>
+             
+              <apex:pageblockSectionItem >Engage Services Quota Renewal Credit
+                 <apex:outputText value="{0, number, ###,###,###,##0.00}"> 
+                     <apex:param value="{!opp.Engage_Services_Renewal_Value__c}" /> 
+                 </apex:outputText>
+             </apex:pageblockSectionItem>
+             
+              
+             
+              <apex:pageblockSectionItem >NetSpot Quota New Sales Credit
+                 <apex:outputText value="{0, number, ###,###,###,##0.00}"> 
+                     <apex:param value="{!opp.NetSpot_New_Sales_Value__c}" /> 
+                 </apex:outputText>
+             </apex:pageblockSectionItem>
+             
+              <apex:pageblockSectionItem >NetSpot Quota Renewal Credit
+                 <apex:outputText value="{0, number, ###,###,###,##0.00}"> 
+                     <apex:param value="{!opp.NetSpot_Renewal_Value__c}" /> 
+                 </apex:outputText>
+             </apex:pageblockSectionItem>
+             
+              
+             
+              <apex:pageblockSectionItem >MyEDU Quota New Sales Credit
+                 <apex:outputText value="{0, number, ###,###,###,##0.00}"> 
+                     <apex:param value="{!opp.MyEDU_Quota_New_Sales_Credit__c}" /> 
+                 </apex:outputText>
+             </apex:pageblockSectionItem>
+             
+              <apex:pageblockSectionItem >MyEDU Quota Renewal Credit
+                 <apex:outputText value="{0, number, ###,###,###,##0.00}"> 
+                     <apex:param value="{!opp.MyEDU_Quota_Renewal_Sales_Credit__c}" /> 
+                 </apex:outputText>
+             </apex:pageblockSectionItem> 
+             
+             
+            
+             </apex:pageBlockSection>
+             
+             
+             <apex:pageBlockSection collapsible="true" title="Approvals" columns="2" rendered="{!NOT(isAdminprofile)}" >
+             
+             <apex:outputField value="{!opp.CPQ_Is_Discount_Approval__c}"/>
+             <apex:outputField value="{!opp.Is_Enterprise_Consulting_Approval__c}"/>
+             <apex:outputField value="{!opp.CPQ_Is_Service_Approval__c}"/>
+             <apex:outputField value="{!opp.Is_Student_Services_MER_Approval__c}"/>
+             <apex:outputField value="{!opp.CPQ_Is_Hosted_Approval__c}"/>
+             <apex:outputField value="{!opp.Is_Student_Services_Other_Approval__c}"/>
+             <apex:outputField value="{!opp.CPQ_Is_Specific_Product_Approval__c}"/>
+             <apex:outputField value="{!opp.Is_Student_Services_SLEC_Approval__c}"/>
+             <apex:outputField value="{!opp.Is_Career_Marketplace_Approval__c}"/>
+             <apex:outputField value="{!opp.Maximum_Margin_Differential__c}"/>
+             <apex:outputField value="{!opp.CPQ_Is_Treasury_Approval__c}"/>
+             <apex:outputField value="{!opp.Maximum_SLEC_Discount__c}"/>
+            
+             
+             
+             </apex:pageBlockSection>
+             
+             
+             <apex:pageBlockSection collapsible="true" title="Approvals" columns="2" rendered="{!isAdminprofile}" >
+             
+             <apex:inputField value="{!opp.CPQ_Is_Discount_Approval__c}"/>
+             <apex:inputField value="{!opp.Is_Enterprise_Consulting_Approval__c}"/>
+             <apex:inputField value="{!opp.CPQ_Is_Service_Approval__c}"/>
+             <apex:inputField value="{!opp.Is_Student_Services_MER_Approval__c}"/>
+             <apex:inputField value="{!opp.CPQ_Is_Hosted_Approval__c}"/>
+             <apex:inputField value="{!opp.Is_Student_Services_Other_Approval__c}"/>
+             <apex:inputField value="{!opp.CPQ_Is_Specific_Product_Approval__c}"/>
+             <apex:inputField value="{!opp.Is_Student_Services_SLEC_Approval__c}"/>
+             <apex:inputField value="{!opp.Is_Career_Marketplace_Approval__c}"/>
+             <apex:inputField value="{!opp.Maximum_Margin_Differential__c}"/>
+             <apex:inputField value="{!opp.CPQ_Is_Treasury_Approval__c}"/>
+             <apex:inputField value="{!opp.Maximum_SLEC_Discount__c}"/>
+            
+             
+             
+             </apex:pageBlockSection>
+             
+             
+             
+             <apex:pageBlockSection collapsible="true" title="Additional Information" columns="2">
+                 <apex:inputField value="{!opp.Renewal_Transaction_Owner__c}"/>
+             </apex:pageBlockSection>
+             
+            
+            
+            
+    
+    </apex:pageBlock>
+    
+    
+   
+    
+    
+    
+    
+    </apex:form>
+  
+</apex:page>

@@ -1,0 +1,113 @@
+<apex:page controller="btbbpublichomeController" id="page" showheader="false" sidebar="false" standardStylesheets="false" cache="false" >
+
+
+ <apex:composition template="btbb_publictemplate">  
+
+        <apex:define name="topbar"><c:btbb_unauthglobalsearch /></apex:define>
+<apex:define name="nav"><c:btbb_unauth_nav /></apex:define>
+<apex:define name="content">
+<apex:includeScript value="{!URLFOR($Resource.jqueryy, 'js/jquery-1.8.0.min.js')}"/> 
+<apex:includeScript value="{!URLFOR($Resource.jqueryy, 'js/jquery-ui-1.8.23.custom.min.js')}"/>
+<apex:stylesheet value="{!URLFOR($Resource.jqueryy, 'css/ui-lightness/jquery-ui-1.8.23.custom.css')}"/>
+
+
+
+
+<script type="text/javascript" charset="UTF-8">
+var j$ = jQuery.noConflict();
+var array = [];
+
+    $(function() {
+        
+        $(document).ready(function(){
+            $( "input.tags" ).autocomplete({
+                 
+                 source: array,
+                 minLength: 2
+            });
+            
+         });
+    });
+    
+    
+    </script> 
+    
+    <!-- <script>
+    function delaytime(){
+    setTimeout('GSupport();',2000);
+    }
+    
+    
+    </script> -->
+    
+    
+    
+<!-- <script>
+function call(){
+
+var bb = GSupport();
+alert('First');
+//var cc = delaytime();
+//alert('Second');
+
+}
+
+    
+</script> -->
+   
+    
+    
+    <apex:repeat value="{!alist}" var="req"> 
+        <script> 
+            array.push("{!req.Account__r.Name}"); 
+        </script> 
+    </apex:repeat>  
+    
+    
+<apex:form >
+<div class="lgBoxContainer">
+                            
+                            <div class="lgBoxContent">                            
+                            
+                            <div class="subTitleImage bbHelp">                                
+                                <apex:image value="{!URLFOR($Resource.BtBbStyles,'includes/images/bb-help.png')}" alt="Bb Support" />
+                            </div>
+                            
+                         
+
+<div class="subTitleContainer">
+                                    <div class="contentSubTitle">
+                                        <span class="agenda"><a href="http://institutionhelp.blackboard.com/" target="_blank" style="color:#000000;" title="Search for your Institutions Help Desk">Support</a></span>
+                                    </div>
+                                    <p>Let us help you solve it.</p><br />
+                                </div>
+                                <div style="display:block;clear:both;">
+                                <p>Beyond the resources available in the Self Service and Community Resources areas of this site, your primary source of support will be your institution’s help desk. Please use the search box below to lookup information about your institution’s help desk.</p>
+                                <br />
+                                <!--<apex:inputText style="width:350px;" value="{!InstitutionSearchText}" onFocus="this.value=''"/><apex:commandButton action="{!SearchInstitutionHelpDesk}" value="Search"/>-->
+                                <!-- <a href="http://institutionhelp.blackboard.com/" target="_blank" title="Search for your Institutions Help Desk">Search for Your Institution's Help Desk</a> -->
+<!-- <apex:actionFunction id="actf" name="GSupport" action="{!getsupport}" />
+<apex:actionFunction id="actd" name="GRedirect" action="{!redirectwebsite}" />
+<apex:actionStatus id="vid" onstop="GRedirect()" /> --> </div>
+
+<div class="ui-widget">
+    <label for="tags">University: </label>
+    <apex:inputtext id="inptext" styleclass="tags" value="{!tp}" size="60"/> 
+    <!-- <apex:commandButton id="cmd" value="Get Support" onclick="setTimeout('Gsupport();', 2000);  return false;"/> -->
+    <apex:commandButton id="cmd" value="Get Support" action="{!getsupport}"/>
+</div>
+   </div>
+   </div>
+{!eText} 
+{!erText} 
+<!-- <apex:outputPanel layout="block" rendered="{!vld}"> -->
+<font color="Red">{!errorText}</font>
+<!--</apex:outputPanel> -->
+
+
+
+</apex:form>
+
+</apex:define>
+</apex:composition>
+</apex:page>

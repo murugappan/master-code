@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<AnalyticSnapshot xmlns="http://soap.sforce.com/2006/04/metadata">
+    <description>Custom Analytic Snapshot for the Enrollment object.</description>
+    <groupColumn>Enrollment__c$Owner.Id</groupColumn>
+    <mappings>
+        <sourceField>FORMULA1</sourceField>
+        <sourceType>summary</sourceType>
+        <targetField>Opportunity_Enrollment_Data__c.Enrollments_Last_90_Days__c</targetField>
+    </mappings>
+    <name>Snapshot #1B - Enrollment Data</name>
+    <runningUser>mabrown1@blackboard.com</runningUser>
+    <sourceReport>Blackboard_Analytic_Snapshot_Reports/Enrollment_Snapshot_Data1</sourceReport>
+    <targetObject>Opportunity_Enrollment_Data__c</targetObject>
+</AnalyticSnapshot>

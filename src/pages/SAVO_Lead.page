@@ -1,0 +1,25 @@
+<apex:page standardController="Lead" >
+    <c:Savo_Header ></c:Savo_Header>
+    <div class="savoBody">
+        <c:Savo_Search ></c:Savo_Search>
+        <div class="wrapper">
+            <div class="left panel">
+                <h1 style="display: block;">Find Assets for {!Lead.Name}</h1>
+                <ul>
+                    <li><a href="#" onclick="window.open(Savo.Salesforce.redirectToTarget('search','{!Lead.Name}'));">Best Assets for the Lead</a></li>
+                    <li><a href="#" onclick="window.open(Savo.Salesforce.redirectToTarget('tag','{!Lead.Industry}'));">Industry: {!Lead.Industry}</a></li> 
+                    <li><a href="#" onclick="window.open(Savo.Salesforce.redirectToUrl('/PROD/Search/Search.aspx?t=Case+Study,{!Lead.Industry}'));">Find a Case Study</a></li> 
+                </ul>               
+            </div>
+            <div class="right panel">
+                <h1 style="display: block;">What do you want to do today?</h1>
+                <ul> 
+                    <li><a href="#" onclick="window.open(Savo.Salesforce.redirectToUrl('/PROD/Document/Document.aspx?id=XXXXXX'));">Create a Call Script</a></li> 
+                    <li><a href="#" onclick="window.open(Savo.Salesforce.redirectToUrl('/PROD/Document/Document.aspx?id=XXXXXX'));">Create a VITO Letter</a></li> 
+                    <li><a href="#" onclick="window.open(Savo.Salesforce.redirectToUrl('/PROD/Document/Document.aspx?id=XXXXXX'));">Contribute to the Field</a></li> 
+                </ul>                                       
+            </div>
+            <div style="clear: both;"></div>
+        </div> 
+    </div>
+</apex:page>

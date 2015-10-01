@@ -1,0 +1,63 @@
+<apex:page standardController="CameleonCPQ__Quote__c" standardstylesheets="true" extensions="CameleonCPQ.CPQQuotePanel_VFCtrl">
+   <link rel="stylesheet" href="{!URLFOR($Resource.CPQBuilder_JQueryPlugins,'jstree/themes/classic/style.css')}"/>
+  <style>
+    .loading {background:url('{!URLFOR($Resource.CPQBuilder_JQueryPlugins,'jstree/themes/classic/throbber.gif')}') center center no-repeat !important;
+      margin-left: 10px;
+      padding-left: 15px;
+      border: none
+    }
+  </style>
+   <apex:messages />
+   <style>
+      body.detailPage .bDetailBlock.bPageBlock[id^="ep"] {border: none; margin-bottom: 20px;}
+   </style>
+   <script type="text/javascript">
+        var cpq_initialized=false;
+   </script>
+   <apex:stylesheet value="/sCSS/23.0/sprites/1320195876000/Theme3/default/versioning.css" />
+   <apex:tabPanel switchType="ajax" id="tabQuotePanel" styleClass="theTabPanel" value="{!selectedTab}" tabClass="theTabPanel" activeTabClass="activeTab" inactiveTabClass="inactiveTab">
+      <apex:tab label="{!$Label.cameleoncpq__TAB_OVERVIEW}" name="Overview" id="tabOverview" status="syncStatus" oncomplete="setTimeout(refreshPage, 3000);">
+            <apex:actionStatus startStyleClass="loading" startText="." styleClass="loading" id="loadingStatus"/>
+            <apex:outputPanel layout="block" id="theQuoteDetail">
+                <apex:detail subject="{!CameleonCPQ__Quote__c.Id}" inlineEdit="true" relatedList="true" relatedListHover="true" showChatter="true" title="true" />
+            </apex:outputPanel>
+      </apex:tab>
+      <apex:tab label="{!$Label.cameleoncpq__TAB_CONTENT}" name="Content" id="tabDetailedContent" status="loadingStatus">
+            <apex:actionStatus rendered="{!syncURL!=null}" id="syncStatus" startText="{!$Label.cameleoncpq__SYNCHRONIZATION}" onStart="if(cpq_initialized) renderCPQFrame({!errorCPQ},'{!syncURL}');" />
+            <div id="CPQFrame"/>
+            <script type="text/javascript">
+                function renderCPQFrame(error,url) {
+                    if(error==true) {
+                       top.location.href = url;
+                    }
+                    else {
+                      var cpqFrame = '<iframe  src="'+url+'" frameborder="0" height="1000px" width="100%" scrolling="auto"></iframe>';
+                      document.getElementById('CPQFrame').innerHTML=cpqFrame;
+                      cpq_initialized=true;
+                    }
+                }
+                renderCPQFrame({!errorCPQ},'{!cpqURL}');
+            </script>
+      </apex:tab>
+   </apex:tabPanel>
+   <apex:form >
+   <apex:actionFunction name="createNewRelease" action="{!newRelease}" rerender="tabQuotePanel"/> 
+   <apex:actionFunction name="refreshQuote" action="{!refreshQuote}" status="loadingStatus" rerender="tabQuotePanel"/> 
+   <apex:actionFunction name="refreshPage" action="{!refreshPage}" rerender="theQuoteDetail"/> 
+   <script type="text/javascript">
+        function validCreateQR() {
+            return ({!releasesNb}>0);
+        }
+        function setAsActive(recordIDs) {
+            if (recordIDs==null||recordIDs.length==0||recordIDs.length>1) 
+                alert('{!$Label.cameleoncpq__SINGLE_QR_SELECTION}');
+            else
+                setActiveRelease(recordIDs[0]);
+        }
+   </script>
+   <apex:actionFunction name="setActiveRelease" action="{!setActiveRelease}" rerender="theQuoteDetail">       
+      <apex:param name="selectedRelease" value=""/>
+   </apex:actionFunction> 
+   <apex:actionFunction name="cloneQuote" action="{!cloneQuote}"/>       
+   </apex:form>   
+</apex:page>

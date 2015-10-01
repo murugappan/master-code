@@ -1,0 +1,29 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<Package xmlns="http://soap.sforce.com/2006/04/metadata">
+    <fullName>Data%2Ecom Reports</fullName>
+    <apiAccessLevel>Unrestricted</apiAccessLevel>
+    <namespacePrefix>jsImpacts</namespacePrefix>
+    <types>
+        <members>Contact.Imported_from_Jigsaw__c</members>
+        <members>Lead.Imported_from_Jigsaw__c</members>
+        <name>CustomField</name>
+    </types>
+    <types>
+        <members>Jigsaw</members>
+        <members>Jigsaw/Jigsaw_Impacts</members>
+        <name>Dashboard</name>
+    </types>
+    <types>
+        <members>Jigsaw</members>
+        <members>Jigsaw/Added_Contacts</members>
+        <members>Jigsaw/Added_Leads</members>
+        <members>Jigsaw/Converted_Leads_Jigsaw_Sourced</members>
+        <members>Jigsaw/Percent_Converted_Leads_Jigsaw_Sourced</members>
+        <members>Jigsaw/Percent_Pipeline_Jigsaw_Sourced</members>
+        <members>Jigsaw/Percent_Revenue_Jigsaw_Sourced</members>
+        <members>Jigsaw/Pipeline_Dollars_Jigsaw_Sourced</members>
+        <members>Jigsaw/Revenue_Dollars_Jigsaw_Sourced</members>
+        <name>Report</name>
+    </types>
+    <version>26.0</version>
+</Package>

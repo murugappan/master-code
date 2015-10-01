@@ -1,0 +1,38 @@
+<apex:component selfClosing="true" controller="btbbUnAuthNavController">
+<ul id="primary-nav">
+    
+    <li class="CMSListMenuLIfirst">
+        <a href="{!$Page.btbb_publichome}" class="{!IF($CurrentPage.Name='btbb_publichome','CMSListMenuLinkHighlighted','CMSListMenuLink')}" title="Home">Home</a>
+    </li>
+    
+    <li class="CMSListMenuLI">
+        <a href="{!$Page.btbb_publicselfservice}" class="{!IF($CurrentPage.Name='btbb_publicKbsearch' || $CurrentPage.Name='btbb_publicdownloads' || $CurrentPage.Name='btbb_publicKbSearch' || $CurrentPage.Name='btbb_publicKbView' || $CurrentPage.Name='btbb_publicselfservice' || $CurrentPage.Name='btbb_selfservice','CMSListMenuLinkHighlighted','CMSListMenuLink')}" title="Self Service">Self Service</a>
+        <ul class="CMSListMenuUL">
+        <apex:repeat value="{!btbbServicelinks}" var="k">
+            <li class="{!IF(k.order__c == 1,'CMSListMenuLIfirst',if(k.order__c<btbbServicelinks.size,'CMSListMenuLI','CMSListMenuLIlast'))}"><a href="{!k.URL__c}" target="{!k.target__c}">{!k.NAME}</a></li>
+            </apex:repeat>
+        </ul> 
+    </li>
+    
+    <li class="CMSListMenuLI">
+        <a href="{!$Page.btbb_publiccommunity}" class="{!IF($CurrentPage.Name='btbb_publiccommunity','CMSListMenuLinkHighlighted','CMSListMenuLink')}" title="Community Resources">Community Resources</a>
+       <ul class="CMSListMenuULWide">
+           <apex:repeat value="{!btbbCommunitylinks}" var="k">
+            <li class="{!IF(k.order__c == 1,'CMSListMenuLIfirstWide',if(k.order__c<btbbCommunitylinks.size,'CMSListMenuLIWide','CMSListMenuLIlastWide'))}"><a href="{!k.URL__c}" target="{!k.target__c}">{!k.NAME}</a></li>
+            </apex:repeat>
+        </ul>  
+    </li>
+    
+    <li class="CMSListMenuLI">
+        <a href="btbb_unauth" style="display:{!IF(isCollabuser,'none','block')}" class="{!IF($CurrentPage.Name='btbb_unauth' || $CurrentPage.Name='btbb_searchcase','CMSListMenuLinkHighlighted','CMSListMenuLink')}" title="Support">Support</a> 
+        <a href="{!IF($CurrentPage.Name<>'btbb_publichome','/btbb_publichome','#support')}" style="display:{!IF(isCollabuser,'block','none')}" class="{!IF($CurrentPage.Name='btbb_unauth' || $CurrentPage.Name='btbb_searchcase','CMSListMenuLinkHighlighted','CMSListMenuLink')}"  onclick="document.getElementById('sub').scrollIntoView();" title="Support">Support</a> 
+        <!-- target="_blank" -->
+         <ul class="CMSListMenuUL">
+            <li class="CMSListMenuLIfirst" style="display:{!IF(isCollabuser,'block','none')}"><a href="/apex/publickbarticleview?id=kA570000000PCje">Call US</a></li>
+           
+            <li class="CMSListMenuLIlast" style="display:{!IF(isCollabuser,'block','none')}"><a href="{!$Page.btbb_searchcase}">My Cases</a></li>
+        </ul>    
+    </li> 
+        
+</ul>
+</apex:component>

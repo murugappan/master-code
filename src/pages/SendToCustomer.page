@@ -1,0 +1,106 @@
+<apex:page standardController="Opportunity" extensions="SendToCustomer" >
+
+<style>
+        .contactTab .tertiaryPalette, .individualPalette .contactBlock .tertiaryPalette, .layoutEdit .individualPalette .contactBlock .tertiaryPalette {
+        background-color: #d3d3d3;
+        border-color: #d3d3d3;
+        }
+
+        .opportunityTab .tertiaryPalette, .individualPalette .opportunityBlock .tertiaryPalette, .layoutEdit .individualPalette .opportunityBlock .tertiaryPalette {
+        background-color: #d3d3d3 !important;
+        
+        border-color: #d3d3d3;
+        
+
+
+</style> 
+
+<style>
+h3 {color:Black;}
+
+</style>
+
+<style>
+.panelWrapper .pbHeader{
+    background-color: LightBlue !important;
+    
+}
+</style>
+
+<style>
+.panelSub .pbSubHeader{
+    background-color:  #d3d3d3 !important;
+    
+}
+</style>
+
+
+
+    <apex:form >
+        <apex:pageMessages />
+             
+              <apex:pageBlock tabStyle="Account" > 
+              
+              <apex:messages layout="table" styleClass="exceptionText"/>
+              
+                  <apex:pageBlockButtons >
+                  &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<apex:commandButton action="{!sendEmail}" Value="Send All - Notification" style="background-color:#d3d3d3;background-image:none;;width: 13em;  height: 2em;" />
+                  
+                 &nbsp;&nbsp;&nbsp;<apex:commandButton action="{!cancel}" Value="Back to Opportunity" style="background-color:#d3d3d3;background-image:none;;width: 11em;  height: 2em;" />
+                  
+                  </apex:pageBlockButtons>
+                  
+                 
+                          <apex:outputPanel styleClass="panelWrapper" layout="block"> 
+                          <apex:pageBlock title="List of Associated Contacts" tabStyle="Account" >
+                          
+                         <!--  <apex:pageBlockTable value="{!crsList}" var="item" id="CId">
+                                       <apex:column value="{!item.Contact_Role__r.Contact__r.Name}" headerValue="Name"/> 
+                                       <apex:column value="{!item.Role__c}" headerValue="Role"/>
+                                       <apex:column value="{!item.Contact_Role__r.Contact__r.Email}" headerValue="Email"/> 
+                                        
+                                        
+                                       <apex:column value="{!item.Contact_Role__r.Contact__r.Contact_Status__c}" headerValue="Contact Status"/>
+                                        <apex:column >
+                                          <apex:facet name="header">Action</apex:facet> 
+                                          <apex:commandbutton Value="Send Notification" action="{!sendEmailToContact}" style="background-color:#d3d3d3;background-image:none;;width:11em;  height: 1.95em;" rerender="theId">
+                                           <apex:param name="itemId" value="{!item.Contact_Role__r.Contact__c}" assignTo="{!itemId}"/>
+                                          </apex:commandbutton>
+                                        </apex:column>
+                                          
+                                    
+                                  </apex:pageBlockTable>   -->
+                                  
+                                  <apex:pageBlockTable value="{!crlist}" var="item" id="CId">
+                                  
+                                  
+                                       <apex:column value="{!item.Contact__r.Name}" headerValue="Name"/> 
+                                       <apex:column value="{!item.Role__c}" headerValue="Role"/>
+                                       <apex:column value="{!item.Contact__r.Email}" headerValue="Email"/>  
+                                       
+                                       <apex:column value="{!item.Contact__r.Contact_Status__c}" headerValue="Contact Status"/>
+                                        <apex:column >
+                                          <apex:facet name="header">Action</apex:facet> 
+                                          <apex:commandbutton Value="Send Notification" action="{!sendEmailToContact}" style="background-color:#d3d3d3;background-image:none;;width:11em;  height: 1.95em;" rerender="theId">
+                                           <apex:param name="itemId" value="{!item.Contact__c}" assignTo="{!itemId}"/>
+                                          </apex:commandbutton>
+                                        </apex:column>
+                                  
+                                  
+                                   </apex:pageBlockTable>
+                                 
+                          
+                   
+                  </apex:pageBlock>  
+                   </apex:outputPanel> 
+                  </apex:pageBlock> 
+                
+                  
+           
+           
+        </apex:form>
+    
+
+
+  
+</apex:page>

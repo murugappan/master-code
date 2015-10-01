@@ -1,0 +1,4 @@
+<apex:page standardcontroller="case" extensions="csmrgp.CsMrgDupeDetectorCtrl" showHeader="false" standardStylesheets="true" >
+<apex:outputLink rendered="{!dupesFound}" value="{!linkUrl}" target="_parent" style="background-color:gold;">{!linkText}</apex:outputLink>
+<apex:outputText rendered="{!NOT(dupesFound)}" id="lblNone" value="None"/>
+</apex:page> <!-- 15px height -->

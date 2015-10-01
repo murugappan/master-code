@@ -1,0 +1,53 @@
+<apex:page controller="btbb_articleSearchController" readOnly="true"  standardstylesheets="false"  showHeader="false" applyhtmltag="false" renderas="pdf">
+    <html>
+        <head>
+            <style type="text/css">
+                @page 
+                {
+                    size:A4 landscape;
+                    margin:0.06in;
+                   
+                }
+                td, th { padding: .1em; border: 1px #ccc solid; word-wrap: break-word;}
+                thead { background: #fc9; } 
+            </style>
+            
+        </head>
+        <body>
+            <apex:image style="float:left;clear:all;margin-top:2%;height:80px%;width:80px;" alt="BtBB KB Search" value="{!URLFOR($Resource.BtBbKBPrint, '/Bb_Logo.jpg')}" /><br /><br /><br /><br /><br />
+            
+            <table  style="margin: .1em; border-collapse: collapse;">
+                <tr>
+                    <th>Article Number</th>
+   
+                    <th>Title</th>
+                    <th>Published Date</th>
+                    <th>Article Type</th>
+                    <th>Article Category</th>
+                    <th>Article Sub Category</th>
+                    <th>Release</th>
+                    <th>Service Pack(s)</th>
+                    <th>Target Release</th>
+                    <th>Patch Available</th>
+                </tr>
+                <apex:repeat value="{!kavWrapperListPDF}" var="listvar" rows="1000">
+                    <apex:repeat value="{!listvar}" var="k" rows="1000">
+                        <tr>
+                           
+                            <td><apex:outputLink value="https://blackboard.secure.force.com/btbb_articleview?id={!k.knowledgearticleId}" target="_blank" style="font-size:11px;">{!k.articleNumber}</apex:outputLink></td>
+                            <td style="font-size:12px;">{!k.name} </td>
+                            <td style="font-size:11px;">{!k.lastpublisheddate}</td>
+                            <td style="font-size:11px;">{!k.articleType}</td> 
+                            <td style="font-size:11px;">{!k.productPDF['ArticleCategory']}</td>
+                            <td style="font-size:11px;">{!k.productPDF['ArticleSubCategory']}</td> 
+                            <td style="font-size:11px;">{!k.release}</td>
+                            <td style="font-size:11px;">{!k.versionsPDF}</td>          
+                            <td style="font-size:11px;">{!k.targetRelease}</td>
+                            <td style="font-size:11px;">{!k.patchAvailable}</td>                       
+                        </tr>
+                    </apex:repeat>
+                </apex:repeat>
+            </table> 
+        </body>                 
+    </html>
+</apex:page>

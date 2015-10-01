@@ -1,0 +1,17 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.0 Transitional//EN">
+<html>
+<head>
+    <script src="/soap/ajax/14.0/connection.js"></script>
+</head>
+<body>
+{!INCLUDE($SControl.ReferenceViewTabUtils)}
+<script>
+var tabURL = getTabURL();
+var addOpp = "&oid={!Opportunity.Id}";
+if(addOpp == "&oid=") addOpp = "";
+tabURL += addOpp;
+
+window.parent.location.href = tabURL;
+  </script>
+</body>
+</html>

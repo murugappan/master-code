@@ -1,0 +1,91 @@
+<apex:page controller="ManageAssetsController" Tabstyle="Asset">
+<script>
+  function checkAll(cb)
+  {
+  var inputElem = document.getElementsByTagName("input");
+  for(var i=0; i<inputElem.length; i++)
+    {
+        if(inputElem[i].id.indexOf("checkedone")!=-1)
+        inputElem[i].checked = cb.checked;
+    }
+}
+ </script>
+<style type='text/css'>
+  div.hideCurrDate span.dateInput span.dateFormat{
+    display:none;
+  }
+</style>
+    <apex:sectionHeader title="Manage Assets" subtitle="Select Assets"/>
+    <apex:pageBlock title="Cannot convert Line Items to Assets" rendered="{!OR(NOT(opportunity.isWon),NOT(opportunity.HasOpportunityLineItem))}">
+        <apex:pageBlockButtons >
+            <apex:form >
+                <apex:commandButton action="{!home}" value="Back" styleClass="btn"/>
+            </apex:form>
+        </apex:pageBlockButtons>
+        <apex:outputText value="The Opportunity "/>
+        <apex:outputLink value="/{!$CurrentPage.parameters.id}"> {!opportunity.name} </apex:outputLink>
+        <apex:outputText value=" is not Closed or does not have line items."/>
+    </apex:pageBlock>
+    <apex:pageBlock title="Cannot Update Assets" rendered="{!AND(opportunity.isWon,opportunity.HasOpportunityLineItem,RenewalItems.size==0)}">
+        <apex:messages styleClass="pbError"/>
+        <apex:pageBlockButtons >
+            <apex:form >
+                <apex:commandButton action="{!home}" value="Back" styleClass="btn"/>
+            </apex:form>
+        </apex:pageBlockButtons>
+        <apex:outputText value="The selected Accounts do not have any Assets that can be renewed."/>
+    </apex:pageBlock>
+    <apex:form >
+        <apex:pageBlock Title="{!opportunity.name}" id="details" rendered="{!AND(opportunity.isWon,opportunity.HasOpportunityLineItem,RenewalItems.size>0)}">
+            <apex:pageBlockButtons >
+                <apex:commandButton action="{!home}" value="Back" immediate="true" styleClass="btn"/>
+                <apex:commandButton action="{!updateAssets}" value="Save" styleClass="btn"/>
+            </apex:pageBlockButtons>
+            <apex:messages styleClass="pbError"/>
+            <apex:pageBlockSection title="Opportunity Details" id="opportunityDetails" collapsible="false">
+                <apex:panelGrid columns="2">
+                    <apex:outputText value="Opportnunity Name: " style="font-weight:bold"/>
+                    <apex:outputLink value="/{!opportunity.id}"> {!opportunity.name} </apex:outputLink>
+                    <apex:outputText value="Total Number of Users: " style="font-weight:bold"/>
+                    <apex:outputText value="{!opportunity.Total_Number_of_Authorized_Users_License__c}"/>
+                    <apex:outputText value="RSM: " style="font-weight:bold"/>
+                    <apex:outputText value="{!opportunity.Owner.Name}"/>
+                </apex:panelGrid>
+            </apex:pageBlockSection>
+            <apex:pageBlockSection Title="List of Available Products" id="products" collapsible="false">
+                <apex:dataTable value="{!RenewalItems}" var="a" cellpadding="4" >
+                    <apex:column >
+                        <apex:facet name="header"> <apex:inputCheckbox onchange="checkAll(this)"></apex:inputCheckbox></apex:facet>
+                        <apex:inputCheckbox value="{!a.selected}" id="checkedone"></apex:inputCheckbox>
+                    </apex:column>
+                    <apex:column headervalue="Account Name">
+                        <apex:outputField value="{!a.asset.account.Name}"/>
+                    </apex:column>
+                    <apex:column headervalue="Type">
+                        <apex:outputField value="{!a.asset.Type__c}"/>
+                    </apex:column>
+                    <apex:column headervalue="Asset Name">
+                        <apex:inputField value="{!a.asset.Name}" style="width:25em"/>
+                    </apex:column>
+                    <apex:column headervalue="Version">
+                        <apex:inputField value="{!a.asset.Version__c}" style="width:5em"/>
+                    </apex:column>
+                    <apex:column headervalue="Status">
+                        <apex:outputField value="{!a.asset.Status}"/>
+                    </apex:column>
+                    <apex:column headervalue="User Limit">
+                        <apex:inputField value="{!a.asset.User_Limit__c}" style="width:10em"/>
+                    </apex:column>
+                    <apex:column headervalue="Expiration Date">
+                        <div class="hideCurrDate">
+                            <apex:inputField value="{!a.asset.UsageEndDate}"/>
+                        </div>
+                    </apex:column>
+                    <apex:column headervalue="Bug">
+                        <apex:outputField value="{!a.asset.Bugzilla_Bug_Number__c}"/>
+                    </apex:column>
+                </apex:dataTable>
+            </apex:pageBlockSection>
+        </apex:pageBlock>
+    </apex:form>
+</apex:page>

@@ -1,0 +1,13 @@
+<apex:page controller="datamapcontroller" title="Datacategorymap">
+<apex:sectionHeader title="Regenerate Knowledge DataCategory" />
+    <apex:message />
+    <apex:form >
+        <apex:pageBlock id="process_counter">
+            <apex:outputText value="Click to Recreate Datacategory Map" /><br/>
+            &nbsp;<apex:commandButton action="{!datamapexecute}" value="Recreate Categorymap"/>
+        </apex:pageBlock>
+        <apex:repeat value="{!versionlist}" var="v">
+         {!v.name} <br/>
+        </apex:repeat>
+    </apex:form>
+</apex:page>

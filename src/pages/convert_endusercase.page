@@ -1,0 +1,376 @@
+<apex:page standardController="Case" extensions="convert_endusercase" id="AssetOnCase" label="AssetOnCase"  >
+<apex:form >
+
+<apex:pageBlock title="Convert to Admin Case" mode="edit" id="thePageBlock">
+    <apex:pageBlockButtons >
+        <apex:commandButton value="Submit" action="{!Save}"/>
+        <apex:commandButton value="Cancel" action="{!Cancel}" />
+    </apex:pageBlockButtons>
+    <apex:pageMessages />
+     <apex:outputPanel id="errorPanel">
+        <apex:pageMessage strength="2" title="{!errorTitle}" summary="{!errorMessage}" severity="{!errorSeverity}" rendered="{!errorShow}" />
+    </apex:outputPanel>  
+    
+    <apex:pageBlockSection title="Account and Contact Information" columns="1">        
+        <apex:pageBlockSectionItem id="accountpageBlockSectionItem">
+            <apex:outputLabel: value="Account:" for="account" />
+             <apex:outputPanel >           
+              <apex:image url="{!$Resource.redbar1}"/>
+            <apex:inputfield value="{!case.accountid}" id="account">
+            <apex:actionSupport event="onchange" rerender="asset, contact" status="assetStatus" />
+            </apex:inputfield>
+            </apex:outputPanel>
+        </apex:pageBlockSectionItem>
+        
+        <apex:pageBlockSectionItem >
+            <apex:actionStatus startText=" Retreiving Account Information" stopText=" " id="assetStatus"/>
+        </apex:pageBlockSectionItem>
+        
+        <apex:pageblockSectionItem rendered="{!(collabe)}"  >
+            <apex:outputLabel value="Contact:" for="contact" />
+             <apex:outputPanel >           
+              <apex:image url="{!$Resource.redbar1}"/>
+                <apex:selectList value="{!contact}" size="1" id="contact" disabled="{!ISNULL(case.accountid)}" >
+                    <apex:selectOptions value="{!contacts}"/>
+                </apex:selectList>
+                </apex:outputPanel>
+        </apex:pageblockSectionItem>
+        
+<!--        <apex:pageblockSectionItem rendered="{!collabe}"  >
+            <apex:outputLabel value="Contact:" for="eucontact" />
+             <apex:outputPanel >           
+              <apex:image url="{!$Resource.redbar1}"/>
+                <apex:inputField value="{!case.End_User__c}"/>
+                </apex:outputPanel>
+        </apex:pageblockSectionItem>     -->
+
+        
+       <apex:pageblockSectionItem rendered="{!(collabe)}" >
+        <apex:outputpanel >
+       <div style="display:{!if(OR(shownextcontacts,showPreviousContacts),'block','none')}">
+                 Click below link to view more contacts. <apex:commandlink action="{!previouscontacts}"  style="display:{!if(showPreviousContacts,'block','none')}">&lt;&lt;Previous</apex:commandlink><apex:commandlink action="{!nextcontacts}" style="display:{!if(showNextContacts,'block','none')}" >Next>></apex:commandlink>
+                 </div> 
+         </apex:outputpanel>        
+        </apex:pageblockSectionItem> <br/>
+        <apex:pageblocksectionitem >
+            <apex:outputlabel value="Cc1:" for="cc1"/>
+            <apex:inputfield value="{!case.ccEmail1__c}" id="cc1"/>
+        </apex:pageblocksectionitem>
+        <apex:pageblocksectionitem />
+        <apex:pageblocksectionitem >
+            <apex:outputlabel value="Cc2:" for="cc2"/>
+            <apex:inputfield value="{!case.ccEmail2__c}" id="cc2"/>
+        </apex:pageblocksectionitem>
+        <apex:pageblocksectionitem />
+        <apex:pageblocksectionitem >
+            <apex:outputlabel value="Cc3:" for="cc3"/>
+            <apex:inputfield value="{!case.ccEmail3__c}" id="cc3"/>
+        </apex:pageblocksectionitem>
+        <apex:pageblocksectionitem />
+        <apex:pageblocksectionitem >
+            <apex:outputlabel value="Cc4:" for="cc4"/>
+            <apex:inputfield value="{!case.ccEmail4__c}" id="cc4"/>
+        </apex:pageblocksectionitem>
+        <apex:pageblocksectionitem />
+        <apex:pageblocksectionitem >
+            <apex:outputlabel value="Cc5:" for="cc5"/>
+            <apex:inputfield value="{!case.ccEmail5__c}" id="cc5"/>
+        </apex:pageblocksectionitem>
+        <apex:pageblocksectionitem />
+        </apex:pageBlockSection>
+    
+    
+<apex:pageBlockSection title="Installed Product Information" columns="2" id="installid">
+
+<!-- ASSET//Core License Picklist -->        
+        <apex:pageblockSectionItem rendered="{!(collabe)}">
+            <apex:outputLabel value="Installed Product:" for="asset" />
+             <apex:outputPanel >           
+              <apex:image url="{!$Resource.redbar1}"/>
+                <apex:selectList value="{!asset}" size="1" id="asset" disabled="{!ISNULL(case.accountid)}" >
+                    <apex:selectOptions value="{!assets}"/>
+                    <apex:actionSupport event="onchange" action="{!InstanceDisplay}"  rerender="thePageBlock,version,module,errorPanel,sourcebuild,installid" status="clStatus"/>
+                </apex:selectList>
+                </apex:outputPanel>
+        </apex:pageblockSectionItem>          
+        
+        
+        
+        <!-- ASSET//Core License Picklist Collab End User -->        
+        <!-- <apex:pageblockSectionItem rendered="{!collabe}">
+            <apex:outputLabel value="Installed Product:" for="euasset" />
+             <apex:outputPanel >           
+              <apex:image url="{!$Resource.redbar1}"/>
+               <apex:inputField value="{!case.End_User_Product__c}"/>
+               <apex:actionSupport event="onchange" action="{!InstanceDisplay}"  rerender="module"/>
+                
+                </apex:outputPanel>
+        </apex:pageblockSectionItem> -->
+        
+        
+<!--        <apex:pageblockSectionItem rendered="{!collabe}">
+            <apex:outputLabel value="Installed Product:" for="euasset" />
+             <apex:outputPanel >           
+              <apex:image url="{!$Resource.redbar1}"/>
+                <apex:selectlist value="{!case.End_User_Product__c}" multiselect="false" size="1">
+                    <apex:selectoptions value="{!productlist}"/>
+                    <apex:actionSupport event="onchange" action="{!InstanceDisplay}" rerender="module" status="clStatus"/>
+                </apex:selectlist>
+                
+                </apex:outputPanel>
+        </apex:pageblockSectionItem>           -->
+        
+        <apex:pageBlockSectionItem rendered="{!collabe}" >
+           
+        </apex:pageBlockSectionItem>
+         
+      
+        
+        
+        <!--  <apex:pageblockSectionItem >
+        <apex:outputLabel value="Instance:" rendered="{!collab}" />
+  
+            <apex:selectList value="{!instancevalue}" rendered="{!collab}" size="1" style="margin-left:10px" >
+            <apex:selectOptions value="{!instanceoptions}"/>
+            </apex:selectList>
+                        
+       </apex:pageBlockSectionItem>     
+        
+        
+       <apex:pageblockSectionItem >
+       </apex:pageblockSectionItem> -->
+        
+        
+        
+        
+        <!-- AJAX RERENDER STATUS FOR ONCHANGE OF ASSET -->
+        <apex:pageBlockSectionItem rendered="{!NOT(collabe)}" >
+            <apex:actionStatus startText=" Finding Issue Topics..." stopText=" " id="clStatus"/>
+        </apex:pageBlockSectionItem>
+        
+       
+       
+  <apex:pageBlockSectionItem >
+            <apex:outputLabel value="Instance:" id="InsOL" rendered="{!temp_flag}"  />
+            <apex:inputField value="{!Case.Instance__c}" id="InsIF" rendered="{!temp_flag}"  style="margin-left:10px" />
+        </apex:pageBlockSectionItem>
+         <apex:pageBlockSectionItem >
+            <apex:actionStatus id="instanceStatus"/>
+        </apex:pageBlockSectionItem>
+        
+        
+
+
+        <apex:pageblockSectionItem rendered="{!AND(NOT(collab), NOT(collabe))}" >
+            <apex:outputLabel value="Version On Case:" for="version" />
+                <apex:selectList value="{!version}" size="1" id="version" disabled="{!ISNULL(asset)}" style="margin-left:10px">
+                    <apex:selectOptions value="{!versions}" />
+                    <apex:actionSupport event="onchange" rerender="sourcebuild,module" status="claStatus"/> 
+                </apex:selectList>
+        </apex:pageblockSectionItem>
+        
+        
+        
+        <!-- AJAX RERENDER STATUS FOR ONCHANGE OF ASSET -->
+        <apex:pageBlockSectionItem rendered="{!AND(NOT(collab), NOT(collabe))}" >
+            <apex:actionStatus startText=" Finding Source Build..." stopText=" " id="claStatus"/>
+        </apex:pageBlockSectionItem>
+        
+        <apex:pageblockSectionItem rendered="{!AND(NOT(moodleroom), NOT(collab), NOT(collabe))}">
+      
+            <apex:outputLabel value="Source Build On Case:" for="sourcebuild" />
+                <apex:selectList value="{!sourcebuild}" size="1" id="sourcebuild" disabled="{!ISNULL(asset)}" style="margin-left:10px">
+                    <apex:selectOptions value="{!sblist}" />
+                   <!--NOSTATUS? <apex:actionSupport event="onchange" rerender="module" status="clStatus"/> -->
+                </apex:selectList>
+        </apex:pageblockSectionItem>
+        
+      
+        
+        <!-- AJAX RERENDER STATUS FOR ONCHANGE OF ASSET -->
+        <apex:pageBlockSectionItem rendered="{!AND(NOT(moodleroom), NOT(collab), NOT(collabe))}">
+            <apex:actionStatus startText=" Finding Issue Topics..." stopText=" " id="claStatus1"/>
+        </apex:pageBlockSectionItem>
+        
+       
+
+<!-- Module Picklist -->    
+        <apex:pageblockSectionItem >
+            <apex:outputLabel value="Issue Topic:" for="module"/>
+             <apex:outputPanel >           
+              <apex:image url="{!$Resource.redbar1}"/>
+                <apex:selectList value="{!module}" size="1" id="module"  >   
+                    <apex:selectOptions value="{!modules}"/>
+                    <apex:actionSupport event="onchange" rerender="functionalarea,category,errorPanel" status="mStatus"/>
+                </apex:selectList>
+                </apex:outputPanel>
+        </apex:pageblockSectionItem>
+        
+        
+        <!-- AJAX RERENDER STATUS FOR MODULE -->
+        <apex:pageBlockSectionItem >
+            <apex:actionStatus startText=" Finding Related Problem Areas..." stopText=" " id="mStatus"/>
+        </apex:pageBlockSectionItem>
+        
+      
+<!-- Functional Area Picklist -->    
+        <apex:pageblockSectionItem >
+                <apex:outputLabel value="Functional Area:" for="functionalarea"/>
+                    <apex:selectList value="{!functionalarea}" size="1" id="functionalarea"  style="margin-left:10px">   
+                        <apex:selectOptions value="{!functionalareas}"/>
+                        <apex:actionSupport event="onchange" rerender="category,errorPanel" status="faStatus"/>
+                    </apex:selectList>
+        </apex:pageblockSectionItem>
+        
+     
+        
+        <!-- AJAX RERENDER STATUS FOR FUNCTIONAL AREA -->
+        <apex:pageBlockSectionItem >
+            <apex:actionStatus startText=" Finding Related Categories..." stopText=" " id="faStatus"/>
+        </apex:pageBlockSectionItem>
+        
+     
+
+<!-- Category Picklist -->    
+        <apex:pageblockSectionItem rendered="{!NOT(moodleroom)}">
+                <apex:outputLabel value="Category:" for="category"/>
+                    <apex:selectList value="{!category}" size="1" id="category"  style="margin-left:10px">   
+                         <apex:selectOptions value="{!categories}"/> 
+                        <apex:actionSupport event="onchange" rerender="AssetOnCase" />
+                    </apex:selectList>
+        </apex:pageblockSectionItem>
+        <apex:pageBlockSectionItem rendered="{!NOT(moodleroom)}">
+        </apex:pageBlockSectionItem>
+        
+        
+       
+   
+        
+  <!--  <apex:pageblockSectionItem >
+        <apex:outputLabel value="Client OS:" rendered="{!collab}" />
+  
+            <apex:selectList value="{!clvalues}" rendered="{!collab}" size="1" style="margin-left:10px" >
+            <apex:selectOptions value="{!clos}"/>
+            </apex:selectList>
+                        
+  </apex:pageBlockSectionItem>     
+        
+        
+       <apex:pageblockSectionItem >
+       </apex:pageblockSectionItem> -->
+        
+        
+        
+        
+
+        
+
+  
+          
+          
+  
+        
+   
+          
+          
+               
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+       
+        
+        
+        
+        
+  <!-- Client OS Picklist(Only visible for Moodlerooms) -->      
+     <apex:pageblockSectionItem >
+  <apex:outputLabel value="Client OS:" rendered="{!moodleroom}"/>
+     <apex:inputfield value="{!tcas.Client_OS__c}" rendered="{!moodleroom}" style="margin-left:10px" />        
+        </apex:pageBlockSectionItem>
+        <apex:pageBlockSectionItem >
+        </apex:pageBlockSectionItem> 
+  <!-- Browser OS Picklist(Only visible for Moodlerooms) -->
+  <apex:pageblockSectionItem >
+               <apex:outputLabel value="Browser:" for="browser" rendered="{!moodleroom}"/>
+               <!-- <apex:inputField value="{!Case.Browser__c}" style="margin-left:10px" rendered="{!moodleroom}"/> -->
+               <apex:inputfield value="{!tcas.Browser__c}" rendered="{!moodleroom}" style="margin-left:10px" />
+
+        </apex:pageblockSectionItem>
+  <apex:pageBlockSectionItem >
+        </apex:pageBlockSectionItem>
+   <!-- URL Access(Only visible for Moodlerooms) -->      
+   <apex:pageblockSectionItem >
+               <apex:outputLabel value="URL Access" rendered="{!moodleroom}"/> 
+<apex:outputPanel >
+<apex:image url="{!$Resource.redbar1}" rendered="{!moodleroom}"/> 
+<apex:inputField value="{!Case.URL_Access__c}" style="padding:3px; width: 35%;" rendered="{!moodleroom}"/>
+</apex:outputPanel>
+       
+        </apex:pageblockSectionItem>         
+
+    </apex:pageBlockSection>
+
+
+</apex:pageBlock>
+
+</apex:form>
+
+</apex:page>

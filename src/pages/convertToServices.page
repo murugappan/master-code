@@ -1,0 +1,70 @@
+<apex:page controller="ConvertToServicesController" Tabstyle="Services_Project__c">
+ <script>
+  function setFocusOnLoad() {}
+ </script>
+ <apex:sectionHeader title="New Services Engagements" rendered="{!AND(opportunity.isWon,opportunity.HasOpportunityLineItem)}"/>
+ <apex:pageBlock title="Cannot create Services Engagement" id="CannotCreateServicesEngagement" rendered="{!OR(NOT(opportunity.isWon),NOT(opportunity.HasOpportunityLineItem))}">
+  <apex:outputText value="The Opportunity "/>
+  <apex:outputLink value="/{!$CurrentPage.parameters.id}"> {!opportunity.name} </apex:outputLink>
+  <apex:outputText value=" is not Closed or does not have line items."/>
+ </apex:pageBlock>
+ <apex:pageBlock title="Cannot convert Line Items to Services Engagements" rendered="{!AND(opportunity.isWon,opportunity.HasOpportunityLineItem,servicesEngagements.size==0)}">
+  <apex:outputText value="The Opportunity "/>
+  <apex:outputLink value="/{!$CurrentPage.parameters.id}"> {!opportunity.name} </apex:outputLink>
+  <apex:outputText value=" does not have any products that can be converted to Services Engagements."/>
+ </apex:pageBlock>
+ <apex:form id="formtop">
+  <apex:pageBlock title="Create new Services Engagements" id="thePageBlock" rendered="{!AND(opportunity.isWon,opportunity.HasOpportunityLineItem,servicesEngagements.size>0)}">
+   <apex:pageMessages />
+   <apex:pageBlockButtons >
+    <apex:commandButton title="Save" value="Save" action="{! save}"/>
+   </apex:pageBlockButtons>
+   <apex:pageBlockSection title="Opportunity Details" id="opportunityDetails" collapsible="false">
+    <apex:panelGrid columns="2">
+     <apex:outputText value="Opportnunity Name: " style="font-weight:bold"/>
+     <apex:outputLink value="/{!opportunity.id}"> {!opportunity.name} </apex:outputLink>
+     <apex:outputText value="RSM: " style="font-weight:bold"/>
+     <apex:outputText value="{!opportunity.Owner.Name}"/>
+     <apex:outputText value="PSM: " style="font-weight:bold"/>
+     <apex:repeat value="{!opportunity.OpportunityTeamMembers}" var="teammember">
+      <apex:outputText value="{!teammember.User.Name}" rendered="{!teammember.TeamMemberRole = 'Professional Services Manager'}"/>
+     </apex:repeat>
+     <apex:outputText value="AM: " style="font-weight:bold"/>
+     <apex:repeat value="{!opportunity.OpportunityTeamMembers}" var="teammember">
+      <apex:outputText value="{!teammember.User.Name}" rendered="{!teammember.TeamMemberRole = 'Account Manager'}"/><br/>
+     </apex:repeat>
+    </apex:panelGrid>
+   </apex:pageBlockSection>
+   <apex:pageBlockSection title="Services Project" id="servicesContainerInfo" collapsible="false" columns="2">
+      <apex:inputField value="{!ServicesProject.Start_Date__c}" required="true"/>
+      <apex:inputField value="{!ServicesProject.End_Date__c}" required="true"/>
+   </apex:pageBlockSection>
+   <apex:pageBlockSection title="Services Engagements" id="servicesEngagementsInfo" collapsible="false" columns="1">
+    <apex:pageBlockTable value="{!ServicesEngagements}" var="servicesEngagement" id="servicesEngagementsTable" cellPadding="4" rowClasses="odd,even" styleClass="tableClass">
+     <apex:column headervalue="Product Name" style="width:11.1%;text-decoration:underline">
+      <apex:outputText value="{!servicesEngagement.Name}"/>
+     </apex:column>
+     <apex:column headervalue="Services Type" style="width:11.1%">
+      <apex:inputField value="{!servicesEngagement.Service_Type__c}" required="true" style="width:90%"/>
+     </apex:column>
+     <apex:column headervalue="Sub-Type" style="width:11.1%">
+      <apex:inputField value="{!servicesEngagement.Service_Sub_Type__c}" required="true" style="width:90%"/>
+     </apex:column>
+     <apex:column headervalue="Product" style="width:23%">
+      <apex:inputField value="{!servicesEngagement.Product__c}" required="true"/>
+     </apex:column>
+     <apex:column headervalue="Contact" style="width:13.2%">
+      <apex:inputField value="{!servicesEngagement.Primary_Contact__c}" style="width:75%"/>
+     </apex:column>
+     <apex:column headervalue="Status" style="width:13.2%">
+      <apex:inputField value="{!servicesEngagement.Status__c}" style="width:75%"/>
+     </apex:column>
+     <apex:column headervalue="Dollar Value" style="width:11.1%">
+      <apex:outputText value="{!servicesEngagement.CurrencyIsoCode} {!servicesEngagement.Dollar_Value__c}"/>
+     </apex:column>
+    </apex:pageBlockTable>
+    <p/>
+   </apex:pageBlockSection>
+  </apex:pageBlock>
+ </apex:form>
+</apex:page>

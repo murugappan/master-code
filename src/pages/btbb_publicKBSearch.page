@@ -1,0 +1,863 @@
+<apex:page controller="publicarticleSearchController" id="ArticleSearch" standardStylesheets="false" showHeader="false" contentType="text/html">
+    <apex:composition template="btbb_publictemplate">
+        <apex:define name="js">
+            <style type="text/css">
+                #drilldown #content ul li { padding: 0px 0px; vertical-align: baseline; color:#4D4D4F; }
+                #drilldown #content ul { margin:0px; }
+                label { margin-top:20px; color:#4D4D4F; }
+                #productlist { margin-bottom:5px; }
+                #drilldown #content #filters {height: 10px;margin-bottom: 5px;}
+                #drilldown #content #filters ul li {padding: 3px 0px 0px 0px;margin-left:5px;}
+                #drilldown #content #filters ul li a {color:#333333;}
+                #drilldown #content #filters ul li a:hover {color:#545454;}
+                .divider {  margin: 2px 0px; }
+                .btbbArticleType {line-height: 12px;}
+                .btbbArticle {padding: 6px 0 10px 25px;}
+                #drilldown #content h2 {line-height: 20px;margin-bottom: 0;}
+                #btbbRightCol { margin-top:20px; }
+                #overlay {
+                  position: fixed;
+                  height: 100%;
+                  width: 100%;
+                  z-index: 1000000;
+                  background: url('link/to/semitransparent.png');
+                }
+
+            </style>
+            <apex:pageblock id="pagination">                                     
+                <!--<script charset="utf-8" src="{!IF(isKnownIssue != true, URLFOR($Resource.BtBbStyles,'includes/js/btbbarticlepagination.js'), URLFOR($Resource.BtBbStyles,'includes/js/btbbKIpagination.js'))}" type="text/javascript"/>-->
+                <script charset="utf-8">
+                ;(function($){
+
+                    $.fn.pajinate = function(options){
+                        // Set some state information
+                        var current_page = 'current_page';
+                        var items_per_page = 'items_per_page';
+                        
+                        var meta;
+                        var defaults;
+                        // Setup default option values
+                        var check = '{!isKnownIssue}';
+                        //alert("check >>>>>>" + check);
+                        if(check == "true") {
+                            
+                        defaults = {
+                            
+                            item_container_id : '.content',
+                            items_per_page : 30,            
+                            nav_panel_id : '.page_navigation',
+                            num_page_links_to_display : 20,         
+                            start_page : 0,
+                            wrap_around : false,
+                            nav_label_first : 'First',
+                            nav_label_prev : 'Prev',
+                            nav_label_next : 'Next',
+                            nav_label_last : 'Last',
+                            show_first_last: true
+                        }; 
+                        } else {
+                            
+                            defaults = {
+                            item_container_id : '.content',
+                            items_per_page : 10,            
+                            nav_panel_id : '.page_navigation',
+                            num_page_links_to_display : 20,         
+                            start_page : 0,
+                            wrap_around : false,
+                            nav_label_first : 'First',
+                            nav_label_prev : 'Prev',
+                            nav_label_next : 'Next',
+                            nav_label_last : 'Last',
+                            show_first_last: true
+                        }; 
+                        }
+                        var options = $.extend(defaults,options);
+                        var $item_container;
+                        var $page_container;
+                        var $items;
+                        var $nav_panels;
+                        var total_page_no_links;
+                    
+                        return this.each(function(){
+                            $page_container = $(this);
+                            $item_container = $(this).find(options.item_container_id);
+                            $items = $page_container.find(options.item_container_id).children();
+                            meta = $page_container;
+                            
+                            // Initialise meta data
+                            meta.data(current_page,0);
+                            meta.data(items_per_page, options.items_per_page);
+                                    
+                            // Get the total number of items
+                            var total_items = $item_container.children().size();
+                            
+                            // Calculate the number of pages needed
+                            var number_of_pages = Math.ceil(total_items/options.items_per_page);
+                            
+                            // Construct the nav bar
+                            var more = '<span class="ellipse more">...</span>';
+                            var less = '<span class="ellipse less">...</span>';
+                            
+                            var first = !options.show_first_last ? '' : '<a class="first_link" href="">'+ options.nav_label_first +'</a>';
+                            var last = !options.show_first_last ? '' : '<a class="last_link" href="">'+ options.nav_label_last +'</a>';
+                            
+                            var navigation_html = first;
+                            navigation_html += '<a class="previous_link" href="">'+ options.nav_label_prev +'</a>'+ less;
+                            var current_link = 0;
+                            while(number_of_pages > current_link){
+                                navigation_html += '<a class="page_link" href="" longdesc="' + current_link +'">'+ (current_link + 1) +'</a>';
+                                current_link++;
+                            }
+                            navigation_html += more + '<a class="next_link" href="">'+ options.nav_label_next +'</a>';
+                            navigation_html += last;
+                            
+                            // And add it to the appropriate area of the DOM    
+                            $nav_panels = $page_container.find(options.nav_panel_id);
+                            $nav_panels.html(navigation_html).each(function(){
+                            
+                                $(this).find('.page_link:first').addClass('first');
+                                $(this).find('.page_link:last').addClass('last');
+                                
+                            });
+                            
+                            // Hide the more/less indicators
+                            $nav_panels.children('.ellipse').hide();
+                            
+                            // Set the active page link styling
+                            $nav_panels.find('.previous_link').next().next().addClass('active_page');
+                            
+                            /* Setup Page Display */
+                            // And hide all pages
+                            $items.hide();
+                            // Show the first page          
+                            $items.slice(0, meta.data(items_per_page)).show();
+                
+                            /* Setup Nav Menu Display */
+                            // Page number slices
+                            
+                            total_page_no_links = $page_container.children(options.nav_panel_id+':first').children('.page_link').size();
+                            options.num_page_links_to_display = Math.min(options.num_page_links_to_display,total_page_no_links);
+                
+                            $nav_panels.children('.page_link').hide(); // Hide all the page links
+                            
+                            // And only show the number we should be seeing
+                            $nav_panels.each(function(){
+                                $(this).children('.page_link').slice(0, options.num_page_links_to_display).show();          
+                            });
+                            
+                            /* Bind the actions to their respective links */
+                             
+                            // Event handler for 'First' link
+                            $page_container.find('.first_link').click(function(e){
+                                e.preventDefault();
+                                
+                                movePageNumbersRight($(this),0);
+                                goto(0);                
+                            });         
+                            
+                            // Event handler for 'Last' link
+                            $page_container.find('.last_link').click(function(e){
+                                e.preventDefault();
+                                var lastPage = total_page_no_links - 1;
+                                movePageNumbersLeft($(this),lastPage);
+                                goto(lastPage);             
+                            });         
+                            
+                            // Event handler for 'Prev' link
+                            $page_container.find('.previous_link').click(function(e){
+                                e.preventDefault();
+                                showPrevPage($(this));
+                            });
+                            
+                            
+                            // Event handler for 'Next' link
+                            $page_container.find('.next_link').click(function(e){
+                                e.preventDefault();             
+                                showNextPage($(this));
+                            });
+                            
+                            // Event handler for each 'Page' link
+                            $page_container.find('.page_link').click(function(e){
+                                e.preventDefault();
+                                goto($(this).attr('longdesc'));
+                            });         
+                            
+                            // Goto the required page
+                            goto(parseInt(options.start_page));
+                            toggleMoreLess();
+                            if(!options.wrap_around)
+                                tagNextPrev();
+                        });
+                        
+                        function showPrevPage(e){
+                            new_page = parseInt(meta.data(current_page)) - 1;
+                            
+                            // Check that we aren't on a boundary link
+                            if($(e).siblings('.active_page').prev('.page_link').length==true){
+                                movePageNumbersRight(e,new_page);
+                                goto(new_page);
+                            }else if(options.wrap_around){
+                                goto(total_page_no_links-1);   
+                            }
+                                
+                        };
+                            
+                        function showNextPage(e){
+                            new_page = parseInt(meta.data(current_page)) + 1;
+                            
+                            // Check that we aren't on a boundary link
+                            if($(e).siblings('.active_page').next('.page_link').length==true){
+                                movePageNumbersLeft(e,new_page);
+                                goto(new_page);
+                            } else if (options.wrap_around) {
+                                goto(0);
+                            }
+                                
+                        };
+                            
+                        function goto(page_num){
+                            
+                            var ipp = meta.data(items_per_page);
+                            
+                            var isLastPage = false;
+                            
+                            // Find the start of the next slice
+                            start_from = page_num * ipp;
+                            
+                            // Find the end of the next slice
+                            end_on = start_from + ipp;
+                            // Hide the current page    
+                            $items.hide()
+                                    .slice(start_from, end_on)
+                                    .show();
+                            
+                            // Reassign the active class
+                            $page_container.find(options.nav_panel_id).children('.page_link[longdesc=' + page_num +']').addClass('active_page')
+                                                                     .siblings('.active_page')
+                                                                     .removeClass('active_page');
+                            
+                            // Set the current page meta data
+                            meta.data(current_page,page_num);
+                            
+                            // Hide the more and/or less indicators
+                            toggleMoreLess();
+                            
+                            // Add a class to the next or prev links if there are no more pages next or previous to the active page
+                            tagNextPrev();
+                        };  
+                        
+                        // Methods to shift the diplayed index of page numbers to the left or right
+                        function movePageNumbersLeft(e, new_p){
+                            var new_page = new_p;
+                            
+                            var $current_active_link = $(e).siblings('.active_page');
+                        
+                            if($current_active_link.siblings('.page_link[longdesc=' + new_page +']').css('display') == 'none'){
+                                
+                                $nav_panels.each(function(){
+                                            $(this).children('.page_link')
+                                                .hide() // Hide all the page links
+                                                .slice(parseInt(new_page - options.num_page_links_to_display + 1) , new_page + 1)
+                                                .show();        
+                                            });
+                            }
+                            
+                        } 
+                        
+                        function movePageNumbersRight(e, new_p){
+                            var new_page = new_p;
+                            
+                            var $current_active_link = $(e).siblings('.active_page');
+                            
+                            if($current_active_link.siblings('.page_link[longdesc=' + new_page +']').css('display') == 'none'){
+                                                                
+                                $nav_panels.each(function(){
+                                            $(this).children('.page_link')
+                                                .hide() // Hide all the page links
+                                                .slice( new_page , new_page + parseInt(options.num_page_links_to_display))
+                                                .show();
+                                            });
+                            }
+                        }
+                        
+                        // Show or remove the ellipses that indicate that more page numbers exist in the page index than are currently shown
+                        function toggleMoreLess(){
+                                                                     
+                            if(!$nav_panels.children('.page_link:visible').hasClass('last')){
+                                $nav_panels.children('.more').show();
+                            }else {
+                                $nav_panels.children('.more').hide();
+                            }
+                            
+                            if(!$nav_panels.children('.page_link:visible').hasClass('first')){
+                                $nav_panels.children('.less').show();
+                            }else {
+                                $nav_panels.children('.less').hide();
+                            }           
+                        }
+                        
+                        /* Add the style class ".no_more" to the first/prev and last/next links to allow custom styling */
+                        function tagNextPrev() {
+                            if($nav_panels.children('.last').hasClass('active_page')){
+                                $nav_panels.children('.next_link').add('.last_link').addClass('no_more');
+                            } else {
+                                $nav_panels.children('.next_link').add('.last_link').removeClass('no_more');
+                            }
+                            
+                            if($nav_panels.children('.first').hasClass('active_page')){
+                                $nav_panels.children('.previous_link').add('.first_link').addClass('no_more');
+                            } else {
+                                $nav_panels.children('.previous_link').add('.first_link').removeClass('no_more');
+                            }
+                        }
+                        
+                    };
+                    
+                })(jQuery);
+            </script>
+                
+            </apex:pageblock>
+            <script type="text/javascript">
+                window.onload = loadParam;
+                var servPack;
+                var tarRelease;
+                var subCat;
+                var topFilter;
+                var searchText;
+                var childCat;
+                var isLock = 0;
+                function resetVal() {
+                    subCat = null;
+                    servPack = null;
+                    tarRelease = null;
+                    patchValue = null;
+                    overlay.remove();
+                    childCat = null;
+                }
+                function removeFilter(filter) {
+                    overlay = $('<div></div>').prependTo('body').attr('id', 'overlay');
+                    if (filter == 'Product') {
+                        topFilter = 'Product';
+                        subCat = null;
+                        servPack = null;
+                    } else if (filter == 'Major Release')
+                        topFilter = 'Major Release';                    
+                    else {
+                        topFilter = 'Patch Available';
+                        patchValue = null;
+                    }
+                    searchServer(tarRelease, servPack, subCat, articleTypes, patchValue, topFilter, searchText, childCat);
+                }
+                function loadParam() {
+                    if ('{!searchText}' != null && (document.getElementById("searchText").value == null
+                    || document.getElementById("searchText").value == '')) {
+                        searchText = '{!searchText}';
+                        document.getElementById("searchText").value = searchText;
+                    }
+                    if (articleTypes == null && '{!articleTypes}' != null) {
+                
+                        articleTypes = '{!articleTypes}';
+                    }
+                }
+                 /* -- Disregard Enter Key Press on Input Text Field for Search (MAC) -- */
+                function disableEnterKey(e){
+                    var key;
+                    if(window.event)
+                        key = window.event.keyCode;     //IE
+                    else
+                        key = e.which;     //firefox
+
+                    if(key == 13)
+                        return false;
+                    else
+                        return true;
+                }
+                
+                /* -- Added Variable to Store Delay/Timeout on Keyup (MAC) Set the keyup function to execute after 700 ms delay -- */
+                var delayTimer;
+                function doSearch() {
+                    if(isLock == 0) {
+                        overlay = $('<div></div>').prependTo('body').attr('id', 'overlay');
+                        isLock = 1;
+                    }
+                    clearTimeout(delayTimer);
+                    searchText = document.getElementById("searchText").value;
+                    topFilter = null;                    
+                    delayTimer = setTimeout(function() {
+                    searchServer(tarRelease, servPack, subCat, articleTypes, patchValue, topFilter, searchText, childCat);
+                    }, 700);
+                }
+                
+                function removeServPackFilter(ser) {
+                    overlay = $('<div></div>').prependTo('body').attr('id', 'overlay');
+                    serPackList = servPack.split(',');
+                    var tmpSerPack;
+                    for (var i = 0; i < serPackList.length; i++) {
+                        if (ser == serPackList[i])
+                        continue;
+                        else {
+                            if (tmpSerPack != null)
+                            tmpSerPack += ',' + serPackList[i];
+                            else
+                            tmpSerPack = serPackList[i];
+                        }
+                    }
+                    servPack = tmpSerPack;                    
+                    searchServer(tarRelease, servPack, subCat, articleTypes, patchValue, topFilter, searchText, childCat);
+                }
+                
+                function removeTargetReleaseFilter(tarRel) {
+                    overlay = $('<div></div>').prependTo('body').attr('id', 'overlay');
+                    targetRelList = tarRelease.split(',');
+                    var tmpTarRelease;
+                    for (var i = 0; i < targetRelList.length; i++) {
+                        if (tarRel == targetRelList[i])
+                        continue;
+                        else {
+                            if (tmpTarRelease != null)
+                            tmpTarRelease += ',' + targetRelList[i];
+                            else
+                            tmpTarRelease = targetRelList[i];
+                        }
+                    }
+                    tarRelease = tmpTarRelease;
+                    searchServer(tarRelease, servPack, subCat, articleTypes, patchValue, topFilter, searchText, childCat);
+                }
+                
+                function removeCategoryFilter(cat) {
+                    overlay = $('<div></div>').prependTo('body').attr('id', 'overlay');
+                    cateList = subCat.split(',');
+                    var tmpSubCat;
+                    for (var i = 0; i < cateList.length; i++) {
+                        if (cat == cateList[i])
+                        continue;
+                        else {
+                            if (tmpSubCat != null)
+                            tmpSubCat += ',' + cateList[i];
+                            else
+                            tmpSubCat = cateList[i];
+                        }
+                    }
+                    subCat = tmpSubCat;
+                    searchServer(tarRelease, servPack, subCat, articleTypes, patchValue, topFilter, searchText, childCat);
+                }
+                
+                function removeSubCategoryFilter(cat) {
+                    overlay = $('<div></div>').prependTo('body').attr('id', 'overlay');
+                    cateList = childCat.split(',');
+                    var tmpSubCat;
+                    for (var i = 0; i < cateList.length; i++) {
+                        if (cat == cateList[i])
+                        continue;
+                        else {
+                            if (tmpSubCat != null)
+                            tmpSubCat += ',' + cateList[i];
+                            else
+                            tmpSubCat = cateList[i];
+                        }
+                    }
+                    childCat = tmpSubCat;
+                    searchServer(tarRelease, servPack, subCat, articleTypes, patchValue, topFilter, searchText, childCat);
+                }
+                function removeArticleFilter(art) {                 
+                    
+                    overlay = $('<div></div>').prependTo('body').attr('id', 'overlay');
+                    artTypeList = articleTypes.split(',');
+                    var tmpArticleTypes;
+                    for (var i = 0; i < artTypeList.length; i++) {
+                        if (art == artTypeList[i])
+                        continue;
+                        else {
+                            if (tmpArticleTypes != null)
+                            tmpArticleTypes += ',' + artTypeList[i];
+                            else
+                            tmpArticleTypes = artTypeList[i];
+                        }
+                    }
+                    articleTypes = tmpArticleTypes;
+                    
+                    searchServer(tarRelease, servPack, subCat, articleTypes, patchValue, topFilter, searchText, childCat);
+                }
+                
+                function doServicePackSearch(test) {
+                    overlay = $('<div></div>').prependTo('body').attr('id', 'overlay');
+                    var serPackList = new Array();
+                    if (document.getElementById(test).checked == true) {
+                        if (servPack != null)
+                        servPack += ',' + test;
+                        else
+                        servPack = test;
+                    } else {
+                        serPackList = servPack.split(',');
+                        var tmpSerPack;
+                        for (var i = 0; i < serPackList.length; i++) {
+                
+                            if (test == serPackList[i])
+                            continue;
+                            else {
+                                if (tmpSerPack != null)
+                                tmpSerPack += ',' + serPackList[i];
+                                else
+                                tmpSerPack = serPackList[i];
+                            }
+                        }
+                        servPack = tmpSerPack;
+                    }                   
+                    topFilter = null;
+                    searchServer(tarRelease, servPack, subCat, articleTypes, patchValue, topFilter, searchText, childCat);
+                }
+                
+                function doTargetReleaseSearch(test) {
+                    overlay = $('<div></div>').prependTo('body').attr('id', 'overlay');
+                    var targetRelList = new Array();
+                    if (document.getElementById(test).checked == true) {
+                        if (tarRelease != null)
+                        tarRelease += ',' + test;
+                        else
+                        tarRelease = test;
+                    } else {
+                        targetRelList = tarRelease.split(',');
+                        var tmpTarRelease;
+                        for (var i = 0; i < targetRelList.length; i++) {
+                
+                            if (test == targetRelList[i])
+                            continue;
+                            else {
+                                if (tmpTarRelease != null)
+                                tmpTarRelease += ',' + targetRelList[i];
+                                else
+                                tmpTarRelease = targetRelList[i];
+                            }
+                        }
+                        tarRelease = tmpTarRelease;
+                    }                   
+                    topFilter = null;
+                    searchServer(tarRelease, servPack, subCat, articleTypes, patchValue, topFilter, searchText, childCat);
+                }
+                
+                function doCategorySearch(test) {
+                    overlay = $('<div></div>').prependTo('body').attr('id', 'overlay');
+                    var cateList = new Array();
+                    if (document.getElementById(test).checked == true) {
+                        if (subCat != null)
+                        subCat += ',' + test;
+                        else
+                        subCat = test;
+                    } else {
+                        cateList = subCat.split(',');
+                        var tmpSubCat;
+                        for (var i = 0; i < cateList.length; i++) {
+                
+                            if (test == cateList[i])
+                            continue;
+                            else {
+                                if (tmpSubCat != null)
+                                tmpSubCat += ',' + cateList[i];
+                                else
+                                tmpSubCat = cateList[i];
+                            }
+                        }
+                        subCat = tmpSubCat;
+                    }
+                    topFilter = null;
+                    searchServer(tarRelease, servPack, subCat, articleTypes, patchValue, topFilter, searchText, childCat);
+                }
+                
+                function doSubCategorySearch(test) {
+                    overlay = $('<div></div>').prependTo('body').attr('id', 'overlay');
+                    var cateList = new Array();
+                    if (document.getElementById(test).checked == true) {
+                        if (childCat != null)
+                        childCat += ',' + test;
+                        else
+                        childCat = test;
+                    } else {
+                        cateList = childCat.split(',');
+                        var tmpSubCat;
+                        for (var i = 0; i < cateList.length; i++) {
+                
+                            if (test == cateList[i])
+                            continue;
+                            else {
+                                if (tmpSubCat != null)
+                                tmpSubCat += ',' + cateList[i];
+                                else
+                                tmpSubCat = cateList[i];
+                            }
+                        }
+                        childCat = tmpSubCat;
+                    }
+                    topFilter = null;
+                    searchServer(tarRelease, servPack, subCat, articleTypes, patchValue, topFilter, searchText, childCat);
+                }
+                var articleTypes;
+                function doArticleSearch(test) {
+                    overlay = $('<div></div>').prependTo('body').attr('id', 'overlay');
+                    var artTypeList = new Array();
+                    if (document.getElementById(test).checked == true) {
+                        if (articleTypes != null && articleTypes != '')
+                        articleTypes += ',' + test;
+                        else
+                        articleTypes = test;
+                    } else {
+                        artTypeList = articleTypes.split(',');
+                        var tmpArticleTypes;
+                        for (var i = 0; i < artTypeList.length; i++) {
+                            if (test == artTypeList[i])
+                            continue;
+                            else {
+                                if (tmpArticleTypes != null)
+                                tmpArticleTypes += ',' + artTypeList[i];
+                                else
+                                tmpArticleTypes = artTypeList[i];
+                            }
+                        }
+                        articleTypes = tmpArticleTypes;
+                    }
+                    topFilter = null;
+                    searchServer(tarRelease, servPack, subCat, articleTypes, patchValue, topFilter, searchText, childCat);
+                }
+                var patchValue;
+                function doPatchAvail() {
+                    overlay = $('<div></div>').prependTo('body').attr('id', 'overlay');
+                    if (document.getElementById('patchAvail').checked == true)
+                    patchValue = 'Yes';
+                    else
+                    patchValue = null;
+                    topFilter = null;
+                    searchServer(tarRelease, servPack, subCat, articleTypes, patchValue, topFilter, searchText, childCat);
+                }
+                function lock(){
+                    overlay = $('<div></div>').prependTo('body').attr('id', 'overlay');
+                }
+                function unLock(){
+                    isLock = 0;
+                    overlay.remove();
+                }
+                
+            </script>
+            <script type="text/javascript">
+            $(document).ready(function(){
+                $("h4.filterCollapsed").click(function(event) {
+                    $("#descriptionHeading").toggleClass("expandedIconDescription");
+                    $("#descriptionPanel").toggle('fast');
+                });
+                $("#stepsHeading").click(function(event) {
+                    $("#stepsHeading").toggleClass("expandedIconSteps");
+                    $("#stepsPanel").toggle('fast');
+                });
+            });
+            </script>
+        </apex:define>
+        <apex:define name="topbar"><c:btbb_unauthglobalsearch /></apex:define>
+        <apex:define name="nav"><c:btbb_unauth_nav /></apex:define>
+        <apex:define name="content">
+            <h2>Knowledge Base Search</h2>
+            <apex:form >
+                 <apex:pageMessages id="errors" />
+                 <apex:actionFunction name="searchServer" action="{!runSearch}" rerender="pagination,articles,criteria,ProductSelection" status="counterStatus" oncomplete="unLock();">
+                      <apex:param name="tarRelease" value="" />
+                      <apex:param name="servPack" value="" />
+                      <apex:param name="subCat" value="" />
+                      <apex:param name="articleTypes" value="" />
+                      <apex:param name="patchValue" value="" />
+                      <apex:param name="topFilterPage" value="" />
+                      <apex:param name="searchTextPage" value="" />
+                      <apex:param name="childCat" value="" />
+                 </apex:actionFunction>                 
+                 <span style="float:right;color:#4d4d4f;font-size:11px;line-height:10px;">
+                        <apex:commandLink action="{!exportToExcel}" type="image/png" title="Export to Excel" id="excel">
+                            <apex:image id="excelImage" value="{!URLFOR($Resource.DataTables, 'media/images/xls_hover.png')}"/>
+                        </apex:commandLink>
+                        <apex:commandLink action="{!exportToPDF}" target="_blank" type="image/png" title="Export to PDF" id="pdf">
+                            <apex:image id="PDFImage" value="{!URLFOR($Resource.DataTables, 'media/images/pdf_hover.png')}"/>                        
+                        </apex:commandLink>
+                        <apex:commandLink action="{!printKBSearch}" type="image/png" target="_blank" title="Print KB Search" id="print">
+                            <apex:image id="PrintImage" value="{!URLFOR($Resource.BtBbStyles, '/includes/theme2011/img/icons/print.png')}"/>
+                        </apex:commandLink>                        
+                 </span>
+                 <div id="btbbLeftCol">
+
+                    <h4>Keyword Search</h4>
+                    <input type="text" onkeyup="doSearch();" onKeyPress="return disableEnterKey(event)" id="searchText" size="23"/>
+                    <apex:pageMessages />
+                    <div id="errorBlock">
+                        <apex:outputPanel id="errorPanel">
+                            <font color="red"><apex:pageMessage strength="2" title="{!errorTitle}" summary="{!errorMessage}" severity="{!errorSeverity}" rendered="{!errorShow}" /></font>
+                        </apex:outputPanel>
+                    </div>       
+                    <br/>
+
+                    <h4>Filter Your Results</h4>
+                    <apex:pageblock id="ProductSelection">
+                        <div><!--  style="display:{!IF(isSearchText == false && productFilter == null, 'block;','none' )}" -->
+                            <h4 class="filterCollapsed">Product</h4>
+                            <apex:selectList id="environments" value="{!product}" styleClass="select" multiselect="false" size="1">
+                                <apex:selectOptions value="{!products}" id="productlist" />
+                                <apex:actionSupport event="onchange" action="{!selectProduct}" oncomplete="resetVal()" onsubmit="lock()" rerender="categories,versions,articles,criteria,ProductSelection,subCategories" status="counterStatus"/>
+                            </apex:selectList>
+                            <br/>
+                        </div>
+
+                        <div style="display:{!IF(isProductSel && majorFilter == null, 'block','none' )}">                  
+                            <h4 class="filterCollapsed">Release</h4>
+                            
+                            <apex:selectList id="versions" value="{!version}" disabled="{!isProdSel}" styleClass="select" multiselect="false" size="4" style="padding: 1px 0;">
+                                <apex:selectOptions value="{!versions}" id="versionlist"/> 
+                                <apex:actionSupport event="onchange" action="{!selectMajor}" onsubmit="lock();" oncomplete="unLock();" rerender="articles,ProductSelection" status="counterStatus"/>                       
+                            </apex:selectList>
+                             
+                            <br/>
+                        </div>
+                        
+                        <div style="display:{!IF(isProductSel, 'block','none' )}">
+                            <apex:pageblock id="minorVersions">
+                                <h4 class="filterCollapsed">Service Pack(s)</h4>
+                               
+                                <div class="btbbScrollCheckBoxes">
+                                    <ul>                            
+                                        <apex:repeat value="{!minVersion}" var="serPack">
+                                            <li style="display:{!IF(serPack.selected, 'block','none' )}"><input type="checkbox" id="{!serPack.NodeName}" onClick="doServicePackSearch('{!serPack.NodeName}');" checked="Yes"/><label for="{!serPack.NodeName}">{!serPack.NodeName}</label></li>
+                                            <li style="display:{!IF(serPack.selected = false, 'block','none' )}"><input type="checkbox" id="{!serPack.NodeName}" onClick="doServicePackSearch('{!serPack.NodeName}');"/><label for="{!serPack.NodeName}">{!serPack.NodeName}</label></li>                            
+                                        </apex:repeat>                                        
+                                    </ul>
+            
+                                </div>
+                             </apex:pageblock>
+                        </div>
+                        
+                        <div style="display:{!IF(isKnownIssue, 'block','none' )}">
+                            <apex:pageblock id="tarRelease">
+                                <h4 class="filterCollapsed">Planned First Fix Release</h4>
+                               
+                                <div class="btbbScrollCheckBoxes">
+                                    <ul>                            
+                                        <apex:repeat value="{!TargetRelease}" var="tarRelease">
+                                            <li style="display:{!IF(tarRelease.selected, 'block','none' )}"><input type="checkbox" id="{!tarRelease.NodeName}" onClick="doTargetReleaseSearch('{!tarRelease.NodeName}');" checked="Yes"/><label for="{!tarRelease.NodeName}">{!tarRelease.NodeName}</label></li>
+                                            <li style="display:{!IF(tarRelease.selected = false, 'block','none' )}"><input type="checkbox" id="{!tarRelease.NodeName}" onClick="doTargetReleaseSearch('{!tarRelease.NodeName}');"/><label for="{!tarRelease.NodeName}">{!tarRelease.NodeName}</label></li>                            
+                                        </apex:repeat>                                        
+                                    </ul>
+            
+                                </div>
+                             </apex:pageblock>
+                        </div>
+                        
+                        <div style="display:{!IF(isProductSel, 'block','none' )}">
+                            <apex:pageblock id="categories">
+                                <h4 class="filterCollapsed">Article Category</h4>
+                               
+                                <div class="btbbScrollCheckBoxes">
+                                    <ul>
+                                        <apex:repeat value="{!ChildCategories}" var="childCate">
+                                            <li style="display:{!IF(childCate.selected, 'block','none' )}"><input type="checkbox" id="{!childCate.NodeId}" onClick="doCategorySearch('{!childCate.NodeId}');" checked="Yes"/><label for="{!childCate.NodeName}">{!childCate.NodeName}</label></li>
+                                            <li style="display:{!IF(childCate.selected = false, 'block','none' )}"><input type="checkbox" id="{!childCate.NodeId}" onClick="doCategorySearch('{!childCate.NodeId}');"/><label for="{!childCate.NodeName}">{!childCate.NodeName}</label></li>                            
+                                        </apex:repeat>
+                                    </ul>
+            
+                                </div>
+                             </apex:pageblock>
+                        </div>
+                        
+                        <div style="display:{!IF(isCatSel, 'block','none' )}">
+                            <apex:pageblock id="subCategories">
+                                <h4 class="filterCollapsed">Article Sub Category</h4>
+                               
+                                <div class="btbbScrollCheckBoxes">
+                                    <ul>
+                                        <apex:repeat value="{!SubChildCategories}" var="childCate">
+                                            <li style="display:{!IF(childCate.selected, 'block','none' )}"><input type="checkbox" id="{!childCate.NodeId}" onClick="doSubCategorySearch('{!childCate.NodeId}');" checked="Yes"/><label for="{!childCate.NodeName}">{!childCate.NodeName}</label></li>
+                                            <li style="display:{!IF(childCate.selected = false, 'block','none' )}"><input type="checkbox" id="{!childCate.NodeId}" onClick="doSubCategorySearch('{!childCate.NodeId}');"/><label for="{!childCate.NodeName}">{!childCate.NodeName}</label></li>
+                                        </apex:repeat>
+                                    </ul>
+            
+                                </div>
+                             </apex:pageblock>
+                        </div>
+                    
+                    
+                        <h4 class="filterCollapsed">Article Types</h4>
+                        <div class="btbbScrollCheckBoxes" id="articleType">
+                            <ul>
+                                <apex:repeat value="{!recordTypeList}" var="arType">
+                                <li style="display:{!IF(arType.selected, 'block','none' )}"><input type="checkbox" id="{!arType.NodeId}" onClick="doArticleSearch('{!arType.NodeId}');" checked="Yes"/><label for="{!arType.NodeName}">{!arType.NodeName}</label></li>
+                                <li style="display:{!IF(arType.selected = false, 'block','none' )}"><input type="checkbox" id="{!arType.NodeId}" onClick="doArticleSearch('{!arType.NodeId}');"/><label for="{!arType.NodeName}">{!arType.NodeName}</label></li>
+                                </apex:repeat>
+                            </ul>
+    
+                        </div>
+                        <br/>
+                        <div style="display:{!IF(patchFilter == null, 'block','none' )}">
+                            <input type="checkbox" id="patchAvail" onClick="doPatchAvail();"/><label for="patchAvail">Patch Available</label>
+                        </div>
+                    </apex:pageblock>
+                </div>
+                <div id="btbbRightCol">
+                    
+                    <apex:pageblock id="articles">
+                    <script>$(document).ready(function(){$('#paging_container').pajinate();});</script>
+                    <div id="filters" style="margin-bottom:15px;">
+                    
+                    <span style="float:left;color:#4d4d4f;font-size:13px;line-height:12px;"><b>Search Criteria:</b></span>
+                            <ul>
+                                <li style="display:{!IF(productFilter != null, 'block','none' )}"><a href="#" onclick="removeFilter('Product');">{!productFilter}</a></li>
+                                <li style="display:{!IF(majorFilter != null, 'block','none' )}"><a href="#" onclick="removeFilter('Major Release');">{!majorFilter}</a></li>
+                                <apex:repeat value="{!minorFilterList}" var="serPackFilter">
+                                    <li><a href="#" onclick="removeServPackFilter('{!serPackFilter.NodeName}');">{!serPackFilter.NodeName}</a></li>
+                                </apex:repeat>
+                                <apex:repeat value="{!articleFilters}" var="artFilter">
+                                    <li><a href="#" onclick="removeArticleFilter('{!artFilter.NodeId}');">{!artFilter.NodeName}</a></li>
+                                </apex:repeat>
+                                <apex:repeat value="{!targetFilterList}" var="tarFilter">
+                                    <li><a href="#" onclick="removeTargetReleaseFilter('{!tarFilter.NodeName}');">{!tarFilter.NodeName}</a></li>
+                                </apex:repeat>
+                                <apex:repeat value="{!catFilters}" var="catFilter">
+                                    <li><a href="#" onclick="removeCategoryFilter('{!catFilter.NodeId}');">{!catFilter.NodeName}</a></li>
+                                </apex:repeat>
+                                <apex:repeat value="{!subCatFilters}" var="subCatFilter">
+                                    <li><a href="#" onclick="removeSubCategoryFilter('{!subCatFilter.NodeId}');">{!subCatFilter.NodeName}</a></li>
+                                </apex:repeat>
+                                <li style="display:{!IF(patchFilter != null, 'block','none' )}"><a href="#" onclick="removeFilter('Patch Available');">{!patchFilter}</a></li>
+                            </ul>
+                        </div>
+                        <div id="paging_container">
+                        
+                        <span style="float:left;">Your search returned {!resultSize} results.</span>
+                        <div class="page_navigation" style="padding-bottom:5px;"></div>
+
+                        <div class="cleaner divider"> </div>
+                        <div class="results">
+                        
+                        <!-- Loader Icon When KBSearch is Invoked -->
+                        <apex:actionStatus startText="" stopText="" id="counterStatus" startStyle="position:absolute;padding: 0px 565px 600px 0px;width:auto;color: #FFF;height:auto;background: url('{!URLFOR($Resource.kbloader)}') no-repeat 60% 25%;opacity:1.0;">
+                            <apex:facet name="start"/>
+                        </apex:actionStatus>
+                        
+                        <apex:outputText value="No Results to Display" style="font-size:16px; line-height: 26px; font-weight: bold; padding-left:50%; padding-right: 50%;" rendered="{!IF(ArticleList == null, true, false)}"/>
+                        <div class="content">
+                        
+                        <apex:repeat value="{!ArticleList}" var="art">
+
+                        <div class="{!art.articleStyleName}">
+                            <a href="{!$Page.btbb_publicKbView}?id={!art.articleId}">{!art.articleName}</a>
+                            <div class="btbbArticleType">{!art.articleTypeName}</div>
+                            <div class="btbbArticleDetails">Article #: {!art.articleNumber} | Version: {!art.version}</div>
+                            <div class="btbbArticleSummary">&mdash; <apex:outputText value="{!art.summary}" escape="false"/></div>
+                         </div>
+                        
+                        </apex:repeat>
+                        
+                        </div><!--*/.content -->
+                        </div><!--*/.results -->
+                        <div class="cleaner divider"> </div>
+                        <div class="page_navigation" style="padding-top:8px;"></div>
+                        </div><!--*/#paging_container -->
+                    
+                    </apex:pageblock>
+                
+                </div>
+                
+            </apex:form>
+            <!--</body>-->
+        </apex:define>
+    </apex:composition>
+</apex:page>

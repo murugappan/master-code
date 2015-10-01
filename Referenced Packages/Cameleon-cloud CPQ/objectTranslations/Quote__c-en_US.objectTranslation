@@ -1,0 +1,159 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<CustomObjectTranslation xmlns="http://soap.sforce.com/2006/04/metadata">
+    <caseValues>
+        <plural>false</plural>
+        <value>Cameleon Quote</value>
+    </caseValues>
+    <caseValues>
+        <plural>true</plural>
+        <value>Cameleon Quotes</value>
+    </caseValues>
+    <fields>
+        <label><!-- Account --></label>
+        <name>AccountId__c</name>
+        <relationshipLabel><!-- Cameleon Quotes --></relationshipLabel>
+    </fields>
+    <fields>
+        <label>Active Release</label>
+        <name>ActiveRelease__c</name>
+    </fields>
+    <fields>
+        <label><!-- Bill To City --></label>
+        <name>BillingCity__c</name>
+    </fields>
+    <fields>
+        <label><!-- Bill To Country --></label>
+        <name>BillingCountry__c</name>
+    </fields>
+    <fields>
+        <label><!-- Bill To Name --></label>
+        <name>BillingName__c</name>
+    </fields>
+    <fields>
+        <label><!-- Bill To Zip/Postal Code --></label>
+        <name>BillingPostalCode__c</name>
+    </fields>
+    <fields>
+        <label><!-- Bill To State/Province --></label>
+        <name>BillingState__c</name>
+    </fields>
+    <fields>
+        <label><!-- Bill To Street --></label>
+        <name>BillingStreet__c</name>
+    </fields>
+    <fields>
+        <label>Commission 1 %</label>
+        <name>CommPctPrice1__c</name>
+    </fields>
+    <fields>
+        <label>Commission 2 %</label>
+        <name>CommPctPrice2__c</name>
+    </fields>
+    <fields>
+        <label>Expiration Date</label>
+        <name>Expires__c</name>
+    </fields>
+    <fields>
+        <label><!-- External Id --></label>
+        <name>ExternalId__c</name>
+    </fields>
+    <fields>
+        <label><!-- Parent Account --></label>
+        <name>ParentAccountId__c</name>
+        <relationshipLabel><!-- Cameleon Quotes (Parent Account) --></relationshipLabel>
+    </fields>
+    <fields>
+        <label><!-- Contact --></label>
+        <name>PrimaryContactId__c</name>
+        <relationshipLabel><!-- Cameleon Quotes --></relationshipLabel>
+    </fields>
+    <fields>
+        <label><!-- Ship To City --></label>
+        <name>ShippingCity__c</name>
+    </fields>
+    <fields>
+        <label><!-- Ship To Country --></label>
+        <name>ShippingCountry__c</name>
+    </fields>
+    <fields>
+        <label><!-- Ship To Name --></label>
+        <name>ShippingName__c</name>
+    </fields>
+    <fields>
+        <label><!-- Ship To Zip/Postal Code --></label>
+        <name>ShippingPostalCode__c</name>
+    </fields>
+    <fields>
+        <label><!-- Ship To State/Province --></label>
+        <name>ShippingState__c</name>
+    </fields>
+    <fields>
+        <label><!-- Ship To Street --></label>
+        <name>ShippingStreet__c</name>
+    </fields>
+    <fields>
+        <label>Status</label>
+        <name>Status__c</name>
+        <picklistValues>
+            <masterLabel>Accepted</masterLabel>
+            <translation><!-- Accepted --></translation>
+        </picklistValues>
+        <picklistValues>
+            <masterLabel>Approved</masterLabel>
+            <translation><!-- Approved --></translation>
+        </picklistValues>
+        <picklistValues>
+            <masterLabel>Draft</masterLabel>
+            <translation><!-- Draft --></translation>
+        </picklistValues>
+        <picklistValues>
+            <masterLabel>In Review</masterLabel>
+            <translation><!-- In Review --></translation>
+        </picklistValues>
+        <picklistValues>
+            <masterLabel>Needs Review</masterLabel>
+            <translation><!-- Needs Review --></translation>
+        </picklistValues>
+        <picklistValues>
+            <masterLabel>Presented</masterLabel>
+            <translation><!-- Presented --></translation>
+        </picklistValues>
+        <picklistValues>
+            <masterLabel>Rejected</masterLabel>
+            <translation><!-- Rejected --></translation>
+        </picklistValues>
+    </fields>
+    <fields>
+        <label>Total Commission 1</label>
+        <name>TotalComm1__c</name>
+    </fields>
+    <fields>
+        <label>Total Commission 2</label>
+        <name>TotalComm2__c</name>
+    </fields>
+    <fields>
+        <label>Total Price 1</label>
+        <name>TotalPrice1__c</name>
+    </fields>
+    <fields>
+        <label>Total Price 2</label>
+        <name>TotalPrice2__c</name>
+    </fields>
+    <layouts>
+        <layout>Quote Layout</layout>
+        <sections>
+            <label><!-- Custom Links --></label>
+            <section>Custom Links</section>
+        </sections>
+    </layouts>
+    <nameFieldLabel>Cameleon Quote Name</nameFieldLabel>
+    <startsWith>Consonant</startsWith>
+    <webLinks>
+        <label><!-- CloneQuote --></label>
+        <name>CloneQuote</name>
+    </webLinks>
+    <webLinks>
+        <label><!-- RefreshQuote --></label>
+        <name>RefreshQuote</name>
+    </webLinks>
+</CustomObjectTranslation>

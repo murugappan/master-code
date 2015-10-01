@@ -1,0 +1,104 @@
+<apex:page standardController="Solution" extensions="BBW_CreateArticle">
+<!-- <apex:includeScript value="{!URLFOR($Resource.ArticleEditor , 'ckeditor/ckeditor.js')}"/>    -->
+       <apex:includeScript value="{!URLFOR($Resource.ArticleEditor1 , 'ckeditor/ckeditor.js')}"/>
+  <apex:form >
+  <apex:sectionHeader title="Article - {!recordType}" subtitle="{!Solution.SolutionName}"/>
+        
+      <body>
+          <apex:pageBlock title="Article Detail" mode="edit" tabStyle="Solution">
+              <apex:pageBlockButtons >
+                <apex:commandButton action="{!saveArticle}" value="Save" onClick=""/>
+                <apex:commandButton action="{!cancel}" value="Cancel"/>
+                <apex:pageMessages />
+                <div id="errorBlock">
+                    <apex:outputPanel id="errorPanel">
+                        <apex:pageMessage strength="2" title="{!errorTitle}" summary="{!errorMessage}" severity="{!errorSeverity}" rendered="{!errorShow}" />
+                    </apex:outputPanel>
+                </div>       
+              </apex:pageBlockButtons>                                         
+              <div id="Original Article" style="display:{!IF(NOT(ISNULL(solution.ParentId__c)),'block','none')}"> 
+                <apex:pageBlockSection columns="1">
+                    <apex:pageBlockSectionItem >
+                       <apex:OutputLabel value="Published Article :"/>
+                       <a id="publishArticle" href="/{!solution.ParentId__c}">Published Article Link</a>
+                    </apex:pageBlockSectionItem>
+                </apex:pageBlockSection>
+              </div>
+               
+              
+              
+              <apex:pageBlockSection columns="1">
+                <apex:inputField value="{!Solution.SolutionName}" required="True" Id="ArticleName" style="width:590px;"/>
+              </apex:pageBlockSection>    
+                
+              
+              
+                <apex:pageBlockSection columns="1">
+                    <apex:inputField value="{!Solution.Product__c}" id="product" required="{!IF(recordType == 'Troubleshooting/Informational' || recordType == 'Standard' || recordType == 'Question/Answer' || recordType == 'Known Issue' || (recordType == 'Product Documentation' || $Profile.Name == 'SRV - Product Documentation Team') || recordType == 'Release Homepage' || (recordType == 'Support Bulletin/Security Advisory' || $Profile.Name == 'SRV - SBSA Authors') || recordType == 'Supported Technologies Information' || recordType == 'Release Page'|| recordType == 'Announcement',true,false)}"/>
+                </apex:pageBlockSection>
+              
+              
+              
+              
+                <apex:pageBlockSection columns="1">
+                    <apex:inputField value="{!Solution.ResourceType__c}" id="ResourceType"/>
+                </apex:pageBlockSection>
+                 
+              
+              <div id="status" style="display:{!IF($Profile.Name == 'System Administrator' ||$Profile.Name == 'SRV System Administrator' || $Profile.Name == 'SRV - KM Administrators' || $Profile.Name == 'SRV - APAC User - KM','block','none')}">
+                <apex:pageBlockSection columns="1">
+                 <apex:pageBlockSectionItem >   
+                    <apex:outputLabel value="Status" style="color:green" rendered="{!IF(solution.Id == null, 'false', 'true')}"/>
+                    <apex:inputField value="{!Solution.Status}" id="status" required="False"  rendered="{!IF(solution.Id == null, 'false', 'true')}"/>
+                </apex:pageBlockSectionItem>
+                </apex:pageBlockSection>
+              </div> 
+              
+                <apex:pageBlockSection columns="1">
+                <apex:inputField value="{!Solution.summary__c}" id="Summary" style="width:590px;height:100px" required="true"/>
+               </apex:pageBlockSection>
+                         
+                            
+              <apex:pageBlockSection columns="1">
+                <apex:pageBlockSectionItem >
+                <apex:OutputLabel value="Visible in Customer Portal" style="color:green"/>             
+                <apex:inputField value="{!Solution.Visible_in_Customer_Portal__c}" id="visCustPortal"/>
+              </apex:pageBlockSectionItem>  
+                <apex:pageBlockSectionItem >
+                <apex:OutputLabel value="Visible in Partner Portal" style="color:green"/>         
+                <apex:inputField value="{!Solution.Visible_in_Partner_Portal__c}" id="visPartPortal"/>
+                </apex:pageBlockSectionItem> 
+                <apex:pageBlockSectionItem >
+                <apex:OutputLabel value="Visible in Public KnowledgeBase" style="color:green"/>         
+                <apex:inputField value="{!Solution.IsPublishedInPublicKb}" id="visPubKnwBase"/>
+                </apex:pageBlockSectionItem>
+              </apex:pageBlockSection>        
+
+                     <apex:pageBlockSection columns="1">
+                     <apex:pageBlockSectionItem >
+                         <apex:OutputLabel value="Resource Description"/>
+                         <apex:inputTextArea styleClass="ckeditor" value="{!Solution.Resource_Description__c}" />
+                        </apex:pageBlockSectionItem>
+                      <apex:pageBlockSectionItem >
+                         <apex:OutputLabel value="Important Information"/>
+                         <apex:inputTextArea styleClass="ckeditor" value="{!Solution.Important_Information__c}" />
+                         </apex:pageBlockSectionItem>
+                     <apex:pageBlockSectionItem >
+                         <apex:OutputLabel value="Resource Link"/>
+                         <apex:inputTextArea styleClass="ckeditor" value="{!Solution.Resource_Link__c}" />
+                     </apex:pageBlockSectionItem>   
+                   </apex:pageBlockSection>
+
+                    <apex:pageBlockSection columns="1">
+                         <apex:pageBlockSectionItem >
+                         <apex:OutputLabel value="Download" />
+                         <apex:inputTextArea styleClass="ckeditor" value="{!Solution.Download__c}" />
+                         </apex:pageBlockSectionItem>
+                    </apex:pageBlockSection>                     
+                            
+                                        
+                                                          
+        </apex:pageBlock>
+    </body>
+  </apex:form>
+</apex:page>

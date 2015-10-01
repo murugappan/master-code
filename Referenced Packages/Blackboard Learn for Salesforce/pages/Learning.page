@@ -1,0 +1,8 @@
+<apex:page showHeader="true" sidebar="false">
+<apex:iframe src="https://{!$Setup.Blackboard_Custom_Settings__c.Host_Name__c}/webapps/Bb-sites-salesforce-sso-BBLEARN/getProviderURL.do?providerName=Salesforce&new_loc=/webapps/bb-sites-learning-program-BBLEARN/showLearnerView.form&userId={!$User.Id}&sid={$!Api.Session_ID}" 
+             scrolling="true" 
+             id="theIframe"
+             rendered="true"
+             title="Learning"
+             width="100%" />
+</apex:page>

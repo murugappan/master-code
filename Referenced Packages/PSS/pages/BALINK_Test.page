@@ -1,0 +1,11 @@
+<apex:page controller="BALINK1.BALINK_Test" showHeader="false" sidebar="false">
+    <apex:form id="myform">
+ 
+       <Apex:outputField value="{!Opp.AnnualRevenue}" />
+        <div id="Currstart"></div>
+        <apex:inputField value="{!Opp.AnnualRevenue}" />
+        <div id="Currend"></div>
+      
+  </apex:form>
+
+</apex:page>

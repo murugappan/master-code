@@ -1,0 +1,140 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<CustomObject xmlns="http://soap.sforce.com/2006/04/metadata">
+    <actionOverrides>
+        <actionName>Accept</actionName>
+        <type>Default</type>
+    </actionOverrides>
+    <actionOverrides>
+        <actionName>Clone</actionName>
+        <type>Default</type>
+    </actionOverrides>
+    <actionOverrides>
+        <actionName>Delete</actionName>
+        <type>Default</type>
+    </actionOverrides>
+    <actionOverrides>
+        <actionName>Edit</actionName>
+        <type>Default</type>
+    </actionOverrides>
+    <actionOverrides>
+        <actionName>List</actionName>
+        <type>Default</type>
+    </actionOverrides>
+    <actionOverrides>
+        <actionName>New</actionName>
+        <type>Default</type>
+    </actionOverrides>
+    <actionOverrides>
+        <actionName>Tab</actionName>
+        <type>Default</type>
+    </actionOverrides>
+    <actionOverrides>
+        <actionName>View</actionName>
+        <type>Default</type>
+    </actionOverrides>
+    <deploymentStatus>Deployed</deploymentStatus>
+    <deprecated>false</deprecated>
+    <description>Custom object refers to the Course Category Memberships.</description>
+    <enableActivities>true</enableActivities>
+    <enableFeeds>false</enableFeeds>
+    <enableHistory>true</enableHistory>
+    <enableReports>true</enableReports>
+    <fields>
+        <fullName>Course_Category__c</fullName>
+        <deprecated>false</deprecated>
+        <description>Master detail relationship refers to the Course Category.</description>
+        <externalId>false</externalId>
+        <label>Course Category</label>
+        <referenceTo>Course_Category__c</referenceTo>
+        <relationshipName>Training_Catalog</relationshipName>
+        <relationshipOrder>0</relationshipOrder>
+        <reparentableMasterDetail>false</reparentableMasterDetail>
+        <trackHistory>false</trackHistory>
+        <type>MasterDetail</type>
+        <writeRequiresMasterRead>false</writeRequiresMasterRead>
+    </fields>
+    <fields>
+        <fullName>Course__c</fullName>
+        <deleteConstraint>SetNull</deleteConstraint>
+        <deprecated>false</deprecated>
+        <description>Master detail relationship refers to the Course.</description>
+        <externalId>false</externalId>
+        <label>Course</label>
+        <referenceTo>Course__c</referenceTo>
+        <relationshipName>Training_Catalog</relationshipName>
+        <required>false</required>
+        <trackHistory>false</trackHistory>
+        <type>Lookup</type>
+    </fields>
+    <fields>
+        <fullName>External_Category_Key__c</fullName>
+        <deprecated>false</deprecated>
+        <description>Text field refers to the External Category Key.</description>
+        <externalId>false</externalId>
+        <label>External Category Key</label>
+        <length>64</length>
+        <required>false</required>
+        <trackHistory>false</trackHistory>
+        <type>Text</type>
+        <unique>false</unique>
+    </fields>
+    <fields>
+        <fullName>External_Course_Key__c</fullName>
+        <deprecated>false</deprecated>
+        <description>Text field refers to the External Course Key.</description>
+        <externalId>false</externalId>
+        <label>External Course Key</label>
+        <length>64</length>
+        <required>false</required>
+        <trackHistory>false</trackHistory>
+        <type>Text</type>
+        <unique>false</unique>
+    </fields>
+    <fields>
+        <fullName>External_ID__c</fullName>
+        <deprecated>false</deprecated>
+        <description>This is the Course Category External ID</description>
+        <externalId>true</externalId>
+        <label>External ID</label>
+        <length>255</length>
+        <required>false</required>
+        <trackHistory>false</trackHistory>
+        <type>Text</type>
+        <unique>false</unique>
+    </fields>
+    <fields>
+        <fullName>Visible__c</fullName>
+        <defaultValue>false</defaultValue>
+        <deprecated>false</deprecated>
+        <description>Checkbox refers to if Visible</description>
+        <externalId>false</externalId>
+        <label>Visible</label>
+        <trackHistory>false</trackHistory>
+        <type>Checkbox</type>
+    </fields>
+    <label>Course Category Membership</label>
+    <listViews>
+        <fullName>By_Category</fullName>
+        <columns>External_ID__c</columns>
+        <columns>NAME</columns>
+        <columns>Course__c</columns>
+        <columns>Course_Category__c</columns>
+        <columns>UPDATEDBY_USER</columns>
+        <filterScope>Everything</filterScope>
+        <label>By Category</label>
+    </listViews>
+    <nameField>
+        <displayFormat>CCM-{000000}</displayFormat>
+        <label>Course Category Membership ID</label>
+        <trackHistory>false</trackHistory>
+        <type>AutoNumber</type>
+    </nameField>
+    <pluralLabel>Course Category Memberships</pluralLabel>
+    <searchLayouts>
+        <customTabListAdditionalFields>Course__c</customTabListAdditionalFields>
+        <customTabListAdditionalFields>Course_Category__c</customTabListAdditionalFields>
+        <customTabListAdditionalFields>UPDATEDBY_USER</customTabListAdditionalFields>
+        <searchFilterFields>NAME</searchFilterFields>
+    </searchLayouts>
+    <sharingModel>ControlledByParent</sharingModel>
+</CustomObject>

@@ -1,0 +1,33 @@
+<apex:page showHeader="false" sidebar="false" standardStylesheets="false" controller="btbb_publicselfservicecontroller">
+    <apex:composition template="btbb_publictemplate">
+      <apex:define name="topbar"><c:btbb_unauthglobalsearch /></apex:define>
+      <apex:define name="nav"><c:btbb_unauth_nav /></apex:define>
+      <apex:define name="content">
+      <h2>Self Service</h2>
+                    <p>Blackboard provides a wealth of information and tools to help you get the most out of the Blackboard products available at your institution. Created by Blackboard, these publicly available resources are designed to help you effectively use these Blackboard products.</p>
+                <div class="content2ColContainer">
+                    <apex:variable var="size" value="{!btbbServicelinks.size}" />
+                        <div class="content2ColL">
+                        <apex:variable var="c" value="{!1}" />
+                            <apex:repeat value="{!btbbServicelinks}" var="k" rows="{!CEILING(size/2)}">
+                            <h3 id="{!k.elementid__c}" class="ssHeading"><a href="{!k.URL__C}" target="{!k.target__c}">{!k.Link_Name__c}</a></h3>
+                            <p><apex:outputtext value="{!k.Description__c}" escape="false"/></p>
+                            <div class="cleaner divider" style="{!if(c==CEILING(size/2),'display:none','display:block')}">&nbsp;</div>
+                             <apex:variable var="c" value="{!c+1}"/>
+                            </apex:repeat>
+                          
+                        </div>
+                        <div class="content2ColR">
+                         <apex:variable var="d" value="{!CEILING(size/2)+1}" />
+                            <apex:repeat value="{!btbbServicelinks}" var="k" first="{!CEILING(size/2)}">
+                            <h3 id="{!k.elementid__c}" class="ssHeading"><a href="{!k.URL__C}" target="{!k.target__c}">{!k.Link_Name__c}</a></h3>
+                            <p><apex:outputtext value="{!k.Description__c}" escape="false"/></p>
+                            <div class="cleaner divider" style="{!if(d==size,'display:none','display:block')}">&nbsp;</div>
+                             <apex:variable var="d" value="{!d+1}"/>
+                            </apex:repeat>
+                        </div>  
+                    </div>
+                    <div class="cleaner">&nbsp;</div>
+      </apex:define>
+  </apex:composition>
+</apex:page>

@@ -1,0 +1,35 @@
+<apex:page id="page" controller="btbb_transitionpage" showheader="false" sidebar="false" standardStylesheets="false" cache="false" >
+<!-- controller="btbb_transitionpage" --> 
+
+<apex:composition template="btbb_template">
+<apex:define name="topbar"><c:btbb_globalsearch /></apex:define>
+<apex:define name="nav"><c:btbb_unauth_nav /></apex:define>
+<apex:define name="content">
+
+<script>
+
+function destpage(){
+
+setTimeout('redir();',2000);
+
+}
+window.onload = destpage();
+</script>
+
+
+
+
+
+<apex:form >
+
+<apex:actionFunction name="redir" action="{!redirect}"/>
+You will be redirected to your institution's support page shortly...<br/><br/>
+Not redirecting? Please use this direct link.
+
+
+</apex:form>
+</apex:define>
+</apex:composition>
+
+  
+</apex:page>

@@ -1,0 +1,31 @@
+<apex:page controller="VersionBuildUpload" sidebar="false" showHeader="true"  >
+<apex:form >
+<apex:pageBlock >
+<apex:pageMessages />
+<apex:pageBlockTable value="{!VersionBuildUploadList}" var="a" >
+<!-- <apex:column headerValue="Name"><apex:inputField value="{!a.Name}" /></apex:column> -->
+<apex:column headerValue="Version"><apex:inputField value="{!a.Version__c}"/></apex:column>
+<apex:column headerValue="Version Build"><apex:inputField value="{!a.Version_Build__c}"/></apex:column>
+<apex:column headerValue="GKEY Product Group"><apex:inputField value="{!a.GKEY_Product_Group__c}"/></apex:column>
+<apex:column headerValue="URL Scrape"><apex:inputField value="{!a.URL_Scrape__c}"/></apex:column>
+<!--<apex:column headerValue="Product"><apex:inputField value="{!a.Product__c}"/></apex:column>-->
+<apex:column headerValue="Active Flag"><apex:inputField value="{!a.Active_Flag__c}"/></apex:column>
+</apex:pageBlockTable>
+
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+<apex:commandButton value="Add Row" action="{!addRow}"/>
+<apex:commandButton value="Save Records" action="{!saveRecords}"/>
+<apex:commandButton value="Remove Row" action="{!removeRow}"/>
+
+</apex:pageBlock>
+</apex:form>
+</apex:page>

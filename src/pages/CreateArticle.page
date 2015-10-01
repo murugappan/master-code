@@ -1,0 +1,512 @@
+<apex:page standardController="Solution" extensions="BBW_CreateArticle" action="{!redirectOnRights}">
+    <!--<apex:includeScript value="{!URLFOR($Resource.jQuery2)}"/>
+    <apex:includeScript value="{!URLFOR($Resource.fckupdate,'/fckeditor/fckeditor.js')}"/>-->
+    <script type="text/javascript">    
+        //window.onload = "{!IF(false, 'javascript_call(\"replaceTextAreaWithEditor\")', 'else case')}"        
+       
+        /*window.onload = function replaceTextAreaWithEditor() {
+    
+            //alert('In replaceTextAreaWithEditor');
+            var styleClsName = new Array(); // Array store style class name 
+            styleClsName[0]='.rdEditor'; 
+            styleClsName[1]=".iiEditor";
+            styleClsName[2]=".rslEditor";
+            styleClsName[3]=".baiEditor"; 
+            styleClsName[4]=".adEditor";
+            styleClsName[5]=".smEditor";
+            styleClsName[6]=".csEditor";
+            styleClsName[7]=".rsEditor";
+            styleClsName[8]=".bpiEditor";
+            styleClsName[9]=".tsg1Editor";
+            styleClsName[10]=".tsg2Editor";
+            styleClsName[11]=".tsg3Editor";
+            styleClsName[12]=".tsg4Editor";
+            styleClsName[13]=".tsg5Editor";
+            styleClsName[14]=".ionEditor";
+            styleClsName[15]=".pfEditor";
+            styleClsName[16]=".pdEditor";
+            styleClsName[17]=".dsEditor";
+            styleClsName[18]=".ddEditor";
+            styleClsName[19]=".uiEditor";
+            styleClsName[20]=".ptEditor";
+            styleClsName[21]=".ctEditor";
+            styleClsName[22]=".upEditor";
+            styleClsName[23]=".dwEditor";
+            styleClsName[24]=".rnEditor";
+            styleClsName[25]=".oiEditor";
+            styleClsName[26]=".anEditor";
+            //styleClsName[25]=".rdEditor";
+            var editor1;
+            for ( var i=0, len=styleClsName.length; i<len; ++i ) { 
+                //alert(styleClsName[i]);
+                editor1 = new FCKeditor($(styleClsName[i]).attr("id"));
+                    editor1.BasePath = "{!URLFOR($Resource.fckupdate, '/fckeditor/')}";
+                    editor1.Config['CustomConfigurationsPath'] = editor1.BasePath + 'richtext.config.js';
+                    editor1.ToolbarSet = 'SalesforceBasic';
+                    editor1.Config['ImageBrowserURL'] = '{!$Page.SiteFileBrowser}';
+                    editor1.Config['SkinPath'] = editor1.BasePath + 'editor/skins/sfdc/';
+                    editor1.Width = '650'; 
+                    editor1.Height = '512';
+                    editor1.ReplaceTextarea();
+            }
+        }*/
+        
+        /* function() {
+            var editor1 = new FCKeditor($(".resourcedescriptioneditor2").attr("id"));
+            editor1.BasePath = "{!URLFOR($Resource.fckupdate, '/fckeditor/')}";
+            editor1.Config['CustomConfigurationsPath'] = editor1.BasePath + 'richtext.config.js';
+            editor1.ToolbarSet = 'SalesforceBasic';
+            editor1.Config['ImageBrowserURL'] = '{!$Page.SiteFileBrowser}';
+            editor1.Config['SkinPath'] = editor1.BasePath + 'editor/skins/sfdc/';
+            editor1.Width = '650'; 
+            editor1.Height = '512';
+            editor1.ReplaceTextarea();
+            var editor2 = new FCKeditor($(".resourcedescriptioneditor1").attr("id"));
+            editor2.BasePath = "{!URLFOR($Resource.fckupdate, '/fckeditor/')}";
+            editor2.Config['CustomConfigurationsPath'] = editor1.BasePath + 'richtext.config.js';
+            editor2.ToolbarSet = 'SalesforceBasic';
+            editor2.Config['ImageBrowserURL'] = '{!$Page.SiteFileBrowser}';
+            editor2.Config['SkinPath'] = editor1.BasePath + 'editor/skins/sfdc/';
+            editor2.Width = '650'; 
+            editor2.Height = '512';
+            editor2.ReplaceTextarea();
+        }  */   
+       
+    </script>
+    
+  <apex:form >
+  <apex:sectionHeader title="Article - {!recordType}" subtitle="{!Solution.SolutionName}"/>
+        
+      <body>
+          <apex:pageBlock title="Article Detail" mode="edit" tabStyle="Solution">
+              <apex:pageBlockButtons >
+                <apex:commandButton action="{!saveArticle}" value="Save" onClick=""/>
+                <apex:commandButton action="{!cancel}" value="Cancel"/>
+                <apex:pageMessages />
+                <div id="errorBlock">
+                    <apex:outputPanel id="errorPanel">
+                        <apex:pageMessage strength="2" title="{!errorTitle}" summary="{!errorMessage}" severity="{!errorSeverity}" rendered="{!errorShow}" />
+                    </apex:outputPanel>
+                </div>       
+              </apex:pageBlockButtons>                                         
+              <div id="Original Article" style="display:{!IF(NOT(ISNULL(solution.ParentId__c)),'block','none')}"> 
+                <apex:pageBlockSection columns="1">
+                    <apex:pageBlockSectionItem >
+                       <apex:OutputLabel value="Published Article :"/>
+                       <a id="publishArticle" href="/{!solution.ParentId__c}">Published Article Link</a>
+                    </apex:pageBlockSectionItem>
+                </apex:pageBlockSection>
+              </div>
+               
+              <!--<div id="Disclaimer" style="display:{!IF(recordType == 'Troubleshooting/Informational' || recordType == 'Standard' || recordType == 'Known Issue','block','none')}"> 
+                <apex:pageBlockSection columns="1">
+                    <apex:inputField value="{!Solution.Disclaimer__c}" id="disclaimer"/>
+                </apex:pageBlockSection>  
+              </div>-->
+              <div id="Type" style="display:{!IF(recordType == 'Support Bulletin/Security Advisory' || $Profile.Name == 'SRV - SBSA Authors','block','none')}">
+                <apex:pageBlockSection columns="1">
+                    <apex:inputField value="{!Solution.Type__c}" id="solType" required="{!IF(recordType == 'Support Bulletin/Security Advisory' || $Profile.Name == 'SRV - SBSA Authors',true,false)}"/>
+                </apex:pageBlockSection>
+              </div>  
+              <apex:pageBlockSection columns="1">
+                <apex:inputField value="{!Solution.SolutionName}" required="True" Id="ArticleName" style="width:590px;"/>
+              </apex:pageBlockSection>    
+              <div id="Product" style="display:{!IF(recordType == 'Troubleshooting/Informational' || recordType == 'Standard' || recordType == 'Question/Answer' || recordType == 'Known Issue' || (recordType == 'Product Documentation' || $Profile.Name == 'SRV - Product Documentation Team') || recordType == 'Product Release Information' || (recordType == 'Support Bulletin/Security Advisory' || $Profile.Name == 'SRV - SBSA Authors') || recordType == 'Supported Technologies Information' || recordType == 'Version Information'|| recordType == 'Announcement','block','none')}">
+                <apex:pageBlockSection columns="1">
+                    <apex:inputField value="{!Solution.Product__c}" id="product" required="{!IF(recordType == 'Troubleshooting/Informational' || recordType == 'Standard' || recordType == 'Question/Answer' || recordType == 'Known Issue' || (recordType == 'Product Documentation' || $Profile.Name == 'SRV - Product Documentation Team') || recordType == 'Product Release Information' || (recordType == 'Support Bulletin/Security Advisory' || $Profile.Name == 'SRV - SBSA Authors') || recordType == 'Supported Technologies Information' || recordType == 'Version Information'|| recordType == 'Announcement',true,false)}"/>
+                </apex:pageBlockSection>
+              </div>  
+              <div id="major" style="display:{!IF(recordType == 'Troubleshooting/Informational' || recordType == 'Standard' || recordType == 'Question/Answer' || recordType == 'Known Issue' || (recordType == 'Product Documentation' || $Profile.Name == 'SRV - Product Documentation Team') || recordType == 'Product Release Information' ||recordType == 'Supported Technologies Information' || recordType == 'Version Information','block','none')}">
+                <apex:pageBlockSection columns="1">                 
+                    <apex:inputField value="{!Solution.Major_Release__c}" id="majRelease" required="{!IF(recordType == 'Troubleshooting/Informational' || recordType == 'Standard' || recordType == 'Question/Answer' || recordType == 'Known Issue' || (recordType == 'Product Documentation' || $Profile.Name == 'SRV - Product Documentation Team') || recordType == 'Product Release Information' ||recordType == 'Supported Technologies Information' || recordType == 'Version Information',true,false)}"/>                 
+                </apex:pageBlockSection>
+              </div>  
+              <div id="version" style="display:{!IF(recordType == 'Troubleshooting/Informational' || recordType == 'Standard' || recordType == 'Question/Answer' || recordType == 'Known Issue' || (recordType == 'Product Documentation' || $Profile.Name == 'SRV - Product Documentation Team') ||recordType == 'Supported Technologies Information' || recordType == 'Version Information','block','none')}">
+                <apex:pageBlockSection columns="1">
+                    <apex:inputField value="{!Solution.Version_s__c}" id="version"/>
+                </apex:pageBlockSection>
+              </div>   
+              
+              <div id="Issue" style="display:{!IF(recordType == 'Known Issue' || recordType == 'Standard','block','none')}">
+              <apex:pageBlockSection columns="1">
+                  <apex:inputField value="{!Solution.Issue_Description__c}" required="{!IF(recordType == 'Known Issue' || recordType == 'Standard',true,false)}" style="width:590px;height:100px"/>                  
+              </apex:pageBlockSection>
+            </div>  
+              
+              <div id="DocumentType" style="display:{!IF(recordType == 'Product Documentation' || $Profile.Name == 'SRV - Product Documentation Team','block','none')}">
+                <apex:pageBlockSection columns="1">
+                    <apex:inputField value="{!Solution.Document_Type__c}" id="Document_Type"/>
+                </apex:pageBlockSection>
+              </div>
+              <div id="ResourceType" style="display:{!IF(recordType == 'Other Resource','block','none')}">
+                <apex:pageBlockSection columns="1">
+                    <apex:inputField value="{!Solution.ResourceType__c}" id="ResourceType"/>
+                </apex:pageBlockSection>
+              </div>
+              <div id="StepstoReproduce" style="display:{!IF(recordType == 'Known Issue' ,'block','none')}">
+                <apex:pageBlockSection columns="1">
+                    <apex:pageBlockSectionItem >
+                         <apex:OutputLabel value="Steps to Replicate"/>
+                         <c:richeditor value="{!Solution.Steps_to_Reproduce__c}" width="830" height="350"></c:richeditor>
+                     </apex:pageBlockSectionItem>   
+                </apex:pageBlockSection>
+              </div>    
+              
+              <div id="status" style="display:{!IF($Profile.Name == 'System Administrator' ||$Profile.Name == 'SRV System Administrator' || $Profile.Name == 'SRV - KM Administrators' || $Profile.Name == 'SRV - APAC User - KM','block','none')}">
+                <apex:pageBlockSection columns="1">
+                 <apex:pageBlockSectionItem >   
+                    <apex:outputLabel value="Status" style="color:green" rendered="{!IF(solution.Id == null, 'false', 'true')}"/>
+                    <apex:inputField value="{!Solution.Status}" id="status" required="False"  rendered="{!IF(solution.Id == null, 'false', 'true')}"/>
+                </apex:pageBlockSectionItem>
+                </apex:pageBlockSection>
+              </div> 
+               <div id="Summary" >
+                <apex:pageBlockSection columns="1">
+                <apex:inputField value="{!Solution.summary__c}" id="Summary" style="width:590px;height:100px" required="true"/>
+               </apex:pageBlockSection>
+              </div>                  
+                           
+              <!--<div id="Other" style="display:{!IF(recordType == 'Supported Technologies Information','block','none')}">
+                <apex:pageBlockSection columns="1">
+                    <apex:inputField value="{!Solution.Platform_Technologies__c}" id="plateform"/>
+                    <apex:inputField value="{!Solution.Client_Technologies__c}" id="clientTech"/>
+                    <apex:inputField value="{!Solution.Upgrade_Paths__c}" Id="upgradePath"/>
+                </apex:pageBlockSection>
+              </div>-->
+              
+              <!--<div id="Cause" style="display:{!IF(recordType == 'Standard' || recordType == 'Known Issue' || (recordType == 'Support Bulletin/Security Advisory' || $Profile.Name == 'SRV - SBSA Authors'),'block','none')}">
+                <apex:pageBlockSection columns="1">
+                    <apex:inputField value="{!Solution.Cause__c}" id="cause"/>
+                </apex:pageBlockSection>
+              </div>-->
+                          
+              <div id="Process" style="display:{!IF(recordType == 'Process/Procedure'|| $Profile.Name == 'SRV - Process Author' && recordType != 'Question/Answer','block','none')}">
+                <apex:pageBlockSection columns="1">
+                    <apex:inputField value="{!Solution.Team_s__c}" id="Team" required="{!IF(recordType == 'Process/Procedure'|| $Profile.Name == 'SRV - Process Author' && recordType != 'Question/Answer' ,true,false)}"/>                    
+                </apex:pageBlockSection>
+              </div>              
+              <apex:pageBlockSection columns="1">
+                <apex:pageBlockSectionItem rendered="{!IF(recordType != 'Process/Procedure','true','false')}">
+                <apex:OutputLabel value="Visible in Customer Portal" style="color:green"/>             
+                <apex:inputField value="{!Solution.Visible_in_Customer_Portal__c}" id="visCustPortal"/>
+              </apex:pageBlockSectionItem>  
+                <apex:pageBlockSectionItem rendered="{!IF(recordType != 'Process/Procedure','true','false')}">
+                <apex:OutputLabel value="Visible in Partner Portal" style="color:green"/>         
+                <apex:inputField value="{!Solution.Visible_in_Partner_Portal__c}" id="visPartPortal"/>
+                </apex:pageBlockSectionItem> 
+                <apex:pageBlockSectionItem rendered="{!IF(recordType != 'Process/Procedure','true','false')}">
+                <apex:OutputLabel value="Visible in Public KnowledgeBase" style="color:green"/>         
+                <apex:inputField value="{!Solution.IsPublishedInPublicKb}" id="visPubKnwBase"/>
+                </apex:pageBlockSectionItem>
+              </apex:pageBlockSection>        
+              
+                  
+            <div id="Otheresources" style="display:{!IF(recordType == 'Other Resource','block','none')}" align="middle">
+                <apex:pageBlockSection columns="1">
+               
+                     <!--<apex:repeat value="{!$ObjectType.Solution.FieldSets.Other_Resources_Article_Fields}" var="TC">
+                      
+                       <apex:inputField value="{!Solution[TC]}"/>
+                       
+                    </apex:repeat>-->
+                     
+                     <apex:pageBlockSectionItem >
+                         <apex:OutputLabel value="Resource Description"/>
+                         <c:richeditor value="{!Solution.Resource_Description__c}" width="830" height="350"></c:richeditor>
+                         <!--<apex:inputTextarea value="{!Solution.Resource_Description__c}" id="rsd1" styleClass="rdeditor"/>-->
+                         <!--<apex:inputTextarea value="{!Solution.Resource_Description__c}" id="dr1" styleClass="rdEditor"/>-->
+                     </apex:pageBlockSectionItem>
+                      <apex:pageBlockSectionItem >
+                         <apex:OutputLabel value="Important Information"/>
+                         <c:richeditor value="{!Solution.Important_Information__c}" width="830" height="350"></c:richeditor>
+                         <!--<apex:inputTextarea value="{!Solution.Important_Information__c}" id="rsd2" styleClass="iiEditor"/>-->
+                     </apex:pageBlockSectionItem>
+                     <apex:pageBlockSectionItem >
+                         <apex:OutputLabel value="Resource Link"/>
+                         <c:richeditor value="{!Solution.Resource_Link__c}" width="830" height="350"></c:richeditor>
+                         <!--<apex:inputTextarea value="{!Solution.Resource_Link__c}" id="rsd3" styleClass="rslEditor"/>-->
+                     </apex:pageBlockSectionItem>   
+                </apex:pageBlockSection>
+            </div>  
+            <!--<div id="StandardAndKnownIssue" style="display:{!IF(recordType == 'Standard' || recordType == 'Known Issue','block','none')}">
+                <apex:pageBlockSection columns="1">
+                    <apex:repeat value="{!$ObjectType.Solution.FieldSets.Standard_Article_Fields}" var="TC">
+                       <apex:inputField value="{!Solution[TC]}"/>                       
+                    </apex:repeat>-->                                                             
+                     
+                     <!--  <apex:pageBlockSectionItem >
+                         <apex:OutputLabel value="Symptoms"/>
+                         <c:richeditor value="{!Solution.Symptoms__c}" width="830" height="350"></c:richeditor>
+                     </apex:pageBlockSectionItem>
+                     <apex:pageBlockSectionItem > 
+                         <apex:OutputLabel value="Resolution/Workaround"/>
+                         <c:richeditor value="{!Solution.Resolution_Workaround__c}" width="830" height="350"></c:richeditor>
+                     </apex:pageBlockSectionItem>                        
+                     <apex:pageBlockSectionItem >
+                         <apex:OutputLabel value="Internal Only Notes"/>
+                         <c:richeditor value="{!Solution.Internal_Only_Notes__c}" width="830" height="350"></c:richeditor>
+                     </apex:pageBlockSectionItem>                     
+                </apex:pageBlockSection>
+           </div>-->    
+           
+           <div id="SupportBulletin" style="display:{!IF(recordType == 'Support Bulletin/Security Advisory' || $Profile.Name == 'SRV - SBSA Authors','block','none')}">
+                <apex:pageBlockSection columns="1">
+                   
+                    <apex:pageBlockSectionItem >
+                         <apex:OutputLabel value="Bulletin/Advisory Information" />
+                         <c:richeditor value="{!Solution.Bulletin_Advisory_Information__c}" width="830" height="350"></c:richeditor>
+                         <!--<apex:inputTextarea value="{!Solution.Bulletin_Advisory_Information__c}" id="SB" styleClass="baiEditor"/>-->
+                     </apex:pageBlockSectionItem>
+                    
+                     </apex:pageBlockSection>  
+           </div> 
+         <div id="Announcement" style="display:{!IF(recordType == 'Announcement','block','none')}">
+                <apex:pageBlockSection columns="1">                   
+                    <apex:pageBlockSectionItem >
+                         <apex:OutputLabel value="Announcement Details" />
+                         <c:richeditor value="{!Solution.Announcement_Detail__c}" width="830" height="350"></c:richeditor>
+                         <!--<apex:inputTextarea value="{!Solution.Announcement_Detail__c}" id="ann" styleClass="adEditor"/>-->
+                     </apex:pageBlockSectionItem>
+                      <apex:inputField value="{!Solution.Related_Link_s__c}" style="width:590px;height:100px"/>                      
+                     </apex:pageBlockSection>  
+           </div>
+           <div id="xythose" style="display:{!IF(recordType == 'Question/Answer','block','none')}">
+                <apex:pageBlockSection columns="1">                       
+                    <apex:inputField value="{!Solution.Question__c}" style="width:590px;height:100px"/>                      
+                    <apex:pageBlockSectionItem >
+                          <apex:OutputLabel value="Answer"/>
+                         <c:richeditor value="{!Solution.Answer__c}" width="830" height="350"></c:richeditor>
+                     </apex:pageBlockSectionItem>
+                </apex:pageBlockSection>
+            </div>
+           <div id="Standard/Known" style="display:{!IF(recordType == 'Standard' || recordType == 'Known Issue','block','none')}">
+                <apex:pageBlockSection columns="1">                                     
+                    <apex:pageBlockSectionItem >
+                         <apex:OutputLabel value="Symptoms"/>
+                         <c:richeditor value="{!Solution.Symptoms__c}" width="830" height="350"></c:richeditor>
+                         <!--<apex:inputTextarea value="{!Solution.Symptoms__c}" id="sk1" styleClass="smEditor"/>-->
+                     </apex:pageBlockSectionItem>
+                     <apex:pageBlockSectionItem >
+                         <apex:OutputLabel value="Cause"/>
+                         <c:richeditor value="{!Solution.Cause__c}" width="830" height="350"></c:richeditor>
+                         <!--<apex:inputTextarea value="{!Solution.Cause__c}" id="sk2" styleClass="csEditor"/>-->
+                     </apex:pageBlockSectionItem>
+                     <apex:pageBlockSectionItem > 
+                         <apex:OutputLabel value="Resolution/Workaround"/>
+                         <c:richeditor value="{!Solution.Resolution_Workaround__c}" width="830" height="350"></c:richeditor>
+                         <!--<apex:inputTextarea value="{!Solution.Resolution_Workaround__c}" id="sk3" styleClass="rsEditor"/>-->
+                     </apex:pageBlockSectionItem>
+                     <apex:pageBlockSectionItem >
+                         <apex:OutputLabel value="Best Practice Info"/>
+                         <c:richeditor value="{!Solution.Best_Practice_Information__c}" width="830" height="350"></c:richeditor>
+                         <!--<apex:inputTextarea value="{!Solution.Best_Practice_Information__c}" id="sk4" styleClass="bpiEditor"/>-->
+                     </apex:pageBlockSectionItem>                     
+                </apex:pageBlockSection> 
+           </div>
+           <div id="TSG" style="display:{!IF(recordType == 'Troubleshooting/Informational','block','none')}">
+                <apex:pageBlockSection columns="1">
+                     <!--<apex:repeat value="{!$ObjectType.Solution.FieldSets.TSG_Article_Fields}" var="TC">
+                       <apex:inputField value="{!Solution[TC]}"/>
+                       
+                    </apex:repeat>-->
+                     <apex:pageBlockSectionItem >
+                             <apex:OutputLabel value="Introduction"/>
+                             <c:richeditor value="{!Solution.How_is_the_component_designed_to_work__c}" width="830" height="350"></c:richeditor>
+                             <!--<apex:inputTextarea value="{!Solution.How_is_the_component_designed_to_work__c}" id="tsg1" styleClass="tsg1Editor"/>-->
+                     </apex:pageBlockSectionItem>
+                              
+                     <apex:pageBlockSectionItem >
+                           <apex:OutputLabel value="Functionality"/>
+                           <c:richeditor value="{!Solution.Files_collection_to_troubleshoot_cpnent__c}" width="830" height="350"></c:richeditor>
+                           <!--<apex:inputTextarea value="{!Solution.Files_collection_to_troubleshoot_cpnent__c}" id="tsg2" styleClass="tsg2Editor"/>-->
+                      </apex:pageBlockSectionItem> 
+                      
+                      <apex:pageBlockSectionItem >
+                           <apex:OutputLabel value="Related System Information"/>
+                           <c:richeditor value="{!Solution.Evaluation_of_logs_information__c}" width="830" height="350"></c:richeditor>
+                         <!--<apex:inputTextarea value="{!Solution.Evaluation_of_logs_information__c}" id="tsg3" styleClass="tsg3Editor"/>-->
+                     </apex:pageBlockSectionItem>
+                     
+                      <apex:pageBlockSectionItem >
+                           <apex:OutputLabel value="Evaluating Related System Information"/>
+                           <c:richeditor value="{!Solution.Causes_of_the_common_issues_with_this_cp__c}" width="830" height="350"></c:richeditor>
+                           <!--<apex:inputTextarea value="{!Solution.Causes_of_the_common_issues_with_this_cp__c}" id="tsg4" styleClass="tsg4Editor"/>-->
+                     </apex:pageBlockSectionItem> 
+                     
+                     <apex:pageBlockSectionItem >
+                           <apex:OutputLabel value="Common Issues"/>
+                           <c:richeditor value="{!Solution.Resources_use_to_troubleshoot_this_cp__c}" width="830" height="350"></c:richeditor>
+                           <!--<apex:inputTextarea value="{!Solution.Resources_use_to_troubleshoot_this_cp__c}" id="tsg5" styleClass="tsg5Editor"/>-->
+                     </apex:pageBlockSectionItem>
+                </apex:pageBlockSection>  
+               </div>  
+           
+           <div id="SBSA/Standard/Known" style="display:{!IF(recordType == 'Standard' || recordType == 'Question/Answer' || recordType == 'Known Issue' || recordType == 'Support Bulletin/Security Advisory' || recordType == 'Troubleshooting/Informational','block;','none;')}">
+                <apex:pageBlockSection columns="1">  
+                   <apex:pageBlockSectionItem >
+                         <apex:OutputLabel value="Internal Only Notes" style="color:green"/>
+                         <c:richeditor value="{!Solution.Internal_Only_Notes__c}" width="830" height="350"></c:richeditor>
+                         <!--<apex:inputTextarea value="{!Solution.Internal_Only_Notes__c}" id="SKSB" styleClass="ionEditor"/>-->
+                   </apex:pageBlockSectionItem>
+                </apex:pageBlockSection>  
+            </div>
+            <div id="targetnew" style="display:{!IF(recordType == 'Known Issue' || recordType == 'Standard' || recordType == 'Question/Answer','block','none')}">
+                <apex:pageBlockSection columns="1">
+                    <!--<apex:inputField value="{!Solution.Target_Release__c}"/>-->
+                    <apex:pageBlockSectionItem >
+                    <apex:OutputLabel value="Support Incident" style="color:green"/>
+                    <apex:inputField value="{!Solution.Support_Incident__c}" id="supporInc"/>
+                    </apex:pageBlockSectionItem>
+                    </apex:pageBlockSection>
+           
+           <div id="target" style="display:{!IF(recordType == 'Known Issue' || recordType == 'Standard','block','none')}">
+                <apex:pageBlockSection columns="1">
+                    <!--<apex:inputField value="{!Solution.Target_Release__c}"/>-->
+                    <apex:inputField value="{!Solution.Patch_Available__c}" id="patchAvail" required="{!IF(recordType == 'Standard' || recordType == 'Known Issue',true,false)}"/> 
+                    </apex:pageBlockSection>
+          </div>
+          
+          </div>
+          <div id="PatchComments" style="display:{!IF(recordType == 'Known Issue'|| recordType == 'Standard','block','none')}">
+                <apex:pageBlockSection columns="1">
+                <!--<apex:inputField value="{!Solution.Patch_Comments__c}" id="PatchComments" style="width:590px;height:100px"/> -->
+	               <apex:pageBlockSectionItem >
+	                         <apex:OutputLabel value="Patch Comments"/>
+	                         <c:richeditor value="{!Solution.Patch_Comments__c}" width="830" height="350"></c:richeditor>                         
+	               </apex:pageBlockSectionItem>
+               </apex:pageBlockSection>
+              </div>  
+          <div id="Known" style="display:{!IF(recordType == 'Standard' || recordType == 'Question/Answer' || recordType == 'Known Issue' || (recordType == 'Support Bulletin/Security Advisory' || $Profile.Name == 'SRV - SBSA Authors'),'block','none')}">
+                <apex:pageBlockSection columns="1">
+                    
+                    
+                </apex:pageBlockSection>
+              </div> 
+                        
+               <div id="ProcessProcedure" style="display:{!IF(recordType == 'Process/Procedure' || $Profile.Name == 'SRV - Process Author'&& recordType != 'Question/Answer','block','none')}">
+                <apex:pageBlockSection columns="1">
+                     <!--<apex:repeat value="{!$ObjectType.Solution.FieldSets.Process_Procedure_Article_Fields}" var="TC">
+                       <apex:inputField value="{!Solution[TC]}"/>
+                       
+                    </apex:repeat>-->                   
+                     <apex:pageBlockSectionItem >
+                         <apex:OutputLabel value="Process Flow"/>
+                         <c:richeditor value="{!Solution.Process_Flow__c}" width="830" height="350"></c:richeditor>
+                         <!--<apex:inputTextarea value="{!Solution.Process_Flow__c}" id="pp1" styleClass="pfEditor"/>-->
+                     </apex:pageBlockSectionItem>
+                      <apex:pageBlockSectionItem >
+                         <apex:OutputLabel value="Process Detail"/>
+                         <c:richeditor value="{!Solution.Process_Details__c}" width="830" height="350"></c:richeditor>
+                         <!--<apex:inputTextarea value="{!Solution.Process_Details__c}" id="pp2" styleClass="pdEditor"/>-->
+                     </apex:pageBlockSectionItem>                     
+                </apex:pageBlockSection>  
+               </div>                       
+               <div id="ProductDoc" style="display:{!IF(recordType == 'Product Documentation' || $Profile.Name == 'SRV - Product Documentation Team','block','none')}">                
+                <apex:pageBlockSection columns="1">
+                     <!--<apex:repeat value="{!$ObjectType.Solution.FieldSets.Product_Documentation_Article_Fields}" var="TC">
+                       <apex:inputField value="{!Solution[TC]}"/>
+                       
+                     </apex:repeat>-->
+                     <apex:pageBlockSectionItem >
+                         <apex:OutputLabel value="Document Summary"/>
+                         <c:richeditor value="{!Solution.Document_Summary__c}" width="830" height="350"></c:richeditor>
+                         <!--<apex:inputTextarea value="{!Solution.Document_Summary__c}" id="pd1" styleClass="dsEditor"/>-->
+                     </apex:pageBlockSectionItem>
+                     <apex:pageBlockSectionItem >
+                         <apex:OutputLabel value="Document Details"/>
+                         <c:richeditor value="{!Solution.Document_Details__c}" width="830" height="350"                  ></c:richeditor>
+                         <!--<apex:inputTextarea value="{!Solution.Document_Details__c}" id="pd2" styleClass="ddEditor"/>-->
+                     </apex:pageBlockSectionItem>
+                </apex:pageBlockSection>
+               </div>  
+               <div id="ProDoc" style="display:{!IF(recordType == 'Product Documentation' || $Profile.Name == 'SRV - Product Documentation Team','block','none')}">
+                <apex:pageBlockSection columns="1">
+                    <apex:inputField value="{!Solution.Document_Link__c}" id="document" style="width:590px;height:100px"/>
+                </apex:pageBlockSection>
+              </div>      
+               <div id="ProductRelease" style="display:{!IF(recordType == 'Product Release Information','block','none')}">
+                <apex:pageBlockSection columns="1">
+                     <!--<apex:repeat value="{!$ObjectType.Solution.FieldSets.Product_Release_Article_Fields}" var="TC">
+                       <apex:inputField value="{!Solution[TC]}"/>
+                       
+                    </apex:repeat>
+                     <apex:pageBlockSectionItem >
+                          <apex:OutputLabel value="Available Versions"/>
+                          <c:richeditor value="{!Solution.Available_Versions__c}" width="830" height="350"></c:richeditor>
+                      </apex:pageBlockSectionItem>
+                      <apex:pageBlockSectionItem >
+                          <apex:OutputLabel value="Product Documentation"/>
+                          <c:richeditor value="{!Solution.Product_Documentation__c}" width="830" height="350"></c:richeditor>
+                      </apex:pageBlockSectionItem>-->
+                    <apex:pageBlockSectionItem >
+                        <apex:OutputLabel value="Upgrade Information"/>
+                        <c:richeditor value="{!Solution.Upgrade_Information__c}" width="830" height="350"></c:richeditor>
+                       <!--<apex:inputTextarea value="{!Solution.Upgrade_Information__c}" id="pr" styleClass="uiEditor"/>-->                          
+                    </apex:pageBlockSectionItem> 
+                     
+                    <apex:pageBlockSectionItem >
+                          <apex:OutputLabel value="Product Documentation"/>
+                          <!--<apex:inputTextarea value="{!Solution.Product_Documentation_New__c}" id="pr2" styleClass="prdEditor"/>-->
+                          <c:richeditor value="{!Solution.Product_Documentation_New__c}" width="830" height="350"></c:richeditor>
+                    </apex:pageBlockSectionItem> 
+                    <apex:inputField value="{!Solution.Support_Policy__c}" id="supportPolicy" required="{!IF(recordType == 'Product Release Information',true,false)}" style="width:590px;height:100px"/>                                         
+                    <apex:pageBlockSectionItem >
+                          <apex:OutputLabel value="Other Information"/>
+                          <!--<apex:inputTextarea value="{!Solution.Other_Information__c}" id="pr1" styleClass="oiEditor"/>-->
+                          <c:richeditor value="{!Solution.Other_Information__c}" width="830" height="350"></c:richeditor>
+                    </apex:pageBlockSectionItem>
+                </apex:pageBlockSection> 
+               </div>   
+               <div id="SupportTech" style="display:{!IF(recordType == 'Supported Technologies Information','block','none')}">
+                  <apex:pageBlockSection columns="1">
+                  
+                      <apex:pageBlockSectionItem >
+                          <apex:OutputLabel value="Platform Technology"/>
+                          <c:richeditor value="{!Solution.Platform_Technologies__c}" width="830" height="350"></c:richeditor>
+                         <!--<apex:inputTextarea value="{!Solution.Platform_Technologies__c}" id="st1" styleClass="ptEditor"/>-->
+                      </apex:pageBlockSectionItem>
+                      <apex:pageBlockSectionItem >
+                          <apex:OutputLabel value="Client Technology"/>
+                          <c:richeditor value="{!Solution.Client_Technologies__c}" width="830" height="350"></c:richeditor>
+                         <!--<apex:inputTextarea value="{!Solution.Client_Technologies__c}" id="st2" styleClass="ctEditor"/>-->
+                      </apex:pageBlockSectionItem>
+                      <apex:pageBlockSectionItem > 
+                          <apex:OutputLabel value="Upgrade Paths"/>
+                          <c:richeditor value="{!Solution.Upgrade_Paths__c}" width="830" height="350"></c:richeditor>
+                         <!--<apex:inputTextarea value="{!Solution.Upgrade_Paths__c}" id="st3" styleClass="upEditor"/>-->
+                      </apex:pageBlockSectionItem>                             
+                  </apex:pageBlockSection>
+               </div>    
+               
+               <div id="download" style="display:{!IF(recordType == 'Version Information'|| recordType == 'Product Release Information' || recordType == 'Other Resource' ,'block','none')}">
+                    <apex:pageBlockSection columns="1">
+                         <apex:pageBlockSectionItem >
+                         <apex:OutputLabel value="Download"/>
+                         <!--<apex:inputTextarea value="{!Solution.Download__c}" id="download" styleClass="dwEditor"/>-->
+                         <c:richeditor value="{!Solution.Download__c}" width="830" height="350"></c:richeditor>
+                         </apex:pageBlockSectionItem>
+                    </apex:pageBlockSection>                     
+               </div>               
+                                        
+               <div id="VersionInfo" style="display:{!IF(recordType == 'Version Information','block','none')}">
+                    <apex:pageBlockSection columns="1">                     
+                     <apex:pageBlockSectionItem > 
+                         <apex:OutputLabel value="Release Notes"/>
+                         <c:richeditor value="{!Solution.Release_Notes__c}" width="830" height="350"></c:richeditor>
+                         <!--<apex:inputTextarea value="{!Solution.Release_Notes__c}" id="vi2" styleClass="rnEditor"/>-->
+                     </apex:pageBlockSectionItem> 
+                    <!-- <apex:pageBlockSectionItem > 
+                         <apex:OutputLabel value="Known Issues"/>
+                         <c:richeditor value="{!Solution.Known_Issues__c}" width="830" height="350"></c:richeditor>
+                     </apex:pageBlockSectionItem> 
+                     <apex:pageBlockSectionItem > 
+                         <apex:OutputLabel value="Resolved Issues"/>
+                         <c:richeditor value="{!Solution.Resolved_Issues__c}" width="830" height="350"></c:richeditor>
+                     </apex:pageBlockSectionItem> --> 
+                    
+                </apex:pageBlockSection>                     
+            </div>                                            
+        </apex:pageBlock>
+    </body>
+  </apex:form>
+</apex:page>

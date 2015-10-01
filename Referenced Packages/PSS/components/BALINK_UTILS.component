@@ -1,0 +1,9 @@
+<apex:component controller="BALINK1.BALINK_Test" access="global">
+    <apex:attribute access="global" name="sobj" type="sObject" description="" assignTo="{!obj2}"/>
+    <apex:includeScript value="{!$Resource.BALINK1__BALINK_Utils}"/>
+<!-- 
+	("{beforeSymbolCurrency}","{afterSymbolCurrency}","{DefaultCurrency}","{CurrencyRate}","edit","{UserGroupingSep}","{UserDecimalSep}","{negPrefix}","{negSuffix}");
+    ("{!beforeSymbolCurrency}"&nbsp;&nbsp;&nbsp;"{!afterSymbolCurrency}"&nbsp;&nbsp;&nbsp;"{!DefaultCurrency}"&nbsp;&nbsp;&nbsp;"{!CurrencyRate}"&nbsp;&nbsp;&nbsp;"edit"&nbsp;&nbsp;&nbsp;"{!UserGroupingSep}"&nbsp;&nbsp;&nbsp;"{!UserDecimalSep}"&nbsp;&nbsp;&nbsp;"{!negPrefix}","{!negSuffix}");
+ -->    
+     <script language="javascript">Init("{!beforeSymbolCurrency}","{!afterSymbolCurrency}","{!DefaultCurrency}","{!CurrencyRate}","edit","{!UserGroupingSep}","{!UserDecimalSep}","{!negPrefix}","{!negSuffix}");</script>
+</apex:component>

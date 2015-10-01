@@ -1,0 +1,59 @@
+<apex:page standardStylesheets="false" showHeader="false" sidebar="false"  contentType="text/html" cache="false" controller="orderstatus"  >
+    <apex:composition template="btbb_publictemplate" > 
+        <apex:define name="content" > 
+        
+        <style type="text/css">
+            .label { white-space:nowrap;
+             width: 150px; margin-left: 160px; font-weight: bold; line-height: 30px; font-size: 12px; color: #444;}
+            .field { margin-left: 60px; line-height: 30px; clear:none; font-size: 12px; width: 300px; color: #343434;}
+            .pagebuttons { float:right; margin-right: 50px; margin-top: 20px; margin-bottom: 20px;  }
+            .pagebuttons input[type="submit"] {
+                background: url({!URLFOR($Resource.BtBbStyles,'/includes/images/button_bg.gif')}) repeat-x top left;
+                height: 24px;   
+                color: #FFF;
+                border: 1px solid #CCC;
+                font-weight: bold;
+                margin: 0 5px 0 0;
+            }
+            @-moz-document url-prefix() { .pagebuttons input[type="submit"] { padding-bottom: 4px; } }
+            input[type="radio"] { position: relative; top: 3px; }
+            
+            </style>
+            
+            
+            <apex:form id="formid">
+            
+            <apex:outputPanel rendered="{!doShowSuccess}" >
+                    <apex:pageBlock title="Thank You for Renewing Your Blackboard Partnership"  id="pageblockid">
+                    
+                    Thank you for renewing your Blackboard Building Blocks partnership. You will receive a confirmation email with your agreement and order information shortly.  <br/>
+                    
+                    Please allow three to five business days to process your renewal and receive your new developer license(s). Email us at <a href="mailto:BbPartnerRenewals@blackboard.com">BbPartnerRenewals@blackboard.com</a> with questions.
+                    
+                   
+                    
+                 
+                    </apex:pageBlock>
+            
+            </apex:outputPanel>
+            
+            
+            <apex:outputpanel rendered="{!NOT(doShowSuccess)}"  >
+            
+                     <apex:pageBlock title="Error!"  id="pageblockiderror">
+                        
+                     Oops! Something has gone wrong. We apologize for the inconvenience. Please try to access the renewal site using another browser. If you continue to experience technical issues, please contact us at <a href="mailto:BbPartnerRenewals@blackboard.com">BbPartnerRenewals@blackboard.com</a> with questions.
+                        
+           
+            
+         
+            </apex:pageBlock>
+            
+            
+            
+            </apex:outputpanel>
+
+        </apex:form>
+        </apex:define>
+    </apex:composition>
+</apex:page>

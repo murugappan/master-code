@@ -1,0 +1,35 @@
+<apex:page showHeader="false" sidebar="false" standardStylesheets="false" controller="btbb_selfservicecontroller" action="{!redirect}">
+  <apex:composition template="btbb_template">
+      <apex:define name="topbar"><c:btbb_globalsearch /></apex:define>
+      <apex:define name="nav"><c:btbb_auth_nav /></apex:define>
+      <apex:define name="content">
+      <h2>Self Service</h2>
+                    <p style="display:{!IF((CONTAINS(corelicense,'Moodlerooms')), 'block','none' )}"> Here is where you’ll find a wealth of information, tools and programs to help you get the most out of Moodlerooms. These resources are designed to help you administer your system and help you more effectively provide support to your faculty, staff, and students.</p>
+                    <p style="display:{!IF((NOT(CONTAINS(corelicense,'Moodlerooms'))), 'block','none' )}"> In Behind the Blackboard, you’ll find a wealth of information, tools and programs to help you get the most out of your Blackboard licensed products. These resources are designed to help you administer your systems and help you more effectively provide support to your faculty, staff, and students.</p>
+                     
+                    <div class="content2ColContainer">
+                    <apex:variable var="size" value="{!btbbServicelinks.size}" />
+                        <div class="content2ColL">
+                        <apex:variable var="c" value="{!1}" />
+                            <apex:repeat value="{!btbbServicelinks}" var="k" rows="{!CEILING(size/2)}">
+                            <h3 id="{!k.elementid__c}" class="ssHeading"><a href="{!k.URL__C}" target="{!k.target__c}">{!k.Link_Name__c}</a></h3>
+                            <p><apex:outputtext value="{!k.Description__c}" escape="false"/></p>
+                            <div class="cleaner divider" style="{!if(c==CEILING(size/2),'display:none','display:block')}">&nbsp;</div>
+                             <apex:variable var="c" value="{!c+1}"/>
+                            </apex:repeat>
+                          
+                        </div>
+                        <div class="content2ColR">
+                         <apex:variable var="d" value="{!CEILING(size/2)+1}" />
+                            <apex:repeat value="{!btbbServicelinks}" var="k" first="{!CEILING(size/2)}">
+                            <h3 id="{!k.elementid__c}" class="ssHeading"><a href="{!k.URL__C}" target="{!k.target__c}">{!k.Link_Name__c}</a></h3>
+                            <p><apex:outputtext value="{!k.Description__c}" escape="false"/></p>
+                            <div class="cleaner divider" style="{!if(d==size,'display:none','display:block')}">&nbsp;</div>
+                             <apex:variable var="d" value="{!d+1}"/>
+                            </apex:repeat>
+                        </div>  
+                    </div>
+                    <div class="cleaner">&nbsp;</div>
+      </apex:define>
+  </apex:composition>
+</apex:page>

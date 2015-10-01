@@ -1,0 +1,55 @@
+<html>
+<head>
+	<title>Salesforce</title>
+	<link  href="/dCSS/Theme2/default/common.css" type="text/css" media="handheld,print,projection,screen,tty,tv" rel="stylesheet" >
+	<link  href="/dCSS/Theme2/default/custom.css" type="text/css" media="handheld,print,projection,screen,tty,tv" rel="stylesheet" >
+	<link  href="/css/assistive.css" type="text/css" media="aural,braille,embossed" rel="stylesheet" >
+
+    <script type="text/javascript" src="/js/functions.js"></script>
+    <script src="/soap/ajax/8.0/connection.js"></script>
+
+<script type="text/javascript">
+var page = "page=Search";
+var qso = window.parent.location.search.substring(1).split("&");
+var oid = "";
+var cid = "";
+var aid = "";
+for(var i = 0; i < qso.length; i++)
+{
+    if(qso[i].indexOf("aid=") > -1)
+    {
+        aid = qso[i].replace("aid=", "");
+    }
+    if(qso[i].indexOf("cid=") > -1)
+    {
+        cid = qso[i].replace("cid=", "");
+    }
+    if(qso[i].indexOf("oid=") > -1)
+    {
+        oid = qso[i].replace("oid=", "");
+    }
+    if(qso[i].indexOf("page=") > -1)
+    {
+        page = "page=" + qso[i].replace("page=", "");
+    }
+}
+</script>
+
+{!INCLUDE($SControl.RV_Utils_for_Portal_Users)}
+
+<script type="text/javascript">
+if(aid != "") finalTargetURL += "&AccountID=" + aid;
+if(cid != "") finalTargetURL += "&ContactID=" + cid;
+if(oid != "") finalTargetURL += "&OpportunityID=" + oid;
+function init() 
+{
+   loader();
+   window.location= finalTargetURL;
+}
+	</script>
+</head>
+
+<body onload="init();">
+	<div id="statusMsg"><h1 id="stat1">Loading..</h1></div>
+</body>
+</html>

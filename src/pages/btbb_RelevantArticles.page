@@ -1,0 +1,58 @@
+<apex:page standardStylesheets="false" showHeader="false" sidebar="false" contentType="text/html" cache="false" controller="ArticleListController" title="Article List">
+    <apex:composition template="btbb_template">
+        <apex:define name="topbar"><c:btbb_globalsearch /></apex:define>
+        
+        <apex:define name="nav"><c:btbb_auth_nav /></apex:define>
+        
+        <apex:define name="content">
+            <apex:form >
+            <apex:pageblock id="ArticleBlock">
+                <div class="btbbCaseTab" title="Known Issues">
+                    <h2>{!articleListType} Articles</h2>
+                    <div class="contentInputRight">
+                            <a class="gray-button" href="{!$Page.btbb_articleview}?Id={!aId}"><span>Go back to Article : {!SolutionNo}</span></a>                            
+                    </div>                   
+                    
+                    <table width="100%" style="border:none;">
+                        <tr class="nohover" style="border:none;">
+                             <th style="border:none;display:{!IF(recType == 'RP','table - cell','none')};">Service Pack</th>
+                            <th style="border:none;display:{!IF(recType == 'KI'||recType == 'RKI'||recType == 'ST','table - cell','none')};">Article Number</th>
+                            <th style="border:none;display:{!IF(recType == 'KI'||recType == 'RKI'||recType == 'ST','table - cell','none')};">Component</th>
+                            <th style="border:none;display:{!IF(recType == 'KI'||recType == 'RKI'||recType == 'ST','table - cell','none')};">Major Release</th>
+                            <th style="border:none;display:{!IF(recType == 'KI'||recType == 'RKI'||recType == 'ST','table - cell','none')};">Version</th>
+                            <th style="border:none;display:{!IF(recType == 'RP','table - cell','none')};">Build Number</th>
+                            <th style="border:none;display:{!IF(recType == 'KI'||recType == 'RKI'||recType == 'ST','table - cell','none')};">Issue Description</th>
+                            <th style="border:none;display:{!IF(recType == 'KI'||recType == 'RKI'||recType == 'ST','table - cell','none')};">Target Fix Release</th>
+                            <th style="border:none;display:{!IF(recType == 'KI'||recType == 'RKI'||recType == 'ST','table - cell','none')};">Patch Available</th>
+                            <th style="border:none;display:{!IF(recType == 'RP','table - cell','none')};">Release Date</th>
+                            
+                        </tr>
+                        <apex:repeat value="{!pageArticleList}" var="Article">
+                            <tr> 
+                                <td style="border:none;display:{!IF(recType == 'RP','table - cell','none')};"><a href="{!$Page.btbb_articleview}?id={!Article.articleId}" target="_blank">{!Article.SolutionName}</a></td>                                       
+                                <td style="border:none;display:{!IF(recType == 'KI'||recType == 'RKI'||recType == 'ST','table - cell','none')};"><a href="{!$Page.btbb_articleview}?id={!Article.articleId}" target="_blank">{!Article.SolutionNumber}</a></td>                                        
+                                <td style="border:none;display:{!IF(recType == 'KI'||recType == 'RKI'||recType == 'ST','table - cell','none')};"><apex:outputText value="{!Article.categoriesName}"/></td>
+                                <td style="border:none;display:{!IF(recType == 'KI'||recType == 'RKI'||recType == 'ST','table - cell','none')};"><apex:outputText value="{!Article.Major}"/></td>
+                                <td style="border:none;display:{!IF(recType == 'KI'||recType == 'RKI'||recType == 'ST','table - cell','none')};"><apex:outputText value="{!Article.Versions}"/></td>
+                                <td style="border:none;display:{!IF(recType == 'RP','table - cell','none')};"><apex:outputText value="{!Article.Versions}"/></td>                                
+                                <td style="border:none;display:{!IF(recType == 'KI'||recType == 'RKI'||recType == 'ST','table - cell','none')};"><apex:outputText value="{!Article.IssueDescription}"/></td>
+                                <td style="border:none;display:{!IF(recType == 'KI'||recType == 'RKI'||recType == 'ST','table - cell','none')};">{!Article.TargetFixRelease}</td>                               
+                                <td style="border:none;display:{!IF(recType == 'KI'||recType == 'RKI'||recType == 'ST','table - cell','none')};">{!Article.PatchAvailable}</td>                                
+                                <td style="border:none;display:{!IF(recType == 'RP','table - cell','none')};"><apex:outputText value="{!Article.ReleaseDate}"/></td> 
+                            </tr>
+                        </apex:repeat>
+                    </table>  
+                    <apex:commandButton value="Previous" action="{!previousBtnClick}" disabled="{!previousButtonEnabled}"  reRender="ArticleBlock"  status="ArticleNext"></apex:commandButton>
+                    <apex:commandButton value="Next" action="{!nextBtnClick}" disabled="{!nextButtonDisabled}" reRender="ArticleBlock"  status="ArticleNext"></apex:commandButton>                                                            
+                    <apex:actionStatus startText="" stopText="" id="ArticleNext">
+                        <apex:facet name="start" ><apex:image url="{!URLFOR($Resource.btbbLoader)}"/></apex:facet>
+                    </apex:actionStatus>  
+                </div>                
+            </apex:pageblock>           
+            </apex:form>
+            
+        </apex:define>
+        
+    </apex:composition>
+    
+</apex:page>

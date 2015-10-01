@@ -1,0 +1,19 @@
+<apex:page standardStylesheets="false" showHeader="false" sidebar="false" contentType="text/html" cache="false" >
+    <apex:composition template="btbb_publictemplate" > 
+        <apex:define name="content" > 
+            <apex:form >   
+            
+            
+             <p>Hello!  You have attempted to navigate to a page for which you do not have appropriate permissions.  If you should be able to access <i>Behind the Blackboard™</i> for Blackboard Learn system administrators, please contact your institution’s primary administrator.</p><br/>
+             
+             Click here to return to <i><a href="https://behind.blackboard.com/s/sysadmincs">"Blackboard Transact Support Portal” </a></i>
+
+
+
+
+
+
+        </apex:form>   
+        </apex:define>
+    </apex:composition>
+</apex:page>

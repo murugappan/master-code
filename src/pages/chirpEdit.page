@@ -1,0 +1,94 @@
+<apex:page StandardController="CHIRP_Ticket__c" recordSetVar="list" showheader="true" sidebar="false"  >
+
+
+<apex:form >
+    <apex:pageBlock >
+         <apex:panelGrid columns="4">
+             <apex:outputLabel value="View:"/>
+             <apex:selectList value="{!filterId}" size="1">
+                <apex:actionSupport event="onchange" rerender="table"/>
+                <apex:selectOptions value="{!listviewoptions}"/>
+             </apex:selectList>
+
+
+
+         </apex:panelGrid>
+    </apex:pageBlock>
+
+
+
+    <apex:pageblock > 
+        <apex:pageBlockButtons >
+            
+            <apex:commandButton action="{!quicksave}" value="Save"/>
+            <apex:commandButton action="{!previous}" value="Previous"/>
+            <apex:commandButton action="{!next}" value="Next" />
+
+
+            
+        </apex:pageBlockButtons>
+    
+        <apex:pageblocktable value="{!list}"  var="x" id="table" width="900px" >
+  
+  
+            <apex:column width="40px"  value="{!x.Name}"/>
+            
+             <apex:column width="100px"  value="{!x.Details__c}"/>
+            
+            <apex:column headervalue="Subject" style="width: 300px;">
+               <div style="width: 300px;"><a href="/{!x.Id}" target="opprWin">{!x.Subject__c}</a></div> 
+            </apex:column>
+                        
+                        
+            <apex:column width="40px" HeaderValue="Status">
+                <apex:inputField value="{!x.Status__c}"  style="width: 80px;"/>
+            </apex:column>     
+                        
+            <apex:column width="40px" HeaderValue="State">
+                <apex:inputField value="{!x.State__c}"  style="width: 80px;"/>
+            </apex:column>     
+ 
+                        
+                        
+            <apex:column width="80px"  value="{!x.Component__c}"/>
+
+
+                        
+            <apex:column width="20px" HeaderValue="Urgency">
+                <apex:inputField value="{!x.Urgency__c}"  style="width: 40px;"/>
+            </apex:column>     
+            
+
+                        
+            <apex:column width="20px" HeaderValue="Impact">
+                <apex:inputField value="{!x.Impact__c}"  style="width: 40px;"/>
+            </apex:column>          
+            
+                        
+            <apex:column width="20px" value="{!x.Priority__c}" />
+            
+            
+            
+                        
+            <apex:column width="80px" HeaderValue="Type">
+                <apex:inputField value="{!x.Type__c}"  style="width: 80px;"/>
+            </apex:column>    
+ 
+ 
+            <apex:column width="80px" HeaderValue="Release">
+                <apex:inputField value="{!x.Release__c}"  style="width: 80px;"/>
+            </apex:column>              
+
+            <apex:column width="40px" value="{!x.RecordType.Name}" HeaderValue="RecordType" />
+               
+            <apex:column HeaderValue="Send to EBIZ" width="20px">
+                <apex:inputfield value="{!x.Send_to_EBIZ__c}"/>
+            </apex:column>
+            <apex:column width="40px" value="{!x.Owner.Name}" HeaderValue="Owner" />
+                        
+        </apex:pageblocktable>
+    </apex:pageblock>
+    </apex:form>
+    
+    <script>document.getElementById('goButton').focus();alert('blahg');</script>
+</apex:page>

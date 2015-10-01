@@ -1,0 +1,70 @@
+<apex:page standardController="learnJIRA__c" extensions="SupportIncidentAssignController" sidebar="false"  showHeader="false">
+    <!--<apex:includeScript value="{!URLFOR($Resource.ckeditor , 'ckeditor/ckeditor.js')}"/>-->
+    <script>
+        function closeWindow() {  
+            opener.location.reload();
+            window.close();
+            
+        }
+    </script>
+    <apex:form >
+        <body >
+            <apex:sectionHeader title="Assign Support Incident" subtitle="{!supportIncident.Name}"/>
+            <apex:pageMessages />
+            <apex:pageblock >
+                <apex:pageBlockButtons location="top">
+                    <apex:commandButton value="Save"  action="{!SaveOwner}" />
+                    <apex:commandbutton value="Cancel" onclick="javascript:parent.window.close()" />
+                </apex:pageBlockButtons>
+                <apex:pageBlockSection columns="1">
+                    <apex:actionStatus startText=" Finding Primary Group..." stopText=" " id="clStatus"/>
+                    <apex:actionStatus startText=" Finding User Name..." stopText=" " id="status"/>
+                </apex:pageBlockSection>
+                <apex:pageBlockSection columns="1">
+                
+                
+                
+                <apex:pageBlockSectionItem >
+                        <apex:outputText value="Business Unit"/>
+                        <apex:selectList id="fcol114" size="1" multiselect="false"  >                            
+                         <apex:selectOptions value="{!queueList1}"/> 
+                         <!-- <apex:actionSupport event="onchange" action="{!loadUsers}" rerender="fcol113" status="status"/> -->  
+                        </apex:selectList>
+                    </apex:pageBlockSectionItem>
+                
+                
+                
+                
+                    <apex:pageBlockSectionItem >
+                        <apex:outputText value="Primary Group"/>
+                        <apex:selectList id="fcol112" size="1" multiselect="false" value="{!selectedPrimaryGroup}" >                            
+                            <apex:selectOptions value="{!queueList}"/> 
+                            <apex:actionSupport event="onchange" action="{!loadUsers}" rerender="fcol113" status="status"/>
+                        </apex:selectList>
+                    </apex:pageBlockSectionItem>
+                    <apex:pageBlockSectionItem >
+                        <apex:outputLabel value="User Name"/>
+                        <apex:selectList id="fcol113" size="1" value="{!selectedUser}" disabled="{!noPrimaryGroup}">                            
+                            <apex:selectOptions value="{!userList}"/>                                         
+                        </apex:selectList>
+                    </apex:pageBlockSectionItem>
+                    <apex:pageBlockSectionItem >
+                        <apex:outputText value="User Comment"/>
+                        <apex:inputTextarea id="UserComment"  styleClass="ckeditor" value="{!userComments}" richText="true" rows="15" cols="140"/>
+                    </apex:pageBlockSectionItem>
+                </apex:pageBlockSection>
+            </apex:pageblock>
+            <apex:outputPanel id="test">
+                <apex:inputHidden value="{!closeWin}" id="closeWinAdmin" />  
+            </apex:outputPanel>
+        </body>   
+    </apex:form>
+    <script language='javascript'>      
+        var closeWinVal = document.getElementById('j_id0:j_id2:closeWinAdmin');
+        if(closeWinVal.value == "true")
+        {
+           parent.window.opener.location.reload();
+           window.parent.close();
+        }
+    </script> 
+</apex:page>

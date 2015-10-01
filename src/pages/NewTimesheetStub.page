@@ -1,0 +1,6 @@
+<apex:page standardcontroller="KimbleOne__Timesheet__c">
+<h1>New Timesheet</h1>
+  <br/>
+  <br/>
+  Please create timesheets using the Kimble Time and Expenses Application.
+</apex:page>

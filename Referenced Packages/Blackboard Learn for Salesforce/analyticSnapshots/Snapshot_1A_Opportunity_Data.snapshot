@@ -1,0 +1,39 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<AnalyticSnapshot xmlns="http://soap.sforce.com/2006/04/metadata">
+    <description>Custom Analytic Snapshot for the Opportunity object.</description>
+    <groupColumn>Opportunity$Owner.Id</groupColumn>
+    <mappings>
+        <sourceField>FORMULA4</sourceField>
+        <sourceType>summary</sourceType>
+        <targetField>Opportunity_Enrollment_Data__c.Opps_Amount_Closed_Lost_Last_90_Days__c</targetField>
+    </mappings>
+    <mappings>
+        <sourceField>FORMULA2</sourceField>
+        <sourceType>summary</sourceType>
+        <targetField>Opportunity_Enrollment_Data__c.Opps_Amount_Closed_Won_Last_90_Days__c</targetField>
+    </mappings>
+    <mappings>
+        <sourceField>FORMULA3</sourceField>
+        <sourceType>summary</sourceType>
+        <targetField>Opportunity_Enrollment_Data__c.Opps_Closed_Lost_Last_90_Days__c</targetField>
+    </mappings>
+    <mappings>
+        <sourceField>FORMULA1</sourceField>
+        <sourceType>summary</sourceType>
+        <targetField>Opportunity_Enrollment_Data__c.Opps_Closed_Won_Last_90_Days__c</targetField>
+    </mappings>
+    <mappings>
+        <sourceField>FORMULA5</sourceField>
+        <sourceType>summary</sourceType>
+        <targetField>Opportunity_Enrollment_Data__c.Opps_Status_Open_Last_90_Days__c</targetField>
+    </mappings>
+    <mappings>
+        <sourceField>ExecutionTime</sourceField>
+        <sourceType>snapshot</sourceType>
+        <targetField>Opportunity_Enrollment_Data__c.Snapshot_Date__c</targetField>
+    </mappings>
+    <name>Snapshot #1A - Opportunity Data</name>
+    <runningUser>mabrown1@blackboard.com</runningUser>
+    <sourceReport>Blackboard_Analytic_Snapshot_Reports/Opportunity_Snapshot_Data1</sourceReport>
+    <targetObject>Opportunity_Enrollment_Data__c</targetObject>
+</AnalyticSnapshot>

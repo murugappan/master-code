@@ -1,0 +1,119 @@
+<apex:page controller="bbl.EnrollSavedController" tabstyle="bbl__Course__c">
+
+<link rel="stylesheet" type="text/css" href="{!URLFOR($Resource.bbl__ExtJS4, 'resources/css/ext-all.css')}">
+<link rel="stylesheet" type="text/css" href="{!URLFOR($Resource.bbl__SalesforceJAR, 'css/salesforceStyles.css')}">
+<link rel="stylesheet" type="text/css" href="{!URLFOR($Resource.bbl__SFDCDialogCssJar, 'basic.css')}">
+<link rel="stylesheet" type="text/css" href="{!URLFOR($Resource.bbl__contentCSS)}">
+<link rel="stylesheet" type="text/css" href="{!URLFOR($Resource.bbl__spaceCSS)}">
+<link rel="stylesheet" type="text/css" href="{!URLFOR($Resource.bbl__modCss)}">
+<link rel="stylesheet" type="text/css" href="{!URLFOR($Resource.bbl__mediaCSS)}">
+<link rel="stylesheet" type="text/css" href="{!URLFOR($Resource.bbl__GridCSS)}">
+<link rel="stylesheet" type="text/css" href="{!URLFOR($Resource.bbl__CatalogCSS)}">
+<link rel="stylesheet" type="text/css" href="{!URLFOR($Resource.bbl__SFDCDialogCssJar, 'basic.css')}">
+<link rel="stylesheet" type="text/css" href="{!URLFOR($Resource.bbl__DialogCSS)}">
+
+
+<script type="text/javascript" src="{!URLFOR($Resource.bbl__ExtJS4, 'ext-all-debug.js')}"></script>
+<script type="text/javascript" src="{!URLFOR($Resource.bbl__jQuery)}"></script>
+<script type="text/javascript" src="{!URLFOR($Resource.bbl__jqMetadata)}"></script>
+<script>
+	jQuery.noConflict();
+</script>
+
+<script type="text/javascript" src="{!URLFOR($Resource.bbl__LearnerModelJS)}"></script>
+<script type="text/javascript" src="{!URLFOR($Resource.bbl__CoursesJS)}"></script>
+<script type="text/javascript" src="{!URLFOR($Resource.bbl__LearnersJS)}"></script>
+<script type="text/javascript" src="{!URLFOR($Resource.bbl__EnrollmentsJS)}"></script>
+<script type="text/javascript" src="{!URLFOR($Resource.bbl__SavedCourses)}"></script>
+<script type="text/javascript" src="{!URLFOR($Resource.bbl__EnrollSavedPageJS)}"></script>
+<script type="text/javascript" src="{!URLFOR($Resource.bbl__SFDCUserPickerPanelJS)}"></script>
+<script type="text/javascript" src="{!URLFOR($Resource.bbl__SimpleModalJS)}"></script>
+<script type="text/javascript" src="{!URLFOR($Resource.bbl__SFDCDialogJS)}"></script>
+
+
+
+
+<apex:form >
+
+<apex:actionFunction name="deleteSavedCourse" action="{!deleteSavedCourse}"  rerender="dummyPanel">
+	<apex:param name="csid" assignTo="{!courseID}" value="" />
+</apex:actionFunction>
+
+<apex:actionFunction name="enrollLearners" action="{!enrollLearners}"  rerender="dummyPanel">
+	<apex:param name="lrnid" assignTo="{!learners}" value="" />
+</apex:actionFunction>
+
+
+
+<apex:outputPanel id="dummyPanel"> 
+</apex:outputPanel>
+
+</apex:form>
+	<script type="text/javascript">
+    var __sfdcSessionId = '{!JSINHTMLENCODE(GETSESSIONID())}';
+    var __sfdcUserId = '{!JSINHTMLENCODE($User.Id)}'
+    var CourseCategoryMembershipAPI = '{!JSINHTMLENCODE(CourseCategoryMembershipAPI)}';
+	var CourseCategoryAPI = '{!JSINHTMLENCODE(CourseCategoryAPI)}';
+	var EnrollmentsAPI = '{!JSINHTMLENCODE(EnrollmentsAPI)}';
+	var CourseAPI = '{!JSINHTMLENCODE(CourseAPI)}';
+	var SavedCourseAPI = '{!JSINHTMLENCODE(SavedCourseAPI)}';
+	var prefix = '{!JSINHTMLENCODE(FieldPrefix)}';
+    </script>
+    <script src="../../soap/ajax/21.0/connection.js"
+          type="text/javascript"></script>
+    
+	
+	<div class="fullWidth paddedTop10">
+		<div class="bPageTitleSF">
+			<div class="ptbodySF">
+				<div class="contentSF">
+					<img src="{!URLFOR($Resource.bbl__LearnersIcon)}" alt="Course" width="33" height="24" class="headerImage imageTopperLearners" title="Course" />
+					<div class="headerTitle">Add Learners</div>
+					<div class="clearingBoxSF"></div>
+				</div>
+			</div>
+			<!-- Holds Saved Courses -->
+			<div class="crumbs fullwidth">
+				<div class="paddedOut5 toTheLeft">
+					&#171;&nbsp;<a href="/apex/Catalog">Back to Training Catalog</a>
+				</div>
+				<div id="enrollAll" style="display: none;" class="buttonContainerSmallSelected toTheRight btnMarginTop3">
+					<input type="button" class="btn btnPadded toTheRight" value="Complete Enrollment"  onclick="enrollSelected();" />
+					<div class="clearingBoxSF"></div>
+				</div>
+				<div class="clearingBoxSF"></div>
+			</div>
+			
+			<div class="line">
+				<div class="unit size2of3">
+					<div class="paddedOut10 removeLeftPad">
+						<div class="metadataSF">
+							<div class="containerHeader">Selected Learners</div>
+							<div class="clearingBoxSF"></div>
+							<div class="chatterexpandoSF">						
+								<div id="SelectedLearners"></div>
+								
+							</div>
+							<div class="clearingBoxSF"></div>
+						</div>
+					</div>
+				</div>
+				<div class="unit size1of3">
+					<div class="paddedOut10 removeRightPad">
+						<div class="metadataSF">
+							<div class="containerHeader">Selected Training Courses</div>
+							<div class="clearingBoxSF"></div>
+							<div class="chatterexpandoSF">
+								<div id="savedDD"></div>
+								<div class="clearingBoxSF"></div>
+							</div>
+							<div class="clearingBoxSF"></div>
+						</div>
+					</div>
+				</div>
+			</div>
+		</div>
+	</div>
+
+
+</apex:page>

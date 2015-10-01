@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<ReportFolder xmlns="http://soap.sforce.com/2006/04/metadata">
+    <accessType>Shared</accessType>
+    <name>Jigsaw</name>
+    <publicFolderAccess>ReadWrite</publicFolderAccess>
+    <sharedTo>
+        <group>SFDCSystemAdmins</group>
+        <roleAndSubordinatesInternal>CollaborateRenewalRepNAWestProEd</roleAndSubordinatesInternal>
+        <roleAndSubordinatesInternal>CollaborateSalesRepNAProEd</roleAndSubordinatesInternal>
+        <roleAndSubordinatesInternal>Global_Field_Sales_Ops_User</roleAndSubordinatesInternal>
+        <roleAndSubordinatesInternal>LearnProEdPresident</roleAndSubordinatesInternal>
+        <roleAndSubordinatesInternal>MobileGreenfieldRSMEast</roleAndSubordinatesInternal>
+    </sharedTo>
+</ReportFolder>

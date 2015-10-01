@@ -1,0 +1,194 @@
+<apex:page standardController="Case_Note__c" extensions="CaseCommentController" tabStyle="Case"  title="New Case Comment" label="New Case Comment" name="New Case Comment" >  
+        <apex:sectionHeader title="New Case Comment" subtitle="Case #{!CaseNumber} - {!Subject}" help="{!$Page.CaseCommentHelp}"/>
+        <apex:includeScript value="{!URLFOR($Resource.BtBbStyles,'includes/theme2011/js/jquery-1.4.4.min.js')}"/>
+         <!--<apex:includeScript value="{!URLFOR($Resource.ckeditor , 'ckeditor/ckeditor.js')}"/>-->
+         <apex:includeScript value="{!URLFOR($Resource.ckeditorNew , 'ckeditor/ckeditor.js')}"/>
+        <apex:form id="theform">
+        
+         <script>
+           function docheckrefreshlogic(){
+           myactionfun();
+           }
+           function loadEditor() {
+           var id='{!$Component.theform.thepageBlock:commentDetails:CommentblockBody:notes}';
+          /*  var instance = CKEDITOR.instances[id];
+            if (instance) {
+                CKEDITOR.remove(instance);
+            }*/
+            
+            if($('.canneddetail').val() != null)
+            {
+                CKEDITOR.instances[id].setData($('.canneddetail').val());
+            }
+        }
+        </script>
+        
+        
+        
+        <script type="text/javascript">
+                document.title = "New Case Comment";
+               
+                function refrshpage(){
+                refreshatt();
+                }
+                
+      $(document).ready(function() {
+        CKEDITOR.replaceAll({toolbar : 'MyToolbar'});
+                CKEDITOR.config.enterMode = CKEDITOR.ENTER_BR;
+                CKEDITOR.config.shiftEnterMode = CKEDITOR.ENTER_P;
+                CKEDITOR.config.pasteFromWordPromptCleanup = true;
+
+               $("#commentbutton").show();
+      });          
+      </script>
+                <apex:pageBlock tabStyle="Case" title="New Case Comment" id="thepageBlock">      
+                <apex:pageBlockButtons >
+                  <span id="commentbutton"><apex:commandButton id="commentbutton" action="{!doSave}" value="Send/Save" /></span>      
+                        <apex:commandButton action="{!Cancel}" value="Cancel"/>
+                        
+
+                        <apex:pageMessages />
+                        <div id="errorBlock">
+                    <apex:outputPanel id="errorPanel">
+                        <apex:pageMessage strength="2" title="{!errorTitle}" summary="{!errorMessage}" severity="{!errorSeverity}" rendered="{!errorShow}" />
+                        </apex:outputPanel>
+                </div>
+                        <div id="errorBlock2">
+                        <apex:outputPanel id="errorPanel2">
+                        <apex:pageMessage strength="2" title="{!errorTitle2}" severity="{!errorSeverity}" rendered="{!errorShow2}" />
+                        </apex:outputPanel>
+                </div>
+                </apex:pageBlockButtons>
+                <apex:actionRegion >
+                        <apex:outputPanel id="WorkflowOptions">
+                                <apex:pageBlockSection columns="1">
+                                   
+                                   <apex:pageBlockSectionItem id="ChooseWorkflow">
+                                                <apex:outputLabel value="Choose a Workflow"/>
+                                                <apex:pageBlockSectionItem id="ChooseWorkflow">
+                                                <apex:outputpanel layout="block" > 
+                                                        <apex:selectList multiselect="false" style="width:225px;" size="1" value="{!Workflow}" >
+                                                                <apex:selectOptions value="{!Workflows}" />
+                                                                <apex:actionSupport event="onchange" action="{!evaluateWorkflow}" rerender="WorkflowOptions"  status="workflowchange"/>
+                                                                        </apex:selectList>
+                                                        <apex:actionStatus startText="" onstart="$('.btn').removeClass('btn').addClass('btnDisabled');  $('input[type=submit]').attr('disabled', 'disabled');" onstop="$('.btnDisabled').removeClass('btnDisabled').addClass('btn'); $('input[type=submit]').removeAttr('disabled', 'disabled');" id="workflowchange">
+                                        <apex:facet name="start" ><apex:image url="{!URLFOR($Resource.btbbLoader)}"/></apex:facet>
+                                        </apex:actionStatus>
+                                </apex:outputpanel> 
+                                        </apex:pageBlockSectionItem>
+                                </apex:pageBlockSectionItem>
+                                   
+                                     <apex:pageBlockSectionItem rendered="{!AND(hasCannedResponses,OR(Workflow == 'Update Client',Workflow == 'Need More Info',Workflow == 'Suggest Solution'))}">  
+                                        <apex:outputText value="Canned Response" />
+                                        <apex:selectList value="{!selectedResponse}" size="1" multiselect="false" onchange="docheckrefreshlogic();">
+                                            <!-- <apex:actionSupport event="onchange" action="{!displayCannedResponse}" /> -->
+                                            <apex:actionFunction name="myactionfun" action="{!actionFunMethod}"  rerender="mbdy" oncomplete="loadEditor();" />
+                                            <apex:selectOption itemValue="" itemLabel="--None--" />
+                                            <apex:selectOptions value="{!cannedResponseList}" />
+                                        </apex:selectList>
+                                    </apex:pageBlockSectionItem> 
+                                    
+                                    
+                                        
+                                        <apex:pageBlockSectionItem rendered="{!SolutionWorkflow && Workflow != 'Closed - Pending Target (non-Learn)'}" id="ClosureReason" >
+                                        <apex:outputLabel value="Closure Reason**" />
+                                              <!--   <apex:selectList multiselect="false" style="width:225px;" size="1" value="{!ClosureReason}" >
+                                                <apex:selectOptions value="{!ClosureReasons}" /> 
+                                                </apex:selectList> --> 
+                                                <apex:inputfield value="{!tempcase.Reason}" style="width:225px;"/>
+                                        </apex:pageBlockSectionItem>
+                                        <apex:pageBlockSectionItem id="ArticleList" helpText="You can choose to reference a article in your message.  The article must be attached to the case in order to appear in this list.">
+                                        <apex:outputLabel value="Select Article to Attach"/>
+                                        <apex:selectList multiselect="false" style="width:300px;" size="1" value="{!SelectedArticleId}" >
+                                        <apex:selectOptions value="{!Articles}" />
+                                        </apex:selectList>
+                                        </apex:pageBlockSectionItem>
+                                        <apex:pageBlockSectionItem id="ResponseOptions" rendered="{!UserOptionResponseRequired}" helpText="If a follow up with the customer is required, select 'Response Required', otherwise select 'No Response Required'">
+                                        <apex:outputLabel value="Require Response"/>
+                                        <apex:selectList multiselect="false" style="width:225px;" size="1" value="{!SelectedResponseOption}" >
+                                                <apex:selectOptions value="{!ResponseOptions}" />
+                                        </apex:selectList>
+                                        </apex:pageBlockSectionItem>
+                                        <apex:pageBlockSectionItem rendered="{!sendEmailCustomer}" id="CustomerEmail">
+                                <apex:outputLabel value="Recipient:"/>
+                                <apex:outputText value="{!if( Not(IsBlank(EndUserEmail)), ContactName&'('&ContactEmail&') ' &'; '&EndUserName&'('&EndUserEmail&')' , ContactName&' ('&ContactEmail&')' ) }" label="To:" style="font-weight:bold;" />
+                                        </apex:pageBlockSectionItem>
+                                        <apex:pageBlockSectionItem rendered="{!sendEmailInternal}" id="InternalEmail">
+                                <apex:outputLabel value="Recipient:"/>
+                                <apex:outputText value="{!OwnerName} ({!OwnerEmail})" label="To:" style="font-weight:bold;" />
+                                        </apex:pageBlockSectionItem>
+                                        <apex:pageBlockSectionItem helpText="Case Team Members with Role of Cc'd on Email" rendered="{!sendEmail}" id="CcdOnEmail">
+                                <apex:outputLabel value="Case Team Cc:"/>
+                                <apex:outputText value="{!ccdonemail}" />
+                                        </apex:pageBlockSectionItem>
+                                        <apex:pageBlockSectionItem helpText="Seperate Email Addresses with a ';' semi-colon." rendered="{!(sendEmail || sendInternalNote)}" id="CcRecipients">
+                                <apex:outputLabel value="Cc:"/>
+                                <apex:inputText size="80" value="{!ccRecipients}" />
+                                        </apex:pageBlockSectionItem>
+                                </apex:pageBlockSection>
+                        </apex:outputPanel>
+                </apex:actionRegion>
+                <apex:pageBlockSection id="commentDetails" columns="1" >
+                        <apex:pageBlockSectionItem id="CommentblockBody">
+                        <apex:outputLabel value="Comment Body" id="CommentBodyLabel"/>
+                            <apex:outputpanel id="commentBody">
+                                maximum 32600 characters allowed.<br />
+                                <apex:inputTextarea id="notes"  value="{!CommentBody}"  richText="false" rows="15" cols="140" label="CommentBodyLabel"   />
+                            </apex:outputpanel>
+                        </apex:pageBlockSectionItem>
+                </apex:pageBlockSection>
+                <apex:outputPanel id="mbdy" style="display:none"> 
+        
+                    
+                        maximum 32600 characters allowed.
+                        <apex:inputTextarea id="body" styleClass="canneddetail" value="{!Mailbodydetails}" richText="false" rows="15" cols="140" label="Mailbodydetails"   />
+                  
+                
+       </apex:outputPanel> 
+
+        </apex:pageBlock>
+        </apex:form>
+    <apex:form id="attachmentform" >
+            <script type="text/javascript">
+                function View1(strId,url){       
+                    var loc = String(parent.location.href); 
+                    if (loc.indexOf('support/servicedesk') != -1) {
+                        srcUp(url+"/"+strId+"?isdtp=vw");
+                    } 
+                    else{  
+                        window.open("../"  + strId, "_blank");
+                      }
+                   }
+             </script>     
+        <apex:actionFunction name="refreshatt" reRender="attachmentform,attachsec" status="refreshing"/>
+        <apex:actionStatus startText="Refreshing...." stopText="" id="refreshing"></apex:actionStatus>
+        <apex:pageBlock title="Add Attachment(s)" id="Attachments">
+                <apex:pageBlockButtons location="top">
+                <apex:commandButton value="Add Attachment" onclick="window.open('{!$Page.WFAttachments}?cid={!CaseID}','Add_Attachment','resizable=yes,status=no,menubar=no,location=no,width=700,height=300,top=277,left=162,scrollbars=no'); return false"/> 
+                        <!--  <apex:commandButton value="Refresh" reRender="Attachments"/>  -->
+                </apex:pageBlockButtons>
+                <apex:outputpanel id="attachsec">
+                        <apex:pageBlockTable value="{!attachmentList}" var="attachment" width="400">
+                        <apex:column >
+                                <apex:outputText value="Attached!" rendered="{!attachment.caseAtt.Relate_to_SI__c }"  /> 
+                                
+                                <!-- <apex:commandLink value="Attach to SI" rendered="{!NOT(attachment.caseAtt.Relate_to_SI__c)}" oncomplete="window.refrshpage();"> TP 5020 -->
+                                <apex:commandLink value="Attach to SI" rendered="{!AND(NOT(learnSI),NOT(attachment.caseAtt.Relate_to_SI__c))}" oncomplete="window.refrshpage();">
+                                        <apex:actionSupport action="{!attachment.attachToSI}" event="onclick" rerender="attachsec" />
+                                </apex:commandLink>
+                        </apex:column>
+                        <apex:column value="{!attachment.caseAtt.Relate_to_SI__c}" rendered="{!NOT(learnSI)}" />     
+                        <apex:column headerValue="Attachment Name">
+                                <a href="#" onClick="View1('{!attachment.caseAtt.ID}','{!instanceURL}')">{!attachment.caseAtt.Name}</a>
+                        </apex:column>
+                        <apex:column headerValue="Folder">
+                                <apex:outputField value="{!attachment.caseAtt.Bucket_Name__c}"/>
+                        </apex:column>
+                        <apex:column headerValue="File Name">
+                                <apex:outputField value="{!attachment.caseAtt.File_Name__c}"/>
+                        </apex:column>
+                        </apex:pageBlockTable>
+                </apex:outputpanel>
+                </apex:pageBlock>
+    </apex:form>
+</apex:page>

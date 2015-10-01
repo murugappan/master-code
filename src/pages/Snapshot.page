@@ -1,0 +1,6 @@
+<apex:page >
+
+        <br/><br/><br/>
+     <a style="font-size:28px;font-weight:bold;color:blue;margin:100px;padding:100px;" href="https://www.dreamfactory.net/sforce/snapshot/snapshot.html">LAUNCH SNAPSHOT</a>
+
+</apex:page>

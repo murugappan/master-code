@@ -1,0 +1,159 @@
+<apex:page showHeader="true" standardController="Opportunity" recordSetVar="opp" extensions="OppQuickEditFulfillment" sidebar="false">
+<script> 
+        // to fix calendar on load
+        function setFocusOnLoad() {}
+
+        function switchMenu(obj,obj1,obj2) 
+        {
+            var el = document.getElementById(obj);                                       
+            if ( el.style.display != 'none' ) {
+            el.style.display = 'none';
+            }
+            else {
+            el.style.display = '';
+            }
+            var e2 = document.getElementById(obj1);                                       
+            if ( e2.style.display != 'none' ) {
+            e2.style.display = 'none';
+            }
+            else {
+            e2.style.display = '';
+            }
+             var e3 = document.getElementById(obj2);                                       
+            if ( e2.style.display != 'none' ) { 
+            e3.style.display = 'none';
+            }
+            else {
+            e3.style.display = '';
+            }
+
+        }
+               
+</script>
+<apex:form >
+    <apex:pageBlock >
+         <apex:panelGrid columns="4">
+             <apex:outputLabel value="View:"/>
+             <apex:selectList value="{!filterId}" size="1">
+                <apex:actionSupport event="onchange" rerender="opp_table"/>
+               <apex:selectOptions value="{!listviewoptions}"/>
+             </apex:selectList>
+
+             <apex:commandButton value="Refresh" Id="goButton" >
+                <apex:actionSupport event="onclick" rerender="opp_table"/>
+            </apex:commandButton>
+
+            <apex:commandButton value="Create View" action="{!doCreateView}" Id="viewButton" />
+
+         </apex:panelGrid>
+    </apex:pageBlock>
+<apex:pageBlock >
+<apex:pageBlockButtons >
+            
+            <apex:commandButton action="{!previous}" value="Previous" immediate="True"/>
+            <apex:commandButton action="{!next}" value="Next" immediate="True"/>
+
+            <apex:commandButton value="Save" action="{!quicksave}"/>
+            <apex:commandButton value="Reload"  action="{!doCancel}" onClick="self.reload();"/>
+            <apex:commandButton value="Exit"  action="{!doHome}" /> 
+            
+        </apex:pageBlockButtons>
+        <apex:pageMessages />
+         <apex:pageblocktable value="{!opp}"  var="o" id="opp_table" width="1000px" >
+        // Coulmn 1 
+         <apex:column width="140px"  headervalue="Owner" value="{!o.Owner__r.Name}" style="width: 140px;"/>  
+        
+        //Column 2
+             <apex:column width="220px" headervalue="Account" >
+                <div style="width: 220px;"><a href="/{!o.Account.Id}" target="acctWin">{!o.Account.Name}</a></div>
+            </apex:column>
+       //Column 3          
+       
+            <apex:column headervalue="Opportunity Name" style="width: 220px;">
+                <div style="float: left;" >
+                    <apex:outputpanel id="plusimage">
+                        <apex:image url="{!$Resource.Plus_Image}" onclick="switchMenu('{!$Component.inlinetablesec}','{!$Component.minusimage}','{!$Component.plusimage}')" title="Expand - Products"/> 
+                    </apex:outputpanel>
+                    <apex:outputpanel id="minusimage" style="display:none;">
+                        <apex:image url="{!$Resource.Minus_Image}" onclick="switchMenu('{!$Component.inlinetablesec}','{!$Component.plusimage}','{!$Component.minusimage}')" title="Collapse - Products"/>
+                    </apex:outputpanel>
+                </div>
+                
+                <div style="float: left; width: 220px;">
+                    <a href="/{!o.Id}" target="{!o.Id}" >{!o.Name}</a> 
+                </div> 
+                
+                <!--  begin_popup   -->
+                
+                
+                <div style="position: absolute; margin-top: 20px; margin-left: 15px; z-index: 1000; " >
+                    <apex:outputpanel id="inlinetablesec" style="display:none;"  >                  
+                        <apex:variable value="{!0}" var="rowNum"/>
+                        <apex:repeat var="count" value="{!o.OpportunityLineItems}">
+                            <apex:variable var="rowNum" value="{!rowNum+1}"/>
+                        </apex:repeat>
+
+                        <apex:outputText rendered="{!rowNum=0}">  No Lines  </apex:outputText>
+
+                        <apex:pageblocktable value="{!o.OpportunityLineItems}" var="line" rendered="{!rowNum>0}" > 
+                                                  
+                            <apex:column headerValue="Product Name" width="220px" >
+                                   <div style="float: left; width: 20px; "><apex:image url="{!$Resource.edit_icon}" onClick="window.open('/apex/bb_lqe?id={!line.Id}', 'editWindow', 'scrollbars=false,location=0,menubar=0,status=0,toolbar=0,height=190px,width=800px')" title="Edit Line Item" /></div>
+                                   <div style="float: left; width: 200px; " ><apex:outputfield value="{!line.PricebookEntry.Name}"/></div>
+                             </apex:column>
+                             
+                             <apex:column value="{!line.Quantity}" width="60px"/>
+                             <apex:column value="{!line.ListPrice}" width="90px"/> 
+                             <apex:column value="{!line.Custom_Price__c}" width="90px"/> 
+                             <apex:column headerValue="Discount" value="{!line.Discount_Amount__c}" width="90px" /> 
+                             <apex:column value="{!line.Backout_Value__c}" width="90px"/>
+                             <apex:column headerValue="Unit Price" value="{!line.UnitPrice}" width="90px"/>  
+                         </apex:pageblocktable>
+                    </apex:outputpanel>                     
+                </div>
+    
+            </apex:column>
+             
+            //Column 4
+            <apex:column width="80px"  headervalue="Est Close Date">                     
+                <c:bb_vforce_hide_dt ><apex:inputField value="{!o.CloseDate}" style="width: 80px;"/> </c:bb_vforce_hide_dt> 
+            </apex:column>
+            // Column 5            
+            <apex:column width="80px"  value="{!o.Amount}"/>
+            <!--//Column 6
+            <apex:column width="80px"  value="{!o.Quota_Value__c}"/> -->
+            //Column 7     
+            <apex:column width="80px" headerValue="Stage">
+                <apex:inputField value="{!o.StageName}"  style="width: 80px;"/>
+            </apex:column>   
+            
+            <!-- // Column 8
+             <apex:column width="80px" headerValue="Forecast Category">
+                <apex:inputField value="{!o.ForecastCategoryName}"  style="width: 100px;"/>
+            </apex:column>
+           //Column 9
+           <apex:column width="80px" headerValue="Forecast Risk">
+                <apex:inputField value="{!o.Forecast_Risk__c}"  style="width: 100px;"/>
+            </apex:column>      -->                 
+            //Column 10      
+      
+           <apex:column width="80px" headerValue="Next Step">
+                <apex:inputfield value="{!o.NextStep}"  style="width: 120px;height:30px"/>
+           </apex:column>  
+           <!--
+          //Column 11  
+              <apex:column width="80px" headerValue="In VP Forecast">
+                        <apex:inputfield value="{!o.In_VP_Forecast__c}"  style="width: 50px;"/>
+               </apex:column>  -->
+          //Column 12 
+         
+              <apex:column width="80px" headerValue="Comments for Fulfillment"> 
+                  <apex:inputField value="{!o.Comments_for_Fulfillment__c}" style="width: 120px;height:30px"/>
+              </apex:column>    
+                  
+        </apex:pageblocktable>
+
+</apex:pageBlock>
+</apex:form>
+    
+</apex:page>

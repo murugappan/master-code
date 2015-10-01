@@ -1,0 +1,149 @@
+<apex:page controller="CaseRelevantArticlesController" cache="false" id="CaseReleventArticle" standardStylesheets="false" showHeader="false" sidebar="false" contentType="text/html" action="{!Redirect}">
+    
+    <apex:composition template="btbb_template">
+    
+        <apex:define name="js">
+                <style type="text/css" title="currentStyle"> 
+                    @import "{!URLFOR($Resource.DataTables, 'media/css/demo_page.css')}";
+                    @import "{!URLFOR($Resource.DataTables, 'media/css/casesearch.css')}";
+                    @import "{!URLFOR($Resource.DataTables, 'media/css/ColumnFilterWidgets.css')}";
+                    @import "{!URLFOR($Resource.BTBB_CaseView, 'media/css/btbb_caseactivity.css')}";
+                    textarea {background-color:#FFFFFF;}
+                    ol {margin-left: 40px;line-height: 10px;}
+                   ul {margin-left: 40px;line-height: 10px;}
+                  div.activityDetails {padding: 0px;margin: 15px;}
+                   div.innerDetails {padding:10px;margin:0px;}
+                    #addCommentForm { display: none; clear: both; border: 2px solid #999; padding: 10px; background-color: #F9F9F9; }
+                    #commentButtonContainer { position: relative; top: -20px; }
+                    tr.selected {background-color: red !important;}
+                    .dataTables_filter input[type="text"] { font-size:11px;font-weight:bold;color:#767676;padding-left:7px; }
+                    .fullContent { margin-top: 10px; }
+                    .btbbCommonButton {cursor:pointer;*cursor:pointer;}
+                    .nohover (cursor:pointer;)
+                    
+                </style> 
+               <link rel="stylesheet" href="{!URLFOR($Resource.ModalBox, 'js/jquery.fancybox-1.3.4.css')}" media="screen" /> 
+                <script type="text/javascript" charset="utf-8" src="{!URLFOR($Resource.ModalBox, 'js/jquery.mousewheel-3.0.4.pack.js')}" />
+                <script type="text/javascript" charset="utf-8" src="{!URLFOR($Resource.ModalBox, 'js/jquery.fancybox-1.3.4.pack.js')}"/>
+           <!--     <script type="text/javascript" charset="utf-8" src="{!URLFOR($Resource.DataTables, 'media/js/jquery.js')}"></script> --> 
+               
+                <script type="text/javascript" charset="utf-8" src="{!URLFOR($Resource.DataTables, 'media/js/jquery.dataTables.js')}"></script> 
+                <script type="text/javascript" charset="utf-8" src="{!URLFOR($Resource.DataTables, 'media/js/ColumnFilterWidgets.js')}"></script>
+                 
+                <script type="text/javascript" charset="utf-8"> 
+                <!-- <apex:includeScript value="{!URLFOR($Resource.ckeditor , 'ckeditor/ckeditor.js')}"/> -->
+     <apex:includeScript value="{!URLFOR($Resource.ckeditorNew , 'ckeditor/ckeditor.js')}"/>
+                function refrshpage(){refreshatt();}
+        function delAttach(x){ deleteatt(x);}
+                    $(document).ready( function () {
+                        var oTable = $('#resultsTable').dataTable( {
+                            "bSort": false,
+                            "sPaginationType": "full_numbers",
+                             "aoColumnDefs": 
+                                [
+                                { "bSortable": false, "aTargets": [ 0,1,2 ] },
+                                { "sWidth": "70px", "aTargets": [  2 ] },
+                                { "sWidth": "200px", "aTargets": [ 1 ] }
+                                ]
+                        } );                        
+                
+                 $("#addCommentButton").click(function() {
+                 $("#addCommentForm").slideDown(340);
+                      });
+                      
+         $("#cancelComment").click(function() {
+        $("#addCommentForm").slideUp(340);
+    });
+               }  );
+                </script>
+                </apex:define>
+        <apex:define name="topbar"><c:btbb_globalsearch /></apex:define>
+        <apex:define name="nav"><c:btbb_auth_nav /></apex:define>
+        <apex:define name="content">
+          <apex:form >
+          <!-- <apex:actionfunction name="comment_submit" action="{!addNote}" immediate="true" ></apex:actionfunction> -->
+          <apex:actionfunction name="comment_submit" action="{!addNote}"></apex:actionfunction>
+          <span style="float: right; clear:none; font-size: 14px; margin-top: 10px;">
+          <apex:outputLink style="font-size: 14px; font-weight: bold; text-decoration: none; color: #555;line-height: 14px;" value="{!$Page.btbb_caseview}?id={!caseId}">
+          Go Back to Case #{!casenumber}&nbsp;&rarr;</apex:outputLink>
+          </span>           
+          <h2>Case Created:<span style="color:black">{!casenumber}</span></h2><br/>
+          Your case has been received by Blackboard  and a support representative will contact you shortly.  If you wish to add additional notes or attachments, you may do so via the Add Attachment(s) button below.
+          <br/><br/><br/><a id="addCommentButton" href="" ><input type="button" class="btbbCommonButton" style="margin: 7px 0px 0px 0px;" value="Add Attachment(s)" /></a><br/>
+            
+            <!-- add comment form -->
+                 <div id="addCommentForm" >   
+                 <apex:actionFunction name="refreshatt" reRender="attachsec"/>
+                 <apex:actionFunction action="{!deleteatt1}" name="deleteatt" reRender="attachsec">
+                     <apex:param name="attachid" value=""/>
+                 </apex:actionFunction>
+                <apex:outputText value="Add Comment" styleClass="formtitle"/><br/><br/>
+                <apex:outputText value="Details:" styleClass="formlabel"/><br/><br/>
+                <!-- <apex:inputTextarea id="Details_Input" value="{!Notes}"  richtext="true" rows="7"/><br/><br/> -->
+                <apex:inputTextarea id="Details_Input" value="{!Notes}" styleClass="ckeditor" richText="false" rows="15" cols="140"/><br/><br/>
+                <apex:outputText value="Attachments:" styleClass="formlabel"/>&nbsp;&nbsp;<apex:outputLink style="float:right;" value="#" onclick="window.open('/apex/btbb_fileupload?cid={!aCase.ID}','Add_Attachment','resizable=yes,status=no,menubar=no,location=yes,width=600,height=200,top=277,left=162,scrollbars=no'); return false;">Add Attachment(s)</apex:outputLink><hr/><br/>
+                <apex:outputpanel id="attachsec">
+                        <apex:repeat value="{!CaseNoteAttachments}" var="attachment">
+                             <apex:outputLink value="#" onclick="delAttach('{!attachment.ID}');"><apex:image value="{!URLFOR($Resource.SupportIcons, 'icons/16x16/delete.png')}" style="float:left;clear:none;"/></apex:outputLink><span style="color:#454545;font-weight:bold;">- {!attachment.File_Name__c}</span><br/><br/>
+                        </apex:repeat>
+                </apex:outputpanel>
+                <div id="commentButtonContainer">
+                <a id="commentcase"   href="" onclick="comment_submit();" style="float:right;" ><input type="button" class="btbbCommonButton" value="Submit" /></a>
+                <a id="cancelComment" href="" style="margin-right: 3px; float: right;"><input type="button" class="btbbCommonButton" value="Cancel" /></a>
+                </div>
+        </div>
+   
+          <br/>
+            <h2>Relevant Knowledge Base Articles</h2>
+            <p>We searched our Knowledge Base for you using the search term <b><i>{!searchtext}</i></b> as it was determined to be related to your support case. The results can be further refined by keyword search using the search box below.</p>
+                <!--<p>The list below contains the most relevant and up-to-date knowledgebase articles that relate to the subject and details of your support case.</p>-->
+                <div class="fullContent" style="margin-top:25px;">                                      
+                    <apex:outputPanel id="output">
+                    
+                    <table width="100%" cellpadding="0" cellspacing="0" id="resultsTable">
+                        <thead class="nohover">
+                            <!--<th>Article #</th>-->
+                            <th>Title</th>
+                            <th>Type</th>
+                            <th>Updated</th>
+                        </thead>
+                        <tbody>
+                        <apex:repeat var="k" value="{!kavWrapperList}" id="articleList">
+                        
+                        <tr>
+                            <!--<td align="center" valign="center">
+                                <apex:outputLink value="{!$Page.btbb_articleview}?id={!k.knowledgeArticleId}&cid={!caseId}">
+                                    <apex:outputText value="{!k.articleNumber}" />
+                                </apex:outputLink>
+                            </td>-->
+                            <td align="left" valign="top">
+                                <apex:outputLink value="{!$Page.btbb_articleview}?id={!k.knowledgeArticleId}&cid={!caseId}">
+                                    <apex:outputText value="{!k.name}" />
+                                </apex:outputLink>
+                            </td>
+                            <td align="left" valign="center">
+                                <apex:outputText value="{!k.articleType}"/>
+                            </td>
+                            <td align="center" valign="center" style="white-space:nowrap;">
+                                <apex:outputText value="{0,date,MMM dd, yyyy}">
+                                    <apex:param value="{!DATEVALUE(k.LastPublishedDate)}" />
+                                </apex:outputText>
+                            </td>
+                        </tr>
+                        </apex:repeat>
+                        </tbody>
+                        </table>                       
+                        </apex:outputPanel>
+                </div>
+             </apex:form> 
+             <!-- Hidden Div's for Modal Windows -->
+    
+    <!-- Add Comment/Attachment Form -->
+    
+           
+        </apex:define>
+    </apex:composition>
+    
+    
+<!-- End of Add Comment/Attachment Form -->
+</apex:page>

@@ -1,0 +1,36 @@
+<apex:page controller="btbb_deactivedisplay" standardStylesheets="false" showheader="false" sidebar="false"  >
+<style>.boxed {
+          border: 1 px solid Red ;
+          padding: 7 px;
+        }
+        </style>
+        
+
+
+<apex:composition template="btbb_template">
+<apex:define name="topbar"><c:btbb_globalsearch /></apex:define>
+<apex:define name="nav"><c:btbb_auth_nav /></apex:define>
+<apex:define name="content">
+
+<h2> My Institution Help Desk </h2>
+ 
+My Institution Help Desk is {need text} <br/><br/> 
+<div class="boxed">
+<p style="color:Red;">Your institution’s Direct Help profile has been Deactivated.</p>  
+<pstyle="color:Red;">You can visit the "Direct Help Profile" on this site at any point to re-activate it</p>
+</div><br/>
+<a href="/apex/btbb_updatedirecthelpprofile?id={!a.id}">Return to My Institution Help Desk.</a>
+
+
+<apex:form >
+<apex:pageBlock >
+           
+
+</apex:pageBlock>
+</apex:form>
+</apex:define>
+</apex:composition>
+
+
+
+</apex:page>

@@ -1,0 +1,260 @@
+<apex:page standardController="Case" extensions="E2CP.NewCommentController" action="{!loadPreferences}" sidebar="false" showHeader="false" standardStylesheets="false" >
+ <head>
+ 
+    <link rel="stylesheet" href="{!URLFOR ($Resource.jquerymobile, '/jquery.mobile-1.0b2/jquery.mobile-1.0b2.css')}" />
+    
+    <script src="{!URLFOR ($Resource.jquerymobile, '/jquery.mobile-1.0b2/jquery-1.6.2.min.js')}"></script>
+    <script src="{!URLFOR ($Resource.jquerymobile, '/jquery.mobile-1.0b2/jquery.mobile-1.0b2.js')}"></script> 
+
+    <meta content="width=320, user-scalable=no" name="viewport" />
+    <meta name="format-detection" content="telephone=no" />  
+
+ </head>
+
+
+<script language="javascript">
+    var $j = jQuery.noConflict();
+    
+    function publicclicked(input) { 
+        var allowcontact=!{!CannotEmailCustomer};
+        if(input == null || input.checked){ 
+            if (allowcontact==1){
+                $j('#cntcts').find('input').attr("checked", {!EMAIL_NOTIFICATION});
+                $j('#cntcts').find('input').attr('disabled', false);
+                $j('#cntcts').find('input').checkboxradio("refresh");
+            }
+            if ({!ENABLE_ADDITIONAL_EMAILS}==true) $j('#addTo').find('input').textinput('enable');
+            if ({!ENABLE_ADDITIONAL_CCS}==true) $j('#addCC').find('input').textinput('enable');
+            if ({!ENABLE_ADDITIONAL_BCCS}==true) $j('#addBCC').find('input').textinput('enable');
+            
+            
+            //leads
+            $j('#lds').find('input').attr("checked", false);
+            $j('#lds').find('input').attr('disabled', false);
+            $j('#lds').find('input').checkboxradio("refresh");
+            
+            //contact roles
+            $j('#crls').find('input').attr("checked", {!EMAIL_NOTIFICATION});
+            $j('#crls').find('input').attr('disabled', false);
+            $j('#crls').find('input').checkboxradio("refresh");
+            
+            //case teams new
+            $j('#tmmbrs').find('input').attr("checked", {!EMAIL_NOTIFICATION});
+            $j('#tmmbrs').find('input').attr('disabled', false);
+            $j('#tmmbrs').find('input').checkboxradio("refresh");
+            
+           
+            uncheckMbrs();
+            
+        } 
+        else { 
+            
+            if (allowcontact==1){
+                $j('#cntcts').find('input').removeAttr("checked");
+                $j('#cntcts').find('input').attr('disabled', true);
+                $j('#cntcts').find('input').checkboxradio("refresh");
+            }
+            if ({!ENABLE_ADDITIONAL_EMAILS}==true){
+                $j('#addTo').find('input').textinput('disable');
+            }
+            if ({!ENABLE_ADDITIONAL_CCS}==true){
+                $j('#addCC').find('input').textinput('disable');
+
+            }
+            if ({!ENABLE_ADDITIONAL_BCCS}==true){
+                $j('#addBCC').find('input').textinput('disable');
+            }
+            
+            
+            //leads
+            $j('#lds').find('input').removeAttr("checked");
+            $j('#lds').find('input').attr('disabled', true);
+            $j('#lds').find('input').checkboxradio("refresh");
+            
+            //contact roles
+        
+            $j('#crls').find('input').removeAttr("checked");
+            $j('#crls').find('input').attr('disabled', true);
+            $j('#crls').find('input').checkboxradio("refresh");
+            
+            //case teams new
+            $j('#tmmbrs').find('input').removeAttr("checked");
+            $j('#tmmbrs').find('input').attr('disabled', true);
+            $j('#tmmbrs').find('input').checkboxradio("refresh");
+            
+       
+        } 
+    }     
+    
+    
+    
+    function uncheckMbrs(){
+        if ({!ENABLE_TEAM_MEMBERS}==true) {
+            var memberIds2 = "{!JSENCODE(uncheckedTeamMembers)}";
+            
+            //case teams new
+            $j('#tmmbrs').find('input').each(function(){
+                if (memberIds2.toUpperCase().indexOf($j('label[for=\'' + $j(this).attr('id') + '\']').html().toUpperCase().substr(0,15))!=-1){
+                    $j('#tmmbrs').find('input').removeAttr("checked");
+                    $j('#tmmbrs').find('input').checkboxradio("refresh");
+                }
+            });
+            
+        }
+
+    }
+    
+    function foobar(a){
+        if ($j("span[id$='errormsg']").html() == '')
+            window.location.hash='success';
+        else
+            alert($j("span[id$='errormsg']").find(".messageText").text());
+    }
+    
+    
+    $j(document).ready(function() {
+        uncheckMbrs();
+        $j('#cmmntBody').find('textarea').attr('autocorrect','on');
+        $j('#cmmntBody').find('textarea').attr('autocapitalize','on');
+        $j('#cmmntBody').show();
+    }); 
+ </script>
+
+
+<body class="ui-mobile-viewport"> 
+<!--
+<textarea cols="40" rows="8" name="textarea" id="textarea" autocorrect="on" autocapitalize="on" class="ui-input-text ui-body-null ui-corner-all ui-shadow-inset ui-body-c"></textarea>
+-->
+
+
+<div data-role="page" data-theme="b">
+
+    <div data-role="header">
+        <h1>Case #{!case.casenumber}</h1>
+    </div>
+
+    <div data-role="content"> 
+        <apex:form id="addCommentF" rendered="{!NOT(CONSTRUCTOR_ERROR)}"  >
+            <apex:pageMessages id="errormsg"></apex:pageMessages>  
+        
+            <div data-role="collapsible" data-collapsed="true">
+                <h3>Summary</h3>
+                <h4>Subject</h4>
+                <p><apex:outputField value="{!case.subject}"/></p>
+                <h4>Description</h4>
+                <p><apex:outputField value="{!case.description}"/></p>
+            </div>
+                <div data-role="fieldcontain">
+                    <h3>Add Comment</h3>
+                    <apex:outputLabel value="Public Comment" for="IsPublic_Checkbox"/>
+                    <span id="fooo"><apex:inputCheckbox value="{!IsPublic}" id="IsPublic_Checkbox" selected="true" onChange="publicclicked(this);" /></span>
+                </div>
+                <div data-role="fieldcontain">
+                    <apex:outputLabel value="Comment" for="Comment_TextArea"/>
+                    <span id="cmmntBody"><apex:inputTextarea value="{!commentBody}" id="Comment_TextArea" cols="80" rows="8" required="true" /></span>
+                </div>
+                
+                <div data-role="fieldcontain">
+                    <h3>Email</h3>
+                    <span id="cntcts">
+                        <apex:outputLabel value="{!Case.Contact.Name} (Email Contact)" for="EmailCustomer_Checkbox" rendered="{!NOT(CannotEmailCustomer)}"/>
+                        <apex:outputLabel value="Invalid Contact" for="EmailCustomer_Checkbox" rendered="{!CannotEmailCustomer}"/>
+                        
+                        <apex:inputCheckbox value="{!EmailCustomer}"  id="EmailCustomer_Checkbox" onClick="historyclicked();" disabled="{!CannotEmailCustomer}"/>
+                    </span>
+                    
+                    <span id="lds">
+                        <apex:selectCheckboxes layout="pageDirection" value="{!SelectedLeads}" title="Leads" id="leads_Checkbox" style="margin-left:-3px;">
+                            <apex:selectOptions value="{!leadsItems}"/>
+                        </apex:selectCheckboxes>
+                    </span>
+                    
+                    <span id="crls">
+                        <apex:selectCheckboxes layout="pageDirection" value="{!SelectedContactRoles}" title="Contact Roles" id="contactRoles_Checkbox" style="margin-left:-3px;">
+                            <apex:selectOptions value="{!contactRolesItems}"/>
+                        </apex:selectCheckboxes>
+                    </span>
+                    
+                    <apex:variable value="{!0}" var="c" />
+                    <span id="tmmbrs">
+                        <apex:repeat var="r" value="{!ctms}">
+                            <apex:outputLabel value="{!r.name}" for="foobar01"/>
+                            <apex:inputCheckbox value="{!r.selected}" id="foobar01" disabled="{!r.rid == null}" />
+                          
+                            <apex:outputText rendered="{!r.rid == ''}" value="Invalid Email Address" style="color:red" />
+                            <apex:variable value="{!c+1}" var="c" />
+                        </apex:repeat>
+                    </span>
+                
+                    <div data-role="collapsible" data-collapsed="true">
+                        <h3>Additional Emails</h3>
+                        <span id="addTo">
+                            <apex:outputLabel value="Additional To" for="additionalEmails_TextBox" rendered="{!NOT(PrivateOnly)}"/>
+                            <apex:inputText value="{!additionalEmails}" id="additionalEmails_TextBox" size="64" rendered="{!NOT(PrivateOnly)}"/>
+                        </span>
+                        <span id="addCC">
+                            <apex:outputLabel value="Additional CC" for="additionalCCs_TextBox" rendered="{!ENABLE_ADDITIONAL_CCS}" />
+                            <apex:inputText value="{!additionalCCs}" id="additionalCCs_TextBox" size="64" rendered="{!ENABLE_ADDITIONAL_CCS}" />
+                        </span>
+                        <span id="addBCC">
+                            <apex:outputLabel value="Additional BCC" for="additionalBCCs_TextBox" rendered="{!ENABLE_ADDITIONAL_BCCS}"/>
+                            <apex:inputText value="{!additionalBCCs}" id="additionalBCCs_TextBox" size="64" rendered="{!ENABLE_ADDITIONAL_BCCS}"/>
+                        </span>
+                    </div> 
+                </div>
+                <apex:commandButton action="{!saveMobile}" onclick="$j.mobile.pageLoading();" reRender="errormsg" oncomplete="foobar(this);$j.mobile.pageLoading(true);/*window.location.hash='success';*/" value="Save/Send"/>
+          
+           <hr/>
+           
+            
+            <div data-role="collapsible" data-collapsed="true">
+                <h3>Comments</h3>
+                <apex:repeat value="{!CaseComments}" var="cmt" >
+                    <p>
+                        <apex:outputField value="{!cmt.CreatedDate}"/> <br/>
+                        <apex:outputField value="{!cmt.CreatedById}"/> <br/>
+                        <apex:outputField value="{!cmt.CommentBody}"/>
+                        <hr/>
+                    </p>
+                </apex:repeat>
+            </div> 
+      </apex:form>
+    </div>
+</div>
+
+<div data-role="page" id="success">
+    <apex:form >
+    <div data-role="header">
+        <h1>Case #{!case.casenumber}</h1>
+    </div>
+
+    <div data-role="content" style="height:400px;">  
+       <p>Save successful.</p> 
+       <p>Click &quot;Done&quot; to go back to Salesforce Mobile.</p>
+    </div> 
+    </apex:form>
+
+</div>
+
+<script>
+if (!{!CannotEmailCustomer}){
+    $j('#cntcts').find('input').attr("checked", {!EMAIL_NOTIFICATION});
+    $j('#cntcts').find('input').attr('disabled', false);
+}
+
+//leads
+$j('#lds').find('input').attr("checked", false);
+$j('#lds').find('input').attr('disabled', false);
+
+//contact roles
+$j('#crls').find('input').attr("checked", {!EMAIL_NOTIFICATION});
+$j('#crls').find('input').attr('disabled', false);
+
+//case teams new
+$j('#tmmbrs').find('input').attr("checked", {!EMAIL_NOTIFICATION});
+$j('#tmmbrs').find('input').attr('disabled', false);
+
+</script>
+
+</body>
+</apex:page>

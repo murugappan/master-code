@@ -1,0 +1,7 @@
+<apex:component >
+    <div class="searchForm">
+        <label style="font-weight: bold;">Search Insite: </label>
+        <input id="criteria" onkeypress="Savo.Salesforce.onSearchEnter(event,document.getElementById('criteria').value);" type="text" size="50" maxlength="50" tabindex="32767" />
+        <input class="btn" size="1" onclick="window.open(Savo.Salesforce.search(document.getElementById('criteria').value));" value="GO" />
+    </div>
+</apex:component>

@@ -1,0 +1,301 @@
+<apex:page controller="enduserdownloadController" cache="false" id="CaseSearch" standardStylesheets="false" showHeader="false" sidebar="false" contentType="text/html">
+                
+    <apex:composition template="btbb_template">
+        
+        <apex:define name="js">
+                <style type="text/css" title="currentStyle"> 
+                    @import "{!URLFOR($Resource.DataTables, 'media/css/demo_page.css')}";
+                    @import "{!URLFOR($Resource.DataTables, 'media/css/casesearch.css')}";
+                    @import "{!URLFOR($Resource.DataTables, 'media/css/ColReorder.css')}";
+                    @import "{!URLFOR($Resource.DataTables, 'media/css/ColVis.css')}";
+                    @import "{!URLFOR($Resource.DataTables, 'media/css/TableTools.css')}";
+                    @import "{!URLFOR($Resource.DataTables, 'media/css/ColumnFilterWidgets.css')}"; 
+                    tr.selected {background-color: red !important;}
+                    .dataTables_filter input[type="text"] { font-size:11px;font-weight:bold;color:#767676;padding-left:7px; }
+                    .fullContent { margin-top: 10px; }
+                </style> 
+                
+                <script type="text/javascript" charset="utf-8" src="{!URLFOR($Resource.DataTables, 'media/js/jquery-1.10.2.js')}"></script> 
+                <script type="text/javascript" charset="utf-8" src="{!URLFOR($Resource.DataTables, 'media/js/jquery.dataTables.js')}"></script> 
+                <script type="text/javascript" charset="utf-8" src="{!URLFOR($Resource.DataTables, 'media/js/ColReorder.js')}"></script>
+                <script type="text/javascript" charset="utf-8" src="{!URLFOR($Resource.DataTables, 'media/js/ColVis.js')}"></script> 
+                <script type="text/javascript" charset="utf-8" src="{!URLFOR($Resource.DataTables, 'media/js/ZeroClipboard.js')}"></script> 
+                <script type="text/javascript" charset="utf-8" src="{!URLFOR($Resource.DataTables, 'media/js/TableTools.js')}"></script>
+                <script type="text/javascript" charset="utf-8" src="{!URLFOR($Resource.DataTables, 'media/js/ColumnFilterWidgets.js')}"></script>
+                <script type="text/javascript" charset="utf-8" src="{!URLFOR($Resource.DataTables, 'media/js/jquery.cookie.js')}"></script>
+                <script type="text/javascript" charset="utf-8"> 
+                
+                    $(document).ready( function () {
+                        var tableContent = $('#datatableid').html();
+                        if({!resetCookie})
+                        {
+                         $.removeCookie('SpryMedia_DataTables_casesearch_btbb_casesearch');
+                        } 
+                        $('#datatableid').html('');
+                        $('#tools').html('<table cellpadding="0" cellspacing="0" border="0" class="display" id="casesearch" >'+tableContent+'</table>');
+                        var oTable = $('#casesearch').dataTable({
+                            "bStateSave": true,
+                            "sDom": 'TW<"clear">RC<"clear">lfrtip',
+                            "aoColumnDefs": 
+                                  [
+                                { "aTargets": [0], "sWidth": "70px", "bVisible": true },
+                                { "aTargets": [1], "sWidth": "80px", "bVisible": false }, 
+                                { "aTargets": [2], "sWidth": "300px", "bVisible": true }, 
+                                { "aTargets": [3], "sWidth": "80px", "bVisible": true }, 
+                                { "aTargets": [4], "sWidth": "80px", "bVisible": true }, 
+                                { "aTargets": [5], "sWidth": "80px", "bVisible": true }, 
+                                { "aTargets": [6], "sWidth": "50px", "bVisible": true }, 
+                                { "iDataSort": 12, "aTargets": [7], "sWidth": "65px", "bVisible": true }, 
+                                { "iDataSort": 13, "aTargets": [8], "sWidth": "65px", "bVisible": false }, 
+                                { "iDataSort": 14, "aTargets": [9], "sWidth": "65px", "bVisible": false }, 
+                                { "aTargets": [10], "sWidth": "80px", "bVisible": true },
+                                { "aTargets": [11], "sWidth": "65px", "bVisible": false},
+                                { "aTargets": [12], "sWidth": "10px", "bVisible": false },
+                                { "aTargets": [15], "sWidth": "100px", "bVisible": false},
+                                { "aTargets": [16], "sWidth": "500px", "bVisible": false},
+                                { "aTargets": [17], "sWidth": "10px", "bVisible": false},
+                                { "aTargets": [18], "sWidth": "10px", "bVisible": true}
+                               
+                                ],
+                            "oColumnFilterWidgets": 
+                                    {
+                                        "sSeparator": "#",
+                                        "aiExclude": [ 0,1,2,3,5,6,7,8,9,10,11,12,13,14,15,16,17]
+                                    },
+                            "oColVis": 
+                                    {
+                                        "aiExclude": [ 11,12,13,14,15,16,17,18]
+                                    },
+
+                            "oLanguage": {
+                                            "sSearch": "Keyword:"
+                                          },
+                            "sPaginationType": "full_numbers",
+                           "aaSorting": [[ 8 , "desc" ]],
+                            "oTableTools": {
+                                "sSwfPath": "{!URLFOR($Resource.DataTables, 'media/swf/copy_cvs_xls_pdf.swf')}",
+                                "aButtons": [
+                                                {
+                                                    "sExtends": "xls",
+                                                    "sToolTip": "Exports the results with the currently visible columns into an excel spreadsheet.",
+                                                    "sFileName": "{!MyFirstName}{!MyLastName}_BbCaseReport.xls",
+                                                    "sTitle": "{!MyName} - Bb Case Report",   
+                                                    "mColumns": [0,3,4,5,6,7,13,14,11,15,16,18],
+                                                     "showAll": true,
+                                                 "bFooter": false 
+                                                },
+                                                {
+                                                    "sExtends": "pdf",
+                                                    "bAutoWidth": true,
+                                                     
+                                                    "sToolTip": "Exports the results with the currently visible columns into a pdf document.",
+                                                    "sPdfOrientation": "landscape",
+                                                    "sPdfMessage": "Created: {!Now()} by {!MyFirstName} {!MyLastName}",
+                                                    "sFileName": "{!MyFirstName}{!MyLastName}_BbCaseReport.pdf",
+                                                    "sTitle": "{!MyName} - Bb Case Report",
+                                                   "mColumns": [0,3,4,5,6,7,13,14,11,15,16,18],
+                                                   "showAll": true
+                                                }
+                                            ]
+                            }  ,
+                            "bAutoWidth":false                                                      
+                        } );
+                        if({!resetCookie})
+                        {
+                            oTable.fnSetColumnVis( 0, true );
+                            oTable.fnSetColumnVis( 1, false );
+                            oTable.fnSetColumnVis( 3, false );
+                            oTable.fnSetColumnVis( 8, true );
+                            oTable.fnSetColumnVis( 9, false );
+                            oTable.fnSetColumnVis( 10, false );
+                            oTable.fnSetColumnVis( 11, false );
+                            oTable.fnSetColumnVis( 12, false);
+                            oTable.fnSetColumnVis( 13, false );
+                            oTable.fnSetColumnVis( 14, false );
+                            oTable.fnSetColumnVis( 15, false );
+                            oTable.fnSetColumnVis( 16, false );
+                            oTable.fnSetColumnVis( 17, false );
+                            oTable.fnSetColumnVis( 18, false );
+
+                         }   
+                         oTable.fnResetAndSetFilters();
+                        var pdfcontent=$("div.DTTT_container").detach();
+                        $('#printpdf').append(pdfcontent);
+                        $("div.dataTables_wrapper").prepend($("div.resetbtn").detach());
+                        $(".resetbtn").show();
+                        $("#column-filter-widget1").replaceWith($("#column-filter-widget20").detach());
+                        if({!resetCookie})
+                         {
+                            $("#filter_20").val("All Open Cases");
+                            $("#filter_20").trigger('change');
+                         }
+                    });
+                     
+                </script>
+                </apex:define>
+        <apex:define name="nav"><c:btbb_auth_nav /></apex:define>
+        <apex:define name="topbar"><c:btbb_globalsearch /></apex:define>
+        
+        <apex:define name="content">
+        
+        <style>
+        .ColVis_Button {background: url({!URLFOR($Resource.BtBbStyles,'includes/theme2011/img/global/gray-btn-sm.png')}) no-repeat top left;border: 0px;height: 
+
+26px;width: 160px;font-size: 11px;padding: 0 0 1px 25px;}
+        .ColVis_Button:hover { color: #000; background-position: right bottom; }
+        div.ColVis_collection .ColVis_Button { background: none; }
+        .dataTables_filter {width:50%;float:right;text-align:right;padding:5px 0 10px 0;font-size:12px;}
+        </style>
+        
+        
+          <apex:form >  
+             <h2>Support - End User Cases</h2>   
+               <p>Search cases submitted by your institution's end users using the filters below. Enter a search term to further refine your results.</p>
+     
+                    <div class="fullContent" style="float:left;clear:none;">                       
+                         <!-- <div style="{!IF(NOT(isMLAAdmin) ,'','display:none;')}"><strong>New Issue?</strong>&nbsp;<a class="gray-button" href="{!
+
+$Page.btbb_newcase}"><span>Create a case</span></a> --> <div id="printpdf" style="float:right"></div> <!-- </div> -->
+                                <div class="cleaner">&nbsp;</div>
+                     </div>
+                 <div class="resetbtn" style="position:relative;bottom:3px;float:right;margin:3px;display:none"> 
+                 <apex:commandlink action="{!resetfilter}" styleclass="gray-button" ><span style="color:#000000;">Reset Filters</span></apex:commandlink>  
+       <!--             <apex:commandbutton action="{!resetfilter}" style="float:right" value="Reset Filters"></apex:commandbutton>    -->
+                 </div>    
+                <div id="tools">       
+                                        
+              </div>  
+              <table id="datatableid" style="display:none">
+                        <thead>
+        <tr>
+                                <th>Case ID</th>
+                                <th>Old Case ID </th>
+                                <th>Subject</th>
+                                <th>Institution</th> 
+                                <th>Contact</th>
+                                <th>Email</th>
+                                <th>Product</th>
+                                <th>Status</th>
+                                <th>Last Update</th>
+                                <th>Date Opened</th>
+                                <th>Date Closed</th>
+                                <th>Description</th>
+                                <th>Case State</th>
+                                <th>Last Update</th>
+                                <th>Date Opened</th>
+                                <th>Date Closed</th>
+                                <th>Case Subject</th>
+                                <th>Case Description</th>
+                                <th>Status</th>
+                                
+                            </tr>
+
+                        </thead>
+
+                        <tfoot>
+        
+                            <tr>
+                                <th>Case ID</th>
+                                <th>Old Case ID </th>
+                                <th>Subject</th>
+                                <th>Institution</th> 
+                                <th>Contact</th>
+                                <th>Email</th>
+                                <th>Product</th>
+                                <th>Status</th>
+                                <th>Last Update</th>
+                                <th>Date Opened</th>
+                                <th>Date Closed</th>
+                                <th>Description</th>
+                                <th>Case State</th>
+                                <th>Last Update</th>
+                                <th>Date Opened</th>
+                                <th>Date Closed</th>
+                                <th>Case Subject</th>
+                                <th>Case Description</th>
+                                <th>Status</th>
+                            </tr>
+    
+                        </tfoot>
+    
+                        <tbody>
+                            
+                            <apex:repeat value="{!recentCases}" var="caselists">
+                             <apex:repeat value="{!caselists}" var="cs">
+                                <tr>
+                                    <td><apex:outputLink value="{!$Page.btbb_caseview}?id={!cs.c.Id}">{!cs.c.CaseNumber}</apex:outputLink></td>
+                                    <td>{!cs.c.Psft_Case_Id__c}</td>
+                                    <td><apex:outputLink value="{!$Page.btbb_caseview}?id={!cs.c.Id}">{!LEFT(cs.c.Subject, 75)}{!IF(LEN(cs.c.Subject)>75,"...","")}
+
+</apex:outputLink></td> 
+                                    <td>
+                                         {!cs.c.Account.Name}
+                                    </td>
+                                    
+                                    <td>{!cs.c.End_User__r.name}</td>
+                                    <td>{!cs.c.End_User__r.Email__c}</td>
+                                    <td>{!cs.c.End_User_Product__c}</td>
+                                    <td><apex:outputText value="{!cs.c.Customer_Portal_Status__c}" /></td>
+                                    <td><apex:outputText value="{0,date, MMM dd, yyyy}"><apex:param value="{!DATEVALUE
+
+(cs.c.Last_activity_update__c)}"/></apex:outputText></td>
+                                    <td><apex:outputText value="{0,date,MMM dd, yyyy}"><apex:param value="{!DATEVALUE(cs.c.CreatedDate)}" /></apex:outputText></td>
+                                    <td><apex:outputText value="{0,date,MMM dd, yyyy}"><apex:param value="{!DATEVALUE(cs.c.ClosedDate)}" /></apex:outputText></td>
+                                    <td>{!LEFT(cs.c.description, 125)}</td>
+                                    <td><apex:outputText value="{!IF(cs.c.isClosed == true && cs.c.Status != 'Solution Suggested', 'Closed', 'Open')}"/></td>
+                                    <td>
+                                        <apex:outputText value="{!cs.lastupdatedate}">
+                                           
+                                        </apex:outputText>
+                                    </td>
+                                    <td>
+                                        <apex:outputText value="{!cs.createddate}">
+                                           
+                                        </apex:outputText>
+                                    </td>
+                                    <td>
+                                        <apex:outputText value="{!cs.closeddate}">
+                                            
+                                        </apex:outputText>
+                                    </td>
+                                    
+                                    <td>
+                                        {!cs.c.Subject}
+                                    </td>
+                                    
+                                    <td>
+                                        {!cs.c.Description}
+                                    </td>
+                                    
+                                    
+                                   
+                                    <td>{!cs.c.Customer_Portal_Status__c}
+                                    <apex:outputText value="{!IF(cs.c.isClosed == true && cs.c.Status != 'Solution Suggested', '#All Closed Cases', '#All Open Cases')}"/>
+                                    </td>
+                                    
+                                </tr>
+                              </apex:repeat>   
+                            </apex:repeat>
+                        
+                        </tbody>
+
+                    </table>
+             <div class="cleaner">&nbsp;</div>
+             <div class="lgTableFooter">
+                                    <div class="lgTableLinks" style="width:100%;white-space:nowrap;">
+                                        <apex:outputLink title="Escalation Procedures" value="{!$Page.btbb_articleview}?id=50170000000WXq8&homepage=true">Escalation 
+
+Procedures</apex:outputLink>&nbsp;&nbsp;|&nbsp;&nbsp;<apex:outputLink title="Support Services Guide" value="{!$Page.btbb_articleview}?
+
+id=50170000000WXq7&homepage=true">Support Services Guide</apex:outputLink>&nbsp;&nbsp;|&nbsp;&nbsp;<apex:outputLink title="Severity Levels" value="{!
+
+$Page.btbb_articleview}?id=50170000000WXq9&homepage=true">Severity Levels</apex:outputLink>&nbsp;&nbsp;|&nbsp;&nbsp;<apex:outputLink title="Support Phone Numbers" 
+
+value="{!$Page.btbb_articleview}?id=50170000000Wc5uAAC&homepage=true">Support Phone Numbers</apex:outputLink>
+                                    </div>
+                                    </div>
+                          
+             </apex:form>   
+        </apex:define>
+    </apex:composition>
+</apex:page>

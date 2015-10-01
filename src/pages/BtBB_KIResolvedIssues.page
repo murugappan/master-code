@@ -1,0 +1,58 @@
+<apex:page standardController="Solution" extensions="articleViewController" cache="false" id="ArticleView" standardStylesheets="false" showHeader="false" sidebar="false" contentType="text/html">
+    <apex:composition template="btbb_template">
+        <apex:define name="topbar"><c:btbb_globalsearch /></apex:define>
+        
+        <apex:define name="nav"><c:btbb_auth_nav /></apex:define>
+        
+        <apex:define name="content">
+            <apex:form >
+            <apex:pageblock id="ArticleBlock">
+                <!--<div class="btbbCaseTab" title="Known Issues">-->
+                    <!--<h2>{!articleListType} Articles</h2>-->
+                    <div class="contentInputRight">
+                            <a class="gray-button" href="{!$Page.btbb_articleview}?Id={!aId}"><span>Go back to Article : {!Solution.SolutionNumber}</span></a>                            
+                    </div>
+                <div class="btbbCaseTab" title="Resolved Issues">
+
+                          <h2>Resolved Issues</h2>
+                          
+                          <table width="100%" style="border:none;">
+                              <tr class="nohover" style="border:none;">
+                                  <th style="border:none;">Article Number</th>
+                                  <th style="border:none;">Component</th>
+                                  <th style="border:none;">Version</th>
+                                  <th style="border:none;">Issue Description</th>
+                                  <th style="border:none;">Target Fix Release</th>                                        
+                                  
+                              </tr>
+                              <apex:repeat value="{!KIResolvedArticleList}" var="KIResolvedArticle">
+                              <tr>                                        
+                                  <td style="border:none;"><a href="{!$Page.btbb_KnownIssueArticleView}?id={!KIResolvedArticle.articleId}&pid={!Solution.id}">{!KIResolvedArticle.SolutionNumber}</a></td>                                        
+                                  <td style="border:none;"><apex:outputText value="{!KIResolvedArticle.categoriesName}"/></td>
+                                  <td style="border:none;"><apex:outputText value="{!KIResolvedArticle.Versions}"/></td>
+                                  <td style="border:none;"><apex:outputText value="{!KIResolvedArticle.IssueDescription}"/></td>
+                                  <td style="border:none;"><apex:outputText value="{!KIResolvedArticle.TargetFixRelease}" /></td>                                        
+                              </tr>
+                              </apex:repeat>
+                          </table>
+                          </div>
+
+
+
+
+ <apex:inputHidden value="{!Solution.Version_s__c}"/>               
+<apex:inputHidden value="{!Solution.ParentId__c}"/>
+ <apex:inputHidden value="{!Solution.Isrejected__c}"/>
+ <apex:inputHidden value="{!Solution.iscopy__c}"/>
+
+
+
+
+
+
+</apex:pageblock>
+
+                </apex:form>
+            </apex:define>
+    </apex:composition>
+</apex:page>

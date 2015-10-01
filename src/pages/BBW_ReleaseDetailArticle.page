@@ -1,0 +1,290 @@
+<apex:page standardController="Solution" extensions="BBW_DetailArticle" action="{!originalArticle}">
+    <head>
+        <style type="text/css">
+            a:link {color:#0000FF; text-decoration:none;}      /* unvisited link */
+            a:visited {color:#0000CC; text-decoration:none;}  /* visited link */
+            a:hover {color:#0000FF; text-decoration:underline;}  /* mouse over link */
+            a:active {color:#0000FF; text-decoration:underline;}  /* selected link */
+            pre {
+                      font-family: courier, fixed-width;
+                      white-space: pre-wrap;       /* css-3 */
+                      white-space: -moz-pre-wrap;  /* Mozilla, since 1999 */
+                      white-space: -pre-wrap;      /* Opera 4-6 */
+                      white-space: -o-pre-wrap;    /* Opera 7 */
+                      word-wrap: break-word;       /* Internet Explorer 5.5+ */
+                    }
+                 ol.loweralpha li  { list-style: lower-alpha }
+
+        </style> 
+    </head>
+    <TITLE>{!solution.SolutionNumber}</TITLE> 
+    <apex:includeScript value="/support/console/20.0/integration.js"/>
+    
+    
+    <script type="text/javascript">
+    
+        function SetTabTitle() {
+            //Set the current tab's title
+            sforce.console.setTabTitle('Article : {!solution.SolutionNumber}');
+        }
+        
+        window.onload = new function() { SetTabTitle(); };
+             
+        function View1(strId){     
+            if (typeof(srcUp) == 'function') {//For Console View
+                srcSelf('{!solution.Link__c}'+strId+'?isdtp=vw'); 
+            }else {   //For Salesforce
+                window.open('../'  + strId, '_parent');
+            }
+         } 
+        function clientView() {             
+            window.open('/apex/btbb_ReleaseArticleView?id='  + '{!solution.id}', '_blank');
+         }
+       
+    </script>
+    <chatter:feedwithfollowers entityid="{!aid}"/>
+    <apex:form >    
+    <apex:sectionHeader title="Article - {!recordType}" subtitle="{!Solution.SolutionName}"/>
+    <div style="display:{!IF(Solution.Visible_in_Customer_Portal__c == false && Solution.Visible_in_Partner_Portal__c == false && Solution.IsPublishedInPublicKb == false, 'block','none' )}">
+        <p style="font-size:200%;text-align:center;color:red"><b>INTERNAL ARTICLE ONLY !</b></p>
+    </div>
+    <a id="articleList" href="#" onClick="View1('501/o');"><font size ="0" color="blue">Back to List : Articles</font></a>
+       <apex:pageBlock title="Article Detail" mode="detail" tabStyle="Solution">
+            <apex:pageBlockButtons location="top" >
+              
+                <apex:image value="/img/lock_small.gif" alt="Lock" width="16" height="16" title="Lock" rendered="{!solution.isApprovalSent__c}"/>                 
+                <apex:commandButton value="Customer View" action="{!CustomerView}" onclick="clientView()" rendered="{!IF($Profile.Name == 'SRV - System Administrator' || $Profile.Name == 'System Administrator' || $Profile.Name == 'SRV - KM Administrators' || $Profile.Name == 'SRV - APAC User - KM' || $Profile.Name == 'SRV - KM USR - Publisher'|| $Profile.Name == 'SRV - Maintenance Experience Team' || $Profile.Name == 'SRV - Process Author' || $Profile.Name == 'SRV - Product Documentation Team' || $Profile.Name == 'SRV - SBSA Authors' || $Profile.Name == 'SRV - Support Tech'|| $Profile.Name == 'SRV - Service Manager' ,true, false)}" rerender="errorBlock" />                
+                <apex:commandButton value="Edit" action="{!editArticle}" rendered="{!IF((solution.status != 'Published' && solution.status != 'In review' && $User.Id == solution.CreatedById) || $Profile.Name == 'System Administrator' || $Profile.Name == 'SRV - System Administrator' ||  $Profile.Name == 'SRV - KM Administrators' || $Profile.Name == 'SRV - APAC User - KM' || $Profile.Name == 'SRV - KM USR - Publisher', 'true', 'false')}"/>
+                <apex:commandButton value="Delete" action="{!deleteArticle}" rendered="{!IF((solution.status != 'Published' && solution.status != 'In review' && $User.Id == solution.CreatedById)  || ($Profile.Name == 'System Administrator' || $Profile.Name == 'SRV - System Administrator' || $Profile.Name == 'SRV - KM Administrators' || $Profile.Name == 'SRV - APAC User - KM' || $Profile.Name == 'SRV - KM USR - Publisher'), 'true', 'false')}"/> 
+                <apex:commandButton value="Edit Published Article" onclick="return confirm('To edit this published article, you are creating a clone of this article.Please make sure to make all edits to this “Draft” edition.  Your edits will not be published to the original article until the draft is sent to the publishers and approved.')" action="{!cloneArticle}" rendered="{!IF(solution.status == 'Published' && solution.iscopy__c == false && solution.ParentId__c == null && ($Profile.Name == 'System Administrator' || $Profile.Name == 'SRV - System Administrator' || $Profile.Name == 'SRV - KM Administrators' || $Profile.Name == 'SRV - APAC User - KM' || $Profile.Name == 'SRV - KM USR - Publisher' || $Profile.Name == 'SRV - Maintenance Experience Team'), true, false)}"/>
+                <apex:pageMessages />
+                <div id="errorBlock">
+                    <apex:outputPanel id="errorPanel">
+                        <apex:pageMessage strength="2" title="{!errorTitle}" summary="{!errorMessage}" severity="{!errorSeverity}" rendered="{!errorShow}" />
+                    </apex:outputPanel>
+                </div>                 
+            </apex:pageBlockButtons>
+            <div id="Original Article" style="display:{!IF(NOT(ISNULL(solution.ParentId__c)),'block','none')}"> 
+                <apex:pageBlockSection columns="1">
+                    <apex:pageBlockSectionItem >
+                       <apex:OutputLabel value="Published Article :"/>
+                       <a id="publishArticle" href="/{!solution.ParentId__c}">Published Article Link</a>
+                    </apex:pageBlockSectionItem>
+                </apex:pageBlockSection>
+            </div>
+            <apex:pageBlockSection columns="1">
+              <apex:outputField value="{!Solution.SolutionNumber}"/>
+            </apex:pageBlockSection>  
+            <apex:inputHidden value="{!Solution.Isrejected__c}"/>    
+           
+            <apex:pageBlockSection columns="1">
+              <apex:outputField value="{!Solution.SolutionName}"/>
+            </apex:pageBlockSection>    
+            
+              <apex:pageBlockSection columns="1">
+                  <apex:outputField value="{!Solution.Product__c}"/>
+              </apex:pageBlockSection>
+              
+            
+              <apex:pageBlockSection columns="1">                 
+                  <apex:outputField value="{!Solution.Major_Release__c}"/>                    
+              </apex:pageBlockSection>
+              
+            
+            
+            <apex:pageBlockSection columns="1">
+            <apex:PageBlockSectionItem >
+                <apex:outputLabel value="Status" style="color:green" rendered="{!IF($Profile.Name == 'Bb - Custom Gold Channel Partner User' || $Profile.Name == 'SRV - Reseller Support' || $Profile.Name == 'SRV - Resellers' || $Profile.Name == 'Gold Partner User', false, true)}"/>
+                <apex:outputText value="{!Solution.status}" rendered="{!IF($Profile.Name == 'Bb - Custom Gold Channel Partner User' || $Profile.Name == 'SRV - Reseller Support' || $Profile.Name == 'SRV - Resellers' || $Profile.Name == 'Gold Partner User', false, true)}"/>
+            </apex:PageBlockSectionItem>
+            </apex:pageBlockSection>             
+             <apex:inputHidden value="{!Solution.summary__c}"/>                          
+            
+            
+             <apex:pageBlockSection columns="1">
+              <apex:pageBlockSectionItem >
+                <apex:OutputLabel value="Visible in Customer Portal" style="color:green" rendered="{!IF($Profile.Name == 'Bb - Custom Gold Channel Partner User' || $Profile.Name == 'SRV - Reseller Support' || $Profile.Name == 'SRV - Resellers' || $Profile.Name == 'Gold Partner User', false, true)}"/>             
+                <apex:outputField value="{!Solution.Visible_in_Customer_Portal__c}" id="visCustPortal" rendered="{!IF($Profile.Name == 'Bb - Custom Gold Channel Partner User' || $Profile.Name == 'SRV - Reseller Support' || $Profile.Name == 'SRV - Resellers' || $Profile.Name == 'Gold Partner User', false, true)}"/>
+              </apex:pageBlockSectionItem>  
+                <apex:pageBlockSectionItem >
+                <apex:OutputLabel value="Visible in Partner Portal" style="color:green" rendered="{!IF($Profile.Name == 'Bb - Custom Gold Channel Partner User' || $Profile.Name == 'SRV - Reseller Support' || $Profile.Name == 'SRV - Resellers' || $Profile.Name == 'Gold Partner User', false, true)}"/>         
+                <apex:outputField value="{!Solution.Visible_in_Partner_Portal__c}" id="visPartPortal" rendered="{!IF($Profile.Name == 'Bb - Custom Gold Channel Partner User' || $Profile.Name == 'SRV - Reseller Support' || $Profile.Name == 'SRV - Resellers' || $Profile.Name == 'Gold Partner User', false, true)}"/>
+                </apex:pageBlockSectionItem> 
+                <apex:pageBlockSectionItem >
+                <apex:OutputLabel value="Visible in Public KnowledgeBase" style="color:green" rendered="{!IF($Profile.Name == 'Bb - Custom Gold Channel Partner User' || $Profile.Name == 'SRV - Reseller Support' || $Profile.Name == 'SRV - Resellers' || $Profile.Name == 'Gold Partner User', false, true)}"/>         
+                <apex:outputField value="{!Solution.IsPublishedInPublicKb}" id="visPubKnwBase" rendered="{!IF($Profile.Name == 'Bb - Custom Gold Channel Partner User' || $Profile.Name == 'SRV - Reseller Support' || $Profile.Name == 'SRV - Resellers' || $Profile.Name == 'Gold Partner User', false, true)}"/>
+                </apex:pageBlockSectionItem>
+              </apex:pageBlockSection>         
+                                
+               <apex:pageBlockSection columns="1">
+                    
+                     <apex:pageBlockSectionItem >
+                         <apex:OutputLabel value="About"/>
+                         <apex:OutputText value="{!Solution.Upgrade_Information__c}" escape="false"/>
+                     </apex:pageBlockSectionItem>
+                     <apex:pageBlockSectionItem >
+                         <apex:OutputLabel value="Highlights"/>
+                         <apex:OutputText value="{!Solution.Product_Documentation_New__c}" escape="false"/>
+                     </apex:pageBlockSectionItem>
+                     <apex:pageBlockSectionItem > 
+                        <apex:OutputLabel value="Upgrade Paths"/>
+                        <apex:OutputText value="{!Solution.Upgrade_Paths__c}" escape="false"/>
+                    </apex:pageBlockSectionItem>
+                    <apex:pageBlockSectionItem >
+                         <apex:OutputLabel value="Reference Material"/>
+                         <apex:OutputText value="{!Solution.Reference_Material__c}" escape="false"/>
+                     </apex:pageBlockSectionItem> 
+                     <apex:pageBlockSectionItem >
+                         <apex:OutputLabel value="Support Policy"/>
+                         <apex:outputLink value="/apex/btbb_OtherResourcesArticleView?id=50170000000WXq7AAG" id="theLink" target="_BLANK">Blackboard Support Services Guides</apex:outputLink>
+                         <!--<apex:OutputText value="{!Solution.Support_Policy__c}" escape="false"/>-->
+                     </apex:pageBlockSectionItem>
+                     <apex:pageBlockSectionItem >
+                            <apex:OutputLabel value="Other Information"/>
+                            <apex:OutputText value="{!Solution.Other_Information__c}" escape="false"/>
+                     </apex:pageBlockSectionItem>                                                  
+                
+                     <apex:pageBlockSectionItem >
+                            <apex:OutputLabel value="Download"/>
+                            <apex:OutputText value="{!Solution.Download__c}" escape="false"/>
+                     </apex:pageBlockSectionItem>    
+                      <apex:pageBlockSection columns="1">
+                    <apex:pageBlockSectionItem >
+                      <apex:OutputLabel value="Public Url"/>
+                      <apex:Outputfield value="{!Solution.Public_URL__c}" />
+                   </apex:pageBlockSectionItem>
+                    <apex:pageBlockSectionItem rendered="{!IF(Solution.Status == 'Published','true','false')}" >
+                   <apex:OutputLabel value="Published Date" />
+                   <apex:Outputfield value="{!Solution.Published_Date__c}" />
+                   </apex:pageBlockSectionItem>
+                   <apex:pageblocksectionitem rendered="{!IF(AND(NOT(ISNULL(Solution.Last_Updated__c)),Solution.Status == 'Published'),'true','false')}" >
+                   <apex:OutputLabel value="Last Updated" />
+                   <apex:Outputfield value="{!Solution.Last_Updated__c}" />
+                   </apex:pageBlockSectionItem>
+              </apex:pageBlockSection>                                              
+                </apex:pageBlockSection>
+                     
+            
+            <apex:pageBlock title="Available Maintenance Release(s)" mode="detail">         
+                 <apex:pageBlockSection columns="1"> 
+                    <apex:pageBlockTable value="{!ReleasePageArticleList}" var="ReleasePageArticle" id="ReleasePage_table" rows="5">
+                
+                        <apex:column width="300px">
+                             <apex:facet name="header"><strong>Service Pack</strong></apex:facet> 
+                            <a href="/apex/BBW_ServicePackDetailArticle?Id={!ReleasePageArticle.articleId}">{!ReleasePageArticle.SolutionName}</a>                     
+                        </apex:column>                 
+                        <apex:column > 
+                            <apex:facet name="header"><strong>Build Number</strong></apex:facet>  
+                            {!ReleasePageArticle.Versions}
+                        </apex:column>
+                        <apex:column > 
+                            <apex:facet name="header"><strong>Release Date</strong></apex:facet><apex:outputText value="{0,date,MM/dd/yyyy}">  
+                           <apex:param value="{!ReleasePageArticle.ReleaseDate}"/> 
+                        </apex:outputText>
+                        </apex:column>
+                        </apex:pageBlockTable>            
+                </apex:pageBlockSection>
+                <apex:pageBlockSection columns="2">      
+                    <a id="KIArticles" style="display:{!IF(RPSize > 5,'block','none')}" href="/apex/RelatedArticles?Id={!solution.Id}&RecType=RP"><font size ="0" color="blue">Go to List >></font></a>                
+                </apex:pageBlockSection>
+            </apex:pageBlock> 
+           <!--product release dynamic table-->        
+               <apex:pageBlock title="Top 10 Issues" mode="detail">         
+                 <apex:pageBlockSection columns="1"> 
+                    <apex:pageBlockTable value="{!KIArticleList}" var="KIArticle" id="KnownIssue_table">
+                        
+                        <apex:column width="30px">
+                             <apex:facet name="header"><strong>Article Number</strong></apex:facet> 
+                            <a href="/apex/BBW_KnownIssueDetailArticle?Id={!KIArticle.articleId}">{!KIArticle.SolutionNumber}</a>                     
+                        </apex:column>                 
+                        <apex:column >   
+                            <apex:facet name="header"><strong>Component</strong></apex:facet>
+                            {!KIArticle.categoriesName}
+                        </apex:column>
+                        <apex:column > 
+                            <apex:facet name="header"><strong>Version</strong></apex:facet>  
+                            {!KIArticle.Versions}
+                        </apex:column>
+                        <apex:column > 
+                            <apex:facet name="header"><strong>Issue Description</strong></apex:facet> 
+                            {!KIArticle.IssueDescription}
+                        </apex:column>                    
+                        <apex:column >
+                            <apex:facet name="header"><strong>Target Fix Release</strong></apex:facet>
+                            {!KIArticle.TargetFixRelease}
+                        </apex:column>
+                        <apex:column >
+                            <apex:facet name="header"><strong>Patch Available</strong></apex:facet>
+                            {!KIArticle.PatchAvailable}
+                        </apex:column>
+                    </apex:pageBlockTable>            
+                </apex:pageBlockSection>
+             <apex:pageBlockSection columns="2">        
+                    <!--<a id="KIArticles" style="display:{!IF(KISize == 5,'block','none')}" href="/apex/RelatedArticles?Id={!solution.Id}&RecType=KI"><font size ="0" color="blue">Full Known Issues List >></font></a>-->
+                </apex:pageBlockSection>
+            </apex:pageBlock>  
+      </apex:pageBlock>
+  </apex:form>
+  
+
+  <apex:relatedList list="ProcessSteps" rendered="{!IF($Profile.Name == 'Bb - Custom Gold Channel Partner User' || $Profile.Name == 'SRV - Resellers' || $Profile.Name == 'SRV - Reseller Support' || $Profile.Name == 'Gold Partner User', false, true)}"/>
+  <!-- Added by Shirish on 26 July -->
+  <apex:form id="AttchedArticles" rendered="{!IF($Profile.Name == 'SRV - Reseller Support', false, true)}">
+    <apex:pageBlock title="Article Attachments" mode="detail">
+         <apex:pageBlockButtons location="top" >
+            <apex:commandButton value="Add New Attachment" action="{!AddAttachment}"/>
+         </apex:pageBlockButtons>
+         <apex:pageBlockSection columns="1">
+            <apex:pageBlockTable value="{!ArticleAttach}" var="attach" id="Article_Attach_table" rendered="{!IF(ISNULL(size) && size == 0, false, true)}">
+                
+                <apex:column width="20px" >
+                     <apex:facet name="header"><strong>Action</strong></apex:facet> 
+                    <a href="../{!attach.Id}/e?retURL=/apex/BBW_DetailArticleRediect?Id={!solution.Id}&srPos=0&srKp=0&501&sfdc.override=1">Edit</a>&nbsp;|&nbsp;<a href="../setup/own/deleteredirect.jsp?id={!solution.Id}&sfdc.override=1&delID={!attach.Id}&retURL=/apex/BBW_DetailArticle?id={!solution.Id}&sfdc.override=1">Del</a><!--<apex:commandLink action="{!deleteAttachment}" value="Del" id="deleteAttachLink" reRender="AttchedArticles"/>-->
+                </apex:column> 
+                <apex:column width="40px" >
+                     <apex:facet name="header"><strong>File Name</strong></apex:facet> 
+                    <a href="../{!attach.Id}">{!attach.File_Name__c}</a>                     
+                </apex:column> 
+                <apex:column width="40px" >
+                     <apex:facet name="header"><strong>Preview Link</strong></apex:facet> 
+                    <a href="{!$Page.AttachmentRedirect}?bname={!attach.Bucket_Name__c}&fname={!attach.File_Name_URL__c}&aws={!as3.key}&sec={!as3.secret}&uval=article" target="_blank">View/Download</a>                     
+                </apex:column>                 
+            </apex:pageBlockTable>  
+            <apex:outputLabel value="No records to display" rendered="{!IF(NOT(ISNULL(size)) && size == 0, true, false)}"/>          
+        </apex:pageBlockSection>
+    </apex:pageBlock>    
+  </apex:form>
+ 
+  <!--added by mac-->
+  <apex:relatedList rendered="{!IF($Profile.Name == 'Bb - Custom Gold Channel Partner User' || $Profile.Name == 'SRV - Reseller Support' || $Profile.Name == 'SRV - Resellers' || $Profile.Name == 'Gold Partner User', false, true)}" list="Internal_Article_Links__r"/>
+  <!--end of mac's edits-->
+  <apex:relatedList list="OpenActivities" rendered="{!IF($Profile.Name == 'Bb - Custom Gold Channel Partner User' || $Profile.Name == 'SRV - Resellers'|| $Profile.Name == 'SRV - Reseller Support' || $Profile.Name == 'Gold Partner User', false, true)}"/>
+  <apex:relatedList list="ActivityHistories" rendered="{!IF($Profile.Name == 'Bb - Custom Gold Channel Partner User' || $Profile.Name == 'SRV - Resellers' || $Profile.Name == 'SRV - Reseller Support' || $Profile.Name == 'Gold Partner User', false, true)}"/>
+  <apex:relatedList list="CaseSolutions"/>
+  <apex:form >
+    <apex:pageBlock title="Related Categories" mode="detail">
+         <apex:pageBlockButtons location="top" >
+            <apex:commandButton value="Select Category" action="{!selectCategory}" rendered="{!IF($Profile.Name != 'System Administrator' && $Profile.Name != 'SRV - System Administrator' && $Profile.Name != 'SRV - KM Administrators' && $Profile.Name != 'SRV - APAC User - KM' && $Profile.Name != 'SRV - KM USR - Publisher' && (solution.isApprovalSent__c == true || solution.Status == 'Published'), false, true)}"/>
+         </apex:pageBlockButtons>
+         <apex:pageBlockSection columns="1"> 
+            <apex:pageBlockTable value="{!ArticleCategories}" var="articleCategory" id="Article_Categories_table">
+                
+                <apex:column width="30px" rendered="{!IF($Profile.Name != 'System Administrator' && $Profile.Name != 'SRV - System Administrator' && $Profile.Name != 'SRV - KM Administrators' && $Profile.Name != 'SRV - APAC User - KM' && $Profile.Name != 'SRV - KM USR - Publisher' && (solution.isApprovalSent__c == true || solution.Status == 'Published'), false, true)}">
+                     <apex:facet name="header"><strong>Action</strong></apex:facet> 
+                     
+                    <a id="delCategory" href="/setup/own/deleteredirect.jsp?delID={!LEFT(articleCategory.categoryId, 15)}&retURL=/{!LEFT(solution.Id, 15)}&_CONFIRMATIONTOKEN=eD9NpjQrgnBTX8Q8Gx_QWhgYpjc_mN9A7sqMwtrBKBsldyF2xJTh8tppXWjoU7wXHhCyaJ_Do6t.YJISxqX_7jIFm4Rg8nhXPu0m9V4ZhKtgqgHE1GiBOV45w30HNSQqtpkN3nDlYXvirVBrc0WOpk_n4gk%">del</a>
+                     
+                </apex:column> 
+                
+                <apex:column breakBefore="false">   
+                    <apex:outputLink value="../ui/solution/SolutionBrowserPage?cid={!LEFT(articleCategory.categoryNodeId,15)}" id="category">
+                    {!articleCategory.categoryName}
+                    </apex:outputLink>
+                    
+                </apex:column>
+            </apex:pageBlockTable>            
+        </apex:pageBlockSection>
+    </apex:pageBlock>
+  </apex:form>
+               
+</apex:page>

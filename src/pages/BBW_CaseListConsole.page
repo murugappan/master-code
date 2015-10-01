@@ -1,0 +1,135 @@
+<apex:page standardController="Case" recordSetVar="cases" extensions="BBW_CaseList" > 
+<apex:includeScript value="/support/console/22.0/integration.js"/>
+<script  type="text/javascript">
+    
+     function View1(strId){       
+         
+        if (sforce.console.isInConsole()) {//For Console View
+            srcUp("/"+ strId+"?isdtp=vw"); 
+        } 
+        
+        else {   //For Salesforce
+          window.open("../"  + strId, "_parent");
+        }
+      
+     }
+     
+     //
+     
+     function View2(){       
+         
+        if (sforce.console.isInConsole()) {//For Console View
+            srcUp("/apex/AssetOnCase?retURL=%2F500%2Fo&save_new=1&sfdc.override=1"); 
+        } 
+        
+        else {   //For Salesforce
+          window.open("/apex/AssetOnCase?retURL=%2F500%2Fo&save_new=1&sfdc.override=1");
+        }
+      
+     }
+     
+     //
+     
+   
+    
+    function dosort(sortval){
+       
+        sortdata(sortval); 
+     } 
+</script>
+<apex:sectionHeader title="My Open Cases" />
+
+<apex:form >
+<apex:pageBlock >
+<apex:pageMessages />
+<apex:actionFunction action="{!updatelist}" name="sortdata" reRender="CaseList" status="processingStatus">
+    <apex:param name="firstParam" value="" />
+</apex:actionFunction>
+<center>
+<apex:commandButton value="New Case" onclick="View2();"  />
+<apex:commandButton value="Default Sorting" action="{!updatelist}" rerender="CaseList" onclick="dosort('def');" />
+<apex:commandButton value="Refresh" action="{!updatelist}" rerender="CaseList" />
+
+</center><br></br>
+
+<!--<apex:panelGrid columns="2">
+
+<apex:outputLabel value="My Cases:"/>
+<apex:selectList value="{!con.filterId}" size="1">
+<apex:actionSupport event="onchange" action="{!updatelist}" rerender="CaseList"/>
+<apex:selectOptions value="{!con.listviewoptions}"/> 
+</apex:selectList>
+</apex:panelGrid>-->
+<!--COMMENTED-OUT-BY-MAC-<apex:actionStatus id="processingStatus" startText="(In Process...)"  /> -->
+<apex:pageBlockTable value="{!orgsortlist}" var="casess" id="CaseList" >
+
+<apex:column >
+    <apex:facet name="header"><apex:outputLabel value="{!CaseNumber}" onclick="dosort('cas');" escape="false"/></apex:facet>
+    <div> <a href="#" onClick="View1('{!casess.ca.id}');" >{!casess.ca.casenumber}</a> </div>
+</apex:column> 
+<apex:column >
+                    <apex:facet name="header"><apex:outputLabel value="{!PsftCaseId}" onclick="dosort('psftcid');" escape="false"/></apex:facet>
+                   <apex:outputText value="{!casess.ca.Psft_Case_Id__c}"></apex:outputText>
+                </apex:column> 
+<!--<apex:column >
+    <apex:facet name="header"><apex:outputLabel value="{!OwnerName}" onclick="dosort('acc');" escape="false"/></apex:facet>
+    <apex:outputText value="{!casess.Owner.Name}"></apex:outputText>
+</apex:column> -->
+<apex:column >
+    <apex:facet name="header"><apex:outputLabel value="{!AccountName}" onclick="dosort('acn');" escape="false"/></apex:facet>
+    <apex:outputText value="{!casess.ca.account.name}"></apex:outputText>
+</apex:column>
+<apex:column >
+    <apex:facet name="header"><apex:outputLabel value="{!subject}" onclick="dosort('sub');" escape="false"/></apex:facet>
+    <apex:outputText value="{!casess.ca.subject}"></apex:outputText>
+</apex:column> 
+
+<apex:column >
+    <apex:facet name="header"><apex:outputLabel value="{!Severity}" onclick="dosort('sev');" escape="false"/></apex:facet>
+    <apex:outputText value="{!casess.ca.Case_Severity__c}"></apex:outputText><apex:image id="theImage" value="{!casess.background}" rendered="{!if(OR(casess.ca.Case_Severity__c =='1',casess.ca.Case_Severity__c =='2'),'true','false')}"/>
+</apex:column> 
+
+<apex:column >
+    <apex:facet name="header"><apex:outputLabel value="{!CreatedDate}" onclick="dosort('crdt');" escape="false"/></apex:facet>
+    <apex:outputField value="{!casess.ca.CreatedDate}" />
+</apex:column> 
+ 
+ <apex:column >
+    <apex:facet name="header"><apex:outputLabel value="{!LastModifiedDate}" onclick="dosort('lmdt');" escape="false"/></apex:facet>
+    <apex:outputField value="{!casess.ca.LastModifiedDate}" />
+</apex:column> 
+
+<apex:column >
+    <apex:facet name="header"><apex:outputLabel value="{!status}" onclick="dosort('sta');" escape="false"/></apex:facet>
+    <apex:outputText value="{!casess.ca.status}"></apex:outputText>
+</apex:column> 
+<apex:column >
+    <apex:facet name="header"><apex:outputLabel value="{!TimeOpen}" onclick="dosort('tim');" escape="false"/></apex:facet>
+    <apex:outputText value="{!casess.ca.Time_Open__c}"></apex:outputText>
+</apex:column>
+<!-- <apex:column >
+    <apex:facet name="header"><apex:outputLabel value="{!Age}" onclick="dosort('age');" escape="false"/></apex:facet>
+    <apex:outputText value="{!casess.ca.Case_Age__c}"></apex:outputText>
+</apex:column> -->
+<apex:column >
+    <apex:facet name="header"><apex:outputLabel value="{!Event_Type}" onclick="dosort('evt');" escape="false"/></apex:facet>
+    <apex:outputtext value="{!casess.ca.responsiveness__r[0].start_event__c}" rendered="{!if(casess.ca.responsiveness__r.size >0,'true','false')}"></apex:outputtext>
+</apex:column>
+<apex:column >
+    <apex:facet name="header"><apex:outputLabel value="{!SLA_Expiry_time}" onclick="dosort('sla');" escape="false"/></apex:facet>
+    <apex:outputtext value="{!casess.SLAdatetime}" rendered="{!if(casess.ca.responsiveness__r.size >0,'true','false')}"></apex:outputtext>
+</apex:column>
+<apex:column >
+    <apex:facet name="header"><apex:outputLabel value="{!Time_left_for_SLA_Expiry}" onclick="dosort('tsla');" escape="false"/></apex:facet>
+    <apex:outputtext value="{!casess.ca.responsiveness__r[0].Time_left_for_SLA_Expiry__c * 24}" rendered="{!if(casess.ca.responsiveness__r.size >0,'true','false')}"></apex:outputtext>
+</apex:column>
+
+<!-- <apex:column >
+    <apex:facet name="header"><apex:outputLabel value="{!CLAtime}" onclick="dosort('cla');" escape="false"/></apex:facet>
+    <apex:outputtext value="{!casess.timeremain}" rendered="{!if(casess.ca.casemilestones.size>0,'true','false')}"></apex:outputtext>
+</apex:column> -->
+<apex:column rendered="True" />
+</apex:pageBlockTable>
+</apex:pageBlock>
+</apex:form>
+</apex:page>

@@ -1,0 +1,20 @@
+<apex:page cache="false" controller="LoginsucessController" standardStylesheets="false" showHeader="false" sidebar="false" contentType="text/html">
+        <apex:composition template="btbb_template">
+       <apex:define name="content"> 
+       <apex:form >
+          <p style="color:green;font-size:20px">Congratulations!</p><br/>
+          <p style="font-size:15px">You have <u>successfully</u> tested your new credentials to <em>Behind the Blackboard&trade;</em>.&nbsp; <u>Please store these credentials in a safe location</u>; you will use them when we open the new <em>Behind the Blackboard</em> customer support portal for our Moodlerooms clients.&nbsp; You will receive more information as we approach our launch date of November 17.&nbsp;</p><br/> 
+          <p style="font-size:15px">Please know that once we launch, all case creation and case management activity must be conducted through<em> Behind the Blackboard</em> (whether directly on the website or through emails originating from support@blackboard.com). &nbsp;</p><br/>  
+          <apex:commandLink action="{!logout}" value="Click here to logout" id="theCommandLink"/>
+       </apex:form>
+    </apex:define>   
+  </apex:composition>          
+  <!-- <apex:composition template="btbb_template">
+    <apex:define name="content"> 
+       <apex:form >
+          <p style="font-size:15px">We apologize, you do not have appropriate permissions to enter the authenticated version of Behind the Blackboard.  Please contact your institution's Blackboard system administrator to resolve this issue.</p><br/> 
+          <apex:commandLink action="{!logout}" value="Click here to logout" id="theCommandLink"/>
+       </apex:form>
+    </apex:define>   
+  </apex:composition> -->
+</apex:page>

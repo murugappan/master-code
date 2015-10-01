@@ -1,0 +1,118 @@
+<apex:page standardController="learnJIRA__c"  extensions="EditSIforCollab" tabStyle="learnJIRA__c" showHeader="true" standardStylesheets="true"  >
+
+
+<apex:sectionHeader title="Change SI Details" subtitle="{!supportIncident.Name}" />
+    
+    <apex:form >
+        <apex:pageBlock mode="edit">
+         <apex:pageMessages /> 
+            <apex:pageBlockButtons >
+                <apex:commandButton value="Save" action="{!s}" />
+                <apex:commandButton value="Cancel" action="{!Cancel}" />
+            </apex:pageBlockButtons>
+             
+              <apex:pageBlockSection title="Update Support Incident Details" id="section1" columns="2">
+              <apex:outputField value="{!supportIncident.Name}"  />
+              <apex:inputField value="{!supportIncident.Tier_2_Assessment__c}">
+                  <apex:actionSupport event="onchange" reRender="theIdd,theIddd,theId"/>
+              </apex:inputField> 
+              <apex:inputField value="{!supportIncident.Summary__c}"  /> 
+              <apex:inputField value="{!supportIncident.JIRA_Key__c}" />
+              
+               <apex:inputField value="{!supportIncident.Severity__c}" /> 
+               <apex:inputField value="{!supportIncident.Duplicate_Of__c}"/> 
+               
+
+                <apex:pageBlockSectionItem >
+                Status
+                <apex:selectlist multiselect="false" size="1" value="{!statusvalue}" id="theIddd">
+                <!-- <apex:selectOption itemValue="New" itemLabel="New" /> -->
+                <apex:selectOption itemValue="Open" itemLabel="Open" />
+                <apex:selectOption itemValue="On Hold" itemLabel="On Hold" rendered="{!supportIncident.Tier_2_Assessment__c != 'Enhancement'}" />
+                <apex:selectOption itemValue="Closed" itemLabel="Closed" /> 
+                <apex:actionSupport event="onchange" reRender="theIdd,theId"/>
+                
+                </apex:selectlist>
+                </apex:pageBlockSectionItem>
+
+
+
+
+
+                
+                <apex:pageBlockSectionItem >
+                On Hold Reason
+                <apex:selectlist multiselect="false" size="1" value="{!onholdreasonvalue}" id="theId">
+                <apex:selectOption itemValue="-None-" itemLabel="-None-"/>
+                <apex:selectOption itemValue="Waiting for Development" itemLabel="Waiting for Development" rendered="{!statusvalue =='On Hold'}"  />
+                <apex:selectOption itemValue="Waiting for Operations" itemLabel="Waiting for Operations" rendered="{!statusvalue =='On Hold'}"  />
+                <apex:selectOption itemValue="Waiting for Client Support Response" itemLabel="Waiting for Client Support Response" rendered="{!statusvalue =='On Hold'}"  />
+                <apex:selectOption itemValue="Waiting on 3rd party" itemLabel="Waiting on 3rd party" rendered="{!statusvalue =='On Hold'}"  /> 
+                </apex:selectlist>
+                </apex:pageBlockSectionItem>
+                
+                <apex:pageBlockSectionItem >
+                Resolution
+                <apex:selectlist multiselect="false" size="1" value="{!resolutionvalue}" id="theIdd">
+                <apex:selectOption itemValue="-None-" itemLabel="-None-" />
+                <apex:selectOption itemValue="Fixed Released" itemLabel="Fixed Released" rendered="{!AND(NOT(supportIncident.Tier_2_Assessment__c == 'Enhancement' && statusvalue =='Closed'),NOT(supportIncident.Tier_2_Assessment__c == 'Enhancement' && statusvalue =='Open'),NOT(supportIncident.Tier_2_Assessment__c == 'Operations Issue' && statusvalue =='Open'),NOT(supportIncident.Tier_2_Assessment__c == 'Software Issue' && statusvalue =='Open'), NOT(statusvalue == 'On Hold'))}"  />
+                <apex:selectOption itemValue="Will not Fix" itemLabel="Will not Fix" rendered="{!AND(NOT(supportIncident.Tier_2_Assessment__c == 'Enhancement' && statusvalue =='Closed'),NOT(supportIncident.Tier_2_Assessment__c == 'Enhancement' && statusvalue =='Open'),NOT(supportIncident.Tier_2_Assessment__c == 'Operations Issue' && statusvalue =='Open'),NOT(supportIncident.Tier_2_Assessment__c == 'Software Issue' && statusvalue =='Open'), NOT(statusvalue == 'On Hold'))}"  />
+                <apex:selectOption itemValue="Functioning as Designed" itemLabel="Functioning as Designed" rendered="{!AND(NOT(supportIncident.Tier_2_Assessment__c == 'Enhancement' && statusvalue =='Closed'),NOT(supportIncident.Tier_2_Assessment__c == 'Enhancement' && statusvalue =='Open'),NOT(supportIncident.Tier_2_Assessment__c == 'Operations Issue' && statusvalue =='Open'),NOT(supportIncident.Tier_2_Assessment__c == 'Software Issue' && statusvalue =='Open'),NOT(statusvalue == 'On Hold'))}" />
+                <apex:selectOption itemValue="Cannot Reproduce" itemLabel="Cannot Reproduce" rendered="{!AND(NOT(supportIncident.Tier_2_Assessment__c == 'Enhancement' && statusvalue =='Closed'),NOT(supportIncident.Tier_2_Assessment__c == 'Enhancement' && statusvalue =='Open'),NOT(supportIncident.Tier_2_Assessment__c == 'Operations Issue' && statusvalue =='Open'),NOT(supportIncident.Tier_2_Assessment__c == 'Software Issue' && statusvalue =='Open'),NOT(statusvalue == 'On Hold'))}"  /> 
+                <apex:selectOption itemValue="Cloned to Bug" itemLabel="Cloned to Bug"  rendered="{!AND(NOT(supportIncident.Tier_2_Assessment__c == 'Enhancement' && statusvalue =='Closed'),NOT(supportIncident.Tier_2_Assessment__c == 'Enhancement' && statusvalue =='Open'),NOT(supportIncident.Tier_2_Assessment__c == 'Operations Issue' && statusvalue =='Open'),NOT(supportIncident.Tier_2_Assessment__c == 'Software Issue' && statusvalue =='Open'),NOT(statusvalue == 'On Hold'))}" />
+                <apex:selectOption itemValue="Duplicate" itemLabel="Duplicate" rendered="{!AND(NOT(supportIncident.Tier_2_Assessment__c == 'Enhancement' && statusvalue =='Closed'),NOT(supportIncident.Tier_2_Assessment__c == 'Enhancement' && statusvalue =='Open'),NOT(supportIncident.Tier_2_Assessment__c == 'Operations Issue' && statusvalue =='Open'),NOT(supportIncident.Tier_2_Assessment__c == 'Software Issue' && statusvalue =='Open'),NOT(statusvalue == 'On Hold'))}" /> 
+                <apex:selectOption itemValue="Operations Fixed" itemLabel="Operations Fixed" rendered="{!AND(NOT(supportIncident.Tier_2_Assessment__c == 'Enhancement' && statusvalue =='Closed'),NOT(supportIncident.Tier_2_Assessment__c == 'Enhancement' && statusvalue =='Open'),NOT(supportIncident.Tier_2_Assessment__c == 'Operations Issue' && statusvalue =='Open'),NOT(supportIncident.Tier_2_Assessment__c == 'Software Issue' && statusvalue =='Open'),NOT(statusvalue == 'On Hold'))}" /> 
+                
+                
+                <apex:selectOption itemValue="Accepted" itemLabel="Accepted" rendered="{!supportIncident.Tier_2_Assessment__c == 'Enhancement' && statusvalue =='Closed'}" />
+                <apex:selectOption itemValue="Denied" itemLabel="Denied" rendered="{!supportIncident.Tier_2_Assessment__c == 'Enhancement' && statusvalue =='Closed'}"  />
+                 
+                
+                
+             
+                
+                
+                
+                <!-- <apex:selectOption itemValue="Accepted" itemLabel="Accepted"  />
+                <apex:selectOption itemValue="Denied" itemLabel="Denied"  /> -->
+                
+                
+                </apex:selectlist>
+                </apex:pageBlockSectionItem>
+                
+                
+               <apex:inputField value="{!supportIncident.External_URL__c}"/> 
+               <apex:inputField value="{!supportIncident.Product_Suite__c}"  />
+
+               
+               
+        <apex:pageblockSectionItem >Issue Topic
+         <apex:selectList value="{!module }" size="1" id="module" style="margin-right:1px" >
+         <apex:actionSupport event="onchange" rerender="functionalarea,category" status="mStatus"/>
+         <apex:selectOptions value="{!modules}" />
+         </apex:selectList>
+        </apex:pageblockSectionItem>
+        
+        <apex:pageblockSectionItem >Functional Area
+        <apex:selectList value="{!functionalarea }" size="1" id="functionalarea" style="margin-right:1px" >
+        <apex:actionSupport event="onchange" rerender="category" status="faStatus"/>
+        <apex:selectOptions value="{!functionalareas }" />
+        </apex:selectList>
+        </apex:pageblockSectionItem>
+        
+        <apex:pageblockSectionItem >Category
+        <apex:selectList value="{!category }" size="1" style="margin-right:1px" id="category"  >
+        <apex:actionSupport event="onchange" rerender="category" status="caStatus" />
+        <apex:selectOptions value="{!categories }" />
+        </apex:selectList>
+        </apex:pageblockSectionItem> 
+        
+       <apex:inputField value="{!supportIncident.Description_HTML__c}"  /> <br/>
+       
+     </apex:pageBlockSection>
+              
+        
+  </apex:pageblock>
+ 
+    </apex:form>
+</apex:page>

@@ -1,0 +1,45 @@
+<apex:page title="Manage Training">
+<style>
+.gsbutton, .gsbutton:visited {
+    background: #1797C0;
+    width:80%;
+    text-align: center;
+    font-weight: bold;
+    margin: 5px;
+    -moz-border-radius: 5px;
+    border-radius: 5px;
+    -moz-box-shadow: 0 2px 4px #AAAAAA;
+    -webkit-box-shadow: 0 2px 4px #AAAAAA;
+    box-shadow: 0 2px 4px #AAAAAA;
+    background-position: right -120px;
+    padding: 4px 20px;
+    border: 2px solid #E8E8E9;
+    color: #FFFFFF;
+    text-decoration: none;
+    white-space: nowrap;
+    top: 5px; 
+    bottom: 5px;
+    float: left;
+}
+
+a.gsbutton:hover {
+    background: #35B4E9;
+    color:#fff;
+    text-decoration: underline;
+}
+</style>
+<div class="steps-text">Manage Blackboard Learn for Salesforce using the buttons below.</div>
+<p>
+<div>
+ <A HREF="https://{!$Setup.bbl__Blackboard_Custom_Settings__c.bbl__Host_Name__c}/webapps/Bb-sites-salesforce-sso-BBLEARN/getProviderURL.do?providerName=Salesforce&new_loc=%2Fwebapps%2Fportal%2Fframeset.jsp%3Furl%3D%252Fwebapps%252Fportal%252Fexecute%252Ftabs%252FtabAction%253FtabType%253Dadmin" target="_parent" class="gsbutton">System Admin Panel</a>
+</div> 
+<div> 
+ <A HREF="https://{!$Setup.bbl__Blackboard_Custom_Settings__c.bbl__Host_Name__c}/webapps/Bb-sites-salesforce-sso-BBLEARN/getProviderURL.do?providerName=Salesforce&new_loc=%2Fwebapps%2Fportal%2Fframeset.jsp%3Furl%3D%252Fwebapps%252Fblackboard%252Fexecute%252FcourseManager%253FsourceType%253DCOURSES" target="_parent" class="gsbutton">Manage Courses and Instructors</a>
+</div>
+</p>
+<p>
+<div>
+ <A HREF="https://{!$Setup.bbl__Blackboard_Custom_Settings__c.bbl__Host_Name__c}/webapps/Bb-sites-salesforce-sso-BBLEARN/getProviderURL.do?providerName=Salesforce&new_loc=%2Fwebapps%2Fportal%2Fframeset.jsp%3Furl%3D%252Fwebapps%252Fblackboard%252Fexecute%252FcatalogMgr%253Fcat_type%253DCRS" class="gsbutton" target="_parent" >Manage the Course Catalog</a>
+</div> 
+</p>
+ </apex:page>

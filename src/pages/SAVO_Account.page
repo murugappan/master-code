@@ -1,0 +1,17 @@
+<apex:page standardController="Account" >
+    <c:Savo_Header ></c:Savo_Header>
+    <div class="savoBody">
+        <c:Savo_Search ></c:Savo_Search>
+        <div class="wrapper">
+            <div class="left panel">
+                <h1 style="display: block;">Find Assets for {!Account.Name}</h1>
+                <ul>
+                    <li><a href="#" onclick="window.open(Savo.Salesforce.redirectToTarget('search','{!Account.Name}'));">Account: {!Account.Name}</a></li>
+                    <li><a href="#" onclick="window.open(Savo.Salesforce.redirectToTarget('tag','{!Account.Industry}'));">Market: {!Account.Industry}</a></li>
+                    <li><a href="#" onclick="window.open(Savo.Salesforce.redirectToTarget('tag','Retain'));"> Sales Stage: Retain</a></li> 
+                </ul>               
+            </div>
+            <div style="clear: both;"></div>
+        </div> 
+    </div>
+</apex:page>

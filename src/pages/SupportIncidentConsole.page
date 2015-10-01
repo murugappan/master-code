@@ -1,0 +1,116 @@
+<apex:page controller="SupportIncidentConsole" showHeader="false" tabStyle="Case">
+	<script src="https://ajax.googleapis.com/ajax/libs/jquery/1.7.0/jquery.min.js" />
+	<apex:includeScript value="/support/console/22.0/integration.js"/>
+	<script>document.title = "Support Incident Search";</script>
+    <apex:stylesheet value="{!URLFOR($Resource.CaseHistory360, 'media/css/styles-min.css')}"/>          
+    <style type="text/css">
+	    button.ColVis_MasterButton {position:absolute;right:0px;top:0px;padding:5px;}
+	    table.display thead th {padding-left:5px;}
+    </style>
+    <script type="text/javascript" charset="utf-8" src="{!URLFOR($Resource.Datatables19, 'datatables-1.9.0/media/js/jquery.dataTables.min.js')}" /> 
+    <script type="text/javascript" charset="utf-8" src="{!URLFOR($Resource.Datatables19, 'datatables-1.9.0/media/js/ColumnFilterWidgets.js')}" />
+    <script type="text/javascript" charset="utf-8" src="{!URLFOR($Resource.Datatables19, 'datatables-1.9.0/media/js/ColVis.js')}" /> 
+    <script type="text/javascript" charset="utf-8">
+        $(document).ready(function(){
+                     
+                     var anOpen = [];
+                     var oTable=$('#supportincidentstable').dataTable({
+                        "sDom":'WR<"clear">lCfti<"clear">,p',
+                        "aaSorting": [[ 1, "desc" ]],
+                        "sPaginationType":"full_numbers",
+                        "iDisplayLength": 50,
+                        "bAutoWidth" : false,
+                        "aoColumnDefs":[
+                                        {"bSortable":false,"aTargets":[0,5,7]}
+                                       ],
+                        "oColumnFilterWidgets":{
+                            "aiExclude":[0,1,3,5,7]
+                        }
+                        
+                        });
+                       
+                       oTable.fnSetColumnVis( 2, false );
+                       oTable.fnSetColumnVis( 3, false );
+                       oTable.fnSetColumnVis( 4, false );
+                       oTable.fnSetColumnVis( 7, false );
+                       
+                       $('#supportincidentstable tbody tr').live( 'click', function () {
+                       var nTr = this;
+                       var i = $.inArray( nTr, anOpen );
+                       if ( $(this).children(":first").hasClass("no-expand") != true ) {                       
+                       if ( i === -1 ) {
+                          var nDetailsRow = oTable.fnOpen( nTr, fnFormatDetails(oTable, nTr), 'details' );
+                          $(nDetailsRow).addClass("openRow");
+                          $(this).children(":first").addClass("rowExpanded").removeClass("rowHidden");
+                          $('div.innerDetails', nDetailsRow).slideDown(200);
+                          anOpen.push( nTr );
+                        } else {
+                          $(this).children(":first").removeClass("rowExpanded").addClass("rowHidden");
+                          $('div.innerDetails', $(nTr).next()[0]).slideUp( 200 , function () {
+                             oTable.fnClose( nTr );
+                             anOpen.splice( i, 1 );
+                           });
+                         }
+                         }
+                     });
+                        function fnFormatDetails(oTable, nTr) {
+                            var aData = oTable.fnGetData(nTr);
+                            var sOut = '<div class="innerDetails">';
+                            sOut += '<div class="activityDetails" style="padding-right:400px;padding-left:50px;">' + aData[7] + '</div>';
+                            sOut += '</div>';
+                            return sOut;
+                        }
+            });                                    
+    </script>
+    <apex:sectionHeader title="Search Support Incidents" />
+    <apex:form >
+    	<apex:pageMessages />
+    	<apex:pageBlock title="Search Support Incidents">
+    		<apex:commandLink action="{!doCancel}" value="Back to Manage Support Incident" />
+    		<apex:pageBlockSection >
+    			<apex:inputText label="Search:" value="{!searchText}" />
+    			<apex:commandButton action="{!searchIssues}" value="Search" />
+    		</apex:pageBlockSection>
+    	</apex:pageBlock>
+		<apex:pageBlock title="Known Issues Finder" rendered="{!validSearch}">
+	        <table cellpadding="0" cellspacing="0" border="0" class="display" id="supportincidentstable">
+	            <thead>
+	                <tr>
+	                    <th>Action</th><!-- [0] -->
+	                    <th>Support Incident</th><!--[1]-->
+	                    <th>SI Status</th><!--[2]-->
+	                    <th>JIRA SI#</th><!--[3]-->
+	                    <th>Tier 2 Assessment </th><!--[4]-->
+	                    <th>Summary</th><!--[5]-->
+	                    <th>Fixed Version</th><!--[6]-->
+	                    <th>Notes</th><!--[7]-->
+	                    <th>Not Fixed Reason</th><!--[8]-->
+	                </tr> 
+	            </thead>
+	            <tbody>
+	                <apex:repeat value="{!siList}" var="s">
+	                    <tr style="padding: 5px 0 5px 0;">
+		                	<apex:outputPanel rendered="{!s.supportIncident.Id != null}">
+		                		<td valign="center" style="padding-left: 20px; border-left: 1px solid #D0D0D0;" class="{!IF(s.supportIncident.Steps_to_Replicate_HTML__c == null, 'no-expand', 'rowHidden')}">
+	                                <apex:commandLink value="Bookmark" action="{!s.doBookmark}" />
+	                                <apex:outputText value=" | " />
+	                                <apex:commandLink value="Attach" action="{!s.doAttach}" />
+		                        </td>
+		                        <td><apex:outputLink value="/{!s.supportIncident.Id}">{!s.supportIncident.Name}</apex:outputLink></td>
+		                        <td><apex:outputText value="{!s.supportIncident.Status__c}" /></td>
+		                        <td><apex:outputText value="{!s.supportIncident.JIRA_Key__c}" /></td>
+		                        <td><apex:outputText value="{!s.supportIncident.Tier_2_Assessment__c}" /></td>
+		                        <td><apex:outputText value="{!LEFT(s.supportIncident.Summary__c, 150)}" /></td>
+		                        <td><apex:outputText value="{!s.supportIncident.Target_Release__c}" /></td>
+		                        <td style="border-right: 1px solid #D0D0D0;">
+		                        	<apex:outputField value="{!s.supportIncident.Steps_to_Replicate_HTML__c}" />
+		                        </td>
+		                        <td><apex:outputText value="{!s.supportIncident.Not_Fixed_Reason__c}" /></td>
+		                	</apex:outputPanel>
+	                    </tr>
+	                </apex:repeat>
+	            </tbody>        
+	        </table>
+		</apex:pageBlock>
+	</apex:form>
+</apex:page>

@@ -1,0 +1,9 @@
+<apex:component >
+    <script type="text/javascript" src="/soap/ajax/17.0/connection.js" />
+    <apex:includeScript value="{!$Resource.SavoScripts}" />
+    <apex:stylesheet value="{!$Resource.SavoStyles}" />
+    <script type="text/javascript">
+        Savo.Salesforce.sessionId = '{!$Api.Session_ID}';
+        Savo.Salesforce.partnerUrl = '{!$Api.Partner_Server_URL_70}';
+    </script>
+</apex:component>

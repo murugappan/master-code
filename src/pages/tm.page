@@ -1,0 +1,8 @@
+<apex:page controller="TerritoryMembers">
+    <apex:pageBlock title="Territory Members" mode="read">
+
+    <!-- <apex:PageBlockTable value="{!account.Territory_Members}" var="item"> 
+    </apex:PageBlockTable>
+    -->
+    </apex:pageBlock>
+</apex:page>

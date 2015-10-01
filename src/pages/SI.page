@@ -1,0 +1,266 @@
+<apex:page controller="SI" tabStyle="learnJIRA__c" showHeader="true" standardStylesheets="true">
+
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/1.7.0/jquery.min.js"></script>
+<apex:includeScript value="/support/console/22.0/integration.js"/>
+<apex:includeScript value="/support/console/22.0/integration.js"/> 
+<script>document.title = "SI History 360";</script>
+
+<script type="text/javascript">
+
+function commentOpenSubtab() {
+  if (sforce.console.isInConsole()) {
+                            sforce.console.getEnclosingPrimaryTabId(openSubtab);
+                               } else {
+                                 window.open('/a1q/e?CF00N70000002jO9X={!SInumber.Name}','_newtab');
+                            }
+                        }
+                        var openSubtab = function openSubtab(result) {
+                            var primaryTabId = result.id;
+                            sforce.console.openSubtab(primaryTabId , '/a1q/e?CF00N70000002jO9X={!SInumber.Name}', true, 
+                                'New SI Note', null, null, 'newSInoteSubtab');
+                        };
+
+
+
+
+ function refreshSubtabById() {
+                        if (sforce.console.isInConsole()) {
+                            sforce.console.getEnclosingTabId(refreshSubtab);
+                        }
+                        else
+                        {
+                        
+                         window.location.href = '/apex/SI?id={!SIid}';
+                        }
+                        }
+var refreshSubtab = function refresh(result) {
+                            var subtabId = result.id;
+                            sforce.console.refreshSubtabById(subtabId, true);
+                        }
+
+
+
+
+
+
+
+function pdfConvert()
+                        {
+                        if (sforce.console.isInConsole()) {
+                        sforce.console.getEnclosingPrimaryTabId(pdftab);
+                        }else
+                        {
+                        window.open('/apex/SIhistorypdf?id={!$CurrentPage.parameters.id}','_newtab');
+                        }
+                        }
+                        
+                        var pdftab = function pdftab(result) {
+                            var primaryTabId = result.id;
+                             sforce.console.openSubtab(primaryTabId , '/apex/SIhistorypdf?id={!$CurrentPage.parameters.id}', true, 
+                                'SIHistory360PDF', null, null, 'SI360PDF');
+                        };
+</script>
+
+<apex:stylesheet value="{!URLFOR($Resource.CaseHistory360, 'media/css/styles-min.css')}"/>          
+    <script type="text/javascript" charset="utf-8" src="{!URLFOR($Resource.CaseHistory360, 'media/js/jquery.dataTables.min.js')}" /> 
+    <script type="text/javascript" charset="utf-8" src="{!URLFOR($Resource.CaseHistory360, 'media/js/ColumnFilterWidgets.js')}" />
+    <script type="text/javascript" charset="utf-8">
+    var oTable;
+    var anOpen = [];
+        $(document).ready(function(){                     
+                      oTable=$('#casehistorytable').dataTable({
+                        "sDom":'WR<"clear">lftip',
+                        "aaSorting": [[ 2, "desc" ]],
+                        "sPaginationType":"full_numbers",
+                        "iDisplayLength": 50,
+                        "aoColumnDefs":[
+                            {"bSortable":false,"aTargets":[1]},
+                            {"sWidth":"75%","aTargets":[2]},
+                            {"sWidth":"70%","aTargets":[0]},
+                            {"sWidth":"15%","aTargets":[1]}],
+                            
+                        "oColumnFilterWidgets":{"aiExclude":[0,2,3]}
+                        });
+                       oTable.fnSetColumnVis( 3, false );
+                       oTable.fnSetColumnVis( 4, false );
+                       oTable.fnSetColumnVis( 5, false );
+                                        
+                       $('#casehistorytable tbody tr').live( 'click', function () {
+                       var nTr = this;                      
+                       var i = $.inArray( nTr, anOpen );                       
+                       if ( $(this).children(":first").hasClass("no-expand") != true ) {                       
+                       if ( i== -1 ) {
+                          var nDetailsRow = oTable.fnOpen( nTr, fnFormatDetails(oTable, nTr), 'details' );
+                          $(nDetailsRow).addClass("openRow");
+                          $(this).children(":first").addClass("rowExpanded").removeClass("rowHidden");
+                          $('div.innerDetails', nDetailsRow).slideDown(200);
+                          anOpen.push( nTr );
+                        } else {
+                          $(this).children(":first").removeClass("rowExpanded").addClass("rowHidden");
+                          $('div.innerDetails', $(nTr).next()[0]).slideUp( 200 , function () {
+                             oTable.fnClose( nTr );
+                             anOpen.splice( i, 1 );
+                           }); 
+                         }
+                         }
+                     });
+                        function fnFormatDetails(oTable, nTr) {
+                            var aData = oTable.fnGetData(nTr);
+                            var sOut = '<div class="innerDetails">';
+                            sOut += '<div class="activityDetails">' + aData[3] + '</div>';
+                            sOut += '</div>';
+                            return sOut;
+                        }
+                     
+            }
+            
+           
+            
+            );
+            
+            
+            
+           function ExpandAll() {
+           
+            $('#casehistorytable tbody tr').each(function () {
+            
+                       var nTr = this;                      
+                       var i = $.inArray( nTr, anOpen );                       
+                       if ( $(this).children(":first").hasClass("no-expand") != true ) {                       
+                    if($(this).children(":first").hasClass("rowHidden") == true ){
+                          var nDetailsRow = oTable.fnOpen( nTr, fnFormatDetails(oTable, nTr), 'details' );
+                          $(nDetailsRow).addClass("openRow");
+                          $(this).children(":first").addClass("rowExpanded").removeClass("rowHidden");
+                          $('div.innerDetails', nDetailsRow).slideDown(200);
+                          anOpen.push( nTr );
+                          }                       
+                         }
+                          function fnFormatDetails(oTable, nTr) {
+                            var aData = oTable.fnGetData(nTr);
+                            var sOut = '<div class="innerDetails">';
+                            sOut += '<div class="activityDetails">' + aData[3] + '</div>';
+                            sOut += '</div>';
+                            return sOut;
+                        }
+                       });  
+                    }
+                
+      function CollapseAll(){
+       $('#casehistorytable tbody tr').each(function () {
+            
+                       var nTr = this;                      
+                       var i = $.inArray( nTr, anOpen );                       
+                       if ( $(this).children(":first").hasClass("no-expand") != true ) {                       
+                    if($(this).children(":first").hasClass("rowExpanded") == true ){
+                          $(this).children(":first").addClass("rowHidden").removeClass("rowExpanded");
+                          $('div.innerDetails', $(nTr).next()[0]).slideUp( 200 , function () {
+                             oTable.fnClose( nTr );
+                          anOpen.splice( 0, 1 );
+                           }); 
+                          }                       
+                         }
+                          
+                       });  
+      
+      }          
+    </script>
+
+<apex:form >
+        <div style="float:left;">
+        <span class="pageheading">SI History 360 - SI Number: {!SInumber.Name}</span>
+        </div>
+        
+        <div style="float:right;position:relative;right:10px;top:10px;clear:none;">
+        <apex:outputLink onclick="pdfConvert();return false;"   title="Export to PDF" id="pdf">
+                            <apex:image id="PDFImage" value="{!URLFOR($Resource.DataTables, 'media/images/pdf_hover.png')}"/>                        
+        </apex:outputLink>
+        <apex:commandButton onclick="refreshSubtabById(); return false" value="Refresh Page" style="font-size:10px;padding:4px;margin-bottom:10px;"/><br/>
+        <apex:commandbutton id="backtocasebutton"  value="Back to SI" action="{!backtoSI}" style="font-size:10px;padding:4px;float:left"/> 
+        <!-- <apex:commandButton action="{!sinote}" value="New SI Note" style="font-size:10px;padding:4px;"/> -->
+        <!-- <apex:commandButton onclick="commentOpenSubtab(); return false" value="New SI Note" style="font-size:10px;padding:4px;"/> -->
+        <apex:commandbutton id="xpndbutton"  value="Expand All" onclick="ExpandAll(); return false;" style="font-size:10px;padding:4px;float:left"/>  
+        <apex:commandbutton id="collapsebutton"  value="Collapse All" onclick="CollapseAll(); return false;" style="font-size:10px;padding:4px;float:left"/>   
+        </div><br></br>    
+    
+</apex:form>
+
+ <div id="tabs-1">
+    
+        <table cellpadding="0" cellspacing="0" border="0" class="display" id="casehistorytable" width="100%">
+            <thead>
+                <tr>
+                    
+                    <th style="padding-left: 20px; border-left: 2px solid #D0D0D0;">Subject/Comments</th>
+                    <th>Created By</th>
+                    <th width="70%" style="border-right: 2px solid #D0D0D0;">Created Date</th>
+                    <th>Details</th>
+                    <th>Has Attachments</th>
+                    <th>Type</th>
+                    
+                </tr>
+            </thead>
+
+
+<tbody>
+  
+<apex:repeat value="{!SIHistories}" var="list">
+<script type="text/javascript">
+                    $(document).ready(function(){
+                    var str = $('#{!list.mainId}').text();
+                    str = str.replace(/&(lt|gt);/g, function (strMatch, p1){
+                        return (p1 == "lt")? "<" : ">";
+                    });
+                    var strTagStrippedText = str.replace(/<\/?[^>]+(>|$)/g, "");
+                     $('#{!list.mainId}').html(strTagStrippedText);
+                     });
+  </script>
+  
+<tr>
+
+                        
+                        <td valign="center" style="padding-left: 20px; border-left: 1px solid #D0D0D0;" class="{!IF(list.Subject == null, 'no-expand', 'rowHidden')}">
+                        <apex:image value="{!list.itemType}" style="clear:none;float:left;margin-right:10px;" />
+                        <!--  <apex:outputText value="{!list.Details}" escape="false" style="margin-top:10px;" /> -->
+                        <!-- <apex:outputText escape="false" value="{!list.Subject}" style="line-height: 30px;margin-top:7px;" rendered="{!IF(list.Summary == null, true, false)}"/> -->
+                        <apex:outputText escape="false" value="{!list.Subject}" style="margin-top:7px;" rendered="{!IF(list.Summary != Null, true, false)}" /> 
+                        <div id="{!list.mainId}" style="margin-top:3px;color:#787878;font-weight:bolder;display:block;font-style:italic;"><apex:outputText escape="false" value="{!LEFT(list.Summary, 125)}{!IF(LEN(list.Details)>125,"...","")}"/></div>
+                            
+                       
+                            
+                        </td>
+                        
+                        <td>
+                            <apex:outputText value="{!list.createdName}"/>
+                        </td>
+                    
+                        <td>
+                            
+                            <apex:outputText value="{!list.createDateFix}"></apex:outputText>
+                            <!-- <apex:outputText value="{!list.createddate}" /> -->
+                            <!--  <apex:outputField value="{!list.createddate}"/> -->
+                        </td>
+
+                        <td><!-- Hidden -->
+                                <apex:outputText value="{!list.Summary}" escape="false" style="margin-top:10px;" />
+                        </td>
+                        
+                        <td>
+                            <apex:outputText value="{!list.HasAttachments}"/>
+                        </td>
+                        
+                        <td>
+                            <apex:outputText value="{!list.itemTypename}"/>
+                        </td>
+                        
+                        
+                       
+                        
+                        
+                        
+</tr>
+
+</apex:repeat>
+</tbody>
+</table>
+</div>
+</apex:page>

@@ -1,0 +1,213 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<CustomLabels xmlns="http://soap.sforce.com/2006/04/metadata">
+    <labels>
+        <fullName>BTN_CANCEL</fullName>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>Cancel Button</shortDescription>
+        <value>Cancel</value>
+    </labels>
+    <labels>
+        <fullName>BTN_CLONE</fullName>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>Clone Button</shortDescription>
+        <value>Clone</value>
+    </labels>
+    <labels>
+        <fullName>BTN_DELETE</fullName>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>Delete Button</shortDescription>
+        <value>Delete</value>
+    </labels>
+    <labels>
+        <fullName>BTN_OK</fullName>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>Ok Button</shortDescription>
+        <value>Ok</value>
+    </labels>
+    <labels>
+        <fullName>BTN_SAVE</fullName>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>Save Button</shortDescription>
+        <value>Save</value>
+    </labels>
+    <labels>
+        <fullName>BTN_SELECT_ALL</fullName>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>Select All</shortDescription>
+        <value>Select All</value>
+    </labels>
+    <labels>
+        <fullName>BTN_UNSELECT_ALL</fullName>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>Unselect All</shortDescription>
+        <value>Clear All</value>
+    </labels>
+    <labels>
+        <fullName>MP_CPQ_COLUMN</fullName>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>CPQ Column</shortDescription>
+        <value>CPQ Column</value>
+    </labels>
+    <labels>
+        <fullName>MP_CPQ_FIELD</fullName>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>CPQ Field</shortDescription>
+        <value>CPQ Field</value>
+    </labels>
+    <labels>
+        <fullName>MP_IN</fullName>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>Mapping Type &lt;IN&gt;</shortDescription>
+        <value>IN (Salesforce.com &gt; Cameleon CPQ)</value>
+    </labels>
+    <labels>
+        <fullName>MP_MAPPED_ONLY</fullName>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>Mapped fields only</shortDescription>
+        <value>View Mapped Fields Only</value>
+    </labels>
+    <labels>
+        <fullName>MP_OUT</fullName>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>Mapping Type &lt;OUT&gt;</shortDescription>
+        <value>OUT (Cameleon CPQ &gt; Salesforce.com)</value>
+    </labels>
+    <labels>
+        <fullName>MP_SELECT_OBJ</fullName>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>Select Object</shortDescription>
+        <value>Select Related Object</value>
+    </labels>
+    <labels>
+        <fullName>MP_SFDC_FIELD</fullName>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>SFDC Field</shortDescription>
+        <value>SFDC Field</value>
+    </labels>
+    <labels>
+        <fullName>MP_SUBTITLE</fullName>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>Mapping Builder SubTitle</shortDescription>
+        <value>Builder</value>
+    </labels>
+    <labels>
+        <fullName>MP_SYNC_COLUMN</fullName>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>Synchronization column</shortDescription>
+        <value>Using synchronization column :</value>
+    </labels>
+    <labels>
+        <fullName>MP_SYNC_DEL</fullName>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>Sync OUT Delete Mode</shortDescription>
+        <value>‘Basic’ policy (Delete &amp; Re-Create All)</value>
+    </labels>
+    <labels>
+        <fullName>MP_SYNC_UPD</fullName>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>Sync OUT Update Mode</shortDescription>
+        <value>‘Advanced update (update/add)’ policy</value>
+    </labels>
+    <labels>
+        <fullName>MP_SYNC_UPDDEL</fullName>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>Sync OUT Update/Delete Mode</shortDescription>
+        <value>‘Advanced update (delete/update/add)’ policy</value>
+    </labels>
+    <labels>
+        <fullName>MSG_ERROR</fullName>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>Error</shortDescription>
+        <value>Unrecoverable error occured in Cameleon-cloud CPQ. Please contact your customer support.</value>
+    </labels>
+    <labels>
+        <fullName>MSG_LICENSE</fullName>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>License</shortDescription>
+        <value>Cameleon-cloud CPQ licence limit has been reached. Please contact your customer support.</value>
+    </labels>
+    <labels>
+        <fullName>MSG_MAINT</fullName>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>Maintenance</shortDescription>
+        <value>Cameleon-cloud CPQ is temporarily down for maintenance. Please try again later.</value>
+    </labels>
+    <labels>
+        <fullName>MSG_MP_NOADDOBJ</fullName>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>Add Object Not Allowed</shortDescription>
+        <value>You cannot specify mapping for Salesforce.com entities related to this object ( depth limit reached )</value>
+    </labels>
+    <labels>
+        <fullName>MSG_MP_NODELOBJ</fullName>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>Delete Object Not Allowed</shortDescription>
+        <value>You can remove object dependencies at this level</value>
+    </labels>
+    <labels>
+        <fullName>NO_QR_CREATION</fullName>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>Create New Release Forbidden</shortDescription>
+        <value>You cannot create a new release before the initial release has been synchronized</value>
+    </labels>
+    <labels>
+        <fullName>NO_QR_DELETION</fullName>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>Release Deletion Forbidden</shortDescription>
+        <value>You cannot delete the current active release</value>
+    </labels>
+    <labels>
+        <fullName>SINGLE_QR_SELECTION</fullName>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>Single release selection</shortDescription>
+        <value>Only one release must be selected</value>
+    </labels>
+    <labels>
+        <fullName>SYNCHRONIZATION</fullName>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>Content to Overview Synchronization</shortDescription>
+        <value>Synchronization.....</value>
+    </labels>
+    <labels>
+        <fullName>TAB_CONTENT</fullName>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>Quote Panel Content Tab</shortDescription>
+        <value>Content</value>
+    </labels>
+    <labels>
+        <fullName>TAB_OVERVIEW</fullName>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>Quote Panel Overview Tab</shortDescription>
+        <value>Overview</value>
+    </labels>
+</CustomLabels>

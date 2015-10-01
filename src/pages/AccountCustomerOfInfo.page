@@ -1,0 +1,145 @@
+<apex:page standardController="Account" showHeader="true" tabStyle="account">
+    <style>
+    .activeTab {height:10px;width:100px;background-color: #236FBD; font-weight:bold; color:white;  border-style: hidden;background-image:none;}
+    .inactiveTab {height:10px;width:100px; background-color: lightgrey; color:black;font-weight:bold;border-style: hidden;background-image:none;}
+    .disabledTab {height:10px;width:100px; background-color: lightgrey; color:grey;border-style: hidden;background-image:none;}
+    </style>
+    <apex:tabPanel switchType="client" id="theTabPanel" tabClass="activeTab" disabledTabClass="disabledTab" inactiveTabClass="inactiveTab" width="100%">
+        <apex:tab label="Learn" name="customerOfLearn" id="customerOfLearn" disabled="{!NOT(account.CustomerofLearn__c)}">
+            <apex:pageBlock id="customerOfLearnBlock">
+                <apex:image url="{!$Resource.learnLogo}"/>
+                    <apex:pageBlockSection columns="2" showHeader="false" > 
+                      <apex:pageBlockSection columns="1" > 
+                            <apex:outputField value="{!account.CustomerOfBbClassicCEVista__c}" />
+                            <apex:outputField value="{!account.Bb_APRD_LS_Enterprise__c}" />
+                            <apex:outputField value="{!account.LearnSaas__c}"/>
+                            <apex:outputField value="{!account.Bb_APRD_LS_Community__c}"/>
+                            <apex:outputField value="{!account.Bb_APRD_LS_Content__c}"/>
+                            <apex:outputField value="{!account.Bb_APRD_Outcomes__c}" />
+                            <apex:outputField value="{!account.Bb_APRD_ProSites__c}"/>
+                            <apex:outputField value="{!account.Bb_APRD_LS_Basic__c}"/>
+                            <apex:outputField value="{!account.Managed_Hosting__c}"/>
+
+                       </apex:pageBlockSection>
+                       <apex:pageBlockSection columns="1"> 
+                            <apex:outputField value="{!account.Learn_Customer_Since__c}"  rendered="{!account.Learn_Customer_Since__c != Null}"/>
+                            <apex:outputField value="{!account.Learn_Contract_Value__c}"  rendered="{!account.Learn_Contract_Value__c != Null}"/>
+                            <apex:outputField value="{!account.CustomerofANGEL__c}"  />
+                            <apex:outputField value="{!account.Bb_APRD_WCT_Vista__c}"/>
+                            <apex:outputField value="{!account.Bb_APRD_WCT_Enterprise__c}"/>
+                            <apex:outputField value="{!account.Bb_APRD_WCT_Portfolio__c}"/>
+                            <apex:outputField value="{!account.Bb_APRD_WCT_Basic__c}" />
+                            <apex:outputField value="{!account.CustomerofXythos__c}"/>
+                      </apex:pageBlockSection>
+                </apex:pageBlockSection> 
+            </apex:pageBlock>
+        </apex:tab>
+        <apex:tab label="Mobile" name="customerOfMobile" id="customerOfMobile" disabled="{!NOT(account.CustomerofMobile__c)}">
+            <apex:pageBlock >
+                <apex:image url="{!$Resource.mobileLogo}"/>
+                <apex:pageBlockSection columns="2" showHeader="false">
+                    <apex:outputField value="{!account.Bb_APRD_Mobile_Learn__c}"  rendered="{!account.Bb_APRD_Mobile_Learn__c == True}"/>
+                    <apex:outputField value="{!account.MobilEdu_Customer_Since__c}" rendered="{!account.MobilEdu_Customer_Since__c !=Null}" />
+                    <apex:outputField value="{!account.Bb_APRD_Mobile_Central__c}" rendered="{!account.Bb_APRD_Mobile_Central__c == True}"/>
+                    <apex:outputField value="{!account.Mobile_Contract_Value__c}" rendered="{!account.Mobile_Contract_Value__c!=Null && account.Mobile_Contract_Value__c >0}"/>
+                    <apex:outputField value="{!account.Bb_APRD_Mobile_Learn_No_Cost__c}" rendered="{!account.Bb_APRD_Mobile_Learn_No_Cost__c == True}"/>
+                    <!-- added Parentlink fields by Vibha according to TP:#15210 -->
+                    <apex:outputField value="{!account.Parentlink_Mobile__c}" />
+                    <apex:outputField value="{!account.Parentlink_Sociability__c}" />
+                </apex:pageBlockSection>
+            </apex:pageBlock>
+        </apex:tab>
+        <apex:tab label="Transact" name="customerOfTransact" id="customerOfTransact" disabled="{!NOT(account.CustomerofTransact__c)}">
+            <apex:pageBlock >
+                <apex:image url="{!$Resource.transactLogo}"/>
+                <apex:pageBlockSection columns="2" showHeader="false">
+                    <apex:outputField value="{!account.Transact_Customer_Since__c}"  rendered="{!account.Transact_Customer_Since__c !=Null}" />
+                    <apex:outputField value="{!account.Transact_Contract_Value__c}"   rendered="{!account.Transact_Contract_Value__c!=Null && account.Transact_Contract_Value__c >0}" />
+                </apex:pageBlockSection>
+            </apex:pageBlock>
+        </apex:tab>
+        <apex:tab label="Connect" name="customerOfConnect" id="customerOfConnect" disabled="{!NOT(account.CustomerofConnect__c)}">
+            <apex:pageBlock >
+                <apex:image url="{!$Resource.connectLogo}"/>
+                <apex:pageBlockSection columns="2" showHeader="false">
+                    <apex:outputField value="{!account.CustomerofAlertNow__c}" rendered="{!account.CustomerofAlertNow__c == True}"/>
+                    <apex:outputField value="{!account.Connect_Customer_Since__c}" rendered="{!account.Connect_Customer_Since__c !=Null}"/>
+                    <apex:outputField value="{!account.Bb_APRD_Bb_Connect__c}" rendered="{!account.Bb_APRD_Bb_Connect__c == True}"/>
+                    <apex:outputField value="{!account.Connect_Contract_Value__c}" rendered="{!account.Connect_Contract_Value__c!=Null && account.Connect_Contract_Value__c >0}"/>
+                    <apex:outputField value="{!account.Bb_APRD_txtTools__c}" rendered="{!account.Bb_APRD_txtTools__c == True}"/>
+                    <!-- added Parentlink field by Vibha according to TP:#15210 -->
+                    <apex:outputField value="{!account.Parentlink_Notification__c}" />
+                    <apex:outputText value=""/>
+                    <apex:outputField value="{!account.Edline_Notification__c}" rendered="{!account.Edline_Notification__c ==True}"/>
+                </apex:pageBlockSection>
+            </apex:pageBlock>
+        </apex:tab>
+        <apex:tab label="Engage" name="customerOfEdline" id="customerOfEdline" disabled="{!NOT(account.CustomerofEdline__c)}">
+            <apex:pageBlock >
+                <apex:image url=""/>
+                <apex:pageBlockSection columns="2" showHeader="false">
+                    <apex:outputField value="{!account.Edline_Customer_Since__c}"  rendered="{!account.Edline_Customer_Since__c != Null}"/>
+                    <apex:outputField value="{!account.Edline_Contract_Value__c}"  rendered="{!account.Edline_Contract_Value__c!=Null && account.Edline_Contract_Value__c >0}"/>
+                    <apex:outputField value="{!account.Edline_LCMS__c}" rendered="{!account.Edline_LCMS__c==True}"/>
+                    <apex:outputField value="{!account.K12Central__c}" rendered="{!account.K12Central__c==True}"/>
+                    <apex:outputField value="{!account.WebGB__c}" rendered="{!account.WebGB__c==True}"/>
+                    <!--This was added by Sneha on request by Bill #CHG0124065 -->
+                    <apex:outputField value="{!account.Schoolwires__c}" rendered="{!account.Schoolwires__c==True}"/>
+
+                </apex:pageBlockSection>
+            </apex:pageBlock>
+        </apex:tab>
+        <apex:tab label="Collaborate" name="customerOfCollaborate" id="customerOfCollaborate" disabled="{!NOT(account.CustomerofCollaborate__c)}">
+            <apex:pageBlock >
+                <apex:image url="{!$Resource.collaborateLogo}"/>
+                <apex:pageBlockSection columns="2" showHeader="false">
+                <apex:outputField value="{!account.CollabSaas__c}"/>
+                    <apex:outputField value="{!account.Products__c}" rendered="{!account.Products__c != Null}" />
+                    <apex:outputField value="{!account.Collaborate_Customer_Since__c}"  rendered="{!account.Collaborate_Customer_Since__c != Null}"/>
+                    <apex:outputText value=" "/>
+                    <apex:outputField value="{!account.Collaborate_Contract_Value__c}"   rendered="{!account.Collaborate_Contract_Value__c!=Null && account.Collaborate_Contract_Value__c >0}"/>
+                </apex:pageBlockSection>
+            </apex:pageBlock>
+        </apex:tab>
+        <apex:tab label="Student Services" name="customerOfStudentServices" id="customerOfStudentServices" disabled="{!NOT(account.CustomerofStudentServices__c)}">
+            <apex:pageBlock >
+                <apex:pageBlockSection columns="2" showHeader="false">
+                    <apex:outputField value="{!account.Student_Services_Customer_Since__c}"  rendered="{!account.Student_Services_Customer_Since__c != Null}"/>
+                    <apex:outputField value="{!account.Student_Services_Contract_Value__c}"  rendered="{!account.Student_Services_Contract_Value__c!=Null && account.Student_Services_Contract_Value__c >0}"/>
+                </apex:pageBlockSection>
+            </apex:pageBlock>
+        </apex:tab>
+        <apex:tab label="Analytics" name="customerOfAnalytics" id="customerOfAnalytics" disabled="{!NOT(account.CustomerofAnalytics__c)}">
+            <apex:pageBlock >
+                <apex:image url="{!$Resource.analyticsLogo}"/>
+                <apex:pageBlockSection columns="2" showHeader="false">
+                    <apex:outputField value="{!account.Analytics_Customer_Since__c}" rendered="{!account.Analytics_Customer_Since__c != Null}"/>
+                    <apex:outputField value="{!account.Analytics_Contract_Value__c}"  rendered="{!account.Analytics_Contract_Value__c!=Null && account.Analytics_Contract_Value__c >0}"/>
+                </apex:pageBlockSection>
+            </apex:pageBlock>
+        </apex:tab>
+        <apex:tab label="moodlerooms" name="customerOfMoodleRooms" id="customerOfMoodleRooms" disabled="{!NOT(account.CustomerOfMoodleRooms__c)}">
+            <apex:pageBlock >
+                <apex:pageBlockSection columns="2" showHeader="false">
+                
+                   
+                    <apex:outputfield value="{!account.moodlerooms_Contract_Value__c}" label="MR Contract Value (USD)" rendered="{!account.moodlerooms_Contract_Value__c!=Null && account.moodlerooms_Contract_Value__c >0}" />
+                    
+                    <!-- Added By Nikhil to Add five fields (TP:5358) --->
+                    <apex:outputField value="{!account.Joule__c}" rendered="{!account.Joule__c == True}"/>
+                    <apex:outputField value="{!account.Power__c}" rendered="{!account.Power__c == True}"/>
+                    <apex:outputField value="{!account.xpLor__c}" rendered="{!account.xpLor__c == True}"/>
+                    <apex:outputField value="{!account.Recurring_Training__c}" rendered="{!account.Recurring_Training__c == True}"/>
+                    <apex:outputField value="{!account.Add_ons__c}" rendered="{!account.Add_ons__c == True}"/>
+                </apex:pageBlockSection>
+            </apex:pageBlock>
+        </apex:tab>
+        <apex:tab label="Netspot" name="CustomerofNetSpot" id="CustomerofNetSpot" disabled="{!NOT(account.CustomerofNetSpot__c)}">
+            <apex:pageBlock >
+                <apex:pageBlockSection columns="2" showHeader="false">
+                    <apex:outputField value="{!account.NetSpot_Contract_Value__c}" rendered="{!account.NetSpot_Contract_Value__c!=Null && account.NetSpot_Contract_Value__c >0}"/>
+                </apex:pageBlockSection>
+            </apex:pageBlock>
+        </apex:tab>
+    </apex:tabPanel>
+</apex:page>

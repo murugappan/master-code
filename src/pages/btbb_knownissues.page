@@ -1,0 +1,231 @@
+<apex:page showHeader="false" sidebar="false" standardStylesheets="false" cache="false" contentType="text/html" action="{!defaultProductSelect}" controller="btbb_knownissues" readOnly="true">
+<apex:composition template="btbb_template">
+<apex:define name="nav"><c:btbb_auth_nav /></apex:define>
+<apex:define name="topbar"><c:btbb_globalsearch /></apex:define>
+<apex:define name="js">
+<style type="text/css" title="currentStyle"> 
+    @import "{!URLFOR($Resource.BTBB_KnownIssues, 'media/css/btbb_caseactivity.css')}";
+    @import "{!URLFOR($Resource.DataTables, 'media/css/TableTools.css')}";
+    .dialogTitle { font-size: 14px; font-weight: bold; color: #454545; margin-bottom:10px;  }
+    .column-filter-widgets a.filter-term { display:block; width: auto; padding-top:0;padding-bottom:0; margin-top:4px; padding-right: 10px;}
+    table.display {padding-top:20px}
+    .column-filter-widget select {display: block;margin-right: 10px;width: 90%;}
+</style>
+                <script type="text/javascript" charset="utf-8" src="{!URLFOR($Resource.DataTables, 'media/js/jquery.js')}"></script> 
+                <script type="text/javascript" charset="utf-8" src="{!URLFOR($Resource.DataTables, 'media/js/jquery.dataTables.js')}"></script> 
+                <script type="text/javascript" charset="utf-8" src="{!URLFOR($Resource.DataTables, 'media/js/ColReorder.js')}"></script>
+                <script type="text/javascript" charset="utf-8" src="{!URLFOR($Resource.DataTables, 'media/js/ColVis.js')}"></script> 
+                <script type="text/javascript" charset="utf-8" src="{!URLFOR($Resource.DataTables, 'media/js/ZeroClipboard.js')}"></script> 
+                <script type="text/javascript" charset="utf-8" src="{!URLFOR($Resource.DataTables, 'media/js/TableTools.js')}"></script>
+                <script type="text/javascript" charset="utf-8" src="{!URLFOR($Resource.DataTables, 'media/js/ColumnFilterWidgets.js')}"></script>
+<script type="text/javascript">
+       var anOpen = [];
+$(document).ready(function() {
+    var oTable=$('#knownissuestable').dataTable({ 
+        "bRetrieve" : true,
+        "bDestroy" : true,
+         "bAutoWidth": false,
+        "sDom":'TW<"clear">,frtip',
+        "sPaginationType":"full_numbers",
+        "oColumnFilterWidgets":{
+             "aiExclude":[0,1,4,5],
+             "sSeparator": "[,]|[;]"
+         },
+         "oTableTools": {
+                                "sSwfPath": "{!URLFOR($Resource.DataTables, 'media/swf/copy_cvs_xls_pdf.swf')}",
+                                "aButtons": [
+                                                {
+                                                    "sExtends": "xls",
+                                                    "sTitle": "Known Issues Report",   
+                                                    "sFileName": "{!FullName}-KnownIssues.pdf",
+                                                    "showAll": true,
+                                                    "mColumns": [ 0, 1, 2, 3, 5, 6 ],
+                                                    "bFooter": false
+                                                },
+                                                {
+                                                    "sExtends": "pdf",
+                                                    "sPdfOrientation": "landscape",
+                                                    "sFileName": "{!FullName}-KnownIssues.pdf",
+                                                    "sPdfMessage": "Created: {!Now()}",
+                                                    "sTitle": "Known Issues Report",
+                                                    "mColumns": [ 0, 1, 2, 3, 5, 6 ],
+                                                    "showAll": true
+                                                }
+                                            ]
+                            }                             
+    });
+    oTable.fnSetColumnVis( 3, false );
+    oTable.fnSetColumnVis( 4, false );
+    oTable.fnSetColumnVis( 5, false );
+    oTable.fnSetColumnVis( 6, false );
+    oTable.fnSetColumnVis( 0, false );
+
+    });
+
+
+    $('#knownissuestable tbody tr').live( 'click', function () {
+       var nTr = this;
+       var i = $.inArray( nTr, anOpen );
+       if ( i === -1 ) {
+          var nDetailsRow = oTable.fnOpen( nTr, fnFormatDetails(oTable, nTr), 'details' );
+          $(nDetailsRow).addClass("openRow");
+          $(this).children(":first").addClass("active").removeClass("hidden");
+          $('div.innerDetails', nDetailsRow).slideDown(200);
+          anOpen.push( nTr );
+        } else {
+          $(this).children(":first").removeClass("active").addClass("hidden");
+          $('div.innerDetails', $(nTr).next()[0]).slideUp( 200 , function () {
+             oTable.fnClose( nTr );
+             anOpen.splice( i, 1 );
+           } );
+         }
+     } );
+function fnFormatDetails(oTable, nTr) {
+    var aData = oTable.fnGetData(nTr);
+    var sOut = '<div class="innerDetails">';
+    sOut += '<div class="activityDetails">' + aData[4] + '</div>';
+    sOut += '</div>';
+    return sOut;
+}
+function redraw(){
+
+if (typeof oTable == 'undefined') {
+            oTable = $('#knownissuestable').dataTable({
+                  "bRetrieve" : true,
+                  "bDestroy" : true,
+                   "bAutoWidth": false,
+                  "sDom":'TW<"clear">,frtip',
+                  "sPaginationType":"full_numbers",
+                  "oColumnFilterWidgets":{
+                      "aiExclude":[0,1,4,5],
+                      "sSeparator": "[;]|[,]",
+                      "bGroupTerms": false
+                  },
+                  "oTableTools": {
+                                "sSwfPath": "{!URLFOR($Resource.DataTables, 'media/swf/copy_cvs_xls_pdf.swf')}",
+                                "aButtons": [{
+                                                        "sExtends": "pdf",
+                                                        "sPdfOrientation": "landscape",
+                                                        "sPdfMessage": "Created: {!Now()}",
+                                                        "sFileName": "{!FullName}-KnownIssues.pdf",
+                                                        "sTitle": "Known Issues Report",
+                                                        "mColumns": [ 0, 1, 2, 3, 5, 6 ],
+                                                        "showAll": true
+                                                        },
+                                                        {
+                                                        "sExtends": "xls",
+                                                        "sFileName": "{!FullName}-KnownIssues.xls",
+                                                        "sTitle": "Known Issues Report",   
+                                                        "showAll": true,
+                                                        "bFooter": false,
+                                                        "mColumns": [ 0, 1, 2, 3, 5, 6 ]
+                                             }]
+                            }     
+    });
+    oTable.fnSetColumnVis( 3, false );
+    oTable.fnSetColumnVis( 4, false );
+    oTable.fnSetColumnVis( 5, false );
+    oTable.fnSetColumnVis( 6, false );
+    oTable.fnSetColumnVis( 0, false );
+        }
+        else
+        {
+            oTable.fnClearTable( 0 );
+            oTable.fnDraw();
+        }
+}
+</script>
+</apex:define>
+<apex:define name="content">
+    
+    <h2>Known Issues Search</h2>
+    
+    <apex:form >
+    
+    <apex:outputPanel id="RequiredSelect" style="display:block;margin: 20px 0;">
+            
+            <apex:outputPanel id="products" style="padding-right:30px;">
+            <apex:outputText value="  Product: " />
+                
+                <apex:selectList id="productlist2" value="{!product}" styleClass="select" multiselect="false" size="1">
+                    <apex:selectOptions value="{!products}" id="productlist" />
+                        <apex:actionSupport event="onchange" action="{!selectProduct}" rerender="versions" status="pStatus" />
+                </apex:selectList>
+            
+            <apex:actionStatus id="pStatus" startText=" " stopText=" "></apex:actionStatus>
+            </apex:outputPanel><!--[//END PRODUCT PICKLIST//]-->        
+        
+            <apex:outputPanel id="versions" style="margin-left:25px;">
+                <apex:outputText value=" Major Release: "  />
+                
+                <apex:selectList id="versionlist2" value="{!version}" disabled="{!if(product!=null||isprodsel==true,false,true)}" styleClass="select" multiselect="false" size="1" style="padding: 1px 0;">
+                    <apex:selectOptions value="{!versions}" id="versionlist"/>
+                        <apex:actionSupport event="onchange" action="{!selectMajor}" rerender="ResultsTable" status="vStatus"/>                       
+                </apex:selectList>
+                
+                <apex:actionStatus id="vStatus" startText=" " stopText=" " onstop="redraw()"></apex:actionStatus>
+            </apex:outputPanel><!--[//END MAJOR RELEASE PICKLIST//]-->    
+    
+    </apex:outputPanel><!--[//END TOP PICKLISTS//]-->
+    
+    <!--[//RERENDER TABLE FOR AJAX REQUEST//]-->
+    <apex:pageBlock id="ResultsTable">
+        <table cellpadding="0" cellspacing="0" border="0" class="display" id="knownissuestable" style="width:910px;">
+            <thead>
+                <tr>
+                    <th>Product</th><!-- [0] **HIDDEN** -->
+                    <th class="left" style="padding-left:25px;">Known Issue Details</th> <!-- [1] -->
+                    <th class="right" align="right">Target Release</th><!-- [2] -->
+                    <th>Patch Available</th><!-- [3] **HIDDEN** -->
+                    <th style="border-right: 1px solid #93CE37;">Summary</th> <!-- [4] **HIDDEN** -->
+                    <th>Major Release</th><!-- [5] **HIDDEN** -->
+                    <th>Service Pack</th><!-- [6] **HIDDEN** -->
+                </tr>
+            </thead>
+
+            <tbody>
+                <apex:repeat value="{!KnownIssues}" var="a">
+                    <tr>
+                        <!-- Row [0] **HIDDEN** Product -->
+                        <td>
+                            <apex:outputText value="{!a.Product__c}" escape="false"/>
+                        </td>
+                        <!-- Row [1] Visible (Article # - Article Name) -->
+                        <td style="padding-left: 20px; border-left: 1px solid #D0D0D0;" class="hidden">
+                                <apex:outputLink value="/apex/btbb_articleview?id={!a.Id}">#{!a.SolutionNumber} - {!a.SolutionName}</apex:outputLink>
+                        </td>
+                        <!-- Row [2] Visible (targetRelease) -->
+                        <td style="border-right: 1px solid #D0D0D0;padding-left:15px;" align="left" valign="center">
+                                <apex:outputText value="{!a.Target_Release_New__c}" />
+                        </td>
+                        <!-- Row[3] **HIDDEN** **FILTERABLE** (patchAvailable) -->
+                        <td>
+                                <apex:outputText value="{!a.Patch_Available__c}" escape="true" />
+                        </td>
+                        <!-- Row [4] **HIDDEN** (Details) -->
+                        <td>
+                            <div style="width:80%;padding:20px;">
+                            <b>Product:</b> {!a.Product__c}<br/>
+                            <b>Patch Available:</b> {!a.Patch_Available__c}<br/>
+                            <b>Target Release:</b> {!a.Target_Release_New__c}<br/> 
+                            <b>Summary:</b><br/>
+                            <apex:outputText value="{!a.summary__c}" escape="false"/><br/>                          
+                            </div>
+                        </td>
+                        <!-- Row [5] **HIDDEN** Major Release -->
+                        <td>
+                            <apex:outputText value="{!a.Major_Release__c}" escape="false"/>
+                        </td>
+                        <!-- Row [6] **HIDDEN** Versions -->
+                        <td>
+                            <apex:outputText value="{!a.Version_s__c}" escape="false"/>
+                        </td>
+                    </tr>
+                </apex:repeat>
+            </tbody>
+        </table>
+        </apex:pageBlock>
+         </apex:form>
+</apex:define>
+</apex:composition>
+</apex:page>

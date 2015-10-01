@@ -1,0 +1,314 @@
+<apex:page showHeader="false" > 
+<!-- This script takes the endpoint URL parameter passed from the deployment page and makes it the action for the form -->
+
+        <apex:includeScript value="{!URLFOR($Resource.BtBbStyles,'includes/theme2011/js/jquery-1.4.4.min.js')}"/>
+        <!-- <apex:includeScript value="{!URLFOR($Resource.ckeditor , 'ckeditor/ckeditor.js')}"/> -->
+     <apex:includeScript value="{!URLFOR($Resource.ckeditorNew , 'ckeditor/ckeditor.js')}"/>
+
+
+
+
+ <script type="text/javascript">
+
+    function validate()
+    {
+    
+        
+      var x = document.getElementById('prechat_field').value;
+      var y = document.getElementById('prechat_field1').value;
+      var z = document.getElementById('prechat_field2').value;
+      var za = document.getElementById('prechat_field7').value;
+      var zb = document.getElementById('prechat_field3').value;
+      var zc = document.getElementById('prechat_field8').value;
+      var zd = document.getElementById('prechat_field4').value;
+      var ze = document.getElementById('prechat_field5').value;
+      
+    var yz = document.getElementById('prechat_field1').value;  
+    var atpos=yz.indexOf("@");
+    var dotpos=yz.lastIndexOf(".");
+    
+      if(x==null || x=="")
+        {
+            alert("Name Field is mandatory");
+            return false;
+        }
+        
+      
+      if(y==null || y=="")
+        {
+            alert("Email Field is mandatory");
+            return false;
+        } 
+        
+  if(yz != null){
+      if (atpos<1 || dotpos<atpos+2 || dotpos+2>=yz.length)
+      {
+      alert("Not a valid e-mail address");
+      return false;
+      }
+  }
+        
+        
+      
+      if(z==null || z=="")
+        {
+            alert("Institution Field is mandatory");
+            return false;
+        } 
+      if(za==null || za=="-- Choose a Role ---")
+        {
+            alert("Role Field is mandatory");
+            return false;
+        } 
+      if(zb==null || zb=="")
+        {
+            alert("Phone Field is mandatory");
+            return false;
+        } 
+      if(zc==null || zc=="" || zc=="--- Choose a Product ---")
+        {
+            alert("Product Field is mandatory");
+            return false;
+        }
+      if(zd==null || zd=="")
+        {
+            alert("Subject Field is mandatory");
+            return false;
+        } 
+      if(ze==null || ze=="")
+        {
+            alert("Description Field is mandatory");
+            return false;
+        }   
+        
+      else{
+          return true;
+      }
+      
+    
+    
+    }
+    
+    
+    
+    function validate_form(thisform)
+    {
+        with (thisform)
+          {
+          if (validate(prechat_field,"Name Field is mandatory")==false)
+          {prechat_field.focus();return false;}
+          
+          if (validate(prechat_field1,"Email Field is mandatory")==false)
+          {prechat_field1.focus();return false;}
+          
+          if (validate(prechat_field1,"Not a valid e-mail address")==false)
+          {prechat_field1.focus();return false;}
+          
+          if (validate(prechat_field2,"Institution Field is mandatory")==false)
+          {prechat_field2.focus();return false;}
+          
+          if (validate(prechat_field7,"Institution Field is mandatory")==false)
+          {prechat_field7.focus();return false;}
+          
+          if (validate(prechat_field3,"Institution Field is mandatory")==false)
+          {prechat_field3.focus();return false;}
+          
+          if (validate(prechat_field8,"Institution Field is mandatory")==false)
+          {prechat_field8.focus();return false;}
+          
+          if (validate(prechat_field4,"Institution Field is mandatory")==false)
+          {prechat_field4.focus();return false;}
+          
+          if (validate(prechat_field5,"Institution Field is mandatory")==false)
+          {prechat_field5.focus();return false;}
+          }
+    }
+    
+ </script>
+
+
+
+
+<script type="text/javascript">
+                document.title = "New Case Comment";
+                CKEDITOR.replaceAll({toolbar : 'MyToolbar'});
+                CKEDITOR.config.enterMode = CKEDITOR.ENTER_BR;
+                CKEDITOR.config.shiftEnterMode = CKEDITOR.ENTER_P;
+                function refrshpage(){
+                refreshatt();
+                }
+                
+      $(document).ready(function() {
+      
+      $("#commentbutton").show();
+      });          
+      </script>
+
+
+
+
+
+
+
+
+
+
+<script type='text/javascript'>
+liveagent.addEventListener(liveagent.chasitor.Events.CHAT_REQUEST_SUCCESSFUL, myCallBack);
+liveagent.addEventListener(liveagent.chasitor.Events.CHAT_ESTABLISHED, newagent);
+liveagent.addEventListener(liveagent.chasitor.Events.AGENT_CHAT_TRANSFERRED, newagent);
+function myCallBack() {
+var details = liveagent.chasitor.getDetails();
+
+}
+function newagent() {
+var details = liveagent.chasitor.getDetails();
+
+}
+</script>
+
+<style>
+html {
+padding: 20px;
+}
+body {
+width: 1500px;
+height: 1500px;
+padding: 1px;
+margin: 0
+}
+
+#liveAgentSaveButton, #liveAgentEndButton { z-index: 2; }
+.liveAgentChatInput {
+top:8px;
+height: 25px;
+border-width: 1px;
+border-style: solid;
+border-color: #BB0000;
+padding: 2px 0 2px 4px;
+background: #fff;
+display: block;
+width: 99%;
+}
+.liveAgentSendButton {
+display: block;
+width: 60px;
+height: 31px;
+padding: 0 0 3px;
+position: absolute;
+top: 0;
+right: -67px;
+}
+#liveAgentChatLog {
+border-color: #BB0000;
+background-image:linear-gradient(#DDEEFF, #AABBCC);
+box-shadow: 10px 10px 5px #888888;
+border-radius: 10px;
+padding:10px;
+width: auto;
+height: auto;
+top: 38px;
+position: absolute;
+overflow-y: auto;
+left: 0;
+right: 0;
+bottom: 0;
+}
+</style>
+
+
+
+
+
+
+
+<!-- Sample -->
+
+<script type="text/javascript">
+     (function() { 
+     function handlePageLoad() {
+       var endpointMatcher = new RegExp("[\\?\\&]endpoint=([^&#]*)");
+       document.getElementById('prechatForm').setAttribute('action',
+       decodeURIComponent(endpointMatcher.exec(document.location.search)[1]));
+     } if (window.addEventListener) {
+              window.addEventListener('load', handlePageLoad, false);
+   } else { window.attachEvent('onload', handlePageLoad, false);
+              }})(); 
+</script>
+<!-- <h1>Pre-chat Form</h1> -->
+<body >
+<b>Welcome to the chat support center for Blackboard Collaborate!</b>&nbsp;&nbsp;&nbsp;<apex:image url="{!$Resource.Bb_Collaborate}" width="85" height="30"/><br/><br/>
+ 
+To help us serve you better, please provide some information before we begin your chat.<br/>
+ 
+<font size="2" color="red">Required fields indicated with an asterisk (*).</font> <br/>
+<form method='post' id='prechatForm' onsubmit='return validate_form(this)' > 
+<table id="pb">
+<tr><td><font size="2" color="red">*</font>Name:</td><td><input type='text' name='liveagent.prechat:Name' id='prechat_field' /></td></tr>
+<input type="hidden" name="liveagent.prechat.save:Name" value="End_User_Name__c" /> 
+<tr><td><font size="2" color="red">*</font>Email:</td><td><input type='text' name='liveagent.prechat:Email' id='prechat_field1' /></td></tr>
+<input type="hidden" name="liveagent.prechat.save:Email" value="End_User_Email__c" /> 
+<tr><td><font size="2" color="red">*</font>Institution:</td><td><input type='text' name='liveagent.prechat:Institution' id='prechat_field2' /></td></tr>
+<input type="hidden" name="liveagent.prechat.save:Institution" value="End_User_Institution__c" />
+<!-- <input type="hidden" name="liveagent.prechat.query:Email" value="Contact,Contact.Email" /> -->
+<tr><td><font size="2" color="red">*</font>Role:</td><td><select name='liveagent.prechat:Role' id='prechat_field7'>
+      <option>-- Choose a Role ---</option>
+      <option>Participant / Student</option>
+      <option>Presenter / Faculty</option>
+      <option>Administrator</option>
+      </select></td></tr>
+<input type="hidden" name="liveagent.prechat.save:Role" value="End_User_Institution_Role__c" />
+<tr><td><font size="2" color="red">*</font>Phone:</td><td><input type='text' name='liveagent.prechat:Phone' id='prechat_field3' /></td></tr>
+<input type="hidden" name="liveagent.prechat.save:Phone" value="End_User_Phone__c" />
+<tr><td><font size="2" color="red">*</font>Product:</td><td><select name='liveagent.prechat:Product' id='prechat_field8'>
+      <option>--- Choose a Product ---</option>
+      <option>Web Conferencing</option>
+      <option>Blackboard IM</option>
+      <option>Voice Authoring</option>
+      <option>Wimba Classroom</option>
+      <option>SAS</option>
+      <option>ELM</option>
+      <option>Create</option>
+      <option>Diploma</option>
+      <option>Publish</option>
+      <option>Plan</option>
+      </select></td></tr>
+<input type="hidden" name="liveagent.prechat.save:Product" value="End_User_Product__c" />
+<tr><td><font size="2" color="red">*</font>Subject:</td><td><input type='text' name='liveagent.prechat:Subject' id='prechat_field4' size="75" maxlength="255" /></td></tr>
+<input type="hidden" name="liveagent.prechat.save:Subject" value="End_User_Subject__c" />
+<tr><td><font size="2" color="red">*</font>Description:</td><td><input type='text' name='liveagent.prechat:Description' id='prechat_field5' size="75" style="height:60px;"  /></td></tr>
+<input type="hidden" name="liveagent.prechat.save:Description" value="End_User_Description__c" />
+</table><br/>
+   
+      
+      
+      
+<!-- Create a Case every time -->
+ <input type="hidden" name="liveagent.prechat:caseOrigin" value="Chat" />
+ <input type="hidden" name="liveagent.prechat.findorcreate.map:EndUser__c" value="Name,Name;Email__c,Email;Institution_text__c,Institution;Institution_Role__c,Role;Phone__c,Phone;Product_Suite__c,Product;" />
+ <input type="hidden" name="liveagent.prechat.findorcreate.map.doFind:EndUser__c" value= "Email__c,true;" />
+ <input type="hidden" name="liveagent.prechat.findorcreate.map.doCreate:EndUser__c" value="Name,true;Email__c,true;Institution_text__c,true;Institution_Role__c,true;Phone__c,true;Product_Suite__c,true;"/>
+ <input type="hidden" name="liveagent.prechat.findorcreate.saveToTranscript:EndUser__c" value="End_User__c" />
+ <input type="hidden" name="liveagent.prechat.findorcreate.showOnCreate:EndUser__c" value="true" />
+ <input type="hidden" name="liveagent.prechat.findorcreate.map:ChatCase__c" value="subject__c,Subject;name__c,Name;email__c,Email;institution__c,Institution;description__c,Description;role__c,Role;phone__c,Phone;product__c,Product;" />
+ <input type="hidden" name="liveagent.prechat.findorcreate.map.doCreate:ChatCase__c" value="subject__c,true;name__c,true;email__c,true;institution__c,true;description__c,true;role__c,true;phone__c,true;product__c,true;" />
+ <input type="hidden" name="liveagent.prechat.findorcreate.saveToTranscript:ChatCase__c" value="ChatCase__c" />
+ <input type="hidden" name="liveagent.prechat.findorcreate.showOnCreate:ChatCase__c" value="true" />
+      
+      
+      
+      
+      
+      
+        
+      &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+      <!-- <input type="hidden" name="liveagent.prechat.query:Email" 
+      value="Contact,Contact.Email" /> commented by Muru --> 
+      <!-- <input type="hidden" name="liveagent.prechat.save:Email" value="Email__c" /> -->
+      &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<input type='submit' value='Request Chat' id='prechat_submit'/> 
+<style type="text/css"> 
+p {font-weight: bolder } 
+</style> 
+</form> 
+</body>
+</apex:page>

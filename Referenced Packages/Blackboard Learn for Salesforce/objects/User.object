@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<CustomObject xmlns="http://soap.sforce.com/2006/04/metadata">
+    <fields>
+        <fullName>Learner_s_Name__c</fullName>
+        <deprecated>false</deprecated>
+        <description>Formula refers to the Learner&apos;s Name</description>
+        <externalId>false</externalId>
+        <formula>LastName&amp;&quot;,&quot;&amp;&quot; &quot;&amp; FirstName</formula>
+        <formulaTreatBlanksAs>BlankAsZero</formulaTreatBlanksAs>
+        <label>Learner&apos;s Name</label>
+        <required>false</required>
+        <type>Text</type>
+        <unique>false</unique>
+    </fields>
+</CustomObject>

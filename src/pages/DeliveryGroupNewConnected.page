@@ -1,0 +1,44 @@
+<apex:page standardcontroller="KimbleOne__DeliveryGroup__c" sidebar="false" >
+ 
+    <apex:outputPanel layout="none" rendered="{!KimbleOne__DeliveryGroup__c.Id == null}">
+        <apex:sectionHeader title="" subtitle="New {!$ObjectType.KimbleOne__DeliveryGroup__c.label}"/>
+    </apex:outputPanel>
+    
+    <apex:pageMessages />
+ 
+    <apex:form >  
+      
+        <apex:pageBlock mode="edit">
+
+            <apex:pageBlockSection title="Engagement Details" collapsible="false">
+                
+                <apex:pageBlockSectionItem >
+                    <apex:outputText value="Opportunity"/>
+                    <apex:inputField id="salesOpportunity" value="{!KimbleOne__DeliveryGroup__c.KimbleOne__SalesOpportunity__c}" required="true"/>
+                </apex:pageBlockSectionItem>                        
+                &nbsp;
+                
+                <apex:inputField id="shortName" value="{!KimbleOne__DeliveryGroup__c.KimbleOne__ShortName__c}" required="true"/>
+                <apex:inputField id="reference" value="{!KimbleOne__DeliveryGroup__c.KimbleOne__Reference__c}"/>
+           
+                <apex:inputField id="productGroup"  value="{!KimbleOne__DeliveryGroup__c.KimbleOne__ProductGroup__c}" required="true"/>   
+                &nbsp;
+                
+                <apex:inputField id="startdate" value="{!KimbleOne__DeliveryGroup__c.KimbleOne__ExpectedStartDate__c}" required="true"/>
+                &nbsp;
+                 
+                <apex:repeat value="{!$ObjectType.KimbleOne__DeliveryGroup__c.FieldSets.KimbleOne__DeliveryGroupDetails}" var="f">
+                    <apex:inputField value="{!KimbleOne__DeliveryGroup__c[f]}"/>
+                </apex:repeat>
+                
+            </apex:pageBlockSection>
+
+        </apex:pageBlock>
+
+        <apex:pageBlock >
+            <apex:commandButton id="save" action="{!Save}" value="Save"/>
+        </apex:pageBlock>
+
+    </apex:form>
+
+</apex:page>

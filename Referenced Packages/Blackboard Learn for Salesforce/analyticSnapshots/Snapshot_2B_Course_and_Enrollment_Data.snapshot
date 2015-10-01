@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<AnalyticSnapshot xmlns="http://soap.sforce.com/2006/04/metadata">
+    <description>Custom Analytic Snapshot for the Course and Enrollment object.</description>
+    <groupColumn>Enrollment__c$CreatedDate</groupColumn>
+    <mappings>
+        <sourceField>FORMULA1</sourceField>
+        <sourceType>summary</sourceType>
+        <targetField>Course_Enrollment_Data__c.Course_Cost__c</targetField>
+    </mappings>
+    <name>Snapshot #2B - Course and Enrollment Data</name>
+    <runningUser>mabrown1@blackboard.com</runningUser>
+    <sourceReport>Blackboard_Analytic_Snapshot_Reports/Enrollment_and_Course_Snapshot_Data</sourceReport>
+    <targetObject>Course_Enrollment_Data__c</targetObject>
+</AnalyticSnapshot>

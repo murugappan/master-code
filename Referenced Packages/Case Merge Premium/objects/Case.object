@@ -1,0 +1,309 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<CustomObject xmlns="http://soap.sforce.com/2006/04/metadata">
+    <fieldSets>
+        <fullName>Case_Merge_Find</fullName>
+        <availableFields>
+            <field>AccountId</field>
+            <isRequired>false</isRequired>
+        </availableFields>
+        <availableFields>
+            <field>AssetId</field>
+            <isRequired>false</isRequired>
+        </availableFields>
+        <availableFields>
+            <field>BusinessHoursId</field>
+            <isRequired>false</isRequired>
+        </availableFields>
+        <availableFields>
+            <field>ClosedDate</field>
+            <isRequired>false</isRequired>
+        </availableFields>
+        <availableFields>
+            <field>CreatedById</field>
+            <isRequired>false</isRequired>
+        </availableFields>
+        <availableFields>
+            <field>Description</field>
+            <isRequired>false</isRequired>
+        </availableFields>
+        <availableFields>
+            <field>Id</field>
+            <isRequired>false</isRequired>
+        </availableFields>
+        <availableFields>
+            <field>IsClosed</field>
+            <isRequired>false</isRequired>
+        </availableFields>
+        <availableFields>
+            <field>IsClosedOnCreate</field>
+            <isRequired>false</isRequired>
+        </availableFields>
+        <availableFields>
+            <field>IsDeleted</field>
+            <isRequired>false</isRequired>
+        </availableFields>
+        <availableFields>
+            <field>IsEscalated</field>
+            <isRequired>false</isRequired>
+        </availableFields>
+        <availableFields>
+            <field>LastModifiedById</field>
+            <isRequired>false</isRequired>
+        </availableFields>
+        <availableFields>
+            <field>LastModifiedDate</field>
+            <isRequired>false</isRequired>
+        </availableFields>
+        <availableFields>
+            <field>Origin</field>
+            <isRequired>false</isRequired>
+        </availableFields>
+        <availableFields>
+            <field>ParentId</field>
+            <isRequired>false</isRequired>
+        </availableFields>
+        <availableFields>
+            <field>Priority</field>
+            <isRequired>false</isRequired>
+        </availableFields>
+        <availableFields>
+            <field>Reason</field>
+            <isRequired>false</isRequired>
+        </availableFields>
+        <availableFields>
+            <field>Subject_Conversation__c</field>
+            <isRequired>false</isRequired>
+        </availableFields>
+        <availableFields>
+            <field>SuppliedCompany</field>
+            <isRequired>false</isRequired>
+        </availableFields>
+        <availableFields>
+            <field>SuppliedEmail</field>
+            <isRequired>false</isRequired>
+        </availableFields>
+        <availableFields>
+            <field>SuppliedPhone</field>
+            <isRequired>false</isRequired>
+        </availableFields>
+        <availableFields>
+            <field>SystemModstamp</field>
+            <isRequired>false</isRequired>
+        </availableFields>
+        <availableFields>
+            <field>Type</field>
+            <isRequired>false</isRequired>
+        </availableFields>
+        <description>Case Merge Find results panel</description>
+        <displayedFields>
+            <field>CaseNumber</field>
+            <isRequired>false</isRequired>
+        </displayedFields>
+        <displayedFields>
+            <field>Subject</field>
+            <isRequired>false</isRequired>
+        </displayedFields>
+        <displayedFields>
+            <field>ContactId</field>
+            <isRequired>false</isRequired>
+        </displayedFields>
+        <displayedFields>
+            <field>SuppliedName</field>
+            <isRequired>false</isRequired>
+        </displayedFields>
+        <displayedFields>
+            <field>OwnerId</field>
+            <isRequired>false</isRequired>
+        </displayedFields>
+        <displayedFields>
+            <field>Status</field>
+            <isRequired>false</isRequired>
+        </displayedFields>
+        <displayedFields>
+            <field>CreatedDate</field>
+            <isRequired>false</isRequired>
+        </displayedFields>
+        <label>Case Merge Find</label>
+    </fieldSets>
+    <fieldSets>
+        <fullName>Case_Merge_Select</fullName>
+        <availableFields>
+            <field>AssetId</field>
+            <isRequired>false</isRequired>
+        </availableFields>
+        <availableFields>
+            <field>BusinessHoursId</field>
+            <isRequired>false</isRequired>
+        </availableFields>
+        <availableFields>
+            <field>ClosedDate</field>
+            <isRequired>false</isRequired>
+        </availableFields>
+        <availableFields>
+            <field>CreatedById</field>
+            <isRequired>false</isRequired>
+        </availableFields>
+        <availableFields>
+            <field>Description</field>
+            <isRequired>false</isRequired>
+        </availableFields>
+        <availableFields>
+            <field>Id</field>
+            <isRequired>false</isRequired>
+        </availableFields>
+        <availableFields>
+            <field>IsClosed</field>
+            <isRequired>false</isRequired>
+        </availableFields>
+        <availableFields>
+            <field>IsClosedOnCreate</field>
+            <isRequired>false</isRequired>
+        </availableFields>
+        <availableFields>
+            <field>IsDeleted</field>
+            <isRequired>false</isRequired>
+        </availableFields>
+        <availableFields>
+            <field>IsEscalated</field>
+            <isRequired>false</isRequired>
+        </availableFields>
+        <availableFields>
+            <field>LastModifiedById</field>
+            <isRequired>false</isRequired>
+        </availableFields>
+        <availableFields>
+            <field>LastModifiedDate</field>
+            <isRequired>false</isRequired>
+        </availableFields>
+        <availableFields>
+            <field>ParentId</field>
+            <isRequired>false</isRequired>
+        </availableFields>
+        <availableFields>
+            <field>Priority</field>
+            <isRequired>false</isRequired>
+        </availableFields>
+        <availableFields>
+            <field>Reason</field>
+            <isRequired>false</isRequired>
+        </availableFields>
+        <availableFields>
+            <field>Subject_Conversation__c</field>
+            <isRequired>false</isRequired>
+        </availableFields>
+        <availableFields>
+            <field>SuppliedCompany</field>
+            <isRequired>false</isRequired>
+        </availableFields>
+        <availableFields>
+            <field>SuppliedEmail</field>
+            <isRequired>false</isRequired>
+        </availableFields>
+        <availableFields>
+            <field>SuppliedPhone</field>
+            <isRequired>false</isRequired>
+        </availableFields>
+        <availableFields>
+            <field>SystemModstamp</field>
+            <isRequired>false</isRequired>
+        </availableFields>
+        <availableFields>
+            <field>Type</field>
+            <isRequired>false</isRequired>
+        </availableFields>
+        <description>Case Merge Select main grid</description>
+        <displayedFields>
+            <field>CaseNumber</field>
+            <isRequired>false</isRequired>
+        </displayedFields>
+        <displayedFields>
+            <field>Subject</field>
+            <isRequired>false</isRequired>
+        </displayedFields>
+        <displayedFields>
+            <field>SuppliedName</field>
+            <isRequired>false</isRequired>
+        </displayedFields>
+        <displayedFields>
+            <field>ContactId</field>
+            <isRequired>false</isRequired>
+        </displayedFields>
+        <displayedFields>
+            <field>AccountId</field>
+            <isRequired>false</isRequired>
+        </displayedFields>
+        <displayedFields>
+            <field>OwnerId</field>
+            <isRequired>false</isRequired>
+        </displayedFields>
+        <displayedFields>
+            <field>Status</field>
+            <isRequired>false</isRequired>
+        </displayedFields>
+        <displayedFields>
+            <field>CreatedDate</field>
+            <isRequired>false</isRequired>
+        </displayedFields>
+        <displayedFields>
+            <field>Origin</field>
+            <isRequired>false</isRequired>
+        </displayedFields>
+        <label>Case Merge Select</label>
+    </fieldSets>
+    <fields>
+        <fullName>Subject_Conversation__c</fullName>
+        <deprecated>false</deprecated>
+        <externalId>false</externalId>
+        <formula>TRIM(SUBSTITUTE(  SUBSTITUTE(   SUBSTITUTE(  SUBSTITUTE(  SUBSTITUTE( SUBSTITUTE(
+Subject, &quot;Fwd:&quot;, &quot;&quot;), &quot;FW:&quot;, &quot;&quot;), &quot;Fw:&quot;, &quot;&quot;),&quot;RE:&quot;, &quot;&quot;), &quot;Re:&quot;, &quot;&quot;),&quot;[Email Loop Protection]&quot;,&quot;&quot;))</formula>
+        <formulaTreatBlanksAs>BlankAsZero</formulaTreatBlanksAs>
+        <label>Subject Conversation</label>
+        <required>false</required>
+        <trackHistory>false</trackHistory>
+        <type>Text</type>
+        <unique>false</unique>
+    </fields>
+    <webLinks>
+        <fullName>CsMrgFindDupes</fullName>
+        <availability>online</availability>
+        <displayType>button</displayType>
+        <height>600</height>
+        <linkType>page</linkType>
+        <masterLabel>Find Duplicates</masterLabel>
+        <openType>sidebar</openType>
+        <page>CsMrgPassThru</page>
+        <protected>false</protected>
+    </webLinks>
+    <webLinks>
+        <fullName>CsMrgListBtn</fullName>
+        <availability>online</availability>
+        <displayType>massActionButton</displayType>
+        <linkType>javascript</linkType>
+        <masterLabel>Merge</masterLabel>
+        <openType>onClickJavaScript</openType>
+        <protected>false</protected>
+        <requireRowSelection>true</requireRowSelection>
+        <url>var records = {!GETRECORDIDS($ObjectType.Case)};
+var url;
+
+if(records.length != 2 &amp;&amp; records.length != 3){
+alert(&quot;You must select two or three cases to merge.&quot;);
+} 
+else {
+
+url = &apos;/apex/csmrgp__csmrgselect?&apos;;
+
+for (var i = 0; i &lt; records.length; i++){ 
+url = url + &quot;cs&quot; + (i+1)  + &quot;=&quot; +  records[i]+ &quot;&amp;&quot;;
+} 
+
+if(typeof srcUp == &apos;function&apos;) { 
+srcUp(url + &apos;isdtp=vw&apos;);
+}
+else{
+window.location.href=url;
+}
+
+}</url>
+    </webLinks>
+</CustomObject>

@@ -1,0 +1,214 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<CustomObject xmlns="http://soap.sforce.com/2006/04/metadata">
+    <customSettingsType>Hierarchy</customSettingsType>
+    <customSettingsVisibility>Public</customSettingsVisibility>
+    <description>Case Flag Preferences as set by the user in the Case Flag Setup Wizard.</description>
+    <enableEnhancedLookup>false</enableEnhancedLookup>
+    <enableFeeds>false</enableFeeds>
+    <fields>
+        <fullName>AllowClearAfterComment__c</fullName>
+        <defaultValue>true</defaultValue>
+        <deprecated>false</deprecated>
+        <description>Enable the clearing of the Case Flag after a public comment has been added to Case. 
+
+Set in the Case Flags Setup Wizard.</description>
+        <externalId>false</externalId>
+        <label>Allow clear after comment</label>
+        <type>Checkbox</type>
+    </fields>
+    <fields>
+        <fullName>AllowClearAfterEmail__c</fullName>
+        <defaultValue>true</defaultValue>
+        <deprecated>false</deprecated>
+        <description>Enable the clearing of the Case Flag after an email has been sent from the Case. 
+
+Set in the Case Flags Setup Wizard.</description>
+        <externalId>false</externalId>
+        <label>Allow clear after email</label>
+        <type>Checkbox</type>
+    </fields>
+    <fields>
+        <fullName>AllowWriteAfterComment__c</fullName>
+        <defaultValue>true</defaultValue>
+        <deprecated>false</deprecated>
+        <description>Enable the Case Flag to automatically be set on immediately after a comment has been added to Case.
+
+Set in the Case Flags Setup Wizard.</description>
+        <externalId>false</externalId>
+        <label>Allow write after comment</label>
+        <type>Checkbox</type>
+    </fields>
+    <fields>
+        <fullName>AllowWriteAfterEmail__c</fullName>
+        <defaultValue>true</defaultValue>
+        <deprecated>false</deprecated>
+        <description>Enable the Case Flag to automatically be set on immediately after an email has been received for the Case.
+
+Set in the Case Flags Setup Wizard.</description>
+        <externalId>false</externalId>
+        <label>Allow write after email</label>
+        <type>Checkbox</type>
+    </fields>
+    <fields>
+        <fullName>BlankOffsetImage__c</fullName>
+        <deprecated>false</deprecated>
+        <description>Id of image Document to be displayed in the Case Flag field when the flag is off.
+
+Set in the Case Flags Setup Wizard.</description>
+        <externalId>false</externalId>
+        <label>Blank Offset Image</label>
+        <length>20</length>
+        <required>false</required>
+        <type>Text</type>
+        <unique>false</unique>
+    </fields>
+    <fields>
+        <fullName>ClearOnCaseClose__c</fullName>
+        <defaultValue>true</defaultValue>
+        <deprecated>false</deprecated>
+        <description>Enable the clearing of the Case Flag after the Case closes. 
+
+Set in the Case Flags Setup Wizard.</description>
+        <externalId>false</externalId>
+        <label>Clear On Case Close</label>
+        <type>Checkbox</type>
+    </fields>
+    <fields>
+        <fullName>CompanyDomain__c</fullName>
+        <deprecated>false</deprecated>
+        <description>The domain of the user&apos;s company needed to distinguish emails between users and their customers.
+
+Set in the Case Flags Setup Wizard.</description>
+        <externalId>false</externalId>
+        <label>Company Domain</label>
+        <length>255</length>
+        <required>false</required>
+        <type>Text</type>
+        <unique>false</unique>
+    </fields>
+    <fields>
+        <fullName>ExcludedUsers__c</fullName>
+        <deprecated>false</deprecated>
+        <description>A comma separated list of user ids which should not clear the case flag when adding a comment.
+
+Set in the Case Flags Setup Wizard.</description>
+        <externalId>false</externalId>
+        <label>Excluded Users</label>
+        <length>255</length>
+        <required>false</required>
+        <type>Text</type>
+        <unique>false</unique>
+    </fields>
+    <fields>
+        <fullName>InsertTriggerErrorComments__c</fullName>
+        <defaultValue>true</defaultValue>
+        <deprecated>false</deprecated>
+        <description>Enable a private comment to be added to the Case if a trigger is unable update the Case Flag field due to error.</description>
+        <externalId>false</externalId>
+        <label>Insert Trigger Error Comments</label>
+        <type>Checkbox</type>
+    </fields>
+    <fields>
+        <fullName>JobId__c</fullName>
+        <deprecated>false</deprecated>
+        <description>Id of Schedule Apex &quot;Case Flags Job&quot; needed for updating business hours every day.</description>
+        <externalId>false</externalId>
+        <label>JobId</label>
+        <length>18</length>
+        <required>false</required>
+        <type>Text</type>
+        <unique>false</unique>
+    </fields>
+    <fields>
+        <fullName>Offset1Image__c</fullName>
+        <deprecated>false</deprecated>
+        <description>Id of image Document to be displayed in the Case Flag field after Age 1 Hours has lapsed. Set in the Case Flags Setup Wizard.</description>
+        <externalId>false</externalId>
+        <label>Age 1 Image</label>
+        <length>20</length>
+        <required>false</required>
+        <type>Text</type>
+        <unique>false</unique>
+    </fields>
+    <fields>
+        <fullName>Offset2Image__c</fullName>
+        <deprecated>false</deprecated>
+        <description>Id of image Document to be displayed in the Case Flag field after Age 2 Hours has lapsed. Set in the Case Flags Setup Wizard.</description>
+        <externalId>false</externalId>
+        <label>Age 2 Image</label>
+        <length>20</length>
+        <required>false</required>
+        <type>Text</type>
+        <unique>false</unique>
+    </fields>
+    <fields>
+        <fullName>Offset3Image__c</fullName>
+        <deprecated>false</deprecated>
+        <description>Id of image Document to be displayed in the Case Flag field after Age 3 Hours has lapsed. Set in the Case Flags Setup Wizard.</description>
+        <externalId>false</externalId>
+        <label>Age 3 Image</label>
+        <length>20</length>
+        <required>false</required>
+        <type>Text</type>
+        <unique>false</unique>
+    </fields>
+    <fields>
+        <fullName>SetOnCaseCreate__c</fullName>
+        <defaultValue>true</defaultValue>
+        <deprecated>false</deprecated>
+        <description>Enable the Case Flag to automatically be set on immediately after a Case has been created.
+
+Set in the Case Flags Setup Wizard.</description>
+        <externalId>false</externalId>
+        <label>Set On Case Create</label>
+        <type>Checkbox</type>
+    </fields>
+    <fields>
+        <fullName>TimeOffset1__c</fullName>
+        <defaultValue>0</defaultValue>
+        <deprecated>false</deprecated>
+        <description>The amount of hours to wait before displaying Age 1 Image in the Case Flag field. Set in the Case Flags Setup Wizard.</description>
+        <externalId>false</externalId>
+        <label>Age 1 Hours</label>
+        <precision>18</precision>
+        <required>false</required>
+        <scale>2</scale>
+        <type>Number</type>
+        <unique>false</unique>
+    </fields>
+    <fields>
+        <fullName>TimeOffset2__c</fullName>
+        <defaultValue>4</defaultValue>
+        <deprecated>false</deprecated>
+        <description>The amount of hours to wait before displaying Age 2 Image in the Case Flag field. Set in the Case Flags Setup Wizard.</description>
+        <externalId>false</externalId>
+        <label>Age 2 Hours</label>
+        <precision>18</precision>
+        <required>false</required>
+        <scale>2</scale>
+        <type>Number</type>
+        <unique>false</unique>
+    </fields>
+    <fields>
+        <fullName>TimeOffset3__c</fullName>
+        <defaultValue>8</defaultValue>
+        <deprecated>false</deprecated>
+        <externalId>false</externalId>
+        <label>Age 3 Hours</label>
+        <precision>18</precision>
+        <required>false</required>
+        <scale>2</scale>
+        <type>Number</type>
+        <unique>false</unique>
+    </fields>
+    <fields>
+        <fullName>UseFuture__c</fullName>
+        <defaultValue>false</defaultValue>
+        <deprecated>false</deprecated>
+        <description>Move the logic to set the custom Business Hours lookup on new cases to Apex Future methods.</description>
+        <externalId>false</externalId>
+        <label>Use Future</label>
+        <type>Checkbox</type>
+    </fields>
+    <label>Case Flag Preferences</label>
+</CustomObject>

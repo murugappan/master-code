@@ -1,0 +1,36 @@
+<apex:page standardStylesheets="false" showHeader="false" sidebar="false" contentType="text/html" cache="false" controller="mhreportcontroller"  action="{!Redirect}" title="MH Report" >
+    <apex:composition template="btbb_template"> 
+        
+      <apex:define name="topbar"><c:btbb_globalsearch /></apex:define>         
+         
+             <apex:define name="nav">
+            <c:btbb_auth_nav /> 
+            </apex:define>  
+                
+                <apex:define name="content">
+                    <apex:form >
+                    <!-- /Header -->
+	
+	
+	
+    
+    <h2><span id="ctl00_ContentPlaceHolder1_cmsPageTitle">Blackboard Insight Report for Bb Learn/Classic</span></h2>
+    <span id="ctl00_ContentPlaceHolder1_Main"><p>Access this report to get more information on your organization's Blackboard usage.&nbsp; Data includes number of active courses, discussion boards, and storage use.</p>
+<p>&nbsp;</p></span>
+
+    
+        <br/><b>Your account is associated with multiple companies. Please select the company you would like to view the Insight Report for.</b><br/><br/>
+        Company:&nbsp;
+        <apex:selectList value="{!pscomapnyid}" multiselect="false" size="1">
+		<apex:selectOptions value="{!accountoptions}"/>
+		</apex:selectList>
+        &nbsp;&nbsp;
+        <apex:commandbutton value="Access Insight Report" action="{!InsightReportRedirect}" />
+
+    
+
+                
+            </apex:form>
+        </apex:define>
+    </apex:composition>  
+</apex:page>

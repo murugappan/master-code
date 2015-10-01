@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<ApexPage xmlns="http://soap.sforce.com/2006/04/metadata">
+    <apiVersion>32.0</apiVersion>
+    <availableInTouch>false</availableInTouch>
+    <confirmationTokenRequired>false</confirmationTokenRequired>
+    <description>Auto-generated Scout Dashboard VisualForce Page for Account Page Layout</description>
+    <label>Scout Dashboard For Account</label>
+    <packageVersions>
+        <majorNumber>1</majorNumber>
+        <minorNumber>5</minorNumber>
+        <namespace>ScoutForSREV</namespace>
+    </packageVersions>
+</ApexPage>

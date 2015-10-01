@@ -1,0 +1,36 @@
+<apex:page controller="KnowledgeArticleManagementController" title="Knowledge Article Management">
+    <apex:sectionHeader title="Knowledge Article Management" />
+    <apex:form >
+        <apex:pageMessages />
+        <apex:pageBlock >
+            <apex:pageBlockSection title="Knowledge Article Search" collapsible="false">
+                <apex:inputText label="Please enter your article title" value="{!articleTitle}" />          
+                <apex:commandButton value="Search" action="{!doSearch}" />
+                <apex:inputText label="OR enter your article number" value="{!articlenumber}" /> 
+            </apex:pageBlockSection>
+            <apex:pageBlockSection title="Article Information" collapsible="false" columns="3">
+                <apex:outputText label="Article Name" value="{!kavWrapper.name}" />
+                <apex:outputText label="Article Number" value="{!kavWrapper.articlenumber}" />
+                <apex:outputText label="Article Id" value="{!kavWrapper.KnowledgeArticleId}" />
+            </apex:pageBlockSection>
+            <apex:outputPanel layout="block" style="padding-top:25px;">
+                <apex:commandButton value="Add Attachment" action="{!redirectToAttachment}" />
+                <apex:pageBlockTable value="{!attachmentList}" var="a">
+                    <apex:column headerValue="Action">
+                        <apex:commandLink value="Delete" action="{!a.doDelete}" />
+                    </apex:column>
+                    <apex:column headerValue="Attachment Name">
+                        <apex:outputLink style="color:blue;" value="/{!a.attachment.Id}?isdtp=vw">
+                            <apex:outputField value="{!a.attachment.Name}" />
+                        </apex:outputLink>
+                    </apex:column>
+                    <apex:column headerValue="File Name">
+                        <apex:outputLink style="color:blue;" value="/{!a.attachment.Id}?isdtp=vw">
+                            <apex:outputField value="{!a.attachment.File_Name__c}" />
+                        </apex:outputLink>
+                    </apex:column>
+                </apex:pageBlockTable>
+            </apex:outputPanel>
+        </apex:pageBlock>
+    </apex:form>
+</apex:page>

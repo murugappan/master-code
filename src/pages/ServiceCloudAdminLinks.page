@@ -1,0 +1,29 @@
+<apex:page >
+  <!-- Begin Default Content REMOVE THIS -->
+  <h1 style="font-weight:bold;font-size:16px;">Service Cloud Administration Links</h1>
+  <div>
+      This page contains links to various configurations pertaining Service Cloud. 
+      <br/>
+            <br/>
+  </div>
+
+<h2>Case Management</h2>
+<ul>
+<li><a href="/a2O">Support Workflows</a></li>
+
+</ul>
+
+
+<h2>Knowledge Management</h2>
+<ul>
+<li><a href="/a25">Versions</a></li>
+<li><a href="/a2M ">Minor Versions</a></li>
+<li><a href="/a2S ">Target Releases</a></li>
+
+
+
+</ul>
+
+
+  <!-- End Default Content REMOVE THIS -->
+</apex:page>

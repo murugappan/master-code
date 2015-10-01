@@ -1,0 +1,18 @@
+<apex:page sidebar="false" showHeader="false">
+
+<apex:form >
+
+
+<b><font size="2.5">Welcome to the chat support center for Blackboard Collaborate!</font></b>&nbsp;&nbsp;&nbsp;<apex:image url="{!$Resource.Bb_Collaborate}" width="85" height="30"/><br/><br/>
+
+ <font size="2.5">Live Chat Support is currently unavailable, we apologize for the inconvenience.  You can <a href="apex/btbb_unauthcase" target="_blank"> submit a case </a>  to us or contact us by telephone.<br/>  Our Tier 1 Technical Support Team is available by telephone, accessible by different numbers world wide.<br/><br/>  They are as follows:<br/>
+ 
+* North America, Toll Free: 1 (877) 382-2293<br/>
+* UK, Toll Free: (0800) 051-7248<br/>
+* Ireland, Toll Free (1800-64-4528)<br/>
+* Australia, Toll Free: 1 (800) 26-7338<br/>
+* International, <b>Non Toll Free:</b> 1 (606) 274-2370</font>
+
+
+</apex:form>
+</apex:page>

@@ -1,0 +1,16 @@
+<apex:component allowDML="true">
+    <apex:attribute name="btbbController" type="publickbarticleview" required="true" description="handle to the btbb article view controller" />
+    <apex:outputPanel layout="block" id="btbbArticlefeedback" style="margin-top:20px; border:none;" rendered="{!btbbController.caseId == null && NOT(btbbController.hasFeedback)}">
+        <p><strong>Bb KB – Was this Article Helpful?</strong>&nbsp;&nbsp;</p>
+        <apex:outputText style="color:red;" value="Please select a ranking before submitting." rendered="{!btbbController.hasRankingError}" />
+        <apex:selectRadio value="{!btbbController.feedbackRanking}" style="border:none;">
+            <apex:selectOptions value="{!btbbController.feedbackOptionList}"/>
+        </apex:selectRadio><br/>                        
+        <apex:commandButton value="Submit" action="{!btbbController.addFeedback}" rerender="btbbArticlefeedback, out" status="status" styleclass="btbbButton" title="Submit Feedback" />
+        <apex:outputPanel id="out">
+            <apex:actionstatus id="status" startText="" stopText=""> 
+                <apex:facet name="start"><apex:image url="{!URLFOR($Resource.btbbLoader)}"/></apex:facet>                               
+            </apex:actionStatus>                
+        </apex:outputPanel>
+    </apex:outputPanel>
+</apex:component>

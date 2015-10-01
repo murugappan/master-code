@@ -1,0 +1,101 @@
+<apex:page controller="SplitServicesEngagementController" tabStyle="Services_Project__c">
+ <script>
+  function setFocusOnLoad() {}
+ </script>
+ <style type='text/css'>
+  div.hideCurrDate span.dateInput span.dateFormat{
+    display:none;
+  }
+ </style>
+    <apex:sectionHeader title="Split Services Engagement"/>
+    <apex:form id="formtop">
+        <apex:pageBlock title="Split Services Engagement">
+            <apex:pageMessages />
+            <apex:pageBlockButtons >
+                <apex:commandButton title="Save" value="Save" action="{! save}"/>
+                <apex:commandButton title="Cancel" value="Cancel" action="{! cancel}" immediate="true"/>
+            </apex:pageBlockButtons>
+            <apex:pageBlockSection title="Services Engagements" id="servicesEngagementsInfo" collapsible="false" columns="1">
+                <apex:pageBlockTable value="{!oldServicesEngagement}" var="servicesEngagement" id="servicesEngagementsTable" cellPadding="4" rowClasses="odd,even" styleClass="tableClass">
+                    <apex:column headervalue="Name" style="text-decoration:underline">
+                        <apex:inputField value="{!servicesEngagement.Name}"/>
+                    </apex:column>
+                    <apex:column headervalue="Services Type">
+                        <apex:inputField value="{!servicesEngagement.Service_Type__c}" required="true" style="width:110px"/>
+                    </apex:column>
+                    <apex:column headervalue="Sub-Type">
+                        <apex:inputField value="{!servicesEngagement.Service_Sub_Type__c}" required="true" style="width:80px"/>
+                    </apex:column>
+                    <apex:column headervalue="Product">
+                        <apex:inputField value="{!servicesEngagement.Product__c}" required="true"/>
+                    </apex:column>
+                    <apex:column headervalue="Bb Collab Staff">
+                        <apex:inputField value="{!servicesEngagement.Trainer__c}" style="width:75px"/>
+                    </apex:column>
+                    <apex:column headervalue="Status">
+                        <apex:inputField value="{!servicesEngagement.Status__c}" required="true" style="width:90px"/>
+                    </apex:column>
+                    <apex:column headervalue="Start Date">
+                        <div class="hideCurrDate">
+                        <apex:inputField value="{!servicesEngagement.Start_Date__c}" required="true" style="width:60px"/>
+                        </div>
+                    </apex:column>
+                    <apex:column headervalue="End Date">
+                        <div class="hideCurrDate">
+                            <apex:inputField value="{!servicesEngagement.End_Date__c}" style="width:60px"/>
+                        </div>
+                    </apex:column>
+                    <apex:column headervalue="Delivery Date">
+                        <div class="hideCurrDate">
+                        <apex:inputField value="{!servicesEngagement.Delivery_Date__c}" style="width:60px"/>
+                        </div>
+                    </apex:column>
+                    <apex:column headervalue="Price">
+                        <apex:inputField value="{!servicesEngagement.Dollar_Value__c}" style="width:60px"/>
+                    </apex:column>
+                </apex:pageBlockTable>
+                <apex:pageBlockTable value="{!newServicesEngagements}" var="servicesEngagement" cellPadding="4" rowClasses="odd,even" styleClass="tableClass">
+                    <apex:column style="text-decoration:underline">
+                        <apex:inputField value="{!servicesEngagement.Name}"/>
+                    </apex:column>
+                    <apex:column >
+                        <apex:inputField value="{!servicesEngagement.Service_Type__c}" required="true" style="width:110px"/>
+                    </apex:column>
+                    <apex:column >
+                        <apex:inputField value="{!servicesEngagement.Service_Sub_Type__c}" required="true" style="width:80px"/>
+                    </apex:column>
+                    <apex:column >
+                        <apex:inputField value="{!servicesEngagement.Product__c}" required="true"/>
+                    </apex:column>
+                    <apex:column >
+                        <apex:inputField value="{!servicesEngagement.Trainer__c}" style="width:75px"/>
+                    </apex:column>
+                    <apex:column >
+                        <apex:inputField value="{!servicesEngagement.Status__c}" required="true" style="width:90px"/>
+                    </apex:column>
+                    <apex:column >
+                        <div class="hideCurrDate">
+                        <apex:inputField value="{!servicesEngagement.Start_Date__c}" required="true" style="width:60px"/>
+                        </div>
+                    </apex:column>
+                    <apex:column >
+                        <div class="hideCurrDate">
+                        <apex:inputField value="{!servicesEngagement.End_Date__c}" style="width:60px"/>
+                        </div>
+                    </apex:column>
+                    <apex:column >
+                        <div class="hideCurrDate">
+                        <apex:inputField value="{!servicesEngagement.Delivery_Date__c}" style="width:60px"/>
+                        </div>
+                    </apex:column>
+                    <apex:column >
+                        <apex:inputField value="{!servicesEngagement.Dollar_Value__c}" style="width:60px"/>
+                    </apex:column>
+                </apex:pageBlockTable>
+                <p/>
+            </apex:pageBlockSection>
+            <apex:commandLink action="{!addServicesEngagement}" id="addengagement" immediate="true"><apex:image value="{!$Resource.AddButton}" width="24px" height="24px"/></apex:commandLink>
+            <apex:commandLink action="{!removeServicesEngagement}" id="removeengagement" immediate="true" rendered="{!newServicesEngagements.size > 1}"><apex:image value="{!$Resource.RemoveButton}" width="24px" height="24px"/></apex:commandLink>
+        </apex:pageBlock>
+    </apex:form>
+</apex:page>

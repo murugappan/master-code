@@ -1,0 +1,69 @@
+<apex:page standardController="Asset" extensions="BBW_AssetVersionUpdate" sidebar="false"  showHeader="false" tabStyle="Asset">
+<script>
+
+    function closeWindow() {        
+        opener.location.reload();
+        window.close();
+    }
+
+</script>
+    <apex:form >
+    <body onunload ="closeWindow();">
+    <apex:sectionHeader title="Asset" subtitle="Update Asset Version"/>
+    <apex:outputPanel id="errorPanel">
+        <apex:pageMessage strength="2" title="{!errorTitle}" summary="{!errorMessage}" severity="{!errorSeverity}" rendered="{!errorShow}" />
+    </apex:outputPanel>
+    
+    <apex:pageMessages id="error"/>
+        
+        <apex:pageblock >
+        <apex:pageBlockButtons title="Update Version and Build">
+            <apex:commandButton action="{!SaveVersion}" value="Save"/>
+            <apex:commandbutton value="Cancel"  onclick="javascript:parent.window.close()"></apex:commandbutton>
+        </apex:pageBlockButtons>
+        
+        <table>
+        <tr>
+            <td colspan="2">
+                 <apex:actionStatus startText=" Finding Source Build..." stopText=" " id="sbstatus"/>                
+                 
+                 </td>
+        </tr>      
+        <tr>
+                <td>
+                    <apex:outputLabel value="Version"/>
+                </td>
+                <td>
+                    <apex:selectList value="{!version}" size="1" id="version" disabled="{!ISNULL(assetId)}">
+                        <apex:selectOptions value="{!versions}" />
+                        <apex:actionSupport action="{!clearsb}" event="onchange" rerender="sourcebuild" status="sbstatus"/>
+                    </apex:selectList>                   
+                </td>
+            </tr>
+
+            <tr>
+                <td>
+                    <apex:outputLabel value="Source Build" rendered="{!NOT(isMoodle)}"/>
+                </td>
+                <td>
+                    <apex:selectList value="{!sourcebuild}" size="1" id="sourcebuild" disabled="{!ISNULL(assetId)}" rendered="{!NOT(isMoodle)}">
+                      <apex:selectOptions value="{!sblist}" />
+                   </apex:selectList>                    
+                </td>
+            </tr>            
+        </table>      
+        </apex:pageblock>
+        <apex:inputHidden value="{!closeWin}" id="closeWinAdmin" /> 
+        
+     </body>   
+
+    </apex:form>
+    <script language='javascript'>      
+        var closeWinVal = document.getElementById('j_id0:j_id2:closeWinAdmin');
+    if(closeWinVal.value=="true")    {
+       parent.window.opener.location.reload();
+       window.parent.close();
+    }
+    </script> 
+    
+</apex:page>

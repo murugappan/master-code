@@ -1,0 +1,294 @@
+<apex:page standardController="learnJIRA__c" extensions="SupportIncidentChangeDetailsController">
+<!-- <style>
+textarea {
+width: 95%;
+}
+</style> -->
+    <apex:sectionHeader title="Change Details" subtitle="{!supportIncident.Name}" />
+    
+    <apex:form >
+     
+        <Apex:pageMessages />
+
+        <apex:pageBlock mode="edit">
+            <apex:pageBlockButtons >
+                <apex:commandButton value="Save" action="{!s}" />
+                <apex:commandButton value="Cancel" action="{!Cancel}" />
+            </apex:pageBlockButtons>
+            
+            
+             <apex:pageBlockSection title="Update Support Incident Version Details" id="versionSection" rendered="{!isMoodle}">
+               <!--  <apex:pageBlockSectionItem >
+                    <apex:outputText value="Broken In Version" />
+                    <apex:selectList value="{!selectedBrokenVersion}" size="1" multiselect="false">
+                        <apex:actionSupport event="onchange" rerender="versionSection" />
+                        <apex:selectOptions value="{!versionList}" />
+                    </apex:selectList> 
+                </apex:pageBlockSectionItem> -->
+                <!-- <apex:pageBlockSectionItem >
+                    <apex:outputText value="Target Version" />
+                    <apex:selectList value="{!selectedTargetVersion}" size="1" multiselect="false">
+                        <apex:actionSupport event="onchange" rerender="versionSection" />
+                        <apex:selectOptions value="{!versionList}" />
+                    </apex:selectList>
+                </apex:pageBlockSectionItem> -->
+                <apex:pageBlockSectionItem >
+                    <apex:outputText value="Broken In Build" />
+                    <apex:selectList value="{!selectedBrokenBuild}" size="1" multiselect="false">
+                        <apex:selectOptions value="{!brokenBuildList}" />
+                    </apex:selectList>
+                </apex:pageBlockSectionItem>
+                
+                
+                
+                    <apex:pageblocksectionItem >
+                   <apex:outputLabel value="Release Type" for="ReleaseType"/>
+                   <apex:inputfield value="{!SupportIncident.Release_Type__c}" id="ReleaseType"/>
+                    </apex:pageBlockSectionItem>
+                
+                
+                <apex:pageBlockSectionItem >
+                    <apex:outputText value="Target Build" />
+                    <apex:selectList value="{!selectedTargetBuild}" size="1" multiselect="false">
+                        <apex:selectOptions value="{!targetBuildList}" />
+                    </apex:selectList>
+                </apex:pageBlockSectionItem>
+                
+                
+               <!--  <apex:pageBlockSectionItem >
+                    <apex:outputText value="Fixed In Version" />
+                    <apex:selectList value="{!selectedFixedVersion}" size="1" multiselect="false">
+                        <apex:actionSupport event="onchange" rerender="versionSection" />
+                        <apex:selectOptions value="{!versionList}" />
+                    </apex:selectList>
+                </apex:pageBlockSectionItem> -->
+               <!--  <apex:outputText value="" /> -->
+               
+               
+                 <apex:pageblocksectionItem >
+                   <apex:outputLabel value="Original Reported Core Version" for="OriginaCoreVersion"/>
+                   <apex:inputfield value="{!SupportIncident.Original_Reported_Core_Version__c}" id="OriginaCoreVersion"/>
+                    </apex:pageBlockSectionItem>
+           
+               
+               
+                <apex:pageBlockSectionItem >
+                    <apex:outputText value="Fixed In Build" />
+                    <apex:selectList value="{!selectedFixedBuild}" size="1" multiselect="false">
+                        <apex:selectOptions value="{!fixedBuildList}" />
+                    </apex:selectList>
+                   </apex:pageBlockSectionItem>
+                   
+                    </apex:pageBlockSection>
+
+                <!-- Analytics code --> 
+                <apex:pageBlockSection title="Product Details" id="section2" columns="2" rendered="{!isAnalytics}">
+                
+                   <apex:outputField value="{!supportIncident.Product_ID__c}"/>
+                   
+                   <apex:pageblockSectionItem >Issue Topic
+                   <apex:selectList value="{!module}" size="1" id="module" style="margin-right:1px" >
+                   <apex:actionSupport event="onchange" rerender="functionalarea,category" status="mStatus"/>
+                   <apex:selectOptions value="{!moduleList}" />
+                   </apex:selectList>
+                   </apex:pageblockSectionItem>
+
+                   <apex:pageblockSectionItem >ERP Platform
+                   <apex:selectList value="{!version}" size="1" style="margin-right:1px" >
+                   <apex:actionSupport event="onchange" action="{!clearsb}" rerender="sourcebuild" status="sbstatus"/>
+                   <apex:selectOptions value="{!versions}" />
+                   </apex:selectList>
+                   </apex:pageblockSectionItem>
+
+                   <apex:pageblockSectionItem >Functional Area
+                   <apex:selectList value="{!functionalarea }" size="1" id="functionalarea" style="margin-right:1px" >
+                   <apex:actionSupport event="onchange" rerender="category" status="faStatus"/>
+                   <apex:selectOptions value="{!functionalareas }" />
+                   </apex:selectList>
+                   </apex:pageblockSectionItem>
+
+                   <apex:pageblockSectionItem >Version
+                   <apex:selectList value="{!sourcebuild}" size="1" style="margin-right:1px" id="sourcebuild">
+                   <apex:selectOptions value="{!sblist}" />
+                   </apex:selectList>
+                   </apex:pageblockSectionItem>
+
+                   <apex:outputField value="{!supportIncident.Hosting_Type__c}" />
+
+                   <!-- <apex:outputField value="{!supportIncident.Module__c}"  />
+                   <apex:outputField value="{!supportIncident.Functional_Area__c}"  /> -->
+                  
+
+                </apex:pageBlockSection>  
+
+                <apex:pageBlockSection title="Update Support Incident Details" id="section1" columns="2" rendered="{!isAnalytics}">
+
+                   <apex:outputField value="{!supportIncident.Name}"  /> 
+                   <apex:inputField value="{!supportIncident.OwnerId}"  /> 
+                   <apex:inputField value="{!supportIncident.Summary__c}"  />    
+                   <apex:inputField value="{!supportIncident.Severity__c}" />       
+                   <apex:inputField value="{!supportIncident.Type__c}" />
+                   &nbsp;
+                   
+                </apex:pageBlockSection>
+
+                <apex:pageBlockSection id="sid" columns="2" rendered="{!isAnalytics}" >
+
+                 <apex:pageBlockSectionItem >   
+                   Status                                             
+                 <apex:selectlist value="{!statusvalue}" multiselect="false" size="1">
+                 <apex:selectOption itemValue="New" itemLabel="New"/>
+                 <apex:selectOption itemValue="Open" itemLabel="Open"/>
+                 <apex:selectOption itemValue="On Hold" itemLabel="On Hold"/>
+                 <apex:selectOption itemValue="Resolved" itemLabel="Resolved"/>
+                 <apex:selectOption itemValue="Closed" itemLabel="Closed"/>
+                 <apex:actionSupport event="onchange" reRender="sid"/>
+                 </apex:selectlist> 
+                 </apex:pageBlockSectionItem>  
+                 
+                 <apex:inputField value="{!supportIncident.Reproduced__c}" /> 
+
+                 <apex:pageBlockSectionItem >
+                   On Hold Reason
+                   <apex:selectlist value="{!onholdreasonvalue}" multiselect="false" size="1">
+                   <apex:selectOption itemValue="-None-" itemLabel="-None-" rendered="{!statusvalue == 'On Hold'}" />
+                   <apex:selectOption itemValue="Waiting for Development" itemLabel="Waiting for Development"  rendered="{!statusvalue == 'On Hold'}"/>
+                   <apex:selectOption itemValue="Waiting for Pyramid" itemLabel="Waiting for Pyramid" rendered="{!statusvalue == 'On Hold'}" />
+                   <apex:selectOption itemValue="Waiting for Client Support Response" itemLabel="Waiting for Client Support Response" rendered="{!statusvalue == 'On Hold'}"/>
+                   <apex:selectOption itemValue="Waiting for Client Response" itemLabel="Waiting for Client Response" rendered="{!statusvalue == 'On Hold'}"/>
+                   </apex:selectlist>
+                 </apex:pageBlockSectionItem>
+
+                 <apex:inputField value="{!supportIncident.Has_Workaround__c}"  />
+
+                 <apex:pageBlockSectionItem >
+                   Resolution
+                   <apex:selectlist value="{!resolutionvalue}" multiselect="false" size="1">
+                   <apex:selectOption itemValue="-None-" itemLabel="-None-" rendered="{!statusvalue == 'Closed'}" />
+                   <apex:selectOption itemValue="Duplicate" itemLabel="Duplicate" rendered="{!statusvalue == 'Closed'}"/>
+                   <apex:selectOption itemValue="Will Not Fix" itemLabel="Will Not Fix" rendered="{!statusvalue == 'Closed'}" />
+                   <apex:selectOption itemValue="Functioning as Designed" itemLabel="Functioning as Designed" rendered="{!statusvalue == 'Closed'}"/>
+                   <apex:selectOption itemValue="Cannot Reproduce" itemLabel="Cannot Reproduce" rendered="{!statusvalue == 'Closed'}"/>
+                   <apex:selectOption itemValue="Fixed Released" itemLabel="Fixed Released" rendered="{!statusvalue == 'Closed'}"/>
+                   </apex:selectlist>
+                 </apex:pageBlockSectionItem>
+
+
+                </apex:pageBlockSection>
+
+                <apex:pageBlockSection rendered="{!isAnalytics}" >
+                   
+                   <apex:inputTextarea value="{!supportIncident.Client_Information_HTML__c}" richText="true"/>
+                   <apex:inputTextarea value="{!supportIncident.Description_HTML__c}" richText="true"/>
+                   <apex:inputTextarea value="{!supportIncident.System_Information_HTML__c}" richText="true"/>
+                   <apex:inputTextarea value="{!supportIncident.Steps_to_Replicate__c}" richText="true"/>
+
+
+                </apex:pageBlockSection>
+                <!--End of Analytics code --> 
+            
+                <apex:pageBlockSection title="Support Incident Information" rendered="{!isMoodle}">
+                <apex:inputField value="{!supportIncident.Type__c}" />
+                <apex:inputField value="{!supportIncident.OwnerId}" />
+                <apex:inputField value="{!supportIncident.Duplicate_Of__c}" />
+                <apex:inputField value="{!supportIncident.Reviewed__c}" />
+                <apex:inputField value="{!supportIncident.Reviewer__c}" />
+                 <apex:inputfield value="{!supportIncident.Tier_2_Assessment__c}"><apex:actionSupport event="onchange" reRender="theIdd"/></apex:inputField>
+                <!-- <apex:inputField value="{!supportIncident.Status__c}" /> --><!-- fix this -->
+                <!-- <apex:outputText escape="false" value="<b>Status</b>" />  -->
+                </apex:pageBlockSection>
+            
+           <apex:pageBlockSection id="theIdd" columns="2" rendered="{!isMoodle}">
+               <apex:pageBlockSectionItem >   
+                Status                                             
+                <apex:selectlist value="{!statusvalue}" multiselect="false" size="1">
+                <apex:selectOption itemValue="New" itemLabel="New"/>
+                <apex:selectOption itemValue="Open" itemLabel="Open"/>
+                <apex:selectOption itemValue="On Hold" itemLabel="On Hold"/>
+                <apex:selectOption itemValue="In Testing" itemLabel="In Testing"/>
+                <apex:selectOption itemValue="Resolved" itemLabel="Resolved"/>
+                <apex:selectOption itemValue="Closed" itemLabel="Closed"/>
+                <apex:actionSupport event="onchange" reRender="theIdd"/>
+                </apex:selectlist> 
+
+                </apex:pageBlockSectionItem>
+                
+               
+                <apex:pageBlockSectionItem >
+                On Hold Reason
+                <!-- <apex:outputtext value="On Hold Reason"></apex:outputtext> -->                   
+                <apex:selectlist value="{!onholdreasonvalue}" multiselect="false" size="1">
+                <apex:selectOption itemValue="-None-" itemLabel="-None-" rendered="{!supportIncident.Tier_2_Assessment__c != 'Enhancement'&& statusvalue == 'On Hold'}" />
+                <apex:selectOption itemValue="Waiting on Moodle Development" itemLabel="Waiting on Moodle Development" rendered="{!supportIncident.Tier_2_Assessment__c != 'Enhancement'&& statusvalue == 'On Hold'}" />
+                <apex:selectOption itemValue="Waiting on 3rd Party Development" itemLabel="Waiting on 3rd Party Development" rendered="{!supportIncident.Tier_2_Assessment__c != 'Enhancement' && statusvalue == 'On Hold'}"/>
+                <apex:selectOption itemValue="Waiting for Client Support Response" itemLabel="Waiting for Client Support Response" rendered="{!statusvalue == 'On Hold'}"/>
+                <apex:selectOption itemValue="Waiting for Client Response" itemLabel="Waiting for Client Response" rendered="{!supportIncident.Tier_2_Assessment__c != 'Enhancement' && statusvalue == 'On Hold'}"/>
+                <apex:selectOption itemValue="Waiting for Product Strategy" itemLabel="Waiting for Product Strategy" rendered="{!supportIncident.Tier_2_Assessment__c != 'Enhancement' && statusvalue == 'On Hold'}"/>
+                </apex:selectlist>
+                </apex:pageBlockSectionItem>
+                
+
+
+                <apex:pageBlockSectionItem >
+                Resolution
+                <!-- <apex:outputtext value="Resolution"></apex:outputtext> -->                
+                <apex:selectlist value="{!resolutionvalue}" multiselect="false" size="1">
+                <apex:selectOption itemValue="" itemLabel="-None-" />
+
+                <apex:selectOption itemValue="Duplicate" itemLabel="Duplicate" rendered="{!supportIncident.Tier_2_Assessment__c == 'This is a Bug' && statusvalue =='Closed' }" />
+                <apex:selectOption itemValue="Will Not Fix" itemLabel="Will Not Fix" rendered="{!supportIncident.Tier_2_Assessment__c == 'This is a Bug' && statusvalue =='Closed' }" />
+                <apex:selectOption itemValue="Functioning as Designed" itemLabel="Functioning as Designed" rendered="{!supportIncident.Tier_2_Assessment__c == 'This is a Bug' && statusvalue =='Closed' }" />
+                <apex:selectOption itemValue="Cannot Reproduce" itemLabel="Cannot Reproduce" rendered="{!supportIncident.Tier_2_Assessment__c == 'This is a Bug' && statusvalue =='Closed' }" />
+                <apex:selectOption itemValue="Fixed Released" itemLabel="Fixed Released" rendered="{!supportIncident.Tier_2_Assessment__c == 'This is a Bug' && statusvalue =='Closed' }" />
+                <apex:selectOption itemValue="Accepted" itemLabel="Accepted" rendered="{!supportIncident.Tier_2_Assessment__c == 'Enhancement' && statusvalue =='Closed' }" />
+                <apex:selectOption itemValue="Denied" itemLabel="Denied" rendered="{!supportIncident.Tier_2_Assessment__c == 'Enhancement' && statusvalue =='Closed'}"  />
+                
+                </apex:selectlist>
+                </apex:pageBlockSectionItem> 
+            </apex:pageBlockSection>
+            
+            <apex:pageBlockSection columns="2" rendered="{!isMoodle}">
+                <apex:inputField value="{!supportIncident.Severity__c}" />
+                
+            
+                
+                
+                
+                
+                
+                
+                
+                
+                <apex:inputField value="{!supportIncident.Affects_Version__c}" />
+                &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<apex:inputField value="{!supportIncident.Module_moodlerooms__c}" />
+            </apex:pageBlockSection>
+            <apex:pageBlockSection rendered="{!isMoodle}" >
+                <apex:inputField value="{!supportIncident.Summary__c}" />
+                <apex:inputField value="{!supportIncident.Reported_In_Version__c}" />
+                <apex:inputField value="{!supportIncident.Functional_Area__c}" />
+                <apex:inputField value="{!supportIncident.JIRA_URL__c}" />
+                <apex:inputField value="{!supportIncident.External_URL__c}" />
+                <apex:inputField value="{!supportIncident.Source__c}" />
+                <apex:inputField value="{!supportIncident.Reported_By__c}" />
+                <apex:inputField value="{!supportIncident.Reproduced__c}" />
+                <apex:inputField value="{!supportIncident.Regression__c}" />
+                
+                <apex:inputField value="{!supportIncident.Has_Workaround__c}"  />
+                <apex:inputTextarea value="{!supportIncident.Workaround_HTML__c}" richText="true" />
+                <apex:inputTextarea value="{!supportIncident.Client_Information_HTML__c}" richText="true"/>
+                
+                <apex:inputTextarea value="{!supportIncident.Description_HTML__c}" richText="true"/>
+                <apex:inputTextarea value="{!supportIncident.System_Information_HTML__c}" richText="true"/>
+                
+                <apex:inputTextarea value="{!supportIncident.Steps_to_Replicate__c}" richText="true"/>
+                <!-- <apex:inputTextarea value="{!supportIncident.Resolution__c}" richText="true"/> -->
+                <!-- <apex:inputTextarea value="{!supportIncident.On_Hold_Reason__c}" richText="true"/> -->
+                                
+                
+                <!-- Versions and Build -->
+            </apex:pageBlockSection>
+           
+           
+        </apex:pageBlock>
+    </apex:form>
+</apex:page>

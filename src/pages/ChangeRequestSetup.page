@@ -1,0 +1,56 @@
+<apex:page controller="ChangeRequestSetupController">
+	<apex:sectionHeader title="{!memberRecord.User__r.Name}'s Change Request Setup" rendered="{!isValidMember}" />
+	<apex:pageMessages />
+	<apex:form rendered="{!isValidMember}">
+		<apex:pageBlock >
+			<apex:pageBlockSection title="My Information" collapsible="false">
+				<apex:outputField value="{!memberRecord.CR_Approver_Group__r.Name}" />
+				<apex:outputField value="{!memberRecord.Type__c}" />
+			</apex:pageBlockSection>
+			<apex:pageBlockSection collapsible="false" columns="1" rendered="{!NOT(isApprover)}">
+				<apex:pageBlockTable value="{!objectList}" var="o">
+					<apex:column headerValue="My Team's Objects">
+						<apex:outputText value="{!o.Salesforce_Object__r.Name}" />
+					</apex:column>
+				</apex:pageBlockTable>
+			</apex:pageBlockSection>
+			<apex:pageBlockSection collapsible="false" columns="1" rendered="{!isApprover}">
+				<apex:outputPanel layout="block" id="allObjects" >
+					<div style="position: relative;">
+					    <apex:outputpanel >
+					        <apex:actionstatus id="status">
+					            <apex:facet name="start">
+					                <div class="waitingSearchDiv" id="el_loading" style="background-color: #fbfbfb; height: 100%;opacity:0.65;width:100%;"> 
+					                    <div class="waitingHolder" style="top: 74.2px; width: 91px;">
+					                        <img class="waitingImage" src="/img/loading.gif" title="Please Wait..." />
+					                        <span class="waitingDescription">Loading...</span>
+					                    </div>
+					                </div>
+					            </apex:facet>
+					        </apex:actionstatus>
+					    </apex:outputpanel>
+						<apex:outputPanel layout="block" style="text-align:center">
+							<apex:commandButton value="Update Objects" action="{!updateObjects}" />
+						</apex:outputPanel>
+						<apex:pageBlockTable value="{!fullObjectList}" var="o">
+							<apex:column >
+								<apex:facet name="header">
+									<apex:outputPanel layout="block">
+										<apex:inputCheckbox value="{!selectAll}" id="selectAll">
+											<apex:actionSupport event="onchange" action="{!flipFlags}" rerender="allObjects" status="status" />
+										</apex:inputCheckbox>
+										<apex:outputText value="Select All" />
+									</apex:outputPanel>
+								</apex:facet>
+								<apex:inputCheckbox value="{!o.selected}" disabled="{!o.disabled}" />
+							</apex:column>
+							<apex:column headerValue="Object Name">
+								<apex:outputText value="{!o.sObj.Name}" />
+							</apex:column>
+						</apex:pageBlockTable>
+						</div>
+				</apex:outputPanel>
+			</apex:pageBlockSection>
+		</apex:pageBlock>
+	</apex:form>
+</apex:page>

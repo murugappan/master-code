@@ -1,0 +1,394 @@
+<apex:page standardController="Account" showHeader="true" tabStyle="account">
+    
+    
+    
+<script>
+
+function setFocusOnLoad() {}
+
+</script>
+    
+    
+    <style>
+    .activeTab {height:10px;width:100px;background-color: #236FBD; font-weight:bold; color:white;  border-style: hidden;background-image:none;}
+    .inactiveTab {height:10px;width:100px; background-color: #ADADAD; color:black;font-weight:bold;border-style: hidden;background-image:none;}
+    .disabledTab {height:10px;width:100px; background-color: #ADADAD; color:grey;border-style: hidden;background-image:none;}
+    .whiteBG { background-color: #236FBD; font-weight:bold; color:white;  border-style: hidden;background-image:none; }
+    .whiteBG1 { background-color: lightgrey; color:#ADADAD;font-weight:bold;border-style: hidden;background-image:none;}
+    </style>
+    <apex:tabPanel switchType="client" id="theTabPanel" tabClass="activeTab" disabledTabClass="disabledTab" inactiveTabClass="inactiveTab" width="105%" >
+        
+        
+        <apex:tab label="Overall" name="customerOfLearn1" id="customerOfLearn1" styleClass="whiteBG">
+            <apex:pageBlock id="customerOfLearnBlock1">
+               
+                    <apex:form >
+                    <apex:pageBlockSection columns="2" showHeader="false" > 
+                     
+                      
+                      <!-- <table style="width:1000px;">
+                            <tr> -->
+                               
+                                 <apex:inputField value="{!account.Risk_Grade__c}"/>
+                                 <apex:inputField value="{!account.Contract_Value__c}"/>
+                                 <apex:inputField value="{!account.Risk_Assessment_Overall_Description__c}" style="width: 260px; height: 40px" />
+                                 <apex:inputField value="{!account.Client_Satisfaction__c}"/>
+                                 <br/>
+                                
+                                 
+                                 
+                                 <apex:InputField value="{!account.Risk_Assessment_Overall__c}"  /><br/>
+                                 <apex:inputField value="{!account.Reason_for_Risk_Assessment_Overall__c}"/>
+                                 
+                                
+                                 <apex:inputField value="{!account.Known_Loss_Date_Overall__c}"/>
+                                 <apex:inputField value="{!account.Overall_Risk_Status_Last_Changed__c}" />
+                                 <apex:inputField value="{!account.Overall_Risk_Status_Last_Changed_by__c}"/>
+                                 <apex:inputField value="{!account.Risk_Primary_Indicators_Overall__c}"/>
+                                  
+                                           
+                                   
+                            <!-- </tr>
+                     </table> -->
+                      
+                </apex:pageBlockSection> 
+                </apex:form>
+            </apex:pageBlock>
+        </apex:tab>
+        
+        
+        
+        
+        <apex:tab label="Learn" name="customerOfLearn" id="customerOfLearn"  styleClass="{!IF(account.CustomerofLearn__c,'whiteBG', 'whiteBG1')}" >
+        <!-- disabled="{!NOT(account.CustomerofLearn__c)}" -->
+            <apex:pageBlock id="customerOfLearnBlock">
+                <apex:image url="{!$Resource.learnLogo}"/>
+                    <apex:form >
+                    <apex:pageBlockSection columns="2" showHeader="false" > 
+                    
+                    <!-- <table style="width:1000px;">
+                            <tr> -->
+                               
+                                 
+                                 <apex:inputField value="{!account.Risk_Assessment_Learn__c}"/>
+                                 <apex:inputField value="{!account.Risk_Primary_Indicators_Learn__c}"/>
+                                 <apex:inputField value="{!account.Risk_Assessment_Date_Learn__c}"  />
+                                 <apex:InputField value="{!account.Reason_for_Risk_Assesment_Learn__c}"  />
+                                 
+                                 <apex:inputField value="{!account.Learn_Risk_Status_Last_Modified__c}"/>
+                                 <apex:inputField value="{!account.Competitor_Learn__c}"/>
+                                 <apex:inputField value="{!account.Learn_Risk_Status_Last_Changed_by__c}" />
+                                 <apex:inputField value="{!account.Known_Loss_Date_Learn__c}"/>
+                                 <apex:inputField value="{!account.Risk_Assessment_Learn_Description__c}" style="width: 260px; height: 40px"/>
+                                
+                                  
+                                           
+                                   
+                            <!-- </tr>
+                     </table> -->
+                </apex:pageBlockSection> 
+                </apex:form>
+            </apex:pageBlock>
+         </apex:tab>
+         
+         
+        <apex:tab label="Mobile" name="customerOfMobile" id="customerOfMobile" styleClass="{!IF(account.CustomerofMobile__c,'whiteBG', 'whiteBG1')}" >
+            <apex:pageBlock >
+                <apex:image url="{!$Resource.mobileLogo}"/>
+                <apex:form >
+                <apex:pageBlockSection columns="2" showHeader="false">
+                  
+                  <!-- <table style="width:1000px;">
+                            <tr> -->
+                               
+                                 <apex:inputField value="{!account.Risk_Assessment_Mobile__c}"/>
+                                 <apex:inputField value="{!account.Risk_Primary_Indicators_Mobile__c}"/>
+                                 <apex:inputField value="{!account.Risk_Assessment_Date_Mobile__c}"  />
+                                 <apex:InputField value="{!account.Reason_for_Risk_Assesment_Mobile__c}"  />
+                                 <apex:inputField value="{!account.Mobile_Risk_Status_Last_Changed__c}" />
+                                 <apex:inputField value="{!account.Competitor_Mobile__c}"/>
+                                 <apex:inputField value="{!account.Mobile_Risk_Status_Last_Changed_by__c}"/>
+                                 <apex:inputField value="{!account.Known_Loss_Date_Mobile__c}"/>
+                                 <apex:inputField value="{!account.Risk_Description_Mobile__c}" style="width: 260px; height: 40px"/>
+                                 
+                            <!-- </tr>
+                     </table> -->
+                  
+                 
+                </apex:pageBlockSection>
+                </apex:form>
+            </apex:pageBlock>
+        </apex:tab>
+        
+        
+        
+        
+        
+        
+        <apex:tab label="Transact" name="customerOfTransact" id="customerOfTransact" styleClass="{!IF(account.CustomerofTransact__c,'whiteBG', 'whiteBG1')}">
+            <apex:pageBlock >
+                <apex:image url="{!$Resource.transactLogo}"/>
+               <apex:form >
+                <apex:pageBlockSection columns="2" showHeader="false">
+                  
+                  <!-- <table style="width:1000px;">
+                            <tr> -->
+                               
+                                 <apex:inputField value="{!account.Risk_Assessment_Transact__c}"/>
+                                 <apex:inputField value="{!account.Risk_Primary_Indicators_Transact__c}"/>
+                                 <apex:inputField value="{!account.Risk_Assessment_Date_Transact__c}"  />
+                                 <apex:InputField value="{!account.Reason_for_Risk_Assesment_Transact__c}"  />
+                                 
+                                 <apex:inputField value="{!account.Transact_Risk_Status_Last_Changed__c}" />
+                                 <apex:inputField value="{!account.Competitor_Transact__c}"/>
+                                 <apex:inputField value="{!account.Transact_Risk_Status_Last_Changed_by__c}" />
+                                 <apex:inputField value="{!account.Known_Loss_Date_Transact__c}"/>
+                                 
+                                 
+                                 
+                            <!-- </tr>
+                     </table> -->
+                  
+                </apex:pageBlockSection>
+                </apex:form>
+            </apex:pageBlock>
+        </apex:tab>
+        
+        
+        
+        
+        
+        
+        
+        <apex:tab label="Connect" name="customerOfConnect" id="customerOfConnect" styleClass="{!IF(account.CustomerofConnect__c,'whiteBG', 'whiteBG1')}">
+            <apex:pageBlock >
+                
+                <apex:image url="{!$Resource.connectLogo}"/>
+                <apex:form >
+                 <apex:pageBlockSection columns="2" showHeader="false">
+                  
+                  <!-- <table style="width:1000px;">
+                            <tr> -->
+                               
+                                 <apex:inputField value="{!account.Risk_Assessment_Connect__c}"/>
+                                 <apex:inputField value="{!account.Risk_Primary_Indicators_Connect__c}"/>
+                                 <apex:inputField value="{!account.Risk_Assessment_Date_Connect__c}"  />
+                                 <apex:InputField value="{!account.Reason_for_Risk_Assesment_Connect__c}"  />
+                                 <apex:inputField value="{!account.Connect_Risk_Status_Last_Changed__c}" />
+                                 <apex:inputField value="{!account.Competitor_Connect__c}"/>
+                                 <apex:inputField value="{!account.Known_Loss_Date_Connect__c}"/>
+                                 <apex:inputField value="{!account.Risk_Description_Connect__c}" style="width: 260px; height: 40px" />
+                                 
+                            <!-- </tr>
+                     </table> -->
+                  
+                </apex:pageBlockSection>
+                </apex:form>
+                
+              
+            </apex:pageBlock>
+        </apex:tab>
+        
+        
+        
+        
+        <apex:tab label="Engage" name="customerOfEdline" id="customerOfEdline" styleClass="{!IF(account.CustomerofEdline__c,'whiteBG', 'whiteBG1')}">
+            <apex:pageBlock >
+               <apex:form >
+                 <apex:pageBlockSection columns="2" showHeader="false">
+                  
+                 <!--  <table style="width:1000px;">
+                            <tr> -->
+                                 <apex:InputField value="{!account.Risk_Assessment_Engage__c}"  />
+                                 <apex:inputField value="{!account.Risk_Primary_Indicators_Engage__c}" />
+                                 <!-- <apex:inputField value="{!account.Engage_Risk_Status_Last_Changed__c}"/> 
+                                  <apex:inputField value="{!account.Engage_Risk_Status_Last_Changed_By__c}" /> -->
+                                 <apex:inputField value="{!account.Competitor_Engage__c}" />
+                                 <apex:inputField value="{!account.Risk_Description_Engage__c}" style="width: 260px; height: 40px"  />
+                            <!-- </tr>
+                  </table> -->
+                  
+                </apex:pageBlockSection>
+                </apex:form>
+                
+            </apex:pageBlock>
+        </apex:tab>
+        
+        
+        
+        
+        <apex:tab label="Collaborate" name="customerOfCollaborate" id="customerOfCollaborate" styleClass="{!IF(account.CustomerofCollaborate__c,'whiteBG', 'whiteBG1')}">
+            <apex:pageBlock >
+                <apex:image url="{!$Resource.collaborateLogo}"/>
+                <apex:form >
+                 <apex:pageBlockSection columns="2" showHeader="false">
+                  
+                  <!-- <table style="width:1000px;">
+                            <tr> -->
+                                 
+                                 <apex:inputField value="{!account.Risk_Assessment_Collaborate__c}"/>
+                                 <apex:inputField value="{!account.Risk_Primary_Indicators_Collaborate__c}" />
+                                 <apex:inputField value="{!account.Risk_Assessment_Date_Collaborate__c}"   />
+                                 <apex:InputField value="{!account.Reason_for_Risk_Assesment_Collaborate__c}"  />
+                                
+                                 <apex:inputField value="{!account.Collaborate_Risk_Status_Last_Changed__c}" />
+                                 <apex:inputField value="{!account.Competitor_Collaborate__c}" />
+                                 <apex:inputField value="{!account.Collaborate_Risk_Status_Last_Changed_by__c}" />
+                                 <apex:inputField value="{!account.Known_Loss_Date_Collaborate__c}" />
+                                 <apex:inputField value="{!account.Risk_Description_Collaborate__c}" style="width: 260px; height: 40px" />
+                            <!-- </tr>
+                  </table> -->
+
+                </apex:pageBlockSection>
+                </apex:form>
+            </apex:pageBlock>
+        </apex:tab>
+        
+        
+        <apex:tab label=" Student Services" name="customerOfStudentServices" id="customerOfStudentServices" labelWidth="125px" styleClass="{!IF(account.CustomerofStudentServices__c,'whiteBG', 'whiteBG1')}">
+            <apex:pageBlock >
+                <apex:form >
+                 <apex:pageBlockSection columns="2" showHeader="false">
+                  
+                  <!-- <table style="width:1000px;">
+                            <tr> -->
+                                 <apex:inputField value="{!account.Risk_Assessment_Student_Services__c}"/> 
+                                 <apex:inputField value="{!account.Risk_Primary_Indicators_Student_Serv__c}" />
+                                 <apex:inputField value="{!account.Risk_Assessment_Date_Student_Services__c}"   />
+                                 <apex:InputField value="{!account.Reason_for_Risk_Assesment_Student_Serv__c}"  />
+                                 <apex:inputField value="{!account.Student_Serv_Risk_Status_Last_Changed__c}" />
+                                 <apex:inputField value="{!account.Competitor_Student_Services__c}" />
+                                 <apex:inputField value="{!account.Student_Serv_Risk_Status_Last_Changed_by__c}" />
+                                 <apex:inputField value="{!account.Known_Loss_Date_Student_Services__c}" /> 
+                                 <apex:inputField value="{!account.Risk_Description_Student_Services__c}" style="width: 260px; height: 40px" />
+                                 
+                            <!-- </tr>
+                  </table> -->
+
+                </apex:pageBlockSection>
+                </apex:form>
+            </apex:pageBlock>
+        </apex:tab>
+        
+        
+        
+        
+        
+        
+        <apex:tab label="Analytics" name="customerOfAnalytics" id="customerOfAnalytics" styleClass="{!IF(account.CustomerofAnalytics__c,'whiteBG', 'whiteBG1')}">
+            <apex:pageBlock >
+                <apex:image url="{!$Resource.analyticsLogo}"/>
+                 <apex:form >
+                 <apex:pageBlockSection columns="2" showHeader="false">
+                  
+                 <!-- <table style="width:1000px;">
+                            <tr> -->
+                                 
+                                 <apex:inputField value="{!account.Risk_Assessment_Analytics__c}"/> 
+                                 <apex:inputField value="{!account.Risk_Primary_Indicators_Analytics__c}" />
+                                 <apex:inputField value="{!account.Risk_Assessment_Date_Analytics__c}"   />
+                                 <apex:InputField value="{!account.Reason_for_Risk_Assesment_Analytics__c}"  />
+                                 <apex:inputField value="{!account.Analytics_Risk_Status_Last_Changed__c}" />
+                                 <apex:inputField value="{!account.Competitor_Analytics__c}" />
+                                 <apex:inputField value="{!account.Analytics_Risk_Status_Last_Changed_by__c}" />
+                                 <apex:inputField value="{!account.Known_Loss_Date_Analytics__c}" /> 
+                                 <apex:inputField value="{!account.Risk_Description_Analytics__c}" style="width: 260px; height: 40px" />
+                                
+                                
+                                
+                                 
+                           <!-- </tr>
+                  </table> -->
+                  
+                </apex:pageBlockSection>
+                </apex:form>
+            </apex:pageBlock>
+        </apex:tab> 
+        
+        <!-- Parent Link -->
+        
+       <apex:tab label="Parent Link" name="customerOfParentLink" id="customerOfParentLink1" styleClass="{!IF(account.CustomerofParentLink__c,'whiteBG', 'whiteBG1')}" >
+            <apex:pageBlock >
+            <apex:form >
+                 <apex:pageBlockSection columns="2" showHeader="false">
+                  
+                  <!-- <table style="width:1000px;">
+                            <tr> -->
+                                 <apex:InputField value="{!account.Risk_Assessment_Parentlink__c}"  />
+                                 <apex:inputField value="{!account.Risk_Primary_Indicators_Parentlink__c}" />
+                                 <!-- <apex:inputField value="{!account.Parentlink_Risk_Status_Last_Changed__c}"/> 
+                                 <apex:inputField value="{!account.Parentlink_Risk_Status_Last_Changed_By__c}" /> --> 
+                                 <apex:inputField value="{!account.Competitor_Parentlink__c}" />
+                                 <apex:inputField value="{!account.Risk_Description_Parentlink__c}"  style="width: 260px; height: 40px"  />
+                                 
+                            <!-- </tr>
+                  </table> -->
+                </apex:pageBlockSection>
+                </apex:form>
+               
+            </apex:pageBlock>
+        </apex:tab>
+        
+        
+        
+        
+        <!-- Parent Link -->
+        
+        
+        
+        <apex:tab label="Moodlerooms" name="customerOfMoodleRooms" id="customerOfMoodleRooms" styleClass="{!IF(account.CustomerOfMoodleRooms__c,'whiteBG', 'whiteBG1')}" >
+            <apex:pageBlock >
+            
+            <apex:form >
+                 <apex:pageBlockSection columns="2" showHeader="false">
+                  
+                 <!--  <table style="width:1000px;">
+                            <tr> -->
+                                 <apex:InputField value="{!account.Risk_Assessment_Moodlerooms__c}"  />
+                                 <apex:inputField value="{!account.Risk_Primary_Indicators_moodlerooms__c}" />
+                                 <apex:inputField value="{!account.moodlerooms_Risk_Status_Last_Changed__c}"/> 
+                                 <apex:inputField value="{!account.Competitor_moodlerooms__c}" />
+                                 <apex:inputField value="{!account.moodlerooms_Risk_Status_Last_Changed_by__c}" /> 
+                                 <apex:inputField value="{!account.Risk_Description_moodlerooms__c}"  style="width: 260px; height: 40px"  />
+                                 
+                           <!--  </tr>
+                  </table> -->
+
+                  
+                </apex:pageBlockSection>
+                </apex:form>
+                
+            </apex:pageBlock>
+        </apex:tab>
+        
+        
+        
+        
+        <apex:tab label="Netspot" name="CustomerofNetSpot" id="CustomerofNetSpot" styleClass="{!IF(account.CustomerofNetSpot__c,'whiteBG', 'whiteBG1')}">
+            <apex:pageBlock >
+            <apex:form >
+                 <apex:pageBlockSection columns="2" showHeader="false">
+                  
+                  <!-- <table style="width:1000px;">
+                            <tr> -->
+                                  <apex:inputField value="{!account.Risk_Assessment_NetSpot__c}"/>
+                                  <apex:inputField value="{!account.Risk_Primary_Indicators_NetSpot__c}" />
+                                  <apex:inputField value="{!account.Risk_Assessment_Date_NetSpot__c}"   />
+                                  <apex:InputField value="{!account.Reason_for_Risk_Assessment_NetSpot__c}"  /> 
+                                  <apex:inputField value="{!account.NetSpot_Risk_Status_Last_Changed__c}" />
+                                  <apex:inputField value="{!account.Competitor_NetSpot__c}" />
+                                  <apex:inputField value="{!account.NetSpot_Risk_Status_Last_Changed_by__c}" />
+                                  <apex:inputField value="{!account.Known_Loss_Date_NetSpot__c}" />
+                                  <apex:inputField value="{!account.Risk_Description_NetSpot__c}" style="width: 260px; height: 40px" />
+                                
+                                 
+                            <!-- </tr>
+                  </table> -->
+
+                  
+                </apex:pageBlockSection>
+                </apex:form>    
+            </apex:pageBlock>
+        </apex:tab>
+    </apex:tabPanel>
+</apex:page>

@@ -1,0 +1,15 @@
+<apex:page controller="salesforcecanvas"  sidebar="false" standardstylesheets="false" showHeader="false" cache="false" action="{!Redirect}">
+
+  <script type="text/javascript" charset="utf-8" src="{!URLFOR($Resource.DataTables, 'media/js/jquery.js')}"></script>
+<script>
+var url = '{!$Label.TransactPortalURL}/s/CanvasApp.aspx';
+var form = $('<form action="' + url + '" method="post">' +
+  '<input type="hidden" name="signed_request" value="{!message}" />' +
+  '</form>');
+$('body').append(form);
+form.submit();
+</script>
+        
+     
+       
+</apex:page>

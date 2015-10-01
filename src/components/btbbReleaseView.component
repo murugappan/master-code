@@ -1,0 +1,113 @@
+<apex:component allowDML="true">
+    <apex:attribute name="btbbController" type="btbb_articleviewController" required="true" description="handle to the btbb article view controller" />
+    <apex:attribute name="showBackLinks" type="Boolean" required="true" description="flag to indicate if 'back to...' buttons should be shown" />
+    <div id="btbbArticleViewBody">          
+        <div id="articleDescription">                             
+            <apex:outputPanel layout="block" id="btbbarticledetail" style="margin-top: 20px;" rendered="{!btbbController.caseId == null}">                   
+                <apex:outputPanel layout="block" id="Product" rendered="{!btbbController.mainArticle.product != null}">
+                    <p>
+                        <strong>Product:</strong>
+                        <apex:outputText escape="false" value="  {!btbbController.mainArticle.product}"/>
+                    </p>                        
+                </apex:outputPanel>  
+                <apex:outputPanel layout="block" id="major" rendered="{!btbbController.mainArticle.release != null}">
+                    <p>
+                        <strong>Release:</strong>
+                        <apex:outputText escape="false" value="  {!btbbController.mainArticle.release}"/>
+                    </p>                                           
+                </apex:outputPanel>
+                <apex:outputPanel layout="block" id="version" rendered="{!btbbController.mainArticle.servicePacks != null}">
+                    <p>
+                        <strong>Service Pack:</strong>
+                        <apex:outputText escape="false" value="  {!btbbController.mainArticle.servicePacks}"/>
+                    </p>                          
+                </apex:outputPanel>
+            </apex:outputPanel>                              
+        </div>                    
+        <div id="ProductRelease" style="overflow: auto;width: 100%">
+            <strong><apex:outputText styleClass="btbbBodyHeading" rendered="{!btbbController.mainArticle.upgradeInformation != null}" value="About:  " /></strong>
+            <apex:outputText value="{!btbbController.mainArticle.upgradeInformation}" escape="false" /><br/>   
+            <strong><apex:outputText styleClass="btbbBodyHeading" rendered="{!btbbController.mainArticle.productDocumentation != null}" value="Highlights:  " /> </strong>
+            
+            <div id="kbHighlights">
+                <apex:outputText value="{!btbbController.mainArticle.productDocumentation}" escape="false" />
+            </div> 
+            
+            <!-- <a href="#" id="kbExpandHighlights">See all highlights</a><br /> -->
+            
+            <apex:outputText styleClass="btbbBodyHeading" rendered="{!btbbController.mainArticle.upgradePaths != null}" value="Upgrade Paths:  " />
+            <apex:outputText value="{!btbbController.mainArticle.upgradePaths}" escape="false" /><br />
+            <apex:outputText styleClass="btbbBodyHeading" rendered="{!btbbController.mainArticle.referenceMaterial != null}" value="Reference Material:  " />
+            <apex:outputText escape="false" value="{!btbbController.mainArticle.referenceMaterial}" /><br/>
+            <apex:outputText styleClass="btbbBodyHeading" value="Support Policy:  " />
+            <apex:outputLink value="btbb_articleview?id=50170000000WXq7AAG" target="_blank">
+                Client Support Services Guides
+            </apex:outputLink><br/>
+            <apex:outputText styleClass="btbbBodyHeading" rendered="{!btbbController.mainArticle.otherInformation != null}" value="Other Information:  " />
+            <apex:outputText escape="false" value="{!btbbController.mainArticle.otherInformation}" /><br/>
+            <apex:outputText styleClass="btbbBodyHeading" rendered="{!btbbController.mainArticle.download != null}" value="Download:  " />
+            <apex:outputText escape="false" value="{!btbbController.mainArticle.download}"/><br/>
+        </div> 
+    </div>
+    <apex:outputPanel layout="block" styleClass="btbbCaseTab" title="Available Maintenance Release(s)" rendered="{!btbbController.hasServicePacks}">
+        <h2>Available Maintenance Release(s)</h2>
+        <table width="100%" style="border:none;">
+            <tr class="nohover" style="border:none;">
+                <th style="border:none;">Service Pack</th>
+                <th style="border:none;">Build Number</th>
+                <th style="border:none;">Release Date</th>                                
+            </tr>
+            <apex:repeat value="{!btbbController.servicePackList}" var="s">
+                <tr>                                        
+                    <td style="border:none;">
+                        <a href="{!$Page.btbb_articleview}?id={!s.knowledgeArticleId}&pid={!btbbController.mainArticle.knowledgeArticleId}">
+                            {!s.name}
+                        </a>
+                    </td>                                        
+                    <td style="border:none;"><apex:outputText value="{!s.versions}"/></td>
+                    <td style="border:none;">
+                        <apex:outputText value="{0,date,MMM dd, yyyy}">
+                            <apex:param value="{!s.releaseDate}"/>
+                        </apex:outputText>
+                    </td>                                
+                </tr>
+            </apex:repeat>
+        </table>
+        <!--<apex:outputLink value="{!$Page.btbb_RelevantArticles}?Id={!Solution.Id}&RecType=RP" rendered="{!IF(RPSize > 5,'true', 'false')}">Go to List >></apex:outputLink>-->
+    </apex:outputPanel><br/>
+    <apex:outputPanel layout="block" styleClass="btbbCaseTab" title="Top Issues" rendered="{!btbbController.hasKnownIssues}">
+        <h2>Top Issues</h2>
+        <table width="100%" style="border:none;">
+            <tr class="nohover" style="border:none;">
+                <th style="border:none;">Article Number</th>
+                <th style="border:none;">Component</th>
+                <th style="border:none;">Service Pack</th>
+                <th style="border:none;">Issue Description</th>
+                <th style="border:none;">Target Fix Release</th>
+                <th style="border:none;">Patch Available</th>
+            </tr>
+            <apex:repeat value="{!btbbController.knownIssuesList}" var="s" rows="10">
+                <tr>                                        
+                    <td style="border:none;">
+                        <a href="{!$Page.btbb_articleview}?id={!s.knowledgeArticleId}&pid={!btbbController.mainArticle.knowledgeArticleId}">
+                            {!s.articleNumber}
+                        </a>
+                    </td>                                        
+                    <td style="border:none;"><apex:outputText value="{!s.products}"/></td>
+                    <td style="border:none;"><apex:outputText value="{!s.versions}"/></td>
+                    <td style="border:none;"><apex:outputText value="{!s.issueDescription}"/></td>
+                    <td style="border:none;"><apex:outputText value="{!s.firstFix}" /></td>
+                    <td style="border:none;"><apex:outputText value="{!s.patchAvailable}" /></td>
+                </tr>
+            </apex:repeat>
+        </table>
+        <apex:outputLink value="{!$Page.btbb_articlesearch}?articleId={!btbbController.mainArticle.articleId}&aType=Known&section=top" target="_blank">
+            Go To List >>
+        </apex:outputLink>
+    </apex:outputPanel>
+    <br />
+    <c:btbbArticleTerms />
+    <br />
+    <c:btbbArticleAttachments btbbController="{!btbbController}" rendered="{!btbbController.hasAttachments}" />
+    <br />         
+</apex:component>

@@ -1,0 +1,111 @@
+<apex:component allowDML="true">
+    <apex:attribute name="btbbController" type="publickbarticleview" required="true" description="handle to the btbb article view controller" />
+    <apex:attribute name="showBackLinks" type="Boolean" required="true" description="flag to indicate if 'back to...' buttons should be shown" />
+    <div id="btbbArticleViewBody">          
+        <div id="articleDescription">                             
+            <apex:outputPanel layout="block" id="btbbarticledetail" style="margin-top: 20px;" rendered="{!btbbController.caseId == null}">                   
+                <apex:outputPanel layout="block" id="Product" rendered="{!btbbController.mainArticle.product != null}">
+                    <p>
+                        <strong>Product:</strong>
+                        <apex:outputText escape="false" value="  {!btbbController.mainArticle.product}"/>
+                    </p>                        
+                </apex:outputPanel>  
+                <apex:outputPanel layout="block" id="major" rendered="{!btbbController.mainArticle.release != null}">
+                    <p>
+                        <strong>Release:</strong>
+                        <apex:outputText escape="false" value="  {!btbbController.mainArticle.release}"/>
+                    </p>                                           
+                </apex:outputPanel>
+                <apex:outputPanel layout="block" id="version" rendered="{!btbbController.mainArticle.servicePacks != null}">
+                    <p>
+                        <strong>Service Pack:</strong>
+                        <apex:outputText escape="false" value="  {!btbbController.mainArticle.servicePacks}"/>
+                    </p>                          
+                </apex:outputPanel>
+                <apex:outputPanel layout="block" id="ReleaseDate" rendered="{!btbbController.mainArticle.releaseDate != null}">                                         
+                    <p>
+                        <strong>Release Date:</strong>
+                        <apex:outputText value="  {0,date,MMM dd,yyyy}">
+                            <apex:param value="{!btbbController.mainArticle.releaseDate}"/> 
+                        </apex:outputText>
+                    </p>
+                </apex:outputPanel>
+            </apex:outputPanel>                              
+        </div>                    
+        <div id="VersionInfo" style="overflow: auto;width: 100%">                            
+            <apex:outputText style="font-weight:bold;display:block;" rendered="{!btbbController.mainArticle.announcing != null}" value="Announcing:  " />
+            <apex:OutputText rendered="{!btbbController.mainArticle.announcing != null}" value="{!btbbController.mainArticle.announcing}" escape="false" />                                               
+            <apex:outputText style="font-weight:bold;display:block;" rendered="{!btbbController.mainArticle.releaseHighlights != null}" value="Release Highlights:  " />
+            <apex:OutputText rendered="{!btbbController.mainArticle.releaseHighlights != null}" value="{!btbbController.mainArticle.releaseHighlights}" escape="false" />
+            <apex:outputText style="font-weight:bold;display:block;" rendered="{!btbbController.mainArticle.upgradePaths != null}" value="Upgrade Paths:  " />
+            <apex:OutputText rendered="{!btbbController.mainArticle.upgradePaths != null}" value="{!btbbController.mainArticle.upgradePaths}" escape="false" /> 
+            <apex:outputText style="font-weight:bold;display:block;" rendered="{!btbbController.mainArticle.releaseResources != null}" value="Related Resources  " />
+            <apex:OutputText rendered="{!btbbController.mainArticle.upgradePaths != null}" value="{!btbbController.mainArticle.upgradePaths}" escape="false" />                                               
+            <apex:outputText style="font-weight:bold;display:block;" rendered="{!btbbController.mainArticle.accessingTheBuild != null}" value="Accessing the Build:  " />
+            <apex:OutputText style="font-weight:bold" rendered="{!btbbController.mainArticle.accessingTheBuild != null}" value="{!btbbController.mainArticle.accessingTheBuild}" escape="false" />                                          
+        </div>  
+    </div>
+    <apex:outputPanel layout="block" styleClass="btbbCaseTab" title="Top Issues" rendered="{!btbbController.hasKnownIssues}">
+        <h2>Top Issues</h2>
+        <table width="100%" style="border:none;">
+            <tr class="nohover" style="border:none;">
+                <th style="border:none;">Article Number</th>
+                <th style="border:none;">Component</th>
+                <th style="border:none;">Service Pack</th>
+                <th style="border:none;">Issue Description</th>
+                <th style="border:none;">Target Fix Release</th>
+                <th style="border:none;">Patch Available</th>
+            </tr>
+            <apex:repeat value="{!btbbController.knownIssuesList}" var="s" rows="10">
+                <tr>                                        
+                    <td style="border:none;">
+                        <a href="{!$Page.btbb_articleview}?id={!s.knowledgeArticleId}&pid={!btbbController.mainArticle.knowledgeArticleId}">
+                            {!s.articleNumber}
+                        </a>
+                    </td>                                        
+                    <td style="border:none;"><apex:outputText value="{!s.products}"/></td>
+                    <td style="border:none;"><apex:outputText value="{!s.versions}"/></td>
+                    <td style="border:none;"><apex:outputText value="{!s.issueDescription}"/></td>
+                    <td style="border:none;"><apex:outputText value="{!s.targetRelease}" /></td>
+                    <td style="border:none;"><apex:outputText value="{!s.patchAvailable}" /></td>
+                </tr>
+            </apex:repeat>
+        </table>
+        <apex:outputLink value="{!$Page.btbb_articlesearch}?articleId={!btbbController.mainArticle.articleId}&aType=Known&section=top" target="_blank">
+            Go To List >>
+        </apex:outputLink>
+    </apex:outputPanel><br />
+    <apex:outputPanel layout="block" styleClass="btbbCaseTab" title="Resolved Issues" rendered="{!btbbController.hasResolvedIssues}">
+        <h2>Resolved Issues</h2>
+        <table width="100%" style="border:none;">
+            <tr class="nohover" style="border:none;">
+                <th style="border:none;">Article Number</th>
+                <th style="border:none;">Component</th>
+                <th style="border:none;">Version</th>
+                <th style="border:none;">Issue Description</th>
+                <th style="border:none;">Target Fix Release</th>                                        
+            </tr>
+            <apex:repeat value="{!btbbController.resolvedIssuesList}" var="s" rows="5">
+                <tr>                                        
+                    <td style="border:none;">
+                        <a href="{!$Page.btbb_articleview}?id={!s.knowledgeArticleId}&pid={!btbbController.mainArticle.knowledgeArticleId}">
+                            {!s.articleNumber}
+                        </a>
+                    </td>                                        
+                    <td style="border:none;"><apex:outputText value="{!s.products}"/></td>
+                    <td style="border:none;"><apex:outputText value="{!s.versions}"/></td>
+                    <td style="border:none;"><apex:outputText value="{!s.issueDescription}"/></td>
+                    <td style="border:none;"><apex:outputText value="{!s.targetRelease}" /></td>
+                </tr>
+            </apex:repeat>
+        </table>
+        <apex:outputLink value="{!$Page.btbb_articlesearch}?articleId={!btbbController.mainArticle.articleId}&aType=Known&section=resolved" target="_blank">
+            Go To List >>
+        </apex:outputLink>
+    </apex:outputPanel>
+    <br />
+    <c:btbbArticleTerms />
+    <br />
+    <c:publicarticleattachment btbbController="{!btbbController}" rendered="{!btbbController.hasAttachments}" />
+    <br />          
+</apex:component>

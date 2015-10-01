@@ -1,0 +1,36 @@
+<apex:component allowDML="true">
+    <apex:attribute name="btbbController" type="publickbarticleview" required="true" description="handle to the btbb article view controller" />
+    <apex:attribute name="showBackLinks" type="Boolean" required="true" description="flag to indicate if 'back to...' buttons should be shown" />
+    <div id="btbbArticleViewBody">          
+        <div id="articleDescription">                             
+            <apex:outputPanel layout="block" id="btbbarticledetail" style="margin-top: 20px;" rendered="{!btbbController.caseId == null}">                   
+                <p>
+                    <strong>Type:</strong>
+                    <apex:outputText escape="false" rendered="{!btbbController.mainArticle.typeC != null}" value="  {!btbbController.mainArticle.typeC}"/>
+                </p>
+                <apex:outputPanel layout="block" id="Product" rendered="{!btbbController.mainArticle.product != null}">
+                    <p>
+                        <strong>Product:</strong>
+                        <apex:outputText escape="false" value="  {!btbbController.mainArticle.product}"/>
+                    </p>                        
+                </apex:outputPanel>
+            </apex:outputPanel>
+        </div>                    
+        <div class="cleaner divider"></div>
+        <div id="SupportBulletin" style="overflow: auto;width: 100%">                          
+            <apex:outputText style="font-weight:bold;" rendered="{!btbbController.mainArticle.bulletinAdvisoryInformation != null}" value="Bulletin/Advisory Information:  " />
+            <apex:outputText rendered="{!btbbController.mainArticle.bulletinAdvisoryInformation != null}" value="{!btbbController.mainArticle.bulletinAdvisoryInformation}" escape="false" /><br />                        
+            <apex:outputText style="font-weight:bold;" rendered="{!btbbController.mainArticle.patchAvailable != null}" value="Patch Available:  " />
+            <apex:outputText rendered="{!btbbController.mainArticle.patchAvailable != null}" value="{!btbbController.mainArticle.patchAvailable}" /><br />
+            <apex:outputText style="font-weight:bold;" rendered="{!btbbController.mainArticle.patchVersions != null}" value="Patch Versions:  " />
+            <apex:outputText rendered="{!btbbController.mainArticle.patchVersions != null}" value="{!btbbController.mainArticle.patchVersions}" /><br />
+            <apex:outputText style="font-weight:bold;" rendered="{!btbbController.mainArticle.patchComments != null}" value="Patch Information:  " />
+            <apex:outputText rendered="{!btbbController.mainArticle.patchComments != null}" value="{!btbbController.mainArticle.patchComments}" escape="false" /><br />
+        </div>
+    </div>
+    <br />
+    <c:btbbArticleTerms />
+    <br />
+    <c:publicarticleattachment btbbController="{!btbbController}" rendered="{!btbbController.hasAttachments}" />
+    <br />         
+</apex:component>

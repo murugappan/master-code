@@ -1,0 +1,21 @@
+<apex:page standardController="Case" extensions="SupportIncidentsOnCase">
+    <apex:pageMessages />
+	<apex:pageBlock >
+		<apex:pageBlockSection title="Support Incident Information" rendered="{!supportIncident.Id != null}">
+			<apex:outputField label="Support Incident #" value="{!supportIncident.Name}" />
+			<apex:outputField label="Status" value="{!supportIncident.Status__c}" />
+		</apex:pageBlockSection>
+		<apex:pageBlockSection title="Related Bug Information" rendered="{!relatedBug.Id != null}">
+			<apex:outputField label="Target Release" value="{!relatedBug.Name}" />
+			<apex:outputField label="Status" value="{!relatedBug.Status__c}" />
+		</apex:pageBlockSection>
+		<apex:pageBlockSection title="Patch Request Information" rendered="{!patchRequest.Id != null}">
+			<apex:outputField label="Patch Name" value="{!patchRequest.Name}" />
+			<apex:outputField label="Status" value="{!patchRequest.Status__c}" />
+		</apex:pageBlockSection>
+		<apex:pageBlockSection columns="2">
+			<apex:outputField value="{!bookmark.Name}" />
+			<apex:outputField value="{!bookmark.Emails_Sent__c}" />
+		</apex:pageBlockSection>
+	</apex:pageBlock>
+</apex:page>

@@ -1,0 +1,98 @@
+<apex:page controller="csmrgp.CsMrgSelectCtrl" title="Merge Cases" tabStyle="Case_Merge_Premium__tab" id="pg">
+    <apex:form id="selectCasesF">
+        <apex:pageBlock title="Merge Cases" id="mergeCasesPB">
+            <apex:pageBlockButtons >
+                <apex:commandButton value="Restart" action="{!previous}" rendered="false" />
+                <apex:commandButton value="Merge" action="{!csmerge}" onclick="return window.confirm('Merging cannot be undone. Are you sure you want to proceed with the case merge?');"/>
+                <apex:commandButton value="Cancel" action="{!previous}" />
+            </apex:pageBlockButtons>
+            
+            <apex:pageMessages />
+            
+            <apex:pageBlockSection columns="1">
+                <apex:outputText value="Select the master case."/>
+            </apex:pageBlockSection>
+            
+            <apex:pageBlockSection columns="1" id="mergeCaseTablePBS">
+                <apex:pageBlockTable styleClass="tableClass" var="f" value="{!$ObjectType.Case.FieldSets.csmrgp__Case_Merge_Select}" rules="rows" width="100%" id="mergeCaseTable">
+                
+                    <apex:column style="width:{!100/(CASECOUNT+1)}%;">
+                        <apex:facet name="header">
+                        </apex:facet>
+                        <apex:outputText value="{!$ObjectType.Case.Fields[f].label}" />
+                    </apex:column>
+                    
+                    <apex:column style="width:{!100/(CASECOUNT+1)}%;" id="col1">
+                        <apex:facet name="header">
+                            <apex:outputpanel id="c1head">
+                                <apex:inputCheckbox id="c1chk" value="{!mergecase1.selected}" onclick="updateChecks(1);"/>
+                                <apex:outputLabel value="{!mergeCase1.cs.casenumber}" for="c1chk"/> 
+                            </apex:outputPanel>
+                        </apex:facet> 
+                        <apex:outputField value="{!mergecase1.cs[f]}" />
+                    </apex:column>
+                    
+                    <apex:column style="width:{!100/(CASECOUNT+1)}%;" id="col2">
+                        <apex:facet name="header">
+                            <apex:outputpanel id="c2head">
+                                <apex:inputCheckbox id="c2chk" value="{!mergecase2.selected}" onclick="updateChecks(2);"/>
+                                <apex:outputLabel value="{!mergeCase2.cs.casenumber}" for="c2chk"/>
+                            </apex:outputPanel>
+                        </apex:facet> 
+                        <apex:outputField value="{!mergeCase2.cs[f]}" />
+                    </apex:column>
+                    
+                    <apex:column style="width:{!100/(CASECOUNT+1)}%;" rendered="{!NOT(ISNULL(mergeCase3))}" id="col3">
+                        <apex:facet name="header">
+                            <apex:outputpanel id="c3head">
+                                <apex:inputCheckbox id="c3chk" value="{!mergecase3.selected}" onclick="updateChecks(3);"/>
+                                <apex:outputLabel value="{!mergeCase3.cs.casenumber}" for="c3chk"/>
+                            </apex:outputpanel>
+                        </apex:facet> 
+                        <apex:outputField value="{!mergeCase3.cs[f]}" />
+                    </apex:column>
+                
+                </apex:pageBlockTable>    
+            </apex:pageBlockSection>
+        </apex:pageBlock>
+    </apex:form>
+    
+    <script language="javascript">
+    
+        updateChecks(1);
+    
+        function shadeColumn(colnum, color){
+            for(var i = 0; i <= {!$ObjectType.Case.FieldSets.csmrgp__Case_Merge_Select.size}-1 ; i++){
+                var c1 = document.getElementById("pg:selectCasesF:mergeCasesPB:mergeCaseTablePBS:mergeCaseTable:" + i + ":col" + colnum);
+                c1.style.backgroundColor = color;
+            }
+        }
+    
+        function updateChecks(i){
+            var c1chk = document.getElementById("{!$Component.selectCasesF.mergeCasesPB.mergeCaseTablePBS.mergeCaseTable.c1chk}")
+            var c2chk = document.getElementById("{!$Component.selectCasesF.mergeCasesPB.mergeCaseTablePBS.mergeCaseTable.c2chk}")
+            var c3chk = document.getElementById("{!$Component.selectCasesF.mergeCasesPB.mergeCaseTablePBS.mergeCaseTable.c3chk}")
+            
+            shadeColumn(1,"white");
+            shadeColumn(2,"white");
+            if(c3chk) shadeColumn(3,"white");
+            
+            if(i==1){
+                if(c1chk.checked) shadeColumn(1,"#FFFFCC");
+                c2chk.checked = false;
+                if(c3chk) c3chk.checked = false;
+            }
+            if(i==2){
+                if(c2chk.checked) shadeColumn(2,"#FFFFCC");
+                c1chk.checked = false;
+                if(c3chk) c3chk.checked = false;
+            }
+            if(i==3){
+                if(c3chk.checked) shadeColumn(3,"#FFFFCC");
+                c1chk.checked = false;
+                c2chk.checked = false;
+            }
+        }
+    </script>
+    
+</apex:page>

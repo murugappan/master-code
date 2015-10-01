@@ -1,0 +1,558 @@
+<apex:page standardStylesheets="false" showHeader="false" sidebar="false" contentType="text/html" cache="false" controller="BtBbHomePageController" action="{!Redirect}" title="HOME" id="homepageid" >
+  
+  
+  
+ <script>
+function initialise()
+{
+
+  var $listItem = $("#primary-nav > li, #global-nav-inner > ul > li");
+    var $flyout = $("#primary-nav > li > ul, #global-nav-inner > ul > li > ul" );
+ 
+    $listItem.has("ul").mouseenter(
+        function () {
+            clearTimeout(mytimer);
+            $flyout.hide().prev("a").removeClass("hover").parent("li").next("li").removeClass("hover");
+            $(this).next("li").addClass("hover").end().children("a").addClass("hover").append("<span></span>").next("ul").show();
+        }
+    );
+    var mytimer = false;
+    $listItem.has("ul").mouseleave(
+        function () {
+            clearTimeout(mytimer);
+            var self = $(this).children("ul");
+            mytimer = setTimeout(function () {
+                self.hide().prev("a").removeClass("hover").children("span").remove().end().parent("li").next("li").removeClass("hover");
+            },
+            300
+            );
+        }
+    ); 
+   liveagent.showWhenOnline('573S0000000CaSA', document.getElementById('liveagent_button_online_573S0000000CaSy'));
+   liveagent.showWhenOffline('573S0000000CaSA', document.getElementById('liveagent_button_offline_573S0000000CaSy')); 
+    
+}
+ </script>
+ 
+ 
+ 
+ 
+<script>
+    function myFunction()
+    {
+
+var sOpenUrl="/adminchatoffline";
+var screenW=window.screen.availWidth;
+var screenH=window.screen.availHeight;
+var winH = 250;
+var winW = 630;
+var winTop = (screenH/2)-(winH/2);
+var winLeft = (screenW/2)-(winW/2); 
+window.open(sOpenUrl,"HandOff","resizable=no,status=no,menubar=no,location=no,top=" +winTop + ",left=" + winLeft + ",width=" + winW + ",height=" + winH);
+    
+    }
+</script>
+ <apex:outputpanel layout="block" id="outerpanel"> 
+
+    <apex:composition template="btbb_template"> 
+       <apex:define name="js">
+       
+          <link rel="stylesheet" href="{!URLFOR($Resource.ModalBox, 'js/jquery.fancybox-1.3.4.css')}" media="screen" />
+           <script type="text/javascript" charset="utf-8" src="{!URLFOR($Resource.ModalBox, 'js/jquery.mousewheel-3.0.4.pack.js')}" />
+           <script type="text/javascript" charset="utf-8" src="{!URLFOR($Resource.ModalBox, 'js/jquery.fancybox-1.3.4.pack.js')}"/> 
+          <script>
+        $(document).ready(function() { 
+            $("#anncment").fancybox({
+                'overlayOpacity'    : '.8',
+                'transitionIn'      : 'elastic',
+                'transitionOut'     : 'elastic',
+                'autoDimensions'    : true,
+                'overlayColor'      : '#000000',
+                'href'              : '#announcement',
+                'type'              : 'inline'
+                });
+             })   ;
+            function invokebox()
+            {
+                $.fancybox({
+                'overlayOpacity'    : '.8',
+                'transitionIn'      : 'elastic',
+                'transitionOut'     : 'elastic',
+                'autoDimensions'    : true,
+                'overlayColor'      : '#000000',
+                'href'              : '#announcement',
+                'type'              : 'inline'
+                });
+            } 
+           function checkannouncement()
+           { 
+            if(document.getElementById('dns').checked==true)
+            {
+                ancmntclose();
+                $.fancybox.close();
+            }
+            else
+            {
+                $.fancybox.close();
+            }
+           }
+          </script>
+          
+       </apex:define>
+        <apex:define name="topbar"><c:btbb_globalsearch /></apex:define>
+        
+            <!-- <apex:define name="nav"><apex:outputPanel id="theID"><c:btbb_auth_nav /></apex:outputPanel></apex:define> -->
+            <apex:define name="nav" >
+            <c:btbb_auth_nav id="authnavid" />
+            </apex:define>
+          
+                <apex:define name="content">
+
+                    <apex:form > 
+                    
+                    <div id="contentLeft">
+                        <div id="contentTitleContainer">
+
+                            <div class="contentTitle"> <span class="agenda">Welcome, </span><span class="gold">{!$User.FirstName} {!$User.LastName}</span>. How can we help you? 
+
+
+                            
+                            
+                            
+                            
+                            </div>
+                            <div class="cleaner">&nbsp;</div>
+                            
+
+                       
+                        </div>
+                        <div class="smBoxContainer">
+                            <div class="smBoxContent">
+                                <div class="subTitleContainer">
+                                    <div class="contentSubTitle">
+                                        <span class="agenda"><a style="color:black;" href="{!$Page.btbb_selfservice}">Self Service</a></span>
+                                    </div>
+                                    <p>Solve it with documentation and <br/>
+                                    tools.</p>
+                                </div> 
+                           
+                           <!-- SELF SERVICE BOX -->
+                           
+                              <div class="subTitleImage">
+                                 <apex:image value="{!URLFOR($Resource.BtBbStyles,'includes/images/self_help.gif')}" alt="Self Service" width="38" height="31"/>
+                              </div>
+                                <div class="cleaner">&nbsp;</div>
+                                <div class="smBoxContentCol smBoxLeft">
+
+                                    <ul>
+                                    <apex:repeat value="{!SelfServicelinks}" var="k" rows="{!CEILING(SelfServicelinks.size/2)}">
+                                        <li><a href="{!k.URL__c}" target="{!k.target__c}">{!k.NAME}</a></li>
+                                    </apex:repeat>
+                                    </ul>
+                                </div>
+                                <div class="smBoxContentCol" >
+                                    <ul>
+                                       <apex:repeat value="{!SelfServicelinks}" var="k" first="{!CEILING(SelfServicelinks.size/2)}">
+                                        <li><a href="{!k.URL__c}" target="{!k.target__c}">{!k.NAME}</a></li>
+                                    </apex:repeat>
+                                    </ul>
+                                </div>
+                                <div class="cleaner">&nbsp;</div>
+                            </div>
+                            <div class="cleaner">&nbsp;</div>
+                            <div class="smBoxBottomShade">&nbsp;</div>
+                        </div>
+                        <div class="smBoxContainer">
+                            <div class="smBoxContent">
+                                <div class="subTitleContainer">
+                                    <div class="contentSubTitle">
+                                        <span class="agenda"><a style="color:black;" href="{!$Page.btbb_community}">Community Resources</a></span>
+                                    </div>
+                                    <p>Solve it with colleagues and <br />
+                                     community.</p>
+                                </div>
+                               
+                                <div class="subTitleImage">                                
+                                    <apex:image value="{!URLFOR($Resource.BtBbStyles,'includes/images/bb_help.gif')}" alt="Community Resources" />
+                                </div>
+
+                                <div class="cleaner">&nbsp;</div>
+                                
+                                <div class="smBoxContentCol smBoxLeft">
+
+                                    <ul>
+                                        <apex:repeat value="{!Communitylinks}" var="k" rows="{!CEILING(Communitylinks.size/2)}">
+                                        <li><a href="{!k.URL__c}" target="{!k.target__c}">{!k.NAME}</a></li>
+                                        </apex:repeat>
+                                    </ul>
+
+                                </div>
+                                
+                                <div class="smBoxContentCol">
+
+                                    <ul>
+                                        <apex:repeat value="{!Communitylinks}" var="k" first="{!CEILING(Communitylinks.size/2)}">
+                                        <li><a href="{!k.URL__c}" target="{!k.target__c}">{!k.NAME}</a></li>
+                                       </apex:repeat>
+                                    </ul>
+                                </div>
+                             
+                                <div class="cleaner">&nbsp;</div>
+                            </div>
+                            <div class="cleaner">&nbsp;</div>
+                            <div class="smBoxBottomShade">&nbsp;</div>
+                        </div>
+                        
+                        <div class="cleaner">&nbsp;</div>
+                        <div class="lgBoxContainer" style="display:{!IF(NOT(isLearnAcademicDeveloper) ,'block','none')}" >
+                            <div class="lgBoxContent" style="display:{!IF(NOT(isLearnAcademicDeveloper) ,'block','none')}" >                            
+                            
+                            <div class="subTitleImage bbHelp" style="display:{!IF(NOT(isLearnAcademicDeveloper) ,'block','none')}">                                
+                                <apex:image value="{!URLFOR($Resource.BtBbStyles,'includes/images/bb-help.png')}" alt="Support" />
+                            </div>
+                                
+                                <div class="subTitleContainer" style="display:{!IF(NOT(isLearnAcademicDeveloper) ,'block','none')}">
+                                    <div class="contentSubTitle">
+                                        <span class="agenda"><a href="{!$Page.btbb_casesearch}" style="color:black;">Support</a></span>
+                                    </div>
+                                    <p>Let us help you solve it.</p>    
+                                </div>
+
+                                <div class="contentInputRight" style="display:{!IF(NOT(OR(isMLAAdmin,isCollabReadOnly)),'block','none')};font-weight:normal;margin:2px">
+                                    <a class="gray-button" href="{!$Page.btbb_newcase}"><span>Create a case</span></a>
+                                </div>
+                                <div class="contentInputRight" style="margin:2px;font-weight:normal;">
+                                    <a class="gray-button" href="{!$Page.btbb_casesearch}"><span>Search cases</span></a>
+                                </div>
+                                
+                                <div class="contentInputRight" style="display:{!IF(NOT(OR(isMLAAdmin,isCollabReadOnly)),'block','none')};margin:2px;font-weight:normal;">
+                                    <a class="gray-button" href="{!$Page.btbb_articleview}?id=50170000000WXq8&homepage=true"><span>Escalate a case</span></a>
+                                </div>
+                                
+                                
+                                
+                                 <apex:outputPanel layout="block" style="display:{!if(selectedproduct=='Collaborate','block','none')}">
+                          <!--       <div class="contentInputRight" style="display:{!IF(NOT(isMLAAdmin) ,'block','none')};margin:2px;font-weight:normal;" >
+                                
+                                    <a class="gray-button" id="liveagent_button_online_57370000000CabJ" href="/" onclick="liveagent.startChat('57370000000CabJ')"  style="display: none;"><span>Chat with Agent</span></a>
+                                    <a class="gray-button" href="" id="liveagent_button_offline_57370000000CabJ" onclick="myFunction()" style="display: none;"><span>Chat with Agent</span></a>
+                                       
+                                </div>-->
+                                
+                                <div class="contentInputRight" style="display:{!if(selectedproduct=='Collaborate','block','none')};margin:2px;font-weight:normal;">
+                                    <a class="gray-button" href="{!$Page.btbb_enduserdownload}"><span>End User Cases</span></a>
+                                </div>
+                                
+                                </apex:outputPanel>
+                                
+                                <div class="cleaner">&nbsp;</div>
+
+<!-- #recentcases -->
+<style>
+
+</style>
+<table width="100%">
+ 
+    <tr class="nohover">
+        <th>Case ID</th>
+        <th>Subject</th>
+        <th>Contact</th>
+        <th>Severity</th>
+        <th>Status</th>
+        <th>Updated</th>
+    </tr>
+    <apex:repeat value="{!RecentCases}" var="rc" >            
+        <tr>
+            <td><apex:outputLink value="{!$Page.btbb_caseview}?id={!rc.Id}">{!rc.CaseNumber}</apex:outputLink></td>
+            <td><apex:outputLink value="{!$Page.btbb_caseview}?id={!rc.Id}">{!LEFT(rc.Subject, 50)}{!IF(LEN(rc.Subject)>50,"...","")}</apex:outputLink></td>            
+            <td>{!rc.Contact.Name}</td>
+            <td style="text-align:center;">{!rc.Case_Severity__c}</td>
+            <td class="dkGrey">{!rc.Customer_Portal_Status__c}</td>
+            <td><apex:outputText value="{0,date,MMM dd, yyyy}"><apex:param value="{!DATEVALUE(rc.Last_activity_update__c)}" /></apex:outputText></td>
+        </tr>
+    </apex:repeat>
+</table>
+<!-- /#recentcases -->                             
+                   <div class="lgTableFooter alt">
+                             
+                       <div class="lgTableSearchAll">
+                                        
+                                       <div class="contentInputRight" style="display:{!IF(NOT(OR(isMLAAdmin,isCollabReadOnly)),'block','none')};font-weight:normal;">
+                                    <a class="gray-button" href="{!$Page.btbb_newcase}"><span>Create a case</span></a>
+                                </div>
+                                <div class="contentInputRight" style="margin-right:5px;font-weight:normal;">
+                                    <a class="gray-button" href="{!$Page.btbb_casesearch}"><span>Search cases</span></a>
+                                </div>
+                                <div class="contentInputRight" style="display:{!IF(NOT(OR(isMLAAdmin,isCollabReadOnly)),'block','none')};margin-right:5px;font-weight:normal;">
+                                    <a class="gray-button" href="{!$Page.btbb_articleview}?id=50170000000WXq8&homepage=true"><span>Escalate a case</span></a>
+                                </div>
+                                    
+                                </div>                                
+                                    
+                                    <div class="cleaner">&nbsp;</div>
+                                
+                                </div>
+                                <!-- DO NOT EDIT !!!! --- !!!!! DO NOT EDIT ----->
+                                <div class="lgTableFooter">
+                                    <div class="lgTableLinks" style="white-space:no-wrap !important;width:100%;">
+                                        <apex:outputLink title="Escalation Procedures" value="{!$Page.btbb_articleview}?id=50170000000WXq8&homepage=true">Escalation Procedures</apex:outputLink>&nbsp;&nbsp;|&nbsp;&nbsp;<apex:outputLink title="Support Services Guide" value="{!$Page.btbb_articleview}?id=50170000000WXq7&homepage=true">Support Services Guide</apex:outputLink>&nbsp;&nbsp;|&nbsp;&nbsp;<apex:outputLink title="Severity Levels" value="{!$Page.btbb_articleview}?id=50170000000WXq9&homepage=true">Severity Levels</apex:outputLink>&nbsp;&nbsp;|&nbsp;&nbsp;<apex:outputLink title="Support Phone Numbers" value="{!$Page.btbb_articleview}?id=50170000000Wc5uAAC&homepage=true">Support Phone Numbers</apex:outputLink>
+
+                                    </div>                                    
+                                <!-- DO NOT EDIT !!!! --- !!!!! DO NOT EDIT ----->
+                                    <div class="cleaner">&nbsp;</div>
+                   
+                                </div>
+                   
+                            </div>
+                   
+                            <div class="lgBoxBottomShade">&nbsp;</div>
+                   
+                        </div>
+                   
+                    </div>
+
+                    <div id="contentRight">
+                        
+                       
+                        <div id="contentClientID">
+                        
+                            <div class="cciContent"> &nbsp; <br/></div>
+                              
+                        </div>
+                        
+
+                        
+                        <div class="contentSubTitle" >
+                        
+                        
+                        
+                            <span class="agenda">What's New for...</span>
+                            <!-- <apex:actionFunction name="updateReleases" action="{!recentArticles}" rerender="recentArticle,theID" status="counterStatus"> -->
+                            <apex:actionFunction name="updateReleases" action="{!recentArticles}"  status="counterStatus" oncomplete="location.reload(); ">
+                                <apex:param name="product" value="" assignTo="{!selectedProduct}" />
+                            </apex:actionFunction>
+                            <div class="contentInputRight">
+                                <div>
+                                    <select name="productList" onchange="updateReleases(this.value)" >
+                                        <knowledge:categoryList categoryVar="category" categoryGroup="Version" rootCategory="All" level="1">
+                                            <apex:outputPanel rendered="{!selectedProduct == category.name &&  Not(contains(category.name,'All')) && contains(BUAccess,category.name)  }"  >
+                                                <option value="{!category.name}" selected="selected" >{!category.label}</option>
+                                            </apex:outputPanel>
+                                            <apex:outputPanel rendered="{!selectedProduct != category.name && Not(contains(category.name,'All')) && contains(BUAccess,category.name) }"   >
+                                                <option value="{!category.name}">{!category.label}</option>
+                                            </apex:outputPanel>
+                                        </knowledge:categoryList>
+                                    </select>
+                                </div>
+                                <apex:actionStatus startText="" stopText="" id="counterStatus">
+                                    <apex:facet name="start" >
+                                        <apex:image url="{!URLFOR($Resource.btbbLoader)}"/>
+                                    </apex:facet>
+                                </apex:actionStatus>                                                                
+                            </div>
+                                
+                        </div>
+                        <apex:outputPanel rendered="{!contains(selectedproduct,'ANGEL')}">
+                        <p><a href="http://status.blackboard.com/" title="View ANGEL Service Status" target="_blank"><strong>View Service Status &raquo;</strong></a></p>
+                        </apex:outputPanel>
+                        
+                        <apex:outputPanel rendered="{!contains(selectedproduct,'Learn')}">
+                        <p><a href="http://status.blackboard.com/" title="View Learn Service Status" target="_blank"><strong>View Service Status &raquo;</strong></a></p>
+                        </apex:outputPanel>
+                        
+                         <apex:outputPanel layout="block" rendered="{!selectedproduct=='Moodlerooms'}">
+                          <p><apex:outputLink title="Users and Storage Data" target="_blank" value="{!$Page.btbb_sites_summary}"><strong>Users and Storage Data &raquo;</strong></apex:outputLink></p> 
+                            <p><apex:outputLink title="View Moodlerooms Service Status" target="_blank" value="http://status.blackboard.com/"><strong>View Service Status &raquo;</strong></apex:outputLink></p>
+                            <p><apex:outputLink title="Manage My Article Subscriptions" value="/btbb_mysubscriptions"><strong>Manage My Article Subscriptions &raquo;</strong></apex:outputLink></p>
+                        </apex:outputPanel>
+                        
+                        <apex:outputPanel rendered="{!selectedproduct != 'Collaborate' && selectedproduct != 'Moodlerooms' && selectedproduct != 'Analytics' && selectedproduct != 'xpLor'}">
+                       <div style="display:{!IF(isMHDisplay ,'block','none')}"> 
+                        <p><apex:outputLink title="Your Insight Report" value="/btbb_mhreport"><strong>Your Insight Report &raquo;</strong></apex:outputLink></p> 
+                        <p><apex:outputLink title="Managed Hosting Resources" value="{!$Page.btbb_articleview}?id=50170000000WXqA&homepage=true"><strong>Managed Hosting Resources &raquo;</strong></apex:outputLink></p>
+                        </div>
+                       <p><apex:outputLink title="Manage My Article Subscriptions" value="/btbb_mysubscriptions"><strong>Manage My Article Subscriptions &raquo;</strong></apex:outputLink></p>
+                        
+                        <hr />
+                        </apex:outputPanel>
+                       
+                       <apex:outputPanel rendered="{!selectedproduct == 'Analytics'}"> 
+                       <p><apex:outputLink title="Manage My Article Subscriptions" value="/btbb_mysubscriptions"><strong>Manage My Article Subscriptions &raquo;</strong></apex:outputLink></p>
+                        
+                        <hr />
+
+                       </apex:outputPanel>
+
+                       <apex:outputPanel rendered="{!selectedproduct == 'xpLor'}"> 
+                       <p><apex:outputLink title="Manage My Article Subscriptions" value="/btbb_mysubscriptions"><strong>Manage My Article Subscriptions &raquo;</strong></apex:outputLink></p>
+                        
+                        <hr />
+
+                       </apex:outputPanel>
+                        
+                   
+                        
+                        
+                        <apex:outputPanel layout="block" rendered="{!selectedproduct=='Collaborate'}">
+                            <p><apex:outputLink title="View Collaborate Service Status" target="_blank" value="http://status.blackboard.com/"><strong>View Service Status &raquo;</strong></apex:outputLink></p>
+                            <p><apex:outputLink title="Manage My Article Subscriptions" value="/btbb_mysubscriptions"><strong>Manage My Article Subscriptions &raquo;</strong></apex:outputLink></p>
+                        
+                        </apex:outputPanel>
+                        
+                       
+                        
+                      <apex:pageBlock id="recentArticle">
+                            
+                            <div class="contentRightLabel"> 
+                                Support Bulletins 
+                            </div>
+                            <apex:repeat value="{!sbsaList}" var="article">
+                                <div class="contentRightSecTitle">
+                                    <apex:outputLink value="{!$Page.btbb_articleview}?id={!article.KnowledgeArticleId}&homepage=true" style="color:#555; font-weight:bolder">
+                                        {!article.Title} #{!article.ArticleNumber}
+                                    </apex:outputLink> 
+                                </div>
+                                <p>
+                                    <strong>
+                                        <apex:outputText value="{0,date,MMM dd, yyyy}">
+                                            <apex:param value="{!article.LastPublishedDate}" />
+                                        </apex:outputText>
+                                    </strong>
+                                </p><br/>
+                            </apex:repeat>
+                            <span style="float:right;">
+                                <a href="{!$Page.btbb_articlesearch}?aType=Bulletin&viewAll={!selectedProduct}&homepage=true" style="font-weight:bold;text-decoration:none;color:#333;">
+                                    View All &raquo;
+                                </a>
+                            </span>
+                            <div class="contentRightSection">&nbsp;</div>                            
+                            <div class="contentRightLabel">
+                                Product Updates 
+                            </div>
+                            <apex:repeat value="{!ProductList}" var="article" rows="2">
+                                <div class="contentRightSecTitle">
+                                    <apex:outputLink value="{!$Page.btbb_articleview}?id={!article.KnowledgeArticleId}&homepage=true" style="color:#555; font-weight:bolder">
+                                        {!article.Name} #{!article.ArticleNumber}
+                                    </apex:outputLink> 
+                                </div>
+                                <p>
+                                    <strong>
+                                        <apex:outputText value="{0,date,MMM dd, yyyy}">
+                                            <apex:param value="{!article.LastPublishedDate}" />
+                                        </apex:outputText>
+                                    </strong>
+                                </p><br/>
+                            </apex:repeat>
+                           
+                            <span style="float:right;">
+                                <a href="{!$Page.btbb_articlesearch}?aType=Release&viewAll={!selectedProduct}&homepage=true" style="font-weight:bold;text-decoration:none;color:#333;">
+                                    View All &raquo;
+                                </a>
+                            </span>
+                            <div class="contentRightSection">&nbsp;</div>      
+                            <div class="contentRightLabel">
+                                Latest Articles
+                            </div>
+                            <apex:repeat value="{!generalList}" var="article">     
+                                <div class="contentRightSecTitle">
+                                    <apex:outputLink value="{!$Page.btbb_articleview}?id={!article.KnowledgeArticleId}&homepage=true" style="color:#555; font-weight:bolder">
+                                        {!article.Title} #{!article.ArticleNumber}
+                                    </apex:outputLink> 
+                                </div>
+                                <p>
+                                    <strong>
+                                        <apex:outputText value="{0,date,MMM dd, yyyy}">
+                                            <apex:param value="{!article.LastPublishedDate}" />
+                                        </apex:outputText>
+                                    </strong>
+                                </p><br/>
+                            </apex:repeat>
+                            <span style="float:right;">
+                                <a href="{!$Page.btbb_articlesearch}?aType=Knowledge&viewAll={!selectedProduct}&homepage=true" style="font-weight:bold;text-decoration:none;color:#333;">
+                                    View All &raquo;
+                                </a>
+                            </span>
+                            <div class="contentRightSection">&nbsp;</div>
+                            <div class="contentRightLabel">
+                                Announcements
+                            </div>
+                            <apex:repeat value="{!announcementList}" var="article">      
+                                <div class="contentRightSecTitle">
+                                    <apex:outputLink value="{!$Page.btbb_articleview}?id={!article.KnowledgeArticleId}&homepage=true" style="color:#555; font-weight:bolder">
+                                        {!article.Title} #{!article.ArticleNumber}
+                                    </apex:outputLink> 
+                                </div>
+                                <p>
+                                    <strong>
+                                        <apex:outputText value="{0,date,MMM dd, yyyy}">
+                                            <apex:param value="{!article.LastPublishedDate}" />
+                                        </apex:outputText>
+                                    </strong>
+                                </p><br/>
+                            </apex:repeat>
+                            <span style="float:right;">
+                                <a href="{!$Page.btbb_articlesearch}?aType=Announcement&viewAll={!selectedProduct}&homepage=true" style="font-weight:bold;text-decoration:none;color:#333;">
+                                    View All &raquo;
+                                </a>
+                            </span>
+                            <div class="contentRightSection">&nbsp;</div>                                 
+                          </apex:pageBlock>
+                                              
+                                              <!-- END WHAT'S NEW SECTION -->
+                        
+                        <div class="contentRightViewAll">
+
+                            <!--<a href="#">View All &raquo;</a>-->
+                        
+                        </div>
+                    
+                    </div>
+                    
+                    
+
+
+
+
+            </apex:form>
+            
+
+
+
+            
+              <apex:outputpanel layout="block" rendered="{!NOT(isNull(announcement))}" >
+              <apex:form >
+              <div style="display:none;">
+                   <div id="announcement" style="padding:10px;background:#fff;width:400px;height:auto;" >
+                     <div style="text-align:center;width:inherit;font-weight:bold"><apex:outputtext value="{!announcementData.a.Title__c}" style="text-align:center"/></div><br/>
+                              <apex:outputtext value="{!announcementData.a.Detail__c}" /><br/><br/>
+                              <input type="checkbox" id="dns" name="dns" value="true"/>Do not show this again.
+                             <input class="btbbCommonButton" onclick="checkannouncement();" style="float:right" type="button" value="Close"/>
+                    </div> 
+                 </div> 
+              <script>
+             $(document).ready(function() { 
+                
+               invokebox();   
+               }); 
+              </script>
+              <apex:actionfunction action="{!closeannouncement}"  rerender="" name="ancmntclose">
+              <apex:param name="dnscntnt" value="" assignTo="{!dns}" />
+              </apex:actionfunction> 
+              </apex:form>      
+           </apex:outputpanel>
+        </apex:define>
+    </apex:composition>
+    </apex:outputpanel>
+     <script type="text/javascript">
+if (!window._laq) { window._laq = []; }
+window._laq.push(function(){liveagent.showWhenOnline('57370000000CabJ', document.getElementById('liveagent_button_online_57370000000CabJ'));
+liveagent.showWhenOffline('57370000000CabJ', document.getElementById('liveagent_button_offline_57370000000CabJ'));
+});</script>
+            <!-- Murugappan Live Agent Code -->                    
+        <script type='text/javascript' src='https://c.la1s1.salesforceliveagent.com/content/g/js/30.0/deployment.js'></script>
+        <script type='text/javascript'>
+         liveagent.setChatWindowHeight(500); 
+         liveagent.setChatWindowWidth(660);
+        liveagent.init('https://d.la1s1.salesforceliveagent.com/chat', '57270000000009U', '00D700000008W5q');
+        </script> 
+</apex:page>

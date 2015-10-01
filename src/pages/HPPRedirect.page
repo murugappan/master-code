@@ -1,0 +1,30 @@
+<apex:page standardStylesheets="false" showHeader="false" sidebar="false" contentType="text/html" cache="false" controller="HPPRedirect"  >
+ <apex:composition template="btbb_publictemplate" > 
+        <apex:define name="content" > 
+        
+        
+             <apex:form id="formid">
+              <script>
+                
+                    function destpage(){
+                        setTimeout('redir();',5000);
+                    }
+                    window.onload = destpage();
+              </script>
+<apex:pageBlock title="Redirecting..."  id="pageblockid">
+
+<apex:actionFunction name="redir" action="{!redirect}"/>
+You are being redirected to a secure payment page...  <br/>
+<apex:image url="{!$Resource.HppspinningImage}"/>
+
+<br/><br/>
+
+        
+</apex:pageBlock>           
+            
+            
+            
+            </apex:form>
+        </apex:define>
+    </apex:composition>
+</apex:page>

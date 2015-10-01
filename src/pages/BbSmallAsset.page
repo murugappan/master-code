@@ -1,0 +1,113 @@
+<!-- 
+Author:   Jon Lal
+Date:     July 30, 2013
+Descr:    This page is to be used as a component on the Asset page mainly for testing
+
+
+Changelog:
+2013-07-30:  [LaL] Initial Implementation
+2013-08-06:  [LaL] Added comments and imported to bitBucket
+2013-08-07:  [LaL] This comment is being made using the developer console.
+2013-08-17:  [LaL] Migrated to Production and avoid rendering non-license tabs
+
+
+ -->
+<apex:page id="bbsmallasset" standardController="Asset" sidebar="false" showHeader="false">
+    <apex:tabPanel switchType="client" selectedTab="lic" id="theTabPanel" height="400px">
+        <apex:tab label="[SysAdmin]Testing" name="test" id="test" rendered="{!$Profile.Name = 'System Administrator' }">
+            
+        </apex:tab>
+        
+            
+        <apex:tab label="Details" name="detail" id="detail" rendered="{!$User.Username = 'jon.lal@blackboard.com' }">
+            <apex:pageBlock >
+                <apex:pageBlockSection columns="2">
+                    <apex:outputField value="{!Asset.Product2.Name}"/>                          <apex:outputField value="{!Asset.Account.name}"/>
+                    <apex:outputField label="CPQ_Active__c" value="{!Asset.CPQ_Active__c}"/>    <apex:outputField label="Legacy Status" value="{!Asset.Status}"/>
+                    <apex:outputField value="{!Asset.CPQ_Contract_Start_Date__c}"/>             <apex:outputField value="{!Asset.CPQ_Contract_End_Date__c}"/>
+                    <apex:pageBlockSectionItem />                                               <apex:pageBlockSectionItem />
+                    <apex:outputField label="Created By" value="{!Asset.CreatedBy.Name}"/>      <apex:outputField label="Last Modified By" value="{!Asset.LastModifiedBy.Name}"/>
+                    <apex:outputField value="{!Asset.CreatedDate}"/>                            <apex:outputField value="{!Asset.LastModifiedDate}"/>
+                    
+                    
+                    
+                </apex:pageBlockSection>      
+            </apex:pageBlock>
+        </apex:tab>    
+        <apex:tab label="Product" name="product" id="product" rendered="{!$User.Username = 'jon.lal@blackboard.com' }">
+            <apex:pageBlock >
+                <apex:pageBlockSection columns="2">
+                    <apex:outputField value="{!Asset.Product2.ProductCode}">
+                        <apex:outputLink target="/{!Asset.Product2.Id}" value="/{!Asset.Product2.Id}">[+]</apex:outputLink>   
+                    </apex:outputField>    
+                    <apex:outputField value="{!Asset.Product2.Name}"/>          <apex:outputField value="{!Asset.Product2.BTBB_Product_Group__c}"/>
+                    
+                    <apex:outputField value="{!Asset.Product2.Platform__c}"/>   <apex:outputField value="{!Asset.Product2.REPI_Product_Group__c}"/>
+                    <apex:outputField value="{!Asset.Product2.Type__c}"/>       <apex:outputField value="{!Asset.Product2.GKEY_Product_Group__c}"/>
+                    <apex:outputField value="{!Asset.Product2.Family}"/>        <apex:outputField value="{!Asset.Product2.Product_Group__c}"/>
+                    
+                    
+                    
+                    
+                    
+                </apex:pageBlockSection>      
+            </apex:pageBlock>            
+            
+        </apex:tab>
+        
+        <apex:tab label="Support" name="support" id="support" rendered="{!$User.Username = 'jon.lal@blackboard.com' }">
+            <apex:pageBlock >
+                <apex:pageBlockSection columns="2">
+                    <apex:outputField value="{!Asset.External_Asset_Name__c}"/>     <apex:outputField value="{!Asset.Account.Name}"><apex:outputLink target="/{!Asset.Account.Id}" value="/{!Asset.Account.Id}">[+]</apex:outputLink></apex:outputField> 
+                    <apex:outputField value="{!Asset.isBtbbEligible__c}"/>          <apex:outputField value="{!Asset.CPQ_isCoreItem__c}"/> 
+                    <apex:outputField value="{!Asset.Installed_Product_ID__c}"/>    <apex:outputField value="{!Asset.Core_License__c}"/> 
+                    <apex:outputField value="{!Asset.Auto_Number__c}"/>             <apex:pageBlockSectionItem />
+                    <apex:outputField value="{!Asset.True_ID__c}"/>                 <apex:pageBlockSectionItem />
+                    <apex:outputField value="{!Asset.Original_True_ID__c}"/>        <apex:pageBlockSectionItem />
+                    <apex:pageBlockSectionItem />                                   <apex:outputField value="{!Asset.Version__c}"/> 
+                    <apex:outputField value="{!Asset.Software_URL__c}"/>            <apex:outputField value="{!Asset.Version_Build__c}"/> 
+                    <apex:pageBlockSectionItem />                                   <apex:outputField value="{!Asset.Version_Effective_Date__c}"/>
+                    <apex:pageBlockSectionItem />                                   <apex:pageBlockSectionItem />
+                    <apex:outputField value="{!Asset.SerialNumber}"/>               <apex:outputField value="{!Asset.Status}"/>  
+                    <apex:outputField value="{!Asset.Comments__c}"/>                <apex:outputField value="{!Asset.Quantity}"/> 
+                    <apex:outputField value="{!Asset.Nickname__c}"/>                <apex:outputField value="{!Asset.JDK_Version__c}"/>  
+                    <apex:outputField value="{!Asset.Application_Server_OS__c}"/>   <apex:outputField value="{!Asset.Database_Server_OS__c}"/>  
+                    <apex:outputField value="{!Asset.Front_Back_Access__c}"/>       <apex:outputField value="{!Asset.Status}"/>  
+                    <apex:outputField value="{!Asset.SerialNumber}"/>               <apex:pageBlockSectionItem />   
+
+                </apex:pageBlockSection>      
+            </apex:pageBlock>
+        </apex:tab>
+        
+        <apex:tab label="License Key" name="lic" id="lic"  rendered="{!$Profile.Name = 'SRV - Client Ops' || $Profile.Name = 'System Administrator'}" >
+           
+
+            <apex:include pageName="LicenseKeyGenerator"/> 
+        </apex:tab>    
+       
+        <apex:tab label="Cases" name="case" id="case" rendered="{!$User.Username = 'jon.lal@blackboard.com' }">
+            <apex:relatedList list="Cases"/>
+        </apex:tab>  
+        <apex:tab label="Version History" name="vhist" id="vhist" rendered="{!$User.Username = 'jon.lal@blackboard.com' }">
+            <!--<apex:relatedList list="Assets_Version_History__r"/>-->
+            <apex:pageBlock >
+            <apex:pageBlockTable value="{!Asset.Assets_Version_History__r}" var="avh">
+                <apex:column value="{!avh.Effective_Date__c}"/>
+                <apex:column headerValue="Version" value="{!avh.Current_Version__c}"/>
+                <apex:column headerValue="Build" value="{!avh.Current_Build__c}"/>
+            </apex:pageBlockTable>
+            </apex:pageBlock>    
+        </apex:tab>
+        <apex:tab label="Open Activities" name="oact" id="oact" rendered="{!$User.Username = 'jon.lal@blackboard.com' }">
+            <apex:relatedList list="OpenActivities"/>
+        </apex:tab>
+        <apex:tab label="Activity History" name="ahist" id="ahist" rendered="{!$User.Username = 'jon.lal@blackboard.com' }">
+            <apex:relatedList list="ActivityHistories"/>
+        </apex:tab>
+        <apex:tab label="Notes & Attachments" name="note" id="note">
+            <apex:relatedList list="NotesAndAttachments"/>
+        </apex:tab>       
+        
+    
+    </apex:tabPanel>
+</apex:page>

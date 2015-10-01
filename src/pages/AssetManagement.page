@@ -1,0 +1,17 @@
+<apex:page controller="ManageAssetsController" Tabstyle="Asset">
+ <apex:sectionHeader title="Asset Management"/>
+ <apex:form >
+  <apex:pageBlock Title="Welcome to the Asset Management Center.">
+   <apex:messages />
+   <apex:outputText value="You can either convert the Opportunity line items into new Assets, or extend the license of existing Assets."/><br/><br/>
+   <apex:commandLink action="{!pickAccounts}" id="newAssets">
+    <apex:image value="{!$Resource.AssetManagementNew}" alt="New Assets" title="New Assets"/>
+    <apex:param name="action" assignTo="{!action}" value="New"/>
+   </apex:commandLink>
+   <apex:commandLink action="{!pickAccounts}" id="renewAssets">
+    <apex:image value="{!$Resource.AssetManagementRenew}" alt="Renew Assets" title="Renew Assets"/>
+    <apex:param name="action" assignTo="{!action}" value="Renewal"/>
+   </apex:commandLink>
+  </apex:pageBlock>
+ </apex:form>
+</apex:page>

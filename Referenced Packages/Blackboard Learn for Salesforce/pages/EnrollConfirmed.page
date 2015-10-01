@@ -1,0 +1,118 @@
+<apex:page controller="bbl.EnrollConfirmedController" tabstyle="bbl__Course__c">
+
+<link rel="stylesheet" type="text/css" href="{!URLFOR($Resource.ExtJS4, 'resources/css/ext-all.css')}" />
+<link rel="stylesheet" type="text/css" href="{!URLFOR($Resource.SalesforceJAR, 'css/salesforceStyles.css')}" />
+<link rel="stylesheet" type="text/css" href="{!URLFOR($Resource.SFDCDialogCssJar, 'basic.css')}" />
+<link rel="stylesheet" type="text/css" href="{!URLFOR($Resource.contentCSS)}" />
+<link rel="stylesheet" type="text/css" href="{!URLFOR($Resource.spaceCSS)}"  />
+<link rel="stylesheet" type="text/css" href="{!URLFOR($Resource.modCss)}"  />
+<link rel="stylesheet" type="text/css" href="{!URLFOR($Resource.mediaCSS)}"  />
+<link rel="stylesheet" type="text/css" href="{!URLFOR($Resource.GridCSS)}"  />
+<link rel="stylesheet" type="text/css" href="{!URLFOR($Resource.CatalogCSS)}"  />
+
+
+<script type="text/javascript" src="{!URLFOR($Resource.ExtJS4, 'ext-all-debug.js')}"></script>
+<script type="text/javascript" src="{!URLFOR($Resource.jQuery)}"></script>
+<script type="text/javascript" src="{!URLFOR($Resource.jqMetadata)}"></script>
+<script>
+    jQuery.noConflict();
+</script>
+
+
+
+<apex:form >
+
+
+
+
+<apex:outputPanel id="dummyPanel"> 
+</apex:outputPanel>
+
+</apex:form>
+
+    
+    <div class="fullWidth paddedTop10">
+        <div class="bPageTitleSF">
+            <div class="ptbodySF">
+                <div class="contentSF">
+                    <img src="{!URLFOR($Resource.EnrollCompleteIcon)}" alt="Enrollment Confirmation" width="32" height="32" class="headerImage" title="Course" />
+                    <div class="headerTitle">Enrollment Confirmation</div>
+                    <div class="clearingBoxSF"></div>
+                </div>
+            </div>
+            <!-- Holds Saved Courses -->
+            <div class="messageBoxBB">
+                <div class="info infoMessage">
+                    <div class="paddedOut10 fullWidth">
+                        <img src="{!URLFOR($Resource.infoIcon)}" class="infoIconBB"/>
+                        <div class="toTheLeft messageTextMargin">Your enrollment is being processed and will be available under the Training tab soon.</div>
+                        <div class="clearingBoxSF"></div>
+                    </div>
+                </div>
+                <div class="clearingBoxSF"></div>
+            </div>
+            <div class="clearingBoxSF"></div>
+            <div class="line">
+                <div class="unit size2of3">
+                    <div class="paddedOut10 removeLeftPad">
+                        <div class="metadataSF">
+                            <div class="containerHeader">Selected Learners</div>
+                            <div class="clearingBoxSF"></div>
+                            <div class="chatterexpandoSF">                      
+                                <div id="SelectedLearners">
+                                <apex:repeat value="{!learners}" var="lr">
+                                    <div class="col toggle">&nbsp;</div>
+                                    <div class="col image">
+                                        <div class="media">
+                                            <a href="" class="img icon">
+                                                <img src="{!lr.SmallPhotoUrl}" alt="img" height="32" width="32"/>
+                                            </a>
+                                            <div class="bd">
+                                                <p class="ptn">
+                                                    {!lr.Name} 
+                                                    <span class="title detail">
+                                                        {!lr.Title}
+                                                    </span>
+                                                </p>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="col info {!IF(lr.Id == userId,'','hideMe')}"><div class="paddedOut10">You have been automatically added as a learner. Deselect the checkbox to the left if you do not want to be included in this enrollment.</div></div>
+                                    <div class="lineRule toTheLeft {!IF(lr.Id == lastLearnerId, 'hideMe','')}">&nbsp;</div>
+                                    <div class="clearingBox"></div>
+                                </apex:repeat>
+                                </div>
+                            </div>
+                            <div class="clearingBoxSF"></div>
+                        </div>
+                    </div>
+                </div>
+                <div class="unit size1of3">
+                    <div class="paddedOut10 removeRightPad">
+                        <div class="metadataSF">
+                            <div class="containerHeader">Selected Training Courses</div>
+                            <div class="clearingBoxSF"></div>
+                            <div class="chatterexpandoSF">
+                                <div id="savedDD"></div>
+                                <apex:repeat value="{!courses}" var="sc">
+                                    <div class="paddedOut5"><div class="savedCourseLine fullWidth {!IF(sc.Id == firstCourseId,'','topLine')}">
+                                    <div class="savedCourseSide paddedTop10">
+                                        <div class="toTheLeft width10">&nbsp;</div>
+                                        <div class="toTheLeft width85">
+                                            <div class="savedCourseTitle toTheLeft paddedOut0 fullWidth">{!sc.Course_Title__c}</div>
+                                            <div class="savedCourseName toTheLeft paddedOut0 fullWidth">{!sc.Name}</div>
+                                            <div class="clearingBoxSF"></div>
+                                        </div>
+                                    </div>
+                                    <div class="clearingBox"></div></div><div class="clearingBox"></div></div>
+                                </apex:repeat>
+                                <div class="clearingBoxSF"></div>
+                            </div>
+                            <div class="clearingBoxSF"></div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</apex:page>

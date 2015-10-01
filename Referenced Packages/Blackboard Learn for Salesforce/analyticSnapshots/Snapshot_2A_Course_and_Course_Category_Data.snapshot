@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<AnalyticSnapshot xmlns="http://soap.sforce.com/2006/04/metadata">
+    <description>Custom Analytic Snapshot for the Course and Course Category object.</description>
+    <groupColumn>CUST_NAME</groupColumn>
+    <name>Snapshot #2A - Course and Course Category Data</name>
+    <runningUser>mabrown1@blackboard.com</runningUser>
+    <sourceReport>Blackboard_Analytic_Snapshot_Reports/Course_with_Course_Cat_Snapshot_Data</sourceReport>
+    <targetObject>Course_Enrollment_Data__c</targetObject>
+</AnalyticSnapshot>

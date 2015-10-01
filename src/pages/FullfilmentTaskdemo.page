@@ -1,0 +1,130 @@
+<apex:page standardController="Custom_Task__c" extensions="FullfilmentTaskdemo">
+ 
+
+<apex:sectionHeader title="My Team's Tasks" />
+
+<apex:form >
+<apex:pageBlock title="My Team's Fulfillment Tasks" id="thePageBlock">
+
+<apex:pageMessages />
+
+<apex:pageBlockButtons >
+<apex:commandButton value="Assign To Me" action="{!processSelected}" rerender="TaskList" /></apex:pageBlockButtons>
+<apex:pageBlock >
+<apex:pageBlockTable value="{!LCustTask}" var="Tassk" id="TaskList" rendered="{!NOT(ISNULL(LCustTask))}" >
+    <apex:column >
+    <apex:facet name="header"><apex:outputLabel value="Select"  escape="false"/>
+    </apex:facet>
+    <apex:inputCheckbox value="{!Tassk.selected}" disabled="{!Tassk.Discheck }"/>
+    <apex:actionSupport event="onclick" action="{!GetSelected}" rerender="Selected_PBS"/>
+
+</apex:column>
+ <apex:column >
+     <apex:facet name="header"><apex:outputLabel value="Action"  escape="false"/>
+    </apex:facet>
+    <apex:outputLink title="" value="/{!Tassk.con.id}/e?retURL=/apex/{!$CurrentPage.Name}" style="font-weight:bold">Edit</apex:outputLink>
+</apex:column>
+<apex:column >
+    <apex:facet name="header">
+     <apex:commandLink action="{!ViewData}" value="Task Name{!IF(sortExpression=='name',IF(sortDirection='ASC','▼','▲'),'')}" id="cmdSort2">
+             <apex:param value="name" name="column" assignTo="{!sortExpression}" ></apex:param>
+           </apex:commandLink> 
+   <!-- <apex:outputLabel value="Task Name"  escape="false"/> -->
+  </apex:facet>
+     <!-- <apex:outputLink value="/{!Tassk.con.id}"><font align="left">{!Tassk.con.Name}</font></apex:outputLink>-->
+      <apex:outputLink value="/{!Tassk.con.id}">{!Tassk.con.Name}</apex:outputLink>
+   
+         
+</apex:column>
+<apex:column >
+    <apex:facet name="header">
+    <apex:commandLink action="{!ViewData}" value="Opportunity{!IF(sortExpression=='Opportunity__r.name',IF(sortDirection='ASC','▼','▲'),'')}" >
+             <apex:param value="Opportunity__r.name" name="column" assignTo="{!sortExpression}" ></apex:param>
+     </apex:commandLink>
+    </apex:facet>
+    <apex:outputLink value="/{!Tassk.con.Opportunity__r.id}">{!Tassk.con.Opportunity__r.name}</apex:outputLink>
+</apex:column>
+<apex:column >
+    <apex:facet name="header">
+    <apex:commandLink action="{!ViewData}" value="Owner{!IF(sortExpression=='Ownerid',IF(sortDirection='ASC','▼','▲'),'')}" >
+             <apex:param value="Ownerid" name="column" assignTo="{!sortExpression}" ></apex:param>
+     </apex:commandLink>
+    </apex:facet>
+    <apex:outputText value="{!Tassk.con.Owner.Name}"></apex:outputText>
+    <!-- <apex:outputLink value="https://blackboard--cpq.cs12.my.salesforce.com/{!Tassk.con.Ownerid}">{!Tassk.con.Owner.name}</apex:outputLink> -->
+</apex:column>
+<apex:column >
+    <apex:facet name="header">
+    <apex:commandLink action="{!ViewData}" value="Queue{!IF(sortExpression=='Queue__c',IF(sortDirection='ASC','▼','▲'),'')}" id="cmdSortq">
+             <apex:param value="Queue__c" name="column" assignTo="{!sortExpression}" ></apex:param>
+    </apex:commandLink>
+    </apex:facet>
+    <apex:outputText value="{!Tassk.con.Queue__c}"></apex:outputText>
+</apex:column>
+<apex:column >
+    <apex:facet name="header">
+    <apex:commandLink action="{!ViewData}" value="Subject{!IF(sortExpression=='Subject__c',IF(sortDirection='ASC','▼','▲'),'')}" id="cmdSort">
+             <apex:param value="Subject__c" name="column" assignTo="{!sortExpression}" ></apex:param>
+    </apex:commandLink>
+    </apex:facet>
+    <apex:outputText value="{!Tassk.con.Subject__c}"></apex:outputText>
+</apex:column>
+<apex:column >
+    <apex:facet name="header">
+    <apex:commandLink action="{!ViewData}" value="Status{!IF(sortExpression=='Status__c',IF(sortDirection='ASC','▼','▲'),'')}" >
+             <apex:param value="Status__c" name="column" assignTo="{!sortExpression}" ></apex:param>
+    </apex:commandLink></apex:facet>
+    <apex:outputText value="{!Tassk.con.Status__c}"></apex:outputText>
+</apex:column>
+<apex:column >
+    <apex:facet name="header">
+    <apex:commandLink action="{!ViewData}" value="Priority{!IF(sortExpression=='Priority__c',IF(sortDirection='ASC','▼','▲'),'')}" >
+             <apex:param value="Priority__c" name="column" assignTo="{!sortExpression}" ></apex:param>
+    </apex:commandLink></apex:facet>
+    <apex:outputText value="{!Tassk.con.Priority__c}"></apex:outputText>
+</apex:column>
+<apex:column >
+    <apex:facet name="header">
+    <apex:commandLink action="{!ViewData}" value="Market{!IF(sortExpression=='Opportunity__r.Account.Market__c',IF(sortDirection='ASC','▼','▲'),'')}" >
+             <apex:param value="Opportunity__r.Account.Market__c" name="column" assignTo="{!sortExpression}" ></apex:param>
+    </apex:commandLink></apex:facet> 
+    <apex:outputText value="{!Tassk.con.Opportunity__r.Account.Market__c}"></apex:outputText>
+</apex:column>
+<apex:column >
+    <apex:facet name="header">
+    <apex:commandLink action="{!ViewData}" value="Billing Country{!IF(sortExpression=='Opportunity__r.Account.BillingCountry',IF(sortDirection='ASC','▼','▲'),'')}" >
+             <apex:param value="Opportunity__r.Account.BillingCountry" name="column" assignTo="{!sortExpression}" ></apex:param>
+    </apex:commandLink></apex:facet> 
+    <apex:outputText value="{!Tassk.con.Opportunity__r.Account.BillingCountry}"></apex:outputText>
+</apex:column>
+
+<apex:column >
+    <apex:facet name="header"><apex:outputLabel value="Due Date" escape="false"/></apex:facet>
+    <apex:outputText value="{!Tassk.con.Due_Date__c}"></apex:outputText>
+</apex:column>
+</apex:pageBlockTable>
+</apex:pageBlock>
+
+
+<!-- <apex:pageBlockSection Title="Selected Tasks" id="Selected_PBS">
+
+<apex:dataTable value="{!SelectedTasks}" var="s" columnswidth="50px,50px" cellpadding="4" border="1">
+
+<apex:column headervalue="Account Name" value="{!s.id}" />
+
+<apex:column headervalue="Account Number" value="{!s.Name}" />
+
+<apex:column headervalue="Phone" value="{!s.Subject__c}" />
+
+</apex:dataTable>
+
+</apex:pageBlockSection> -->
+
+
+
+
+
+
+</apex:pageBlock>
+</apex:form>
+</Apex:Page>

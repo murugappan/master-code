@@ -1,0 +1,118 @@
+<apex:page standardcontroller="case" extensions="createliveagentcontroller" >
+    <apex:form >
+    <apex:pageblock mode="edit">
+    <apex:pageBlockButtons >
+        <apex:commandButton value="Create New Case" action="{!savecase}" timeout="900"/>
+        <apex:commandButton value="Create and Grab Case" action="{!saveandgrabcase}"/>
+    </apex:pageBlockButtons>
+    <apex:outputPanel id="errorPanel">
+        <apex:pageMessage strength="2" title="{!errorTitle}" summary="{!errorMessage}" severity="{!errorSeverity}" rendered="{!errorShow}" />
+    </apex:outputPanel> 
+        <apex:pageblocksection columns="1">
+            <apex:pageblocksectionitem >
+                <apex:outputLabel value="Account:"></apex:outputLabel>
+                <apex:inputfield value="{!caserecord.accountid}"/>
+            </apex:pageblocksectionitem>
+            <apex:pageblocksectionitem >
+                <apex:outputLabel value="End User:"></apex:outputLabel>
+                <apex:inputfield value="{!caserecord.End_User__c}"/>
+            </apex:pageblocksectionitem>
+        </apex:pageblocksection>
+        
+        <apex:pageblocksection columns="2" title="Product Information">
+            <apex:pageblocksectionitem >
+                <apex:outputLabel value="Product:"></apex:outputLabel>
+                <apex:selectlist value="{!caserecord.End_User_Product__c}" multiselect="false" size="1">
+                    <apex:selectoptions value="{!productlist}"/>
+                    <apex:actionSupport event="onchange" action="{!changeproduct}" rerender="module,functionalarea,category,errorPanel"/>
+                </apex:selectlist>
+            </apex:pageblocksectionitem>
+            <apex:pageblocksectionitem >
+            </apex:pageblocksectionitem>
+            <apex:pageblockSectionItem >
+            <apex:outputLabel value="Issue Topic:" for="Issue Topic"/>     
+                <apex:selectList value="{!module}" size="1" id="module" disabled="{!ISNULL(caserecord.End_User_Product__c)}">   
+                    <apex:selectOptions value="{!modules}"/>
+                    <apex:actionSupport event="onchange" rerender="functionalarea,category,errorPanel" status="mStatus"/>
+                </apex:selectList>
+        </apex:pageblockSectionItem>
+        
+        <apex:pageBlockSectionItem >
+            <apex:actionStatus startText=" Finding Related Problem Areas..." stopText=" " id="mStatus"/>
+        </apex:pageBlockSectionItem>
+           
+        <apex:pageblockSectionItem >
+                <apex:outputLabel value="Functional Area:" for="functionalarea"/>
+                    <apex:selectList value="{!functionalarea}" size="1" id="functionalarea" disabled="{!ISNULL(module) || displayfuncarea}" style="margin-left:10px">   
+                        <apex:selectOptions value="{!functionalareas}"/>
+                        <apex:actionSupport event="onchange" rerender="category,errorPanel" status="faStatus"/>
+                    </apex:selectList>
+        </apex:pageblockSectionItem>
+        
+        <apex:pageBlockSectionItem >
+            <apex:actionStatus startText=" Finding Related Categories..." stopText=" " id="faStatus"/>
+        </apex:pageBlockSectionItem>
+        
+        <apex:pageblockSectionItem >
+                <apex:outputLabel value="Category:" for="category"/>
+                    <apex:selectList value="{!category}" size="1" id="category" disabled="{!ISNULL(functionalarea) || displaycategory}" style="margin-left:10px">   
+                        <apex:selectOptions value="{!categories}"/>
+                    </apex:selectList>
+        </apex:pageblockSectionItem>
+        </apex:pageblocksection>
+        
+        <apex:pageblocksection Columns="1" Title="Problem Information">
+            <!-- commented by Muru -->
+            <!-- <apex:pageblockSectionItem >
+                   <apex:outputLabel value="Severity Level" for="SeverityLevel"/>
+                   <apex:inputfield value="{!caserecord.Case_Severity__c}" />
+            </apex:pageblockSectionItem> -->
+            <apex:pageblockSectionItem >
+                   <apex:outputLabel value="Client OS" />
+                   <apex:inputfield value="{!caserecord.Client_OS__c}" />
+            </apex:pageblockSectionItem>
+            <apex:pageblockSectionItem >
+                   <apex:outputLabel value="Client OS Version" />
+                   <apex:inputfield value="{!caserecord.Client_OS_Version__c}" />
+            </apex:pageblockSectionItem>
+            <apex:pageblockSectionItem >
+                   <apex:outputLabel value="Browser" />
+                   <apex:inputfield value="{!caserecord.Browser__c}" />
+            </apex:pageblockSectionItem>
+            <apex:pageblockSectionItem >
+                   <apex:outputLabel value="Browser Version" />
+                   <apex:inputfield value="{!caserecord.Browser_Version__c}" />
+            </apex:pageblockSectionItem>
+            
+            <apex:pageblockSectionItem >
+                   <apex:outputLabel value="Java Version" />
+                   <apex:inputfield value="{!caserecord.Java_Version__c}" />
+            </apex:pageblockSectionItem>
+            <apex:pageblockSectionItem >
+                   <apex:outputLabel value="URL Accessed" />
+                   <apex:inputfield value="{!caserecord.URL_Access__c}" />
+            </apex:pageblockSectionItem>
+            <apex:pageblockSectionItem >
+                   <apex:outputLabel value="CMS/LMS" />
+                   <apex:inputfield value="{!caserecord.CMS_LMS__c}" />
+            </apex:pageblockSectionItem>
+            <apex:pageblockSectionItem >
+                   <apex:outputLabel value="CMS/LMS URL" />
+                   <apex:inputfield value="{!caserecord.CMS_LMS_URL__c}" style="width:50%; height:75px;" />
+            </apex:pageblockSectionItem>
+            <apex:pageblocksectionitem >
+                <apex:outputlabel value="Subject:"></apex:outputlabel>
+                <apex:inputfield value="{!caserecord.subject}" style="padding:3px; width: 35%;"/>
+            </apex:pageblocksectionitem>
+            <apex:pageblocksectionitem >
+                <apex:outputlabel value="Description:"></apex:outputlabel>
+                <apex:inputfield value="{!caserecord.Description}" style="width:75%; height:150px;" />
+            </apex:pageblocksectionitem>
+            <apex:pageblocksectionitem >
+                <apex:outputlabel value="Case Origin:"></apex:outputlabel>
+                <apex:inputfield value="{!caserecord.Origin}"/>
+            </apex:pageblocksectionitem>
+        </apex:pageblocksection>
+    </apex:pageblock>
+    </apex:form>    
+</apex:page>

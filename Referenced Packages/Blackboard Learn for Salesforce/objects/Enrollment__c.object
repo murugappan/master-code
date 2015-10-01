@@ -1,0 +1,398 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<CustomObject xmlns="http://soap.sforce.com/2006/04/metadata">
+    <actionOverrides>
+        <actionName>Accept</actionName>
+        <type>Default</type>
+    </actionOverrides>
+    <actionOverrides>
+        <actionName>Clone</actionName>
+        <type>Default</type>
+    </actionOverrides>
+    <actionOverrides>
+        <actionName>Delete</actionName>
+        <type>Default</type>
+    </actionOverrides>
+    <actionOverrides>
+        <actionName>Edit</actionName>
+        <type>Default</type>
+    </actionOverrides>
+    <actionOverrides>
+        <actionName>List</actionName>
+        <type>Default</type>
+    </actionOverrides>
+    <actionOverrides>
+        <actionName>New</actionName>
+        <type>Default</type>
+    </actionOverrides>
+    <actionOverrides>
+        <actionName>Tab</actionName>
+        <type>Default</type>
+    </actionOverrides>
+    <actionOverrides>
+        <actionName>View</actionName>
+        <content>BBRedirect</content>
+        <skipRecordTypeSelect>false</skipRecordTypeSelect>
+        <type>Visualforce</type>
+    </actionOverrides>
+    <deploymentStatus>Deployed</deploymentStatus>
+    <deprecated>false</deprecated>
+    <description>Custom object refers to the Enrollment.</description>
+    <enableActivities>true</enableActivities>
+    <enableFeeds>true</enableFeeds>
+    <enableHistory>true</enableHistory>
+    <enableReports>true</enableReports>
+    <fields>
+        <fullName>Completed_Date__c</fullName>
+        <deprecated>false</deprecated>
+        <description>Date refers to the Completed Date of the Enrollment</description>
+        <externalId>false</externalId>
+        <label>Completed Date</label>
+        <required>false</required>
+        <trackFeedHistory>false</trackFeedHistory>
+        <trackHistory>false</trackHistory>
+        <type>Date</type>
+    </fields>
+    <fields>
+        <fullName>Course_ID__c</fullName>
+        <deleteConstraint>SetNull</deleteConstraint>
+        <deprecated>false</deprecated>
+        <description>Lookup relationship refers to the Course.</description>
+        <externalId>false</externalId>
+        <label>Course Name</label>
+        <referenceTo>Course__c</referenceTo>
+        <relationshipLabel>Training</relationshipLabel>
+        <relationshipName>Memberships</relationshipName>
+        <required>false</required>
+        <trackFeedHistory>true</trackFeedHistory>
+        <trackHistory>false</trackHistory>
+        <type>Lookup</type>
+    </fields>
+    <fields>
+        <fullName>Course_URL__c</fullName>
+        <deprecated>false</deprecated>
+        <externalId>false</externalId>
+        <formula>&quot;https://&quot;&amp; $Setup.Blackboard_Custom_Settings__c.Host_Name__c &amp;&quot;/webapps/Bb-sites-salesforce-sso-BBLEARN/getProviderURL.do?providerName=Salesforce&amp;new_loc=%2Fwebapps%2Fportal%2Fframeset.jsp%3Furl%3D%252Fwebapps%252Fblackboard%252Fexecute%252Flauncher%253Ftype%253DCourse%2526id%253D_&quot;&amp;Course_ID__r.External_ID__c &amp;&quot;_1%2526url%253D&quot;</formula>
+        <formulaTreatBlanksAs>BlankAsZero</formulaTreatBlanksAs>
+        <label>Course URL</label>
+        <required>false</required>
+        <trackHistory>false</trackHistory>
+        <type>Text</type>
+        <unique>false</unique>
+    </fields>
+    <fields>
+        <fullName>Course__c</fullName>
+        <deprecated>false</deprecated>
+        <description>Formula field refers to the Course .</description>
+        <externalId>false</externalId>
+        <formula>IF( ($User.Id !=  Person__r.Id) || (Visible__c = False), Course_ID__r.Course_Title__c, HYPERLINK(&quot;https://&quot;&amp;$Setup.Blackboard_Custom_Settings__c.Host_Name__c&amp;&quot;/webapps/Bb-sites-salesforce-sso-BBLEARN/getProviderURL.do?providerName=Salesforce&amp;new_loc=%2Fwebapps%2Fportal%2Fframeset.jsp%3Furl%3D%252Fwebapps%252Fblackboard%252Fexecute%252Flauncher%253Ftype%253DCourse%2526id%253D_&quot;&amp;Course_ID__r.External_ID__c &amp;&quot;_1%2526url%253D&quot;,Course_ID__r.Course_Title__c, &quot;_self&quot;))</formula>
+        <formulaTreatBlanksAs>BlankAsZero</formulaTreatBlanksAs>
+        <label>Course</label>
+        <required>false</required>
+        <trackHistory>false</trackHistory>
+        <type>Text</type>
+        <unique>false</unique>
+    </fields>
+    <fields>
+        <fullName>Display__c</fullName>
+        <deprecated>false</deprecated>
+        <description>This field is used during the enrollment process to determine who can enroll.</description>
+        <externalId>false</externalId>
+        <formula>IF (Status__c = &quot;Pending&quot;, &quot;Locked&quot;,
+
+IF (Status__c = &quot;Enrolled&quot;, &quot;Locked&quot;,
+
+IF (Status__c = &quot;Completed&quot;, &quot;Locked&quot;,
+
+
+&quot;Available&quot;
+
+)))</formula>
+        <formulaTreatBlanksAs>BlankAsZero</formulaTreatBlanksAs>
+        <label>Display</label>
+        <required>false</required>
+        <trackHistory>false</trackHistory>
+        <type>Text</type>
+        <unique>false</unique>
+    </fields>
+    <fields>
+        <fullName>Enrollment_Date__c</fullName>
+        <deprecated>false</deprecated>
+        <description>This is the date of enrollment.</description>
+        <externalId>false</externalId>
+        <label>Enrollment Date</label>
+        <required>false</required>
+        <trackFeedHistory>true</trackFeedHistory>
+        <trackHistory>false</trackHistory>
+        <type>Date</type>
+    </fields>
+    <fields>
+        <fullName>Est_Completion_Hours__c</fullName>
+        <deprecated>false</deprecated>
+        <description>A number field that refers to the estimated time to complete the associated course.</description>
+        <externalId>false</externalId>
+        <label>Est Completion Hours</label>
+        <precision>18</precision>
+        <required>false</required>
+        <scale>2</scale>
+        <trackFeedHistory>false</trackFeedHistory>
+        <trackHistory>false</trackHistory>
+        <type>Number</type>
+        <unique>false</unique>
+    </fields>
+    <fields>
+        <fullName>Est_Cost__c</fullName>
+        <deprecated>false</deprecated>
+        <description>A currency field that refers to the estimated cost of the associated course.</description>
+        <externalId>false</externalId>
+        <label>Est Cost</label>
+        <precision>18</precision>
+        <required>false</required>
+        <scale>2</scale>
+        <trackFeedHistory>false</trackFeedHistory>
+        <trackHistory>false</trackHistory>
+        <type>Currency</type>
+    </fields>
+    <fields>
+        <fullName>External_Course_Key__c</fullName>
+        <deprecated>false</deprecated>
+        <description>Text field refers to the External Course Key.</description>
+        <externalId>false</externalId>
+        <label>External Course Key</label>
+        <length>64</length>
+        <required>false</required>
+        <trackFeedHistory>false</trackFeedHistory>
+        <trackHistory>false</trackHistory>
+        <type>Text</type>
+        <unique>false</unique>
+    </fields>
+    <fields>
+        <fullName>External_ID__c</fullName>
+        <deprecated>false</deprecated>
+        <description>This is the Enrollment External ID.</description>
+        <externalId>true</externalId>
+        <label>External ID</label>
+        <length>255</length>
+        <required>false</required>
+        <trackFeedHistory>false</trackFeedHistory>
+        <trackHistory>false</trackHistory>
+        <type>Text</type>
+        <unique>false</unique>
+    </fields>
+    <fields>
+        <fullName>External_Person_Key__c</fullName>
+        <deprecated>false</deprecated>
+        <description>Text area refers to the External Person Key.</description>
+        <externalId>false</externalId>
+        <label>External Person Key</label>
+        <length>64</length>
+        <required>false</required>
+        <trackFeedHistory>false</trackFeedHistory>
+        <trackHistory>false</trackHistory>
+        <type>Text</type>
+        <unique>false</unique>
+    </fields>
+    <fields>
+        <fullName>Grade_Value__c</fullName>
+        <deprecated>false</deprecated>
+        <description>Text field refers to the Grade Value.</description>
+        <externalId>false</externalId>
+        <label>Grade Value</label>
+        <length>32</length>
+        <required>false</required>
+        <trackFeedHistory>true</trackFeedHistory>
+        <trackHistory>false</trackHistory>
+        <type>Text</type>
+        <unique>false</unique>
+    </fields>
+    <fields>
+        <fullName>Last_Accessed__c</fullName>
+        <deprecated>false</deprecated>
+        <description>Date/Time field refers to the Last Accessed.</description>
+        <externalId>false</externalId>
+        <label>Last Accessed</label>
+        <required>false</required>
+        <trackFeedHistory>false</trackFeedHistory>
+        <trackHistory>false</trackHistory>
+        <type>DateTime</type>
+    </fields>
+    <fields>
+        <fullName>Manager__c</fullName>
+        <deprecated>false</deprecated>
+        <externalId>false</externalId>
+        <formula>IF ( Person__r.FirstName  = &quot;&quot;, &quot;&quot;, Person__r.Manager.FirstName )&amp;&quot; &quot;&amp; Person__r.Manager.LastName</formula>
+        <formulaTreatBlanksAs>BlankAsZero</formulaTreatBlanksAs>
+        <label>Manager</label>
+        <required>false</required>
+        <trackHistory>false</trackHistory>
+        <type>Text</type>
+        <unique>false</unique>
+    </fields>
+    <fields>
+        <fullName>Person__c</fullName>
+        <deleteConstraint>SetNull</deleteConstraint>
+        <deprecated>false</deprecated>
+        <description>Lookup refers to the Person.</description>
+        <externalId>false</externalId>
+        <label>Person</label>
+        <referenceTo>User</referenceTo>
+        <relationshipName>Training</relationshipName>
+        <required>false</required>
+        <trackFeedHistory>true</trackFeedHistory>
+        <trackHistory>false</trackHistory>
+        <type>Lookup</type>
+    </fields>
+    <fields>
+        <fullName>Result__c</fullName>
+        <deprecated>false</deprecated>
+        <description>Formula refers to the Result</description>
+        <externalId>false</externalId>
+        <formula>IF ( ((TEXT(Role__c) = &quot;Instructor&quot;) &amp;&amp; (Visible__c  = TRUE) &amp;&amp; ($User.Id = Person__r.Id) ),HYPERLINK(&quot;https://&quot;&amp;$Setup.Blackboard_Custom_Settings__c.Host_Name__c&amp;&quot;/webapps/Bb-sites-salesforce-sso-BBLEARN/getProviderURL.do?providerName=Salesforce&amp;new_loc=%2Fwebapps%2Fportal%2Fframeset.jsp%3Furl%3D%252Fwebapps%252Fgradebook%252Fdo%252Finstructor%252FenterGradeCenter%253Fcourse_id%253D_&quot;&amp;  Course_ID__r.External_ID__c  &amp;&quot;_1%2526cvid%253DfullGC&quot; ,                           &quot;--&quot; , &quot;_self&quot;),
+IF ( ((TEXT(Role__c) = &quot;Instructor&quot;)                                                      ),                                                                                                                                                                                                                                                                                                                                                                  &quot;--&quot;,
+IF ( ((TEXT(Role__c) = &quot;Learner&quot;   ) &amp;&amp; (Visible__c  = TRUE) &amp;&amp; ($User.Id = Person__r.Id) ),HYPERLINK(&quot;https://&quot;&amp;$Setup.Blackboard_Custom_Settings__c.Host_Name__c&amp;&quot;/webapps/Bb-sites-salesforce-sso-BBLEARN/getProviderURL.do?providerName=Salesforce&amp;new_loc=%2Fwebapps%2Fportal%2Fframeset.jsp%3Furl%3D%252Fwebapps%252Fgradebook%252Fdo%252Fstudent%252FviewGrades%253Fcourse_id%253D_&quot;&amp;  Course_ID__r.External_ID__c   &amp;&quot;_1%2526callback%253Dcourse&quot;      ,BLANKVALUE(Grade_Value__c,&quot;--&quot;), &quot;_self&quot;),
+IF ( ((TEXT(Role__c) = &quot;Learner&quot;   )                                                      ),                                                                                                                                                                                                                                                                                                                                        BLANKVALUE(Grade_Value__c,&quot;--&quot;)          ,&quot;&quot; ) ) ) )</formula>
+        <label>Result</label>
+        <required>false</required>
+        <trackHistory>false</trackHistory>
+        <type>Text</type>
+        <unique>false</unique>
+    </fields>
+    <fields>
+        <fullName>Role__c</fullName>
+        <deprecated>false</deprecated>
+        <description>Picklist refers to the role.</description>
+        <externalId>false</externalId>
+        <label>Role</label>
+        <picklist>
+            <picklistValues>
+                <fullName>Learner</fullName>
+                <default>true</default>
+            </picklistValues>
+            <picklistValues>
+                <fullName>Instructor</fullName>
+                <default>false</default>
+            </picklistValues>
+            <sorted>false</sorted>
+        </picklist>
+        <trackFeedHistory>false</trackFeedHistory>
+        <trackHistory>false</trackHistory>
+        <type>Picklist</type>
+    </fields>
+    <fields>
+        <fullName>Status__c</fullName>
+        <defaultValue>&quot;Pending&quot;</defaultValue>
+        <deprecated>false</deprecated>
+        <description>This is the status of the enrollment.</description>
+        <externalId>false</externalId>
+        <label>Status</label>
+        <length>255</length>
+        <required>true</required>
+        <trackFeedHistory>false</trackFeedHistory>
+        <trackHistory>false</trackHistory>
+        <type>Text</type>
+        <unique>false</unique>
+    </fields>
+    <fields>
+        <fullName>Total_Enrollments_90_Days__c</fullName>
+        <deprecated>false</deprecated>
+        <description>This formula displays a 1 if the Enrollment&apos;s Created Date occurred in the last 90 days. It is used to generate data for analytic snap shots that are part of the Blackboard Learn for Sales application.</description>
+        <externalId>false</externalId>
+        <formula>IF(DATEVALUE(CreatedDate) &gt;= TODAY() - 90, 1, 0)</formula>
+        <formulaTreatBlanksAs>BlankAsZero</formulaTreatBlanksAs>
+        <label>Total Enrollments 90 Days</label>
+        <precision>18</precision>
+        <required>false</required>
+        <scale>0</scale>
+        <trackHistory>false</trackHistory>
+        <type>Number</type>
+        <unique>false</unique>
+    </fields>
+    <fields>
+        <fullName>Visible__c</fullName>
+        <defaultValue>false</defaultValue>
+        <deprecated>false</deprecated>
+        <description>Checkbox refers to Visible</description>
+        <externalId>false</externalId>
+        <label>Visible</label>
+        <trackFeedHistory>false</trackFeedHistory>
+        <trackHistory>false</trackHistory>
+        <type>Checkbox</type>
+    </fields>
+    <label>Enrollment</label>
+    <listViews>
+        <fullName>My_Team_Training</fullName>
+        <columns>Course__c</columns>
+        <columns>Person__c</columns>
+        <columns>Role__c</columns>
+        <columns>Status__c</columns>
+        <columns>Result__c</columns>
+        <columns>Manager__c</columns>
+        <columns>Last_Accessed__c</columns>
+        <columns>Sales_Reporting_Group__c</columns>
+        <filterScope>Everything</filterScope>
+        <filters>
+            <field>Visible__c</field>
+            <operation>equals</operation>
+            <value>1</value>
+        </filters>
+        <label>My Team Training</label>
+        <language>en_US</language>
+    </listViews>
+    <listViews>
+        <fullName>My_Training</fullName>
+        <columns>Course__c</columns>
+        <columns>Person__c</columns>
+        <columns>Role__c</columns>
+        <columns>Result__c</columns>
+        <columns>Status__c</columns>
+        <columns>Manager__c</columns>
+        <columns>Last_Accessed__c</columns>
+        <columns>OWNER.ALIAS</columns>
+        <columns>Sales_Reporting_Group__c</columns>
+        <filterScope>Mine</filterScope>
+        <filters>
+            <field>Visible__c</field>
+            <operation>equals</operation>
+            <value>1</value>
+        </filters>
+        <label>My Training</label>
+        <language>en_US</language>
+    </listViews>
+    <listViews>
+        <fullName>Test_View</fullName>
+        <columns>Course__c</columns>
+        <columns>Result__c</columns>
+        <columns>Visible__c</columns>
+        <columns>OWNER.ALIAS</columns>
+        <columns>Person__c</columns>
+        <columns>Role__c</columns>
+        <columns>Last_Accessed__c</columns>
+        <columns>Status__c</columns>
+        <columns>Manager__c</columns>
+        <columns>External_ID__c</columns>
+        <columns>External_Person_Key__c</columns>
+        <columns>External_Course_Key__c</columns>
+        <filterScope>Everything</filterScope>
+        <label>Testing View</label>
+        <language>en_US</language>
+        <sharedTo>
+            <group>SFDCSystemAdmins</group>
+        </sharedTo>
+    </listViews>
+    <nameField>
+        <label>Enrollment ID</label>
+        <trackFeedHistory>false</trackFeedHistory>
+        <trackHistory>false</trackHistory>
+        <type>Text</type>
+    </nameField>
+    <pluralLabel>Training List</pluralLabel>
+    <searchLayouts>
+        <customTabListAdditionalFields>Course__c</customTabListAdditionalFields>
+        <customTabListAdditionalFields>Person__c</customTabListAdditionalFields>
+        <customTabListAdditionalFields>Role__c</customTabListAdditionalFields>
+        <customTabListAdditionalFields>Status__c</customTabListAdditionalFields>
+        <customTabListAdditionalFields>Result__c</customTabListAdditionalFields>
+        <customTabListAdditionalFields>Last_Accessed__c</customTabListAdditionalFields>
+        <searchFilterFields>NAME</searchFilterFields>
+    </searchLayouts>
+    <sharingModel>Private</sharingModel>
+</CustomObject>

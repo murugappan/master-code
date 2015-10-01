@@ -1,0 +1,55 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<Report xmlns="http://soap.sforce.com/2006/04/metadata">
+    <aggregates>
+        <calculatedFormula>Enrollment__c.Course_ID__c.Est_Cost__c:MAX</calculatedFormula>
+        <datatype>currency</datatype>
+        <developerName>FORMULA1</developerName>
+        <downGroupingContext>Enrollment__c$CreatedDate</downGroupingContext>
+        <isActive>true</isActive>
+        <isCrossBlock>false</isCrossBlock>
+        <masterLabel>Course Cost</masterLabel>
+        <scale>2</scale>
+    </aggregates>
+    <aggregates>
+        <calculatedFormula>Enrollment__c.Course_ID__c.Est_Completion_Hours__c:MAX</calculatedFormula>
+        <datatype>number</datatype>
+        <developerName>FORMULA2</developerName>
+        <downGroupingContext>Enrollment__c$CreatedDate</downGroupingContext>
+        <isActive>true</isActive>
+        <isCrossBlock>false</isCrossBlock>
+        <masterLabel>Estimated Time to Complete</masterLabel>
+        <scale>0</scale>
+    </aggregates>
+    <columns>
+        <field>Enrollment__c$Course_ID__c.Id</field>
+    </columns>
+    <description>Report returns all Courses with Enrollment Snapshot Data</description>
+    <format>Summary</format>
+    <groupingsDown>
+        <dateGranularity>Day</dateGranularity>
+        <field>Enrollment__c$Id</field>
+        <sortOrder>Asc</sortOrder>
+    </groupingsDown>
+    <groupingsDown>
+        <dateGranularity>Day</dateGranularity>
+        <field>Enrollment__c$Course_ID__c.Course_Title__c</field>
+        <sortOrder>Asc</sortOrder>
+    </groupingsDown>
+    <groupingsDown>
+        <dateGranularity>Day</dateGranularity>
+        <field>Enrollment__c$CreatedDate</field>
+        <sortOrder>Asc</sortOrder>
+    </groupingsDown>
+    <name>Enrollment and Course Snapshot Data</name>
+    <params>
+        <name>co</name>
+        <value>1</value>
+    </params>
+    <reportType>Enrollments_With_User_ID__c</reportType>
+    <scope>organization</scope>
+    <showDetails>true</showDetails>
+    <timeFrameFilter>
+        <dateColumn>Enrollment__c$CreatedDate</dateColumn>
+        <interval>INTERVAL_CURRENT</interval>
+    </timeFrameFilter>
+</Report>

@@ -1,0 +1,67 @@
+<apex:page standardController="Case" extensions="BBW_CasePrimaryGroup" sidebar="false"  showHeader="false">
+<script>
+
+    function closeWindow() {        
+        opener.location.reload();
+        window.close();
+    }
+
+</script>
+    <apex:form >
+    <body onunload ="closeWindow();">
+        <apex:pageBlock >
+            <apex:sectionHeader title="Case" subtitle="Set Alternate Primary Group"/>
+        </apex:pageBlock>
+        
+        <font color="red"> <b>&nbsp;&nbsp;&nbsp;&nbsp;Note:  This action is only to be used if you intend to maintain ownership of the case, but require that the case reside in a different Primary Group.</b></font>
+        <apex:outputPanel id="errorPanel">
+        <apex:pageMessage strength="2" title="{!errorTitle}" summary="{!errorMessage}" severity="{!errorSeverity}" rendered="{!errorShow}" />
+    </apex:outputPanel>
+        <apex:pageMessages id="error"/>
+                <apex:pageblock >
+       
+        <apex:pageBlockButtons >
+                   &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; <apex:commandButton action="{!ChangePrimaryGroup}" value="Change"/>
+            <apex:commandbutton value="Cancel" onclick="javascript:window.parent.close()"></apex:commandbutton>
+                </apex:pageBlockButtons>
+        <div align="center">
+        <table>
+        
+            <tr>
+            
+                <td>
+                    <apex:outputLabel value="Primary Group Name"/>
+                </td>
+                <td>
+                    <apex:selectList id="fcol113" size="1" value="{!GroupName}" required="true">                            
+                        <apex:selectOptions value="{!QueueName}"/>                                         
+                    </apex:selectList>
+                </td>
+            </tr>
+            <tr>
+            
+                <!--<td>
+                    <apex:outputLabel value="User Comment"/>
+                </td>
+                <td>
+                    <apex:inputTextarea id="UserComment" required="true"  value="{!UserComment}" richText="true"/>
+                </td>-->
+                            </tr>
+                            
+        </table>
+        </div>
+              </apex:pageblock>
+        <apex:inputHidden value="{!closeWin}" id="closeWinAdmin" /> 
+        
+     </body>   
+
+    </apex:form>
+    <script language='javascript'>      
+        var closeWinVal = document.getElementById('j_id0:j_id2:closeWinAdmin');
+    if(closeWinVal.value=="true")    {
+       parent.window.opener.location.reload();
+       window.parent.close();
+    }
+    </script> 
+    
+</apex:page>

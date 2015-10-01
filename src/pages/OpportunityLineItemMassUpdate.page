@@ -1,0 +1,89 @@
+<apex:page standardController="OpportunityLineItem" title="OpportunityLineItems" tabStyle="Opportunity_Console__tab" sidebar="false" extensions="SearchOppLineItemExtension" showHeader="false">
+  <!-- Begin Default Content REMOVE THIS -->
+  
+    <style> 
+        div.hideCurrDate span.dateInput span.dateFormat{  
+            display:none;  
+    
+        }  
+    </style> 
+    <script type="text/javascript" language="javascript">
+        
+        function showErrorBlock(action) {
+            var errorDiv = document.getElementById("errorBlock");
+            if(action == 'save') {
+                errorDiv.style.display   = "block";
+            }else if(action == 'cancel') {
+                errorDiv.style.display   = "none";
+            }
+        }
+        /*function window.onunload()
+        {
+          alert('Check1>>>>>'+window.opener);
+          if (window.opener != null) {
+            window.opener.UpdateOpener();
+          } 
+        } */       
+
+    </script>
+  
+    <apex:form > 
+      
+        <apex:pageBlock tabStyle="Opportunity_Console__tab">
+            <apex:sectionHeader title="Product Line Items" subtitle="{!oppName}"/>
+            <apex:commandButton value="Save All" action="{!save}" onClick="showErrorBlock('save')" /> 
+            <apex:commandButton value="Cancel" immediate="true" action="{!refreshPage}" reRender="opp_LineItem_table" onClick="showErrorBlock('cancel')" />  
+            <apex:pageMessages />
+            <div id="errorBlock">
+                <apex:outputPanel id="errorPanel">
+                    <apex:pageMessage strength="2" title="{!errorTitle}" summary="{!errorMessage}" severity="{!errorSeverity}" rendered="{!errorShow}" />
+                </apex:outputPanel>
+            </div>
+            <apex:pageBlockSection columns="1"> 
+                    <!--<apex:actionStatus startText="(Saving...)" stopText="" onStop="window.top.close();" ID="AJAXStatus"/> -->
+                <apex:pageBlockTable value="{!opportunityLineItems}" var="oppLineItems" id="opp_LineItem_table">                
+                     
+                    <apex:column headerValue="Product Name" value="{!oppLineItems.PricebookEntry.Product2.Name}"/>
+                    <apex:column headerValue="Product Code" value="{!oppLineItems.PricebookEntry.Product2.ProductCode}"/>
+                    <apex:column headerValue="Internal Long Description" value="{!oppLineItems.PricebookEntry.Product2.Internal_Long_Description__c}"/> 
+                    <apex:column headerValue="Quantity" value="{!oppLineItems.Quantity}"/>
+                    <apex:column headerValue="Custom Price" value="{!oppLineItems.Custom_Price__c}"/>
+                    <apex:column headerValue="Discount Amount" value="{!oppLineItems.Discount_Amount__c}"/>
+                    <apex:column headerValue="Unit Price" value="{!oppLineItems.UnitPrice}"/>
+                    <apex:column headerValue="Customer Price" value="{!oppLineItems.Customer_Price__c}"/>
+                    <apex:column headerValue="Converted To Order" value="{!oppLineItems.Converted_To_Order__c}"/>
+                    <apex:column headerValue="Psft Capture ID" value="{!oppLineItems.Psft_Capture_ID__c}"/>
+                    <apex:column headerValue="Product Type" value="{!oppLineItems.PricebookEntry.Product2.Type__c}"/>
+                   <!-- <apex:column headerValue="Transact Desired Live Date">
+                        <div class="hideCurrDate"> 
+                            <apex:inputField value="{!oppLineItems.Transact_Desired_Live_Date__c}"/>
+                        </div>
+                    </apex:column>
+                    <apex:column headerValue="Transact Desired Production Date">
+                        <div class="hideCurrDate">
+                            <apex:inputField value="{!oppLineItems.Transact_Desired_Prod_Date__c}"/>
+                        </div>
+                    </apex:column> -->
+                    <apex:column headerValue="Product Delivery Date">
+                        <div class="hideCurrDate"> 
+                            <apex:inputField value="{!oppLineItems.ts_line_product_delivery_date__c}"/>
+                        </div>
+                    </apex:column>
+                     <apex:column headerValue="Project Start Date">
+                        <div class="hideCurrDate"> 
+                            <apex:inputField value="{!oppLineItems.ts_line_project_start_date__c}"/>
+                        </div>
+                    </apex:column>
+                    <apex:column headerValue="Desired Live Date">
+                        <div class="hideCurrDate"> 
+                            <apex:inputField value="{!oppLineItems.ts_line_desired_live_date__c}"/>
+                        </div>
+                    </apex:column>
+                </apex:pageBlockTable>
+                
+           </apex:pageBlockSection>
+                
+        </apex:pageBlock> 
+        
+    </apex:form> 
+</apex:page>

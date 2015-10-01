@@ -1,0 +1,72 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<CustomObjectTranslation xmlns="http://soap.sforce.com/2006/04/metadata">
+    <caseValues>
+        <plural>false</plural>
+        <value>Cameleon CPQ settings</value>
+    </caseValues>
+    <caseValues>
+        <plural>true</plural>
+        <value>Cameleon CPQ settings</value>
+    </caseValues>
+    <fields>
+        <label><!-- CPQ Mapping Set Name --></label>
+        <name>CPQMappingSet__c</name>
+    </fields>
+    <fields>
+        <help><!-- https://&lt;hostname&gt;[:port] --></help>
+        <label>CPQ Server URL</label>
+        <name>CPQServer_EndpointURL__c</name>
+    </fields>
+    <fields>
+        <label><!-- CPQ Auth. Password --></label>
+        <name>CPQSession_AuthPwd__c</name>
+    </fields>
+    <fields>
+        <label><!-- CPQ Auth. User --></label>
+        <name>CPQSession_AuthUser__c</name>
+    </fields>
+    <fields>
+        <help><!-- This setting allows CPQ  to immediately start a predefined Configuration Service when creating a new quote. 
+Syntax :  [Action name:Service name] 
+Example: ConfList:CONF_SUBSCRIPT_SRV --></help>
+        <label>CPQ Quick Action</label>
+        <name>CPQSession_EmptyQuoteQuickAction__c</name>
+    </fields>
+    <fields>
+        <label>CPQ UI Layout</label>
+        <name>CPQSession_Layout__c</name>
+    </fields>
+    <fields>
+        <label><!-- CPQ Synchronize Action --></label>
+        <name>CPQSession_OverviewSyncAction__c</name>
+    </fields>
+    <fields>
+        <label>CPQ Quote Model Name</label>
+        <name>CPQSession_QuoteModel_Name__c</name>
+    </fields>
+    <fields>
+        <label>CPQ Quote Model Release</label>
+        <name>CPQSession_QuoteModel_Release__c</name>
+    </fields>
+    <fields>
+        <label><!-- CPQ Refresh Action --></label>
+        <name>CPQSession_RefreshAction__c</name>
+    </fields>
+    <fields>
+        <label>CPQ UI Theme</label>
+        <name>CPQSession_Theme__c</name>
+    </fields>
+    <fields>
+        <help><!-- 1 = [Re-Use Only], 
+2 = [Allow Creation Or Re-Use Existing]
+3 = [Re-Use Existing And Update]
+4 = [Re-Use (or Create if necessary) and Update] --></help>
+        <label><!-- Product Management Policy --></label>
+        <name>ProductMgtPolicy__c</name>
+    </fields>
+    <fields>
+        <label>Enable standard trigger</label>
+        <name>StdTrigger_Enabled__c</name>
+    </fields>
+    <startsWith>Consonant</startsWith>
+</CustomObjectTranslation>

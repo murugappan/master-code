@@ -1,0 +1,243 @@
+<apex:page standardcontroller="Opportunity" extensions="PSS_OppProd" action="{!initProductGrid}" tabstyle="Opportunity" sidebar="{!sidebar}" cache="true">
+<link href="{!URLFOR($Resource.BALINK1__balink, 'style.css')}" type="text/css" rel="stylesheet" />
+<apex:includeScript value="{!$Resource.BALINK1__BALINK_Utils}"/>
+<BALINK1:BALINK_Header />
+<BALINK1:BALINK_UTILS sobj="{!Opportunity}"/>
+
+<apex:includeScript value="{!$Resource.BALINK1__BALINK_ProductGridScript}"/>
+ <apex:pageMessages id="pageMessages" rendered="{!!isId}"/>
+<apex:form id="form" rendered="{!isId}">
+        <div style="display:{!If(showErrorMessage,'','none')}">
+        <apex:pageMessages />
+        </div>
+     
+    <br/>
+    <br/>
+    <apex:commandLink value="Show full size" id="lnkSize" action="{!changeSize}" style="display:none"></apex:commandLink>
+        
+     <apex:pageBlock id="pBlock">
+        <apex:pageBlockButtons >
+          <div>
+            <apex:commandButton value="Save" action="{!save}" />
+            <apex:commandButton value="Save & More" action="{!AddMoreProduct}" />   
+            <apex:commandButton value="Cancel" action="{!cancel}" />
+          </div>   
+       </apex:pageBlockButtons>
+
+        <apex:pageBlockSection title="Products Grid - Quantity and Price Calibration" columns="1" id="pBlockSection" collapsible="false">
+                              
+        <apex:pageBlockTable value="{!ListItem}" var="item">
+             
+             <apex:column width="50px">
+                    <apex:facet name="header" >
+                        <!-- <input style="color: red;width:1px; visibility: hidden;"/>
+                        <br/>-->
+                      <div>Action</div>
+                    </apex:facet>
+                   {!item.Key}.&nbsp; 
+                    <a href="javascript:void(0)" onclick="confirmDelete(event,this);" style="font-weight:bold">Del</a> 
+                    <apex:commandLink value="del me" style="font-weight:bold" action="{!DeleteItem}" style="display:none;visibility:hidden">
+                       <apex:param value="{!item.Key}" name="selectedId"/>
+                    </apex:commandLink>
+              </apex:column>
+             
+               <apex:column headerValue="Product Name" value="{!item.PriceBookItem.Product2.name}">
+                    <apex:facet name="header">
+                        <!-- <input style="color: red;width:1px; visibility: hidden;"/>
+                        <br/> -->
+                         {!$ObjectType.Product2.fields.Name.label}
+                   </apex:facet>
+               </apex:column>
+               
+
+               <!-- List Price -->
+                <apex:column headerValue="{!$ObjectType.PricebookEntry.fields.UnitPrice.label}" headerClass="CurrencyElement" >
+                   <apex:facet name="header">
+                        <!-- <input style="color: red;width:1px; visibility: hidden;"/>
+                        <br/> -->
+                         {!$ObjectType.PricebookEntry.fields.UnitPrice.label}
+                   </apex:facet>
+                   <DIV id="{!item.Key}" align="right" style="white-space:nowrap" >
+                     <script language="javascript">
+                     document.getElementById("{!item.Key}").innerHTML = FormatCurrency({!item.PriceBookItem.UnitPrice}*1,2)
+                     </script>
+                 </DIV>
+                </apex:column>
+             
+             <!-- Quantity -->
+                <apex:column headerValue="{!$ObjectType.OpportunityLineItem.fields.Quantity.label}" width="50px">
+                       <apex:facet name="header">
+                        <!-- <input style="color: red;width:1px; visibility: hidden;"/>
+                        <br/> -->
+                         <span style="color:red">{!$ObjectType.OpportunityLineItem.fields.Quantity.label}</span>
+                       </apex:facet>
+                       <apex:inputField value="{!item.LineItem.Quantity}" style="width:50px" onchange="initGrid();" onfocus="this.select();" required="false"/>
+                  </apex:column> 
+                  
+                <!-- Discount -->
+                <apex:column headerValue="{!$ObjectType.OpportunityLineItem.fields.BALINK1__Sales_Discount__c.label}" rendered="{!$ObjectType.OpportunityLineItem.fields.BALINK1__Sales_Discount__c.accessible}">
+                    <apex:facet name="header">
+                        <!-- <input type="text" value="0" style="width:50px" id="applyToAllDisc"/> 
+                        <br/>-->
+                        {!$ObjectType.OpportunityLineItem.fields.BALINK1__Sales_Discount__c.label}
+                     </apex:facet>
+                     <apex:inputField value="{!item.LineItem.BALINK1__Sales_Discount__c}" onchange="_DiscountChanged(this);" required="false" style="width:50px" onFocus="this.select()"/> 
+                </apex:column>      
+                               
+                    <!-- Sales Price -->      
+                  <apex:column headerValue="{!$ObjectType.OpportunityLineItem.fields.UnitPrice.label}" width="80px">
+                       <apex:facet name="header">
+                            <!-- <input style="color: red;width:1px; visibility: hidden;"/>
+                            <input type="button" onclick="applyDiscount();" class="btn" value="Apply Discount to All"/>  
+                            <br/>-->
+                            <span style="color:red">{!$ObjectType.OpportunityLineItem.fields.UnitPrice.label}</span>
+                       </apex:facet>
+                      <apex:inputField value="{!item.LineItem.UnitPrice}" style="width:80px" onchange="_SalesPriceChanged(this);" onfocus="this.select();" required="false"></apex:inputField>
+                      <apex:facet name="footer">
+                          <div  style="text-align:right;">
+                              <span style="font-weight:bold">Total :</span>
+                         </div>
+                      </apex:facet>
+                  </apex:column>
+                  
+                     <!-- Date -->    
+                  <apex:column headerValue="{!$ObjectType.OpportunityLineItem.fields.ServiceDate.label}" rendered="{!$ObjectType.OpportunityLineItem.fields.ServiceDate.accessible}">
+                       <apex:facet name="header">
+                            <!-- <input style="color: red;width:1px; visibility: hidden;"/>
+                            <br/>  --> 
+                            <span style="">{!$ObjectType.OpportunityLineItem.fields.ServiceDate.label}</span> 
+                       </apex:facet>                      
+                      <apex:inputField value="{!item.LineItem.ServiceDate}" />
+                  </apex:column>
+                   
+                  <!-- Line Description 
+                  <apex:column headerValue="{!$ObjectType.OpportunityLineItem.fields.description.label}" width="200px">
+                      <apex:facet name="header">
+                            <input style="color: red;width:1px; visibility: hidden;"/>
+                            <br/>
+                            <span style="">{!$ObjectType.OpportunityLineItem.fields.description.label}</span> 
+                       </apex:facet>
+                      <apex:inputField value="{!item.LineItem.description}" style="width:200px"></apex:inputField>
+                      <apex:facet name="footer">
+                          <div  style="text-align:right;">
+                              <span style="font-weight:bold">Total :</span>
+                         </div>
+                      </apex:facet>
+                  </apex:column>
+                    -->      
+                  <!-- Total Price -->
+                  <apex:column headerValue="{!$ObjectType.OpportunityLineItem.fields.TotalPrice.label}" value="{!item.LineItem.TotalPrice}" styleClass="CurrencyElement" headerClass="CurrencyElement" footerClass="CurrencyElement">
+                      <apex:facet name="header">
+                            <!-- <input style="color: red;width:1px; visibility: hidden;"/>
+                            <br/>-->
+                            <span style="">{!$ObjectType.OpportunityLineItem.fields.TotalPrice.label}</span> 
+                       </apex:facet>
+                      <apex:facet name="footer">
+                          <span  style="width:40px;horizontal-align:right;" id="sTotal"></span>
+                      </apex:facet>
+                  </apex:column>    
+                  
+                  <!-- Line Description -->      
+                  <apex:column headerValue="{!$ObjectType.OpportunityLineItem.fields.description.label}" width="200px">
+                      <apex:facet name="header">
+                            <!-- <input style="color: red;width:1px; visibility: hidden;"/>
+                            <br/> -->
+                            <span style="">{!$ObjectType.OpportunityLineItem.fields.description.label}</span> 
+                       </apex:facet>
+                      <apex:inputField value="{!item.LineItem.description}" style="width:200px"></apex:inputField>
+                  </apex:column>
+               </apex:pageBlockTable>
+         </apex:pageBlockSection>
+        
+<script language="javascript">
+window.onload = function init()
+{
+    initGrid();
+}
+      
+var ua = navigator.userAgent.toLowerCase();
+
+//Click Link
+function clickLink(linkobj) {
+     if (linkobj.getAttribute('onclick') == null) {
+          if (linkobj.getAttribute('href')) document.location = linkobj.getAttribute('href');
+          else linkobj.click();
+     }
+     else linkobj.onclick();
+}
+
+if ( ua.indexOf( "firefox" ) != -1 ) 
+{ 
+      HTMLElement.prototype.click = function() 
+      {
+            var evt = this.ownerDocument.createEvent('MouseEvents');
+            evt.initMouseEvent('click', true, true, this.ownerDocument.defaultView, 1, 0, 0, 0, 0, false, false, false, false, 0, null);
+            this.dispatchEvent(evt);
+      } 
+}
+
+function confirmDelete(mozEvent,obj)   
+{   
+    var e = confirm("Are you sure?");
+    if(!e)
+    {
+        if(window.event)
+        {
+            window.event.cancelBubble = true;   
+            window.event.returnValue = false;   
+        }
+        else
+        {
+            mozEvent.preventDefault();
+            return false;
+        }              
+    }
+    else
+    {
+       clickLink(obj.parentNode.getElementsByTagName("a")[1]);
+    }
+}
+
+   function initGrid()
+   {
+        //InitValues({!$ObjectType.OpportunityLineItem.fields.BALINK1__Sales_Discount__c.accessible},{!$ObjectType.OpportunityLineItem.fields.ServiceDate.accessible});
+        InitValues({!$ObjectType.OpportunityLineItem.fields.BALINK1__Sales_Discount__c.accessible},false);
+        var elem = document.getElementById("{!$Component.form.pBlock.pBlockSection}");
+        var table = elem.getElementsByTagName("table")[1];
+        debugger;
+        calculateGrid(table);
+   }     
+   function _SalesPriceChanged(elem)
+    {
+          //debugger;
+          //InitValues({!$ObjectType.OpportunityLineItem.fields.BALINK1__Sales_Discount__c.accessible},{!$ObjectType.OpportunityLineItem.fields.ServiceDate.accessible});
+          total = 0;
+          var row = elem.parentNode.parentNode;
+          SalesPriceChanged(row);
+    }  
+    function _DiscountChanged(elem)
+    {
+          //debugger;
+          //InitValues({!$ObjectType.OpportunityLineItem.fields.BALINK1__Sales_Discount__c.accessible},{!$ObjectType.OpportunityLineItem.fields.ServiceDate.accessible});
+          total = 0;
+          var row = elem.parentNode.parentNode;
+          DiscountChanged(row);
+    }
+    function  applyDiscount()
+    {
+        var discToApply= document.getElementById('applyToAllDisc').value;
+        var theTable = document.getElementById('applyToAllDisc').parentNode.parentNode.parentNode.parentNode.parentNode;
+        for( i=1 ; i < theTable.rows.length-1 ; i++ )
+        {
+            var tableRow =theTable.rows[i];
+            tableRow.cells[4].getElementsByTagName('input')[0].value =discToApply;  
+            _DiscountChanged(tableRow.cells[4].getElementsByTagName('input')[0]);
+        }
+        //calculateGrid(theTable);
+    }
+            
+</script>
+    </apex:pageBlock>
+ </apex:form>
+
+</apex:page>

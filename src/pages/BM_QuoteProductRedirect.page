@@ -1,0 +1,5 @@
+<apex:page standardController="Quote_Product__c" extensions="BigMachinesQuoteProductExtension">
+<apex:sectionHeader title="BigMachines Quote Product" subtitle="Edit Quote"/>
+<apex:outputText rendered="false" value="{!Quote_Product__c.BigMachines_Quote__c}" />
+<apex:iframe height="2000px" src="{!redirectURL}"/>
+</apex:page>

@@ -1,0 +1,660 @@
+<apex:page standardController="Case" extensions="btbbCreateCase" cache="false" id="NewCase" standardStylesheets="false" showHeader="false" sidebar="false" contentType="text/html" action="{!Redirect}">
+<apex:composition template="btbb_template">
+
+        <apex:define name="js">
+        <script type="text/javascript">
+        function changeEdit(){changeedit1();}
+        function changeVersion(x){
+            var val = document.getElementById(x).value;
+            changeversion1(val);}
+        function changemodule(x){
+            var val = document.getElementById(x).value;
+            changemodule1(val);}
+        </script>
+        
+        
+        
+        <script>
+            var isClicked = false;
+            function checkDoubleSubmit(obj){
+                        if (isClicked) {
+                            return false;
+                        }else {
+                            isClicked = true;
+                            obj.className = 'btnDisabled';//only shows the button as disabled.
+                            return true;
+                        }
+             }
+        
+
+        </script>
+        
+        
+        
+        </apex:define>
+        <apex:define name="nav"><c:btbb_auth_nav /></apex:define>
+        <apex:define name="topbar"><c:btbb_globalsearch /></apex:define>
+
+
+           
+        <apex:define name="content">     
+        
+<style type="text/css">
+.label { white-space:nowrap;
+ width: 150px; margin-left: 160px; font-weight: bold; line-height: 30px; font-size: 12px; color: #444;}
+.field { margin-left: 60px; line-height: 30px; clear:none; font-size: 12px; width: 300px; color: #343434;}
+.pagebuttons { float:right; margin-right: 50px; margin-top: 20px; margin-bottom: 20px;  }
+.pagebuttons input[type="submit"] {
+    background: url({!URLFOR($Resource.BtBbStyles,'/includes/images/button_bg.gif')}) repeat-x top left;
+    height: 24px;   
+    color: #FFF;
+    border: 1px solid #CCC;
+    font-weight: bold;
+    margin: 0 5px 0 0;
+}
+@-moz-document url-prefix() { .pagebuttons input[type="submit"] { padding-bottom: 4px; } }
+input[type="radio"] { position: relative; top: 3px; }
+
+.updateassettext {float:left; margin-left: 60px; margin-right: 5px; clear:none; color: #343434; border-top: 2px solid #F0B10B; border-right: 2px solid #F0B10B; border-left: 2px solid #F0B10B; padding: 8px 8px 8px 50px;
+        background: #FFFCF6 url({!URLFOR($Resource.BtBbStyles,'/includes/theme2011/img/icons/warning.png')}) no-repeat 8px 8px;
+        width:500px;
+        position: relative; left: -150px;
+}
+
+.updateassetlink {float:left; margin-left: 60px; margin-right: 5px; clear:none; color: #343434; border-bottom: 2px solid #F0B10B; border-right: 2px solid #F0B10B; border-left: 2px solid #F0B10B; padding: 8px 8px 8px 50px;
+        background: #FFFCF6;
+        width:500px;
+        position: relative; left: -150px;
+}
+</style>
+
+            <apex:form >
+
+                <apex:pageBlock title="Submit a New Support Case" id="thePageBlock" >
+
+                    <apex:outputText >If you are logging a Severity 1 - System Down Emergency, please call us at one of our <a
+                            class="btbbColoredLink"
+                            href="{!$Page.btbb_articleview}?id=50170000000Wc5uAAC">support
+                        phone numbers</a> for immediate assistance. Please have your 6-digit Client ID available.<br />
+                        <br />
+                        <span style="color: red;">All form fields are required.</span>
+                    </apex:outputText>
+
+                    <apex:pageBlockSection id="errormessages">
+                        <apex:pageMessages />
+                        <apex:outputPanel id="errorPanel" style="color:red;">
+                            <apex:pageMessage escape="false"
+                                summary="{!errorTitle}-{!errorMessage}"
+                                severity="{!errorSeverity}" rendered="{!errorShow}" />
+                        </apex:outputPanel>
+                    </apex:pageBlockSection>
+
+
+                    <apex:pageBlockSection id="corefields" columns="2"
+                        showHeader="false">
+
+                        <!--ACCOUNT PICKLIST-->
+
+                        <apex:pageBlockSectionItem >
+                            <apex:outputLabel for="account" value="Account:"
+                                styleClass="label" />
+                        </apex:pageBlockSectionItem>
+
+                        <apex:pageBlockSectionItem >
+                            <apex:selectList value="{!account}" size="1" id="account"
+                                styleClass="field">
+                                <apex:selectOptions value="{!accounts}" />
+                                <apex:actionSupport action="{!selectAccount}" event="onchange"
+                                    rerender="presuplab,presup,supportlabel,check,instance, instancelabel,chattranscriptid,chattranscript,textareasec,asset, module1, version, assetupdatelink, editlink,sourcebuild, module, functionalarea, category,severityid"
+                                    focus="environment" status="accountchange" />
+                            </apex:selectList>
+
+                            <apex:actionStatus startText="" id="accountchange">
+                                <apex:facet name="start">
+                                    <apex:image url="{!URLFOR($Resource.btbbLoader)}" />
+                                </apex:facet>
+                            </apex:actionStatus>
+
+                        </apex:pageBlockSectionItem>
+
+                        <!--ASSET PICKLIST-->
+                        <apex:pageBlockSectionItem >
+                            <apex:outputLabel for="asset" value="Environment:"
+                                styleClass="label" />
+                        </apex:pageBlockSectionItem>
+
+                        <apex:pageBlockSectionItem >
+                            <apex:selectList value="{!asset}" size="1" id="asset"
+                                styleClass="field">
+                                <apex:selectOptions value="{!assets}" />
+                                <apex:actionSupport action="{!selectAsset}" event="onchange"
+                                    rerender="sourcebuild, module, functionalarea, category, instance,chattranscriptid,chattranscript,textareasec,instancelabel,presuplab,presup,supportlabel,check,version,assetdummy,assetlab, module1,assetdis,assetupdatelink,editlink,corefields,cms,siteurl,courseid"
+                                    status="assetchange" />
+                            </apex:selectList>
+
+                            <apex:actionStatus startText="" stopText="" id="assetchange">
+                                <apex:facet name="start">
+                                    <apex:image url="{!URLFOR($Resource.btbbLoader)}" />
+                                </apex:facet>
+                            </apex:actionStatus>
+
+                        </apex:pageBlockSectionItem>
+
+
+                        <!--ANGEL ONLY INSTANCE PICKLIST-->
+                        <apex:outputPanel id="assetlab">
+                            <apex:pageBlockSectionItem >
+                                <apex:outputLabel rendered="{!displayInstance}" for="instance"
+                                    value="Instance: " styleClass="label" id="instancelabel" />
+                            </apex:pageBlockSectionItem>
+                            </apex:outputpanel>
+                            <apex:outputPanel id="assetdis">
+                                <apex:pageBlockSectionItem dataStyle="text-align:center">
+                                    <apex:inputField rendered="{!displayInstance}"
+                                        value="{!Case.Instance__c}" id="instance" styleClass="field" />
+                                </apex:pageBlockSectionItem>
+                                </apex:outputpanel>
+
+
+                               <!--VERSION PICKLIST-->
+                                <apex:pageBlockSectionItem rendered="{!NOT(collab)&&NOT(isLearnSAAS)&&NOT(modelroom)&&NOT(isxplor)}" >
+                                    <apex:outputLabel for="version" value="{!IF(isAnalytics,'ERP Platform','Version On Case')}"
+                                        styleClass="label" id="versionlabel" />
+                                </apex:pageBlockSectionItem>
+
+                                <apex:pageBlockSectionItem rendered="{!NOT(collab)&&NOT(isLearnSAAS)&&NOT(modelroom)&&NOT(isxplor)}"  >
+
+                                    <apex:selectList value="{!version}" size="1" id="version"
+                                        styleClass="field" disabled="{!isAssetSelect}"
+                                        onchange="changeEdit();">
+                                        <apex:selectOptions value="{!versions}" />
+                                        <apex:actionFunction name="changeedit1" action="{!changeedit}"
+                                            rerender="assetupdatelink,editlink,sourcebuild"
+                                            status="versionchange" />
+                                    </apex:selectList>
+
+                                    <apex:actionStatus startText="" stopText="" id="versionchange">
+                                        <apex:facet name="start">
+                                            <apex:image url="{!URLFOR($Resource.btbbLoader)}" />
+                                        </apex:facet>
+                                    </apex:actionStatus>
+
+                                </apex:pageBlockSectionItem>
+
+                                <!--SOURCE BUILD PICKLIST-->
+                                <apex:pageBlockSectionItem rendered="{!NOT(modelroom)&&NOT(collab)&&NOT(isLearnSAAS)&&NOT(isxplor)}">
+                                    <apex:outputLabel for="sourcebuild" value="{!IF(isAnalytics,'Version','Source Build On Case')}"
+                                        styleClass="label" id="sourcebuildlabel" />
+                                </apex:pageBlockSectionItem>
+
+                                <apex:pageBlockSectionItem rendered="{!NOT(modelroom)&&NOT(collab)&&NOT(isLearnSAAS)&&NOT(isxplor)}">
+                                    <apex:selectList value="{!sourcebuild}" size="1"
+                                        id="sourcebuild" styleClass="field"
+                                        disabled="{!isAssetSelect}" onchange="changeVersion(this.id);">
+                                        <apex:selectOptions value="{!sblist}" />
+                                        <apex:actionFunction name="changeversion1" immediate="true"
+                                            action="{!changeversion}" reRender="editlink"
+                                            status="sbchange">
+                                            <apex:param name="sbuild" value="" />
+                                        </apex:actionFunction>
+                                    </apex:selectList>
+
+                                    <apex:actionStatus startText="" stopText="" id="sbchange"
+                                        rendered="{!NOT(modelroom)}">
+                                        <apex:facet name="start">
+                                            <apex:image url="{!URLFOR($Resource.btbbLoader)}" />
+                                        </apex:facet>
+                                    </apex:actionStatus>
+
+                                </apex:pageBlockSectionItem>
+
+                                <!--UPDATE ASSET LINK-->
+                               
+                                <apex:pageBlockSectionItem >
+                                <apex:outputLabel value="" styleClass="label" rendered="{!displayeditasset && NOT(managedhostingasset)}" />    
+                            </apex:pageBlockSectionItem>
+
+                                <!--rendered="{!displayeditasset}"-->
+                                 
+                                <apex:outputPanel id="editlink" layout="inline" >
+                               <apex:pageBlockSectionItem >
+                                   <apex:outputText styleClass="updateassettext" rendered="{!displayeditasset && NOT(managedhostingasset)}" value="<b>You have selected a version and/or build that differs from our record for this Environment.</b><br> The version and build you have selected here are specific to this case, which may differ from what is installed in your Environment.   However, if your selection reflects what is actually installed in your Environment, please use the link below to update our records with this version and build. " escape="false"/>    
+                               </apex:pageBlockSectionItem>
+                               
+                           
+                                 <apex:commandLink title="Update my Environment information with this build"  rendered="{!displayeditasset && NOT(managedhostingasset)}" id="assetupdatelink" action="{!updateasset}" immediate="true" value="Update Environment" reRender="asset,editlink,version,sourcebuild" styleClass="updateassetlink" style="color:#3BC2C8;font-weight:bold;" status="updateAsset"/>
+                                 <apex:commandLink title=" Use selected version for this case, but do not update my Environment" rendered="{!displayeditasset && NOT(managedhostingasset)}" id="assetcancellink" action="{!cancelupdate}" immediate="true" value="Continue" reRender="editlink" styleClass="updateassetlink" style="color:#3BC2C8;font-weight:bold;" status="updateAsset"/>
+                                  <apex:actionStatus startText="" stopText="" id="updateAsset">
+                                        <apex:facet name="start" ><apex:image url="{!URLFOR($Resource.btbbLoader)}"/></apex:facet>
+                                </apex:actionStatus>
+                           
+
+                            </apex:outputPanel>       
+                     
+
+                                <!--MODULE PICKLIST-->
+                                <apex:pageBlockSectionItem >
+                                    <apex:outputLabel for="module" value="Issue Topic:"
+                                        styleClass="label" id="modulelabel" />
+                                </apex:pageBlockSectionItem>
+
+                                <apex:outputPanel id="module1">
+                                    <apex:pageBlockSectionItem >
+
+                                        <apex:selectList value="{!module}" size="1" id="module"
+                                            styleClass="field" disabled="{!isAssetSelect}"
+                                            onchange="changemodule(this.id);">
+                                            <apex:selectOptions value="{!modules}" />
+                                            <apex:actionFunction name="changemodule1" immediate="true"
+                                                action="{!modulechange}"
+                                                rerender="funcar,functionalarea,category"
+                                                status="modulechange">
+                                                <apex:param name="mod" value="" />
+                                                </apex:actionfunction>
+                                        </apex:selectList>
+
+                                        <apex:actionStatus startText="" stopText="" id="modulechange">
+                                            <apex:facet name="start">
+                                                <apex:image url="{!URLFOR($Resource.btbbLoader)}" />
+                                            </apex:facet>
+                                        </apex:actionStatus>
+
+                                    </apex:pageBlockSectionItem>
+                                </apex:outputPanel>
+
+                                <!--FUNCTIONAL AREA PICKLIST-->
+                                <apex:pageBlockSectionItem rendered="{!NOT(isxplor)}">
+                                    <apex:outputLabel for="functionalarea" value="Functional Area:"
+                                        styleClass="label" />
+                                </apex:pageBlockSectionItem>
+
+                                <apex:outputPanel id="funcar" rendered="{!NOT(isxplor)}">
+                                    <apex:pageBlockSectionItem rendered="{!NOT(isxplor)}">
+
+                                        <apex:selectList value="{!functionalarea}" size="1"
+                                            id="functionalarea" styleClass="field"
+                                            disabled="{!IF(ISNULL(module) || isAssetSelect || displayfuncarea, true, false)}">
+                                            <apex:selectOptions value="{!functionalareas}" />
+                                            <apex:actionSupport event="onchange"
+                                                rerender="categ,category" status="functionalareachange" />
+                                        </apex:selectList>
+
+                                        <apex:actionStatus startText="" stopText=""
+                                            id="functionalareachange">
+                                            <apex:facet name="start">
+                                                <apex:image url="{!URLFOR($Resource.btbbLoader)}" />
+                                            </apex:facet>
+                                        </apex:actionStatus>
+
+                                    </apex:pageBlockSectionItem>
+                                </apex:outputPanel>
+                                
+                                 <!--Pyramid version-->
+                                <apex:pageBlockSectionItem rendered="{!isAnalytics}" >
+                                    <apex:outputLabel for="pyramidversion" value="Pyramid Version:" 
+                                        styleClass="label" />
+                                </apex:pageBlockSectionItem>
+
+                                <apex:outputPanel rendered="{!isAnalytics}" >
+                                    <apex:pageBlockSectionItem rendered="{!isAnalytics}">
+
+                                        <apex:selectList value="{!Pyramidversion}" size="1"
+                                             styleClass="field" id="pyramidversion">
+                                            <apex:selectOptions value="{!Pyramidversions}"/>
+                                            
+                                        </apex:selectList>
+
+                                        
+
+                                    </apex:pageBlockSectionItem>
+                                </apex:outputPanel>
+                                
+                                
+                                <!--Pyramid version end-->
+
+                                <!--CATEGORY PICKLIST-->
+                                <apex:pageBlockSectionItem rendered="{!NOT(modelroom) && NOT(isAnalytics) && NOT(isxplor)}">
+                                    <apex:outputLabel for="category" value="Category:"
+                                        styleClass="label" />
+                                </apex:pageBlockSectionItem>
+
+                                <apex:outputPanel id="categ" rendered="{!NOT(modelroom) && NOT(isAnalytics) && NOT(isxplor)}">
+                                    <apex:pageBlockSectionItem rendered="{!NOT(modelroom) && NOT(isAnalytics) && NOT(isxplor)}">
+
+                                        <apex:selectList value="{!category}" size="1" id="category"
+                                            styleClass="field"
+                                            disabled="{!IF(ISNULL(functionalarea) || isAssetSelect || displaycategory, true, false)}">
+                                            <apex:selectOptions value="{!categories}" />
+                                        </apex:selectList>
+
+                                    </apex:pageBlockSectionItem>
+                                </apex:outputPanel>
+
+                                <!-- xpLor -->
+                               <apex:pageBlockSectionItem rendered="{!isxplor}">
+                                     <apex:outputLabel for="cms" value="CMS/ LMS:" styleClass="label" />
+                               </apex:pageBlockSectionItem>
+
+                               <apex:outputPanel rendered="{!isxplor}" >
+                               <apex:pageblockSectionItem rendered="{!isxplor}" >
+                                  
+                                   <apex:inputfield value="{!case.CMS_LMS__c}"  styleClass="field" id="cms" />
+                                  
+                                </apex:pageBlockSectionItem>
+                                </apex:outputPanel>
+
+                                <apex:pageBlockSectionItem rendered="{!isxplor}">
+                                     <apex:outputLabel for="siteurl" value="Site URL:" styleClass="label" />
+                                </apex:pageBlockSectionItem>
+
+                                <apex:outputPanel rendered="{!isxplor}" >
+                                <apex:pageblockSectionItem rendered="{!isxplor}" >
+                                  
+                                   <apex:inputfield value="{!case.Site_URL__c}"  styleClass="field" id="siteurl" />
+                                  
+                                </apex:pageBlockSectionItem>
+                                </apex:outputPanel>
+
+                                <apex:pageBlockSectionItem rendered="{!isxplor}">
+                                     <apex:outputLabel for="courseid" value="Course ID:" styleClass="label" />
+                                </apex:pageBlockSectionItem>
+
+                                <apex:outputPanel rendered="{!isxplor}" >
+                                <apex:pageblockSectionItem rendered="{!isxplor}" >
+                                  
+                                   <apex:inputfield value="{!case.Course_ID__c}"  styleClass="field" id="courseid" />
+                                  
+                                </apex:pageBlockSectionItem>
+                                </apex:outputPanel>
+
+                                
+                                <!-- Collab -->
+                                  
+                                  <apex:pageBlockSectionItem rendered="{!collab}">
+                                     <apex:outputLabel for="instancefield" value="Instance:" styleClass="label" />
+                                   </apex:pageBlockSectionItem>
+
+                                   <apex:outputPanel id="instancetype" rendered="{!collab}">
+                                    <apex:pageBlockSectionItem rendered="{!collab}">
+
+                                        <apex:selectlist value="{!instancevalue}" styleClass="field" id="instancefield" size="1">
+                                            <apex:selectOptions value="{!instanceoptions}" />
+                                        </apex:selectlist>
+
+                                    </apex:pageBlockSectionItem>
+                                  </apex:outputPanel>
+                                  
+                                  
+                                   <apex:pageBlockSectionItem rendered="{!collab}" >
+                                     <apex:outputLabel for="UserRolefield" value="User Role:" styleClass="label" />
+                                   </apex:pageBlockSectionItem>
+
+                                   <apex:outputPanel id="UserRolefieldtype" rendered="{!collab}">
+                                    <apex:pageBlockSectionItem >
+
+                                        <apex:selectlist value="{!usrrolevalue}" styleClass="field" id="UserRolefield" size="1">
+                                            <apex:selectOptions value="{!usrroleoptions}" />
+                                        </apex:selectlist>
+
+                                    </apex:pageBlockSectionItem>
+                                  </apex:outputPanel>
+                                  
+                                  
+                                  <apex:pageBlockSectionItem rendered="{!collab}">
+                                     <apex:outputLabel for="closfield" value="Client OS:" styleClass="label" />
+                                   </apex:pageBlockSectionItem>
+
+                                   <apex:outputPanel id="closlist" rendered="{!collab}">
+                                    <apex:pageBlockSectionItem rendered="{!collab}">
+
+                                        <apex:selectlist value="{!clvalues}" styleClass="field" id="closfield" size="1">
+                                            <apex:selectOptions value="{!clos}" />
+                                        </apex:selectlist>
+
+                                    </apex:pageBlockSectionItem>
+                                  </apex:outputPanel>
+                                  
+                                  
+                                  
+                                   <apex:pageBlockSectionItem rendered="{!collab}" >
+                                       <apex:outputLabel for="ClientOSVersionfield" value="Client OS Version:" styleClass="label" />
+                                       </apex:pageBlockSectionItem>
+
+                                       <apex:outputPanel id="ClientOSVersionfieldtype" rendered="{!collab}">
+                                       <apex:pageBlockSectionItem rendered="{!collab}" >
+
+                                       <apex:inputField value="{!case.Client_OS_Version__c}" styleClass="field" id="ClientOSVersionfield" />
+
+                                       </apex:pageBlockSectionItem>
+                                       </apex:outputPanel>
+                                  
+                                   <apex:pageBlockSectionItem rendered="{!collab}">
+                                     <apex:outputLabel for="browserfield" value="Browser:" styleClass="label" />
+                                   </apex:pageBlockSectionItem>
+
+                                   <apex:outputPanel id="browseros" rendered="{!collab}">
+                                    <apex:pageBlockSectionItem rendered="{!collab}">
+
+                                        <apex:selectlist value="{!browservalues }" styleClass="field" id="browserfield" size="1">
+                                            <apex:selectOptions value="{!browsop}" />
+                                        </apex:selectlist>
+
+                                    </apex:pageBlockSectionItem>
+                                  </apex:outputPanel>
+                                  
+                                  
+                                   <apex:pageBlockSectionItem rendered="{!collab}" >
+                                       <apex:outputLabel for="BrowserVersionfield" value="Browser Version:" styleClass="label" />
+                                       </apex:pageBlockSectionItem>
+
+                                       <apex:outputPanel id="BrowserVersionfieldtype" rendered="{!collab}">
+                                       <apex:pageBlockSectionItem rendered="{!collab}" >
+
+                                       <apex:inputField value="{!case.Browser_Version__c}" styleClass="field" id="BrowserVersionfield" />
+
+                                       </apex:pageBlockSectionItem>
+                                       </apex:outputPanel>
+                                       
+                                       
+                                       
+                                       <apex:pageBlockSectionItem rendered="{!collab}" >
+                                       <apex:outputLabel for="JavaVersionfield" value="Java Version:" styleClass="label" />
+                                       </apex:pageBlockSectionItem>
+
+                                       <apex:outputPanel id="JavaSVersionfieldtype" rendered="{!collab}" >
+                                       <apex:pageBlockSectionItem rendered="{!collab}" >
+
+                                       <apex:inputField value="{!case.Java_Version__c}" styleClass="field" id="JavaVersionfield" />
+
+                                       </apex:pageBlockSectionItem>
+                                       </apex:outputPanel>
+                                
+                                  
+                                  <apex:pageBlockSectionItem rendered="{!collab}">
+                                     <apex:outputLabel for="CMSLMSfield1" value="CMS/ LMS:" styleClass="label" />
+                                   </apex:pageBlockSectionItem>
+
+                                   <apex:outputPanel id="CMSLMSfield1type" rendered="{!collab}">
+                                    <apex:pageBlockSectionItem rendered="{!collab}">
+
+                                        <apex:selectlist value="{!cmsvalue}" styleClass="field" id="CMSLMSfield1" size="1">
+                                            <apex:selectOptions value="{!cmsoptions}" />
+                                        </apex:selectlist>
+
+                                    </apex:pageBlockSectionItem>
+                                  </apex:outputPanel>
+                                  
+                                  
+                                       <apex:pageBlockSectionItem rendered="{!collab}" >
+                                       <apex:outputLabel for="CMSLMSURLfield" value="CMS/ LMS URL:" styleClass="label" />
+                                       </apex:pageBlockSectionItem>
+
+                                       <apex:outputPanel id="CMSLMSURLfieldfieldtype" rendered="{!collab}">
+                                       <apex:pageBlockSectionItem rendered="{!collab}" >
+
+                                       <apex:inputField value="{!case.CMS_LMS_URL__c}" styleClass="field" id="CMSLMSURLfield" />
+
+                                       </apex:pageBlockSectionItem>
+                                       </apex:outputPanel>
+                                       
+                                       
+                                         <apex:pageBlockSectionItem rendered="{!collab}" >
+                                       <apex:outputLabel for="URLAccessedfield1" value="URL Accessed:" styleClass="label" />
+                                       </apex:pageBlockSectionItem>
+
+                                       <apex:outputPanel id="URLAccessedfield1type1" rendered="{!collab}" >
+                                       <apex:pageBlockSectionItem rendered="{!collab}" >
+
+                                       <apex:inputField value="{!case.URL_Access__c}" styleClass="field" id="URLAccessedfield1" />
+
+                                       </apex:pageBlockSectionItem>
+                                       </apex:outputPanel>
+                              
+                                <!-- end Collab -->
+
+                                <!--modified by avik-->
+
+                                <apex:pageBlockSectionItem rendered="{!modelroom}">
+                                    <apex:outputLabel for="clientosfield" value="Client OS:"
+                                        styleClass="label"  />
+                                </apex:pageBlockSectionItem>
+
+                                <apex:outputPanel id="clientos" rendered="{!modelroom}">
+                                    <apex:pageBlockSectionItem rendered="{!modelroom}">
+
+                                        <apex:selectlist value="{!clvalues}" styleClass="field"
+                                            id="clientosfield" size="1">
+                                            <apex:selectOptions value="{!clos}" />
+                                        </apex:selectlist>
+
+                                    </apex:pageBlockSectionItem>
+                                </apex:outputPanel>
+
+                                <apex:pageBlockSectionItem rendered="{!modelroom}">
+                                    <apex:outputLabel for="Browser" value="Browser:"
+                                        styleClass="label" />
+                                </apex:pageBlockSectionItem>
+
+                                <apex:outputPanel id="Browsr" rendered="{!modelroom}">
+                                    <apex:pageBlockSectionItem >
+
+                                        <apex:selectlist value="{!browservalues}" styleClass="field"
+                                            size="1" id="Browser">
+                                            <apex:selectOptions value="{!browsop}" />
+                                        </apex:selectlist>
+
+
+                                    </apex:pageBlockSectionItem>
+                                </apex:outputPanel>
+
+
+                                <apex:pageBlockSectionItem rendered="{!modelroom}">
+                                    <apex:outputLabel for="MRCasetypefield" value="MR Case Type:"
+                                        styleClass="label" />
+                                </apex:pageBlockSectionItem>
+
+                                <apex:outputPanel id="MRcasetype" rendered="{!modelroom}">
+                                    <apex:pageBlockSectionItem rendered="{!modelroom}">
+                                        <apex:selectlist value="{!mrcasetypevalues}"
+                                            styleClass="field" size="1" id="MRCasetypefield">
+                                            <apex:selectOptions value="{!mrcsop}" />
+                                        </apex:selectlist>
+                                    </apex:pageBlockSectionItem>
+                                </apex:outputPanel>
+
+                                <apex:pageBlockSectionItem rendered="{!modelroom}">
+                                    <apex:outputLabel for="URLAccesstypefield"
+                                        value="URL Accessed:" styleClass="label" />
+                                </apex:pageBlockSectionItem>
+
+                                <apex:outputPanel id="URLAccesstype"  rendered="{!modelroom}">
+                                    <apex:pageBlockSectionItem rendered="{!modelroom}">
+
+                                        <apex:inputField value="{!case.URL_Access__c}"
+                                            styleClass="field" id="URLAccesstypefield" />
+
+                                    </apex:pageBlockSectionItem>
+                                </apex:outputPanel>
+                             <apex:pageblocksectionitem >
+                            <apex:outputLabel for="ccemail" value="Cc:"  styleClass="label" /><span >&nbsp;<b style="color:#444444;">(maximum 5 emails)</b></span>  
+                             </apex:pageblocksectionitem>   
+                             <apex:pageblocksectionitem >
+                                <apex:inputText value="{!ccemail}"   maxlength="255" id="ccemail" styleclass="field" /><span style="float:right;margin-left:2px"><b style="color:#444444;">(Emails to be separated by a semicolon ';')</b></span>
+                             </apex:pageblocksectionitem>
+                                
+                    </apex:pageBlockSection>
+
+
+                    <apex:pageBlockSection showHeader="false" collapsible="false"
+                        columns="1">
+
+
+
+
+                        <span
+                            style="display: block; margin-top: 25px; margin-left: 160px; font-weight: bold; color: #343434; margin-bottom: 8px;">Subject/Error Message:</span>
+                        <apex:inputText value="{!Case.Subject}"
+                            style="padding: 3px 0 3px 0;display:block;width:65%;margin-left:160px;"
+                            maxlength="255" />
+
+                        <span
+                            style="display: block; margin-top: 10px; margin-left: 160px; font-weight: bold; color: #343434; margin-bottom: 8px;">Description:</span>
+                        <apex:inputTextarea value="{!Case.Description}" id="description"
+                            style="display:block;margin-left:160px;width:65%;height:150px;" />
+
+                        <span
+                            style="display: block; margin-top: 15px; margin-left: 160px; font-weight: bold; color: #343434; margin-bottom: 8px;">Steps
+                        to Repeat:</span>
+                        <apex:inputTextarea value="{!Case.Steps_to_Replicate__c}"
+                            id="stepstoreplicate"
+                            style="display:block;margin-left:160px;width:65%;height:150px;" />
+                            
+                            
+                       <apex:outputPanel layout="inline" rendered="{!collab}"  id="chattranscriptid"
+                            style="display: block; margin-top: 15px; margin-left: 160px; font-weight: bold; color: #343434; margin-bottom: 8px;">Chat Transcript:</apex:outputPanel>
+                        <apex:inputTextarea value="{!Case.Chat_Transcript__c}"
+                            id="chattranscript"
+                            style="display:block;margin-left:160px;width:65%;height:150px;" rendered="{!collab}"   />
+     
+                     
+
+                        <span
+                            style="display: block; margin-top: 15px; margin-left: 160px; font-weight: bold; color: #343434; margin-bottom: 8px;">Severity
+                        Level:</span>
+                        <apex:selectRadio value="{!Sev}" layout="pageDirection"
+                            style="margin-left:160px; width:100%; font-size:{!IF(servcheck == true,'8.2pt','9pt')};" id="severityid">
+                            <apex:selectOptions value="{!Severities}" id="SeverityList"  />
+                            <apex:actionSupport event="onchange" reRender="presuplab" />
+                        </apex:selectRadio>
+                        <br />
+                        <br />
+
+                        <apex:outputPanel id="presuplab">
+                            <apex:pageBlockSectionItem >
+                                <apex:outputLabel rendered="{!displayInstance && premiumsupport1}" for="check"
+                                    value="To invoke Premium Support please check the box. This service is only for severity 1 and 2 cases and a representative must be available from the institution to work the case until resolved or severity is reduced.  Please review your Premium Support contract for complete details as you will be charged per your contract for invoking Premium Support."
+                                    id="supportlabel" />
+                                <apex:inputcheckbox rendered="{!displayInstance && premiumsupport1}" id="check"
+                                    value="{!premiumsupport}" />
+                            </apex:pageBlockSectionItem>
+                            </apex:outputpanel>
+
+                            <apex:outputPanel styleClass="pagebuttons"
+                                id="NewCaseFormButtons" layout="Block">
+                                <apex:commandButton value="Create New Case" action="{!Save}"
+                                    onclick="return checkDoubleSubmit(this)" styleClass="caseActionButton" />
+                                <apex:commandButton value="Cancel" action="{!Cancel}"
+                                    styleClass="caseActionButton" />
+                            </apex:outputPanel>
+                    </apex:pageBlockSection>
+
+                </apex:pageBlock>
+
+            </apex:form>
+            <!--/END OF NEW CASE FORM/-->
+
+        </apex:define><!--/END CONTENT DEFINE/-->
+
+</apex:composition><!--/END COMPOSITION/-->
+
+</apex:page><!--/END OF NEW CASE PAGE/-->

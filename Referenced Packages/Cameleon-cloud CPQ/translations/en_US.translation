@@ -1,0 +1,131 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<Translations xmlns="http://soap.sforce.com/2006/04/metadata">
+    <customApplications>
+        <label>Cameleon CPQ</label>
+        <name>CameleonCPQ</name>
+    </customApplications>
+    <customLabels>
+        <label>Cancel</label>
+        <name>BTN_CANCEL</name>
+    </customLabels>
+    <customLabels>
+        <label>Clone</label>
+        <name>BTN_CLONE</name>
+    </customLabels>
+    <customLabels>
+        <label>Delete</label>
+        <name>BTN_DELETE</name>
+    </customLabels>
+    <customLabels>
+        <label>Ok</label>
+        <name>BTN_OK</name>
+    </customLabels>
+    <customLabels>
+        <label>Save</label>
+        <name>BTN_SAVE</name>
+    </customLabels>
+    <customLabels>
+        <label>Select All</label>
+        <name>BTN_SELECT_ALL</name>
+    </customLabels>
+    <customLabels>
+        <label>Clear All</label>
+        <name>BTN_UNSELECT_ALL</name>
+    </customLabels>
+    <customLabels>
+        <label>CPQ Column</label>
+        <name>MP_CPQ_COLUMN</name>
+    </customLabels>
+    <customLabels>
+        <label>CPQ Field</label>
+        <name>MP_CPQ_FIELD</name>
+    </customLabels>
+    <customLabels>
+        <label>IN (Salesforce.com &gt; Cameleon CPQ)</label>
+        <name>MP_IN</name>
+    </customLabels>
+    <customLabels>
+        <label>View Mapped Fields Only</label>
+        <name>MP_MAPPED_ONLY</name>
+    </customLabels>
+    <customLabels>
+        <label>OUT (Cameleon CPQ &gt; Salesforce.com)</label>
+        <name>MP_OUT</name>
+    </customLabels>
+    <customLabels>
+        <label>Select Related Object</label>
+        <name>MP_SELECT_OBJ</name>
+    </customLabels>
+    <customLabels>
+        <label>SFDC Field</label>
+        <name>MP_SFDC_FIELD</name>
+    </customLabels>
+    <customLabels>
+        <label>Builder</label>
+        <name>MP_SUBTITLE</name>
+    </customLabels>
+    <customLabels>
+        <label>Using synchronization column :</label>
+        <name>MP_SYNC_COLUMN</name>
+    </customLabels>
+    <customLabels>
+        <label>‘Basic’ policy (Delete &amp; Re-Create All)</label>
+        <name>MP_SYNC_DEL</name>
+    </customLabels>
+    <customLabels>
+        <label>‘Advanced update (update/add)’ policy</label>
+        <name>MP_SYNC_UPD</name>
+    </customLabels>
+    <customLabels>
+        <label>‘Advanced update (delete/update/add)’ policy</label>
+        <name>MP_SYNC_UPDDEL</name>
+    </customLabels>
+    <customLabels>
+        <label>Unrecoverable error occured in Cameleon-cloud CPQ. Please contact your customer support.</label>
+        <name>MSG_ERROR</name>
+    </customLabels>
+    <customLabels>
+        <label>Cameleon-cloud CPQ licence limit has been reached. Please contact your customer support.</label>
+        <name>MSG_LICENSE</name>
+    </customLabels>
+    <customLabels>
+        <label>Cameleon-cloud CPQ is temporarily down for maintenance. Please try again later.</label>
+        <name>MSG_MAINT</name>
+    </customLabels>
+    <customLabels>
+        <label>You cannot specify mapping for Salesforce.com entities related to this object ( depth limit reached )</label>
+        <name>MSG_MP_NOADDOBJ</name>
+    </customLabels>
+    <customLabels>
+        <label>You can remove object dependencies at this level</label>
+        <name>MSG_MP_NODELOBJ</name>
+    </customLabels>
+    <customLabels>
+        <label>You cannot create a new release before the initial release has been synchronized</label>
+        <name>NO_QR_CREATION</name>
+    </customLabels>
+    <customLabels>
+        <label>You cannot delete the current active release of the quote</label>
+        <name>NO_QR_DELETION</name>
+    </customLabels>
+    <customLabels>
+        <label>Only one release must be selected</label>
+        <name>SINGLE_QR_SELECTION</name>
+    </customLabels>
+    <customLabels>
+        <label>Synchronization.....</label>
+        <name>SYNCHRONIZATION</name>
+    </customLabels>
+    <customLabels>
+        <label>Content</label>
+        <name>TAB_CONTENT</name>
+    </customLabels>
+    <customLabels>
+        <label>Overview</label>
+        <name>TAB_OVERVIEW</name>
+    </customLabels>
+    <customPageWebLinks>
+        <label><!-- Cameleon CPQ Configure --></label>
+        <name>Cameleon_CPQ_Configure</name>
+    </customPageWebLinks>
+</Translations>

@@ -1,0 +1,12 @@
+<apex:page controller="NotifyFollowers" title="Notify Followers" >
+    <apex:sectionHeader title="Notifying Followers" />
+    <apex:message />
+    <apex:form >
+        <apex:pageBlock id="process_counter">
+            <apex:outputText value="{!className}" /><br />
+            <apex:outputText value="Click to Notify Knowledge Subscrition Followers" /><br/>
+            Execute batch for <apex:inputtext maxlength="2" value="{!days}"/> days &nbsp;<apex:commandButton action="{!autorun}" value="Execute Batch"/>
+            <br/><apex:outputText value="{!message}" /><br />
+        </apex:pageBlock>
+    </apex:form>
+</apex:page>

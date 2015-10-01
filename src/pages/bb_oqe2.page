@@ -1,0 +1,66 @@
+<apex:page StandardController="Opportunity" recordSetVar="opp" showheader="true" sidebar="false"  >
+
+
+<apex:form >
+    <apex:pageBlock >
+         <apex:panelGrid columns="4">
+             <apex:outputLabel value="View:"/>
+             <apex:selectList value="{!filterId}" size="1">
+                <apex:actionSupport event="onchange" rerender="opp_table"/>
+                <apex:selectOptions value="{!listviewoptions}"/>
+             </apex:selectList>
+
+
+
+         </apex:panelGrid>
+    </apex:pageBlock>
+
+
+
+    <apex:pageblock > 
+        <apex:pageBlockButtons >
+            
+            <apex:commandButton action="{!previous}" value="Previous"/>
+            <apex:commandButton action="{!next}" value="Next" />
+
+
+            
+        </apex:pageBlockButtons>
+    
+        <apex:pageblocktable value="{!opp}"  var="o" id="opp_table" width="1000px" >
+            <apex:column headervalue="Opportunity Name" style="width: 300px;">
+               <div style="width: 300px;"><a href="/{!o.Id}" target="opprWin">{!o.Name}</a></div> 
+            </apex:column>
+            <apex:column width="310px" headervalue="Account" >
+                <div style="width: 310px;"><a href="/{!o.Account.Id}" target="acctWin">{!o.Account.Name}</a></div>
+            </apex:column> 
+                        
+            <apex:column width="80px"  value="{!o.Amount}"/>
+            <apex:column width="80px"  value="{!o.Quota_Value__c}"/>
+
+            <apex:column width="200px"  headervalue="Owner" value="{!o.Owner__r.Name}" style="width: 200px;"/>          
+
+            <apex:column width="80px"  headervalue="Est Close Date">                     
+                <c:bb_vforce_hide_dt ><apex:outputField value="{!o.CloseDate}" style="width: 80px;"/> </c:bb_vforce_hide_dt> 
+            </apex:column>
+            <!--
+            <apex:column width="80px" headerValue="Stage">
+                <apex:outputField value="{!o.StageName}"  style="width: 80px;"/>
+            </apex:column>     
+
+             <apex:column width="60px" headerValue="Probability">
+                <apex:outputField value="{!o.Probability}"  style="width: 60px;"/>
+            </apex:column>              
+ 
+             <apex:column width="80px" headerValue="Sales Value x Probability">
+                <apex:outputField value="{!o.ExpectedRevenue}"  style="width: 80px;"/>
+            </apex:column> 
+-->             
+
+                        
+        </apex:pageblocktable>
+    </apex:pageblock>
+    </apex:form>
+    
+    <script>document.getElementById('goButton').focus();alert('blahg');</script>
+</apex:page>

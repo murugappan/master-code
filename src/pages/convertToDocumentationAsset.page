@@ -1,0 +1,37 @@
+<apex:page controller="convertToDocumentationAssetController" Tabstyle="Documentation_Asset__c">
+ <script>
+  function setFocusOnLoad() {}
+ </script>
+ <apex:sectionHeader title="New Documentation Asset" rendered="{!AND(opportunity.isWon,opportunity.HasOpportunityLineItem)}"/>
+ <apex:pageBlock title="Cannot create new Documentation Asset" id="CannotCreateDocumentationAsset" rendered="{!OR(NOT(opportunity.isWon),NOT(opportunity.HasOpportunityLineItem))}">
+  <apex:outputText value="The Opportunity "/>
+  <apex:outputLink value="/{!$CurrentPage.parameters.id}"> {!opportunity.name} </apex:outputLink>
+  <apex:outputText value=" is not Closed or does not have line items."/>
+ </apex:pageBlock>
+ <apex:pageBlock title="Cannot create new Documentation Asset" rendered="{!AND(opportunity.isWon,opportunity.HasOpportunityLineItem,ISNULL(documentationAsset))}">
+  <apex:outputText value="The Opportunity "/>
+  <apex:outputLink value="/{!$CurrentPage.parameters.id}"> {!opportunity.name} </apex:outputLink>
+  <apex:outputText value=" does not have any products that can be converted to Documentation Assets."/>
+ </apex:pageBlock>
+ <apex:form id="formtop">
+  <apex:pageBlock title="Create new Documentation Asset" id="thePageBlock" rendered="{!AND(opportunity.isWon,opportunity.HasOpportunityLineItem,NOT(ISNULL(documentationAsset)))}">
+   <apex:messages styleClass="pbError"/>
+   <apex:pageBlockButtons >
+    <apex:commandButton title="Save" value="Save" action="{!save}"/>
+   </apex:pageBlockButtons>
+   <apex:pageBlockSection title="Opportunity Details" id="opportunityDetails" collapsible="false">
+    <apex:panelGrid columns="2">
+     <apex:outputText value="Opportnunity Name: " style="font-weight:bold"/>
+     <apex:outputLink value="/{!opportunity.id}"> {!opportunity.name} </apex:outputLink>
+    </apex:panelGrid>
+   </apex:pageBlockSection>
+   <apex:pageBlockSection title="Documentation Assets" id="DocumentationAssetsInfo" collapsible="false" columns="2" showHeader="true">
+      <apex:outputField value="{!documentationAsset.Name}" />
+      <apex:inputField value="{!documentationAsset.Usage_Start_Date__c}" required="True"/>
+      <apex:inputField value="{!documentationAsset.Contact__c}" required="True"/>
+      <apex:inputField value="{!documentationAsset.Usage_End_Date__c}" required="True"/>
+    <p/>
+   </apex:pageBlockSection>
+  </apex:pageBlock>
+ </apex:form>
+</apex:page>

@@ -1,0 +1,35 @@
+<apex:page controller="ManageAssetsController" Tabstyle="Asset">
+    <script>
+    function checkAll(cb)
+    {
+        var inputElem = document.getElementsByTagName("input");
+        for(var i=0; i<inputElem.length; i++)
+        {
+            if(inputElem[i].id.indexOf("checkedone")!=-1)
+            inputElem[i].checked = cb.checked;
+        }
+    }    
+    </script>
+ <apex:sectionHeader title="Manage Assets" subtitle="Select Accounts"/>
+ <apex:form id="formtop">
+  <apex:pageBlock id="thePageBlock">
+   <apex:messages styleClass="pbError"/>
+   <apex:pageBlockButtons >
+    <apex:commandButton title="Cancel" value="Back" action="{!home}"/>
+    <apex:commandButton title="Next" value="Next" action="{!pickAssets}" rendered="{!action == 'New'}"/>
+    <apex:commandButton title="Next" value="Next" action="{!pickAssetsRenewal}" rendered="{!action == 'Renewal'}"/>
+    </apex:pageBlockButtons>
+       <apex:pageBlockSection title="Select Accounts" id="DocumentationAssetsInfo" collapsible="false" columns="2" showHeader="true">
+         <apex:dataTable value="{!childAccounts}" var="a" cellpadding="4">
+            <apex:column >
+                <apex:facet name="header"> <apex:inputCheckbox onchange="checkAll(this)"></apex:inputCheckbox></apex:facet>
+                <apex:inputCheckbox value="{!a.selected}" id="checkedone"></apex:inputCheckbox>
+            </apex:column>
+            <apex:column headervalue="Account Name">
+                <apex:outputField value="{!a.account.name}"/>
+            </apex:column>
+        </apex:dataTable>
+    </apex:pageBlockSection>
+  </apex:pageBlock>
+ </apex:form>
+</apex:page>

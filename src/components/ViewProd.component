@@ -1,0 +1,45 @@
+<apex:component controller="viewProd" access="global">
+  <apex:attribute name="TaskId" type="Id" description="Id of the Custom Task" assignTo="{!TasksId}"/>
+  <apex:attribute name="StoreCombo" type="String" description="Id of the Custom Task" assignTo="{!storeId}"/> 
+      <STYLE type="text/css">
+                  TH {font-size: 11px; font-face: arial;background: #CCCCCC;
+                       border-width: 1;  text-align: center } 
+                  TD  {font-size: 11px; font-face: verdana } 
+                  TABLE {border: solid #CCCCCC; border-width: 1}
+                  TR {border: solid #CCCCCC; border-width: 1}
+            </STYLE>
+       <br/>
+       Product CPQ Details:<br/>
+       <table border = "0">
+       <tr>
+            <th> Product Name</th>
+            <th> PS Product ID</th>
+            <th> Sales Value</th>
+            <th> Product Status</th>                
+        </tr>
+        <apex:repeat value="{!oppline}" var="o">
+        <tr>
+            <td>{!o.Product2.Name}</td>
+            <td>{!o.PS_Product_ID__c}</td>
+            <td>{!o.TotalPrice}</td>
+            <td>{!o.CPQ_Product_Status__c}</td>
+        </tr>
+        </apex:repeat>        
+    </table>
+    <br/>
+    Contact Role Selector Details: <br/>
+    <table border="0">
+    <tr>
+            <th>Contact Name</th>
+            <th>Contact Email</th>
+            <th>Role</th>
+            </tr>
+            <apex:repeat var="c" value="{!conroleselector}">
+            <tr>
+            <td>{!c.Contact_Role__r.Contact__r.Name}</td>
+            <td>{!c.Contact_Role__r.Contact__r.Email}</td>
+            <td>{!c.Role__c}</td>
+           </tr>
+            </apex:repeat>
+            </table>
+</apex:component>

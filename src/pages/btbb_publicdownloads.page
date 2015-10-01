@@ -1,0 +1,42 @@
+<apex:page cache="false" id="Public-Downloads" standardStylesheets="false" showHeader="false" sidebar="false" contentType="text/html">
+    <apex:composition template="btbb_publictemplate">
+        <apex:define name="topbar"><c:btbb_unauthglobalsearch /></apex:define>
+        <apex:define name="nav"><c:btbb_unauth_nav /></apex:define>
+        <apex:define name="content">
+            
+            <h2>Digital Content</h2>
+                    <p>Blackboard provides digital content support for Faculty, Instructors and Designers, accessible via the links below. If you are experiencing difficulties other than with Course Cartridges or ePacks, you should contact your institution's helpdesk for assistance.</p>
+                    <div class="content2ColContainer">
+                        <div class="content2ColL">
+                           
+
+                            <h3 id="ssAccessCodes" class="ssHeading"><a href="http://www2.blackboard.com/content/viewpage?name=content_student_access_codes" target="_blank">Student Access Codes and Keys</a></h3>
+                            <p>A Student Access Code is for a Blackboard Learning System – Vista or CE License (formerly WebCT) course. It is required in order for a student to view and use publisher content delivered via e-Packs within a Vista or CE course. A Student Access Key is for a Blackboard Learn Course Cartridge.</p>                            
+                            <div class="cleaner divider">&nbsp;</div>
+                               
+                            <h3 id="ssEpacks" class="ssHeading"><a href="http://www.blackboard.com/Partnerships/Extensions.aspx" target="_blank">Blackboard e-Packs</a></h3>
+                            <p>Blackboard e-Packs are text-based and discipline-specific content solutions developed by leading educational content providers to supplement online courses. Backboard e-Packs are available for Blackboard Learning System – Vista or CE Licenses (formerly WebCT).</p>
+                            <div class="cleaner divider">&nbsp;</div>
+
+                            <h3 id="ssCourseCartridges" class="ssHeading"><a href="http://www.blackboard.com/Partnerships/Extensions.aspx" target="_blank">Blackboard Course Cartridges</a></h3>
+                            <p>Blackboard Course Cartridges are text-based and discipline-specific content solutions developed by leading educational content providers to supplement online courses. Backboard Course Cartridges are available for the Blackboard Learn platform.</p>
+                            
+                        </div>
+                        
+                        <div class="content2ColR">
+                            
+                            <h3 id="ssContentSolutions" class="ssHeading"><a href="http://www.blackboard.com/Partnerships/Featured-Partners.aspx" target="_blank">Integrated Content Solutions</a></h3>
+                            <p>Blackboard publishing partners offer integrated content solutions that allow you to deliver market-leading publisher content using your institution’s Blackboard Learn installation. These solutions provide seamless access to the high-value content you need, the way you want it—through your Blackboard Learn course. (The availability of license varies by publisher.)</p>
+                            <div class="cleaner divider">&nbsp;</div>
+
+                            <h3 id="ssBuildingBlocks" class="ssHeading"><a href="http://www.blackboard.com/Partnerships/Extensions.aspx" target="_blank">Blackboard Building Blocks</a></h3>
+                            <p>Blackboard has hundreds of partners who provide Building Blocks to extend the capabilities of the Blackboard platform. Content providers, media and technology companies, system integrators and other partners all provide Building Blocks to help Blackboard clients around the globe meet their unique needs. Blackboard Extensions is the easily searchable online catalog for Blackboard platform integrations created by the Blackboard community and partners. Consult your institution’s system administrator if you are interested in a particular Blackboard Building Block.</p>                        
+                            <div class="cleaner divider">&nbsp;</div>
+                            </div>                            
+                    </div>
+                    <div class="cleaner">&nbsp;</div>    
+
+    
+        </apex:define>
+    </apex:composition>
+</apex:page>

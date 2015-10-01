@@ -1,0 +1,23 @@
+<script>
+function getTabURL()
+{
+	var webTabName = "Reference View";
+	var tabURL = "";
+	sforce.connection.sessionId = '{!$Api.Session_ID}';
+	var tabResults= sforce.connection.describeTabs();    	
+	for(var y=0; y< tabResults.length;y++)
+	{
+		var tabs = tabResults[y];
+		for(var x=0;x<tabs.tabs.length;x++)
+		{
+			if(tabs.tabs[x].label == webTabName)
+			{
+				tabURL = tabs.tabs[x].url;
+				break;
+			}
+		}
+	}
+if(tabURL == "") tabURL = "servlet.Integration?lid=01r700000002Hv9&ic=1";
+	return tabURL;
+}
+</script>

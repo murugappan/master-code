@@ -1,0 +1,85 @@
+<apex:page standardController="Case" extensions="BBW_CaseHandOff" sidebar="false"  showHeader="false">
+<!-- <apex:includeScript value="{!URLFOR($Resource.ckeditor , 'ckeditor/ckeditor.js')}"/> -->
+     <apex:includeScript value="{!URLFOR($Resource.ckeditorNew , 'ckeditor/ckeditor.js')}"/>
+ 
+<script>
+CKEDITOR.replaceAll({toolbar : 'MyToolbar'});
+    function closeWindow() {        
+        opener.location.reload();
+        window.close();
+    }
+
+</script>
+    <apex:form id="formid">
+    <body >
+        <apex:pageBlock >
+            <apex:sectionHeader title="Case" subtitle="Change Owner Queue"/>
+        </apex:pageBlock>
+        <apex:outputPanel id="errorPanel">
+        <apex:pageMessage strength="2" title="{!errorTitle}" summary="{!errorMessage}" severity="{!errorSeverity}" rendered="{!errorShow}" />
+    </apex:outputPanel>
+        <apex:pageMessages id="error"/>
+        
+        <apex:pageblock >
+        <apex:pageBlockButtons >
+            <apex:commandButton action="{!SaveOwner}" value="Save" />
+            <apex:commandbutton value="Cancel"  onclick="javascript:parent.window.close()"></apex:commandbutton>
+        </apex:pageBlockButtons>
+        
+        <table>
+        <tr>
+            <td colspan="2">
+                 <apex:actionStatus startText=" Finding Primary Group..." stopText=" " id="status"/>
+                <!-- <apex:actionStatus startText=" Finding User Name..." stopText=" " id="status"/>-->
+                 
+                 </td>
+        </tr>      
+        <tr>
+                <td>
+                    <apex:outputLabel value="Business Unit"/>
+                </td>
+                <td>
+                    <apex:selectList id="fcol1123" size="1" value="{!RecName}">                            
+                        <apex:selectOptions value="{!RecordName}"/>
+                        <apex:actionSupport event="onchange" action="{!Values}" rerender="fcol112" status="status"/>
+                                         
+                    </apex:selectList>
+                </td>
+            </tr>
+
+            <tr>
+                <td>
+                    <apex:outputLabel value="Primary Group"/>
+                </td>
+                <td>
+                    <apex:selectList id="fcol112" size="1" value="{!GroupName}" >                            
+                        <apex:selectOptions value="{!QueueName}"/>                                         
+                    </apex:selectList>
+                </td>
+            </tr>
+            <tr>
+                <td>
+                    <apex:outputLabel value="User Comment"/>
+                </td>
+                <td>
+                    <apex:inputTextarea id="UserComment"  styleClass="ckeditor" value="{!UserComment}" richText="false" rows="15" cols="140"  />
+                </td>
+            </tr>
+        </table>
+      
+        </apex:pageblock>
+        <apex:inputHidden value="{!closeWin}" id="closeWinAdmin" /> 
+        
+     </body>   
+
+    </apex:form>
+    <script language='javascript'>      
+        var closeWinVal = document.getElementById('j_id0:formid:closeWinAdmin');
+        
+    if(closeWinVal.value=="true")    {
+       parent.window.opener.location.reload();
+       window.parent.close();
+    }
+    </script> 
+    
+</apex:page>

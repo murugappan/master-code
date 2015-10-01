@@ -1,0 +1,1 @@
+<apex:page showHeader="false" sidebar="false" standardController="Account"><ScoutForSREV:ScoutDashboard customerId="{!Account.Id}"/></apex:page>

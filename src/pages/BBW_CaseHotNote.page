@@ -1,0 +1,27 @@
+<apex:page standardcontroller="case" tabstyle="case" showHeader="false" sidebar="false">
+<apex:sectionHeader title="Account" subtitle="Hot Note"/>
+<style>
+.lblStyle{font-weight:bold;}
+.clmStyle{ text-align:center;}
+</style>
+<apex:form id="myForm">
+<apex:pageBlock >
+<apex:dataTable value="{!Case}" var="a" columns="2" columnsWidth="100px" border="0px" cellpadding="5px" cellspacing="2px">
+<apex:column > 
+<apex:outputLabel value="Account Name." for="stage" styleClass="lblStyle"/>
+</apex:column>
+<apex:column >
+<apex:outputLabel value="{!Case.Account.Name}" for="stage" styleClass="clmStyle"/>
+</apex:column>
+</apex:dataTable>
+<apex:dataTable value="{!Case}" var="a" columns="2" columnsWidth="100px" border="0px" cellpadding="5px" cellspacing="2px">
+<apex:column > 
+<apex:outputLabel value="Hot Note" for="stage" styleClass="lblStyle"/>
+</apex:column>
+<apex:column >
+<apex:outputLabel value="{!Case.Hot_Note__c}" for="stage" styleClass="clmStyle"/>
+</apex:column>
+</apex:dataTable> 
+</apex:pageBlock>
+</apex:form> 
+</apex:page>

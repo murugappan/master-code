@@ -1,0 +1,134 @@
+<apex:page controller="csmrgp.CsMrgSetupCtrl" tabStyle="Setup_Wizard__tab" >
+
+    <apex:sectionheader title="Case Merge Premium" subtitle="Setup Wizard" help="http://www.ic-2000.com/support.asp"/>
+
+    <apex:form >
+        <apex:pageblock title="Initial Setup">
+        
+            <apex:pageBlockButtons >
+                <apex:commandButton action="{!next}" value="Next"/>
+            </apex:pageBlockButtons>
+            
+<p>
+Case Merge Premium is a purpose-built add-on for Salesforce.com that allows authorized users to find duplicate cases and merge them together. Child objects such as comments, attachments and emails are cloned to the master record and the duplicate cases are closed and related to the master case as child cases.
+</p>
+
+<p>
+You will need a few minutes to setup your organization and configure our application. If you need any help along the way, contact <a href="mailto:casemergepremium@ic-2000.com">casemergepremium@ic-2000.com</a> and we will be happy to help.
+</p>     
+     
+<p>
+<b>1.</b> To distinguish between cases closed ordinarily and cases closed because they are a duplicate, we recommend that you create a new case status called "Closed as Duplicate".  Case Merge Premium will use this status to close your duplicate cases after they are merged.  <a target="_blank" href="/p/setup/field/StandardFieldAttributes/d?id=Status&type=Case">Click here to open the Status pick list</a> or navigate to Setup > Customize > Cases > Fields > Status.  Click New and enter "Closed as Duplicate", or other wording if you prefer, select the appropriate support processes, and click Save.
+</p>
+
+<p>
+<apex:image url="{!$Resource.csmrgp__wiz01}"/>
+</p>
+
+<p>
+Next, edit the status entry you just created, check the "Closed" box and click Save.
+</p>
+
+<p>
+<apex:image url="{!$Resource.csmrgp__wiz02}"/>
+</p>
+
+<p>&nbsp;</p>
+
+<p>
+<b>2.</b> To ensure the appropriate Profiles can merge cases, <a target="_blank" href="/apexpages/setup/listApexPage.apexp">click here to open Visualforce Pages</a> or navigate to Setup > Develop > Pages.  Click on "Security" next to each of these pages: Duplicates, CsMrgFind, CsMrgPassThru, CsMrgSelect.  Ensure the appropriate profiles are added to the "Enabled Profiles" column.  Note that it is not recommended to give non-administrative profiles access to the CsMrgConfig page as that would allow someone to make changes to the configuration for Case Merge Premium.
+</p>
+
+<p>
+<apex:image url="{!$Resource.csmrgp__wiz03}"/>
+</p>
+
+<p>&nbsp;</p>
+
+<p>
+<b>3.</b> There are three ways to merge cases: manually from the Case Merge Premium tab, from a case detail record, and from a case list view.
+</p>
+
+<p style="margin-left:0.5in">
+a. To merge cases from the <b>Case Merge Premium tab</b>, <a target="_blank" href="/02u">click here to open Apps</a> or navigate to Setup > Create > Apps.  Select the App that you want to add the tab to, choose Edit, select Case Merge Premium from the Available Tabs list, click Add, and optionally choose to "Overwrite users’ personal custom app customizations" and finally click Save.
+</p>
+
+<p style="margin-left:0.5in">
+<apex:image url="{!$Resource.csmrgp__wiz04}"/>
+</p>
+
+<p style="margin-left:0.5in">
+b. To merge cases from a <b>case detail record</b>, <a target="_blank" href="/ui/setup/layout/PageLayouts?type=Case&setupid=CaseLayouts">click here to open Case Page Layouts</a> or navigate to Setup > Customize > Cases > Page Layouts.  Choose "Edit" next to the layout you want to add the merge capability to.  Choose "Buttons" on the left and drag and drop the "Find Duplicates" button to the "Custom Buttons" area of the page layout.  Click "Save".
+</p>
+
+<p style="margin-left:0.5in">
+<apex:image url="{!$Resource.csmrgp__wiz05}"/>
+</p>
+
+<p style="margin-left:0.5in">
+c. To merge cases from a <b>case list view</b>, <a target="_blank" href="/p/setup/layout/ListButtonsEdit?LayoutEntity=Case">click here to open Cases List View Search Layout</a> or navigate to Setup > Customize > Cases > Search Layouts and click "Edit" next to "Cases List View".  Select "Merge" from the list of available buttons and click "Add".  Click "Save".
+</p>
+
+<p style="margin-left:0.5in">
+<apex:image url="{!$Resource.csmrgp__wiz06}"/>
+</p>
+
+<p>&nbsp;</p>
+
+<p>
+<b>4.</b> In order to view related cases you must add the "Parent Case" field and "Related Cases" list to your page layout(s) if this is not already done. <a target="_blank" href="/ui/setup/layout/PageLayouts?type=Case&setupid=CaseLayouts">Click here to open Case Page Layouts</a> or navigate to Setup > Customize > Cases > Page Layouts.  Choose "Edit" next to the layout(s) you want to update.  Locate the "Parent Case" field and drag it onto your layout. <i>Note that this step may already be completed in your organization.</i>
+</p>
+
+<p>
+<apex:image url="{!$Resource.csmrgp__wiz07}"/>
+</p>
+
+<p>
+Next, click "Related Lists" on the left, locate "Related Cases" and click and drag that related list onto your layout.  Click "Save".
+</p>
+
+<p>
+<apex:image url="{!$Resource.csmrgp__wiz08}"/>
+</p>
+
+<p>&nbsp;</p>
+
+<p>
+<b>5.</b> Case Merge Premium includes the capability to display an inline alert on the case detail page when there is a possible duplicate. Note that this functionality uses the duplicate criteria you will setup on the next page of this wizard, so you may want to omit the alert if your criteria typically returns results for many cases; for example, if you base it simply on recently created cases. <a target="_blank" href="/ui/setup/layout/PageLayouts?type=Case&setupid=CaseLayouts">Click here to open Case Page Layouts</a> or navigate to Setup > Customize > Cases > Page Layouts.  Choose "Edit" next to the layout(s) you want to update.  Locate the "Duplicate" Visual Force page and drag it onto your layout as if it were a field. By default, its size will be too large, so you must manually set its attributes. Hover over the box on the layout and click the wrench icon. Set the height to 15 pixels and enable the label checkbox.
+</p>
+
+<p>
+<apex:image url="{!$Resource.csmrgp__wiz09}"/>
+</p>
+
+        </apex:pageblock>
+    </apex:form>
+    <script>
+    //overwrite help
+    var hlinks = getElementsByClassName('links')[0];
+    hlinks.innerHTML = '<a href="http://www.ic-2000.com/support.asp" target="_new">Knowledge Base</a> | <a href="mailto:casemergepremium@ic-2000.com">casemergepremium@ic-2000.com</a> | +1.609.570.7200 <img src="/s.gif" alt="Help" class="helpIcon" title="Help">';
+    hlinks.innerHTML += '<br/><div style="font-size:smaller">Free implementation assistance is available via email or phone.</div>';    
+    
+    hlinks.style.fontSize = 'larger';
+    hlinks.style.position = 'absolute';
+    hlinks.style.float  = 'right';
+    hlinks.style.right = '0%';
+    
+    //elements by CSS style
+    function getElementsByClassName(className) {
+        var hasClassName = new RegExp("(?:^|\\s)" + className + "(?:$|\\s)");
+        var allElements = document.getElementsByTagName("*");
+        var results = [];
+    
+        var element;
+        for (var i = 0; (element = allElements[i]) != null; i++) {
+            var elementClass = element.className;
+            if (elementClass && elementClass.indexOf(className) != -1 && hasClassName.test(elementClass))
+                results.push(element);
+        }
+    
+        return results;
+    }
+    </script>
+
+</apex:page>

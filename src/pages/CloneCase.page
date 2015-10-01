@@ -1,0 +1,20 @@
+<apex:page standardController="Case" extensions="Clone_Case" >
+  
+   <apex:form >
+  <apex:actionfunction name="clone" action="{!autorun}"></apex:actionfunction>
+  <apex:actionfunction name="Cancel" action="{!Cancel}"></apex:actionfunction>
+  </apex:form>
+  <script >
+  
+  var r=confirm("Do you want to clone case?");
+if (r==true)
+  {
+ clone();
+  }
+else
+  {
+  Cancel();
+  } 
+  </script>
+ 
+</apex:page>

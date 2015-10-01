@@ -1,0 +1,42 @@
+<apex:page controller="publicarticleSearchController" standardstylesheets="false" readOnly="true" showHeader="false" cache="false" sidebar="false" renderAs="html" name="BtBB KB Search - Print">
+	<style>
+		p {margin-top:7px;margin-bottom:4px;}
+		table { border-collapse:collapse;margin-top:7px;margin-bottom:7px;}
+		table, td {border:1px solid #757575;padding:5px;}
+		th {font-weight:bold;border:1px solid #757575;padding:5px;}
+		
+	</style>
+    <div class="mainpdf" style="font-family:arial,helvetica,sans-serif;font-size:85%;margin-left:2%;margin-right:2%;display:block;">
+            
+    	<apex:image style="float:left;clear:all;margin-top:2%;height:80px%;width:80px;" alt="BtBB KB Search" value="{!URLFOR($Resource.BtBbKBPrint, '/Bb_Logo.jpg')}" /><br /><br /><br /><br /><br />
+            
+        <span style="background: transparent url('{!URLFOR($Resource.BtBbKBPrint, '/yellow_gray_blocks.jpg')}') repeat x;clear:none;">&nbsp;</span>
+        
+        <apex:pageBlock >
+	        <apex:pageBlockTable value="{!articleList}" var="x">
+				<apex:column headerValue="Article Number">
+	                {!x.articleNumber}
+	            </apex:column>
+	            <apex:column headerValue="Title">
+	                {!x.articleName}
+	            </apex:column>
+	            <apex:column headerValue="Category">
+	                {!x.Category}
+	            </apex:column>           
+	            <apex:column headerValue="Release">
+	                {!x.majorRelease}
+	            </apex:column> 
+	            <apex:column headerValue="Service Pack(s)">
+	                {!x.version}
+	            </apex:column> 
+	            <apex:column headerValue="Target Relase">
+	                {!x.TargetRelease}
+	            </apex:column>
+	            <apex:column headerValue="Patch Available">
+	                {!x.patchAvailable}
+	            </apex:column>             
+	        </apex:pageBlockTable>
+    	</apex:pageBlock>  
+        
+    </div>
+</apex:page>

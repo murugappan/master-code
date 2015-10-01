@@ -1,0 +1,79 @@
+<apex:page standardController="Custom_Task__c" extensions="ViewTasks" title="Task Review">
+<apex:sectionHeader title="Task Review" subtitle="{!Custom_Task__c.Name}" />
+<apex:form >
+<apex:pageBlock >
+<apex:pageBlockButtons >
+<apex:commandButton value="Back" action="{!Cancel}"/>
+<apex:commandButton action="{!SendMail}" Value="Send Fulfillment Email"/>
+</apex:pageBlockButtons>
+  <apex:pageBlock title="Products">
+      <apex:pageBlockTable value="{!oppline}" var="a">
+          <apex:column value="{!a.Product2.Name}"/>
+          <apex:column value="{!a.CPQ_Integrated_System__c}"/>
+          <apex:column value="{!a.CPQ_Product_Status__c}"/>
+          <apex:column value="{!a.CPQ_Delivery_Date__c}"/>
+          <apex:column value="{!a.CPQ_Delivery_Status__c}"/>
+          <apex:column value="{!a.Product2.Type__c}"/>
+          <apex:column value="{!a.Product2.Product_Category__c}"/>
+          <apex:column value="{!a.Product2.Product_Sub_Category__c}"/>
+      </apex:pageBlockTable>
+  </apex:pageBlock>
+  <apex:pageBlock title="Assets">
+  <apex:pageblockTable value="{!Lass}" var="as">
+      <apex:column value="{!as.Name}"/>
+      <apex:column value="{!as.Status}"/>
+      <apex:column value="{!as.CPQ_Net_Price__c}"/>
+      <apex:column value="{!as.CPQ_Contract_Start_Date__c}"/>
+      <apex:column value="{!as.CPQ_Contract_End_Date__c}"/>
+  </apex:pageblockTable>
+  </apex:pageBlock>
+ <!-- <apex:pageBlock > -->
+  <apex:pageblockSection title="Related Contacts" columns="1">
+                                <apex:pageBlockTable value="{!fullContactRoleList}" var="f">
+                                  <apex:column >
+                                    <apex:facet name="header">Contact Name</apex:facet> 
+                                      <apex:outputLink value="/{!f.Contact_Role__r.Contact__r.id}" >{!f.Contact_Role__r.Contact__r.Name}</apex:outputLink>
+                                    </apex:column>
+                                     <apex:column >
+                                      <apex:facet name="header">Contact Mailing Address</apex:facet> 
+                                      <apex:outputField value="{!f.Contact_Role__r.Contact__r.MailingStreet}"/><br></br>
+                                      
+                                      <apex:outputField value="{!f.Contact_Role__r.Contact__r.MailingCity}"/>
+                                      <apex:outputText value="," rendered="{!f.Contact_Role__r.Contact__r.MailingCity!='' && f.Contact_Role__r.Contact__r.MailingState !=''}"/>
+                                      <apex:outputField value="{!f.Contact_Role__r.Contact__r.MailingState}"/>
+                                      <apex:outputText value=" "/>
+                                      <apex:outputField value="{!f.Contact_Role__r.Contact__r.MailingPostalCode}"/><br></br>
+                                      <apex:outputfield value="{!f.Contact_Role__r.Contact__r.MailingCountry}"/>
+                                    </apex:column>
+                                     <apex:column >
+                      <apex:facet name="header">Contact PS Person Id</apex:facet> 
+                      <apex:outputField value="{!f.Contact_Role__r.Contact__r.PS_Person_Id__c}"/>
+                    </apex:column>
+                    <apex:column >
+                      <apex:facet name="header">Email</apex:facet> 
+                      <apex:outputField value="{!f.Contact_Role__r.Contact__r.Email}"/>
+                    </apex:column>
+                    <apex:column >
+                      <apex:facet name="header">Contact Role</apex:facet> 
+                      <apex:outputField value="{!f.Contact_Role__r.Role__c}"/>
+                    </apex:column>
+                    <apex:column >
+                      <apex:facet name="header">Mobile Phone</apex:facet> 
+                      <apex:outputField value="{!f.Contact_Role__r.Contact__r.MobilePhone}"/>
+                    </apex:column>
+                    <apex:column >
+                      <apex:facet name="header">Phone</apex:facet> 
+                      <apex:outputField value="{!f.Contact_Role__r.Contact__r.Phone}"/>
+                    </apex:column>
+                    <apex:column >
+                      <apex:facet name="header">Active Portal User</apex:facet> 
+                      <apex:outputField value="{!f.Contact_Role__r.Contact__r.NOV_isActive__c}"/>
+                    </apex:column>
+                    
+                </apex:pageBlockTable>
+                </apex:pageblockSection>
+               <!-- </apex:pageBlock> -->
+</apex:pageBlock>
+</apex:form>
+
+</apex:page>

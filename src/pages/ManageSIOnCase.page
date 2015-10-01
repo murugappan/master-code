@@ -1,0 +1,248 @@
+<apex:page title="Manage Support Incidents" standardController="Case" extensions="ManageSIOnCaseController">
+	<head>
+		<link rel="stylesheet" href="{!URLFOR($Resource.Jtreeview,'Jquerytreeview/jquery.treeview.css')}"/>
+	    <script src="{!URLFOR($Resource.Jtreeview,'Jquerytreeview/jquery.js')}" type="text/javascript"></script>
+	    <script src="{!URLFOR($Resource.Jtreeview,'Jquerytreeview/jquery.cookie.js')}" type="text/javascript"></script>
+	    <script src="{!URLFOR($Resource.Jtreeview,'Jquerytreeview/jquery.treeview.js')}" type="text/javascript"></script>
+	    <script type="text/javascript">
+	        $(function() {
+	            $("#tree").treeview({
+	                collapsed: false,
+	                animated: "medium",
+	                control:"#sidetreecontrol",
+	                persist: "location"
+	            });
+	        })
+		</script>
+		<style>
+			input.hint 
+			{
+			    color: grey;
+			}
+		</style>
+		<apex:includeScript value="/support/console/25.0/integration.js"/>
+		<script type="text/javascript">
+			function reloadPrimaryTab()
+			{
+				//First find the ID of the current primary tab to close it
+            	sforce.console.getEnclosingPrimaryTabId(closeSubtab);
+			}
+			function insertParam(key, value)
+			{
+			    key = escape(key); value = escape(value);
+			
+			    var kvp = document.location.search.substr(1).split('&');
+			
+			    var i=kvp.length; var x; while(i--) 
+			    {
+			        x = kvp[i].split('=');
+			
+			        if (x[0]==key)
+			        {
+			                x[1] = value;
+			                kvp[i] = x.join('=');
+			                break;
+			        }
+			    }
+			
+			    if(i<0) {kvp[kvp.length] = [key,value].join('=');}
+			
+			    //this will reload the page, it's likely better to store this until finished
+			    document.location.search = kvp.join('&'); 
+			}
+	        function testGetFocusedPrimaryTabId() 
+	        {
+	        	if ({!reloadNeeded})
+	        	{
+	        		insertParam('reload', 'false');
+	            	sforce.console.getFocusedPrimaryTabId(showTabId);
+	            }
+	        }
+	        var showTabId = function showTabId(result) 
+	        {
+	        	//Display the tab ID
+	        	//alert('Tab ID: ' + result.id);
+	        	sforce.console.refreshPrimaryTabById(result.id, true, refreshSuccess);
+	        	
+	        	var refreshSuccess = function refreshSuccess(result) 
+	        	{
+		            //Report whether refreshing the primary tab was successful
+		            if (result.success == true) 
+		            {
+		                //alert('Primary tab refreshed successfully');
+		            } 
+		            else 
+		            {
+		                //alert('Primary did not refresh');
+		            }
+		        };
+	        };
+	        window.onload = testGetFocusedPrimaryTabId();;       
+		</script>
+	</head>
+	<body>
+	<!--<body onload="testGetFocusedPrimaryTabId();">-->
+		<apex:sectionHeader title="Manage Support Incidents For Case:" subtitle="{!caseObj.CaseNumber}" />
+		<apex:form rendered="{!NOT(isPageError)}">
+			<apex:pageBlock >
+				<apex:pageBlockButtons location="top">
+					<apex:commandButton action="{!doCreateSI}" value="Create Support Incident" />
+					<apex:commandButton action="{!doSearchSI}" value="Search Support Incidents" />
+					<apex:commandButton action="{!cancel}" value="Cancel" />
+				</apex:pageBlockButtons>
+				<apex:pageBlockSection title="Case Information" collapsible="false">
+					<apex:outputField label="Case Status" value="{!caseObj.Status}" />
+				</apex:pageBlockSection>
+				<!-- Tree -->
+				<div class="treeheader" style="height:0px;">&nbsp;</div>
+				<div id="sidetreecontrol"><a href="?#"><font style="color:blue;">Collapse All</font></a> | <a href="?#"><font style="color:blue;">Expand All</font></a></div>
+				<div style="position: relative;">
+					<apex:outputpanel >
+				        <apex:actionstatus id="status">
+				            <apex:facet name="start">
+				                <div class="waitingSearchDiv" id="el_loading" style="background-color: #fbfbfb; height: 100%;opacity:0.65;width:100%;"> 
+				                    <div class="waitingHolder" style="top: 74.2px; width: 91px;">
+				                        <img class="waitingImage" src="/img/loading.gif" title="Please Wait..." />
+				                        <span class="waitingDescription">Loading...</span>
+				                    </div>
+				                </div>
+				            </apex:facet>
+				        </apex:actionstatus>
+				    </apex:outputpanel>
+					<ul id="tree">
+				    	<apex:repeat value="{!siList}" var="si" id="supportIncidentList">
+							<li>
+					        	<table>
+					        		<thead>
+					        			<tr>
+					        				<th></th>
+					        				<th>Name</th>
+					        				<th>Status</th>
+					        				<th>Summary</th>
+					        			</tr>
+					        		</thead>
+					        		<tbody>
+					        			<tr>
+						        			<td style="padding:0px 0px 0px 5px;">
+						        				<apex:inputCheckbox value="{!si.isAttached}" >
+						        					<apex:actionSupport event="onchange" action="{!si.modifyAttachment}" 
+						        						rerender="supportIncidentList" status="status" />
+						        				</apex:inputCheckbox>
+						        			</td>
+						        			<td style="padding-right:10px;">
+						        				<strong>
+						        					<apex:outputLink style="color:blue;" value="/{!si.supportIncident.Id}?isdtp=vw">
+						        						{!si.supportIncident.Name}
+						        					</apex:outputLink>
+						        				</strong>
+						        			</td>
+						        			<td style="padding-right:10px;">
+						        				<apex:outputText value="{!si.supportIncident.Status__c}" />
+						        			</td>
+						        			<td>
+						        				<apex:outputText value="{!si.supportIncident.Summary__c}" />
+						        			</td>
+						        		</tr>
+					        		</tbody>
+					        	</table>
+					             <ul>
+					             	<apex:outputPanel layout="block" rendered="{!si.hasBugs && si.isAttached}">
+						             	<li><span class="formattextcon"><apex:outputtext style="color:green;" escape="false" value="Bugs"/></span>
+						             		<ul>
+								                 <apex:repeat value="{!si.children}" var="bug">
+								                 	<apex:outputPanel layout="block" rendered="{!bug.isBug}">
+									                    <li>
+									                    	<table>
+									                    		<thead>
+									                    			<tr>
+									                    				<th></th>
+									                    				<th>Fix Version</th>
+									                    				<th>Status</th>
+									                    				<th>Timeframe</th>
+									                    				<th>Not Fixed Reason</th>
+									                    			</tr>
+									                    		</thead>
+									                    		<tbody>
+										                    		<tr>
+										                    			<td>
+										                    				<apex:inputCheckbox value="{!bug.isFollowed}" disabled="{!NOT(si.isAttached)}">
+										                    					<apex:actionSupport event="onchange" action="{!bug.modifyFollow}" rerender="supportIncidentList" status="status" />
+										                    				</apex:inputCheckbox>
+										                    			</td>
+										                    			<td style="padding-right:10px;">
+										                    				<span class="formattextcon">
+													                    		<apex:outputtext style="color:green;" escape="false" value="{!bug.bug.Name}" />
+													                    	</span> 
+										                    			</td>
+										                    			<td style="padding-right:10px;">
+										                    				<apex:outputText value="{!bug.bug.Status__c}" />
+										                    			</td>
+										                    			<td style="padding-right:10px;">
+										                    				<apex:outputText value="{!bug.bug.Timeframe__c}" />
+										                    			</td>
+										                    			<td>
+										                    				<apex:outputText value="{!bug.bug.Not_Fixed_Reason__c}" />
+										                    			</td>
+										                    		</tr>
+										                    	</tbody>
+									                    	</table>
+									                    </li>
+									             	</apex:outputPanel>
+								                 </apex:repeat>
+								     		</ul>
+								     	</li> 
+							     	</apex:outputPanel>
+					             </ul>
+					             <ul>
+					             	<apex:outputPanel layout="block" rendered="{!si.hasPatches && si.isAttached}">
+						             	<li><span class="formattextcon"><apex:outputtext style="color:green;" escape="false" value="Patch Request"/></span>
+						             		<ul>
+								                 <apex:repeat value="{!si.children}" var="patch">
+								                 	<apex:outputPanel layout="block" rendered="{!patch.isPatch}">
+									                    <li>
+									                    	<table>
+									                    		<thead>
+									                    			<tr>
+									                    				<th></th>
+									                    				<th>Version</th>
+									                    				<th>Status</th>
+									                    				<th>Codeline Patch</th>
+									                    			</tr>
+									                    		</thead>
+									                    		<tbody>
+									                    			<tr>
+										                    			<td>
+										                    				<apex:inputCheckbox value="{!patch.isFollowed}" disabled="{!NOT(si.isAttached)}">
+										                    					<apex:actionSupport event="onchange" action="{!patch.modifyFollow}" rerender="supportIncidentList" status="status" />
+										                    				</apex:inputCheckbox>
+										                    			</td>
+										                    			<td style="padding-right:10px;">
+										                    				<span class="formattextcon">
+													                    		<apex:outputtext style="color:green;" escape="false" value="{!patch.patch.Name}" />
+													                    	</span>  
+										                    			</td>
+										                    			<td style="padding-right:10px;">
+										                    				<apex:outputText value="{!patch.patch.Status__c}" />
+										                    			</td>
+										                    			<td>
+										                    				<apex:outputText value="{!patch.patch.Codeline_Patch__c}" />
+										                    			</td>
+										                    		</tr>
+									                    		</tbody>
+									                    	</table>
+									                    </li>
+									             	</apex:outputPanel>
+								                 </apex:repeat>
+								     		</ul>
+								     	</li> 
+								     </apex:outputPanel>
+					             </ul>
+					        </li>
+					    </apex:repeat>
+					</ul>
+				</div>
+				<!-- End of Tree -->
+			</apex:pageBlock>
+		</apex:form>
+	</body>
+</apex:page>

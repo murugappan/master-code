@@ -1,0 +1,202 @@
+<apex:page controller="publickbsearch" id="ArticleSearch" standardStylesheets="false" showHeader="false" contentType="text/html" >
+     <apex:composition template="btbb_publictemplate">
+         <apex:define name="topbar"><c:btbb_unauthglobalsearch /></apex:define>
+        <apex:define name="nav">
+            <c:btbb_unauth_nav />
+        </apex:define>
+        <apex:define name="content">
+            <h2>Knowledge Base Search</h2>
+            <!-- Loader Icon When KBSearch is Invoked -->
+                <apex:actionStatus startText="" stopText="" id="counterStatus" startStyle="position:absolute;padding: 400px 565px 600px 400px;width:auto;color: #FFF;height:auto;background: url('{!URLFOR($Resource.kbloader)}') no-repeat 60% 25%;opacity:1.0;z-index:5">
+                    <apex:facet name="start"/>
+                </apex:actionStatus>
+            <apex:form >
+                <apex:outputPanel style="float:right;color:#4d4d4f;font-size:11px;line-height:10px;" rendered="true">
+                    <apex:commandLink action="{!exportToExcel}" type="image/png" title="Export to Excel" id="excel">
+                        <apex:image id="excelImage" value="{!URLFOR($Resource.DataTables, 'media/images/xls_hover.png')}"/>
+                    </apex:commandLink>
+                    <apex:commandLink action="{!exportToPDF}" target="_blank" type="image/png" title="Export to PDF" id="pdf">
+                        <apex:image id="PDFImage" value="{!URLFOR($Resource.DataTables, 'media/images/pdf_hover.png')}"/>                        
+                    </apex:commandLink>
+                    <apex:commandLink action="{!printKBSearch}" type="image/png" target="_blank" title="Print KB Search" id="print">
+                        <apex:image id="PrintImage" value="{!URLFOR($Resource.BtBbStyles, '/includes/theme2011/img/icons/print.png')}"/>
+                    </apex:commandLink>                        
+                </apex:outputPanel>
+                <div id="btbbLeftCol">
+                    <h4>Keyword Search</h4>
+                    <apex:inputText value="{!publicSearchText}" id="searchText" size="23" onkeypress="if (event.keyCode == 13) {refreshSearchResult();return false;} " />
+                    <div id="errorBlock">
+                        <apex:outputPanel id="errorPanel">
+                            <!--<font color="red">
+                                <apex:pageMessage strength="2" title="{!errorTitle}" summary="{!errorMessage}" severity="{!errorSeverity}" rendered="{!errorShow}" />
+                            </font>-->
+                        </apex:outputPanel>
+                    </div>
+                    <h4>Filter Your Results</h4>
+                    <apex:pageblock id="ProductSelection">
+                        <apex:actionFunction action="{!refreshSearchResult}" name="refreshSearchResult" rerender="articles, resultsSize" status="counterStatus" />
+                        <apex:actionFunction name="updateReleases" action="{!updateReleases}" rerender="release, build, firstFix, category, subcategory, articles" status="counterStatus">
+                            <apex:param name="product" value="" assignTo="{!selectedProduct}" />
+                        </apex:actionFunction>
+                        <apex:actionFunction name="updateVersionBuild" action="{!updateVersionBuild}" rerender="build, articles" status="counterStatus">
+                            <apex:param name="release" value="" assignTo="{!selectedRelease}" />
+                        </apex:actionFunction>
+                        <apex:actionFunction name="updateServicePack" action="{!updateServicePack}" rerender="articles" status="counterStatus">
+                            <apex:param name="servicePack" value="" assignTo="{!selectedServicePack}" />
+                        </apex:actionFunction>
+                        <apex:actionFunction name="updateFirstFix" action="{!updateFirstFix}" rerender="articles" status="counterStatus">
+                            <apex:param name="firstFix" value="" assignTo="{!selectedFirstFix}" />
+                        </apex:actionFunction>
+                        <apex:actionFunction name="updateSubCategory" action="{!updateSubCategory}" rerender="subcategory, articles" status="counterStatus">
+                            <apex:param name="category" value="" assignTo="{!selectedCategory}" />
+                        </apex:actionFunction>
+                        <apex:actionFunction name="updateSubCategoryFinal" action="{!updateSubCategoryFinal}" rerender="articles" status="counterStatus">
+                            <apex:param name="subCategory" value="" assignTo="{!selectedSubCategory}" />
+                        </apex:actionFunction>
+                        <apex:actionFunction name="updateTypes" action="{!updateTypes}" status="counterStatus" rerender="articles">
+                            <apex:param name="types" value="" assignTo="{!selectedTypes}" />
+                        </apex:actionFunction>
+                        <div>
+                            <h4 class="filterCollapsed">Product</h4>
+                            <select name="productList" onchange="updateReleases(this.value)">
+                                <knowledge:categoryList categoryVar="category" categoryGroup="Version" rootCategory="All" level="1">
+                                    <apex:outputPanel rendered="{!selectedProduct == category.name && NOT(contains(category.name,'All')) && NOT(contains(category.name,'ANGEL')) && NOT(contains(category.name,'Xythos')) && NOT(contains(category.name,'CE_Vista_BU')) && NOT(contains(category.name,'xpLor'))}" >
+                                        <option value="{!category.name}" selected="selected">{!category.label}</option>
+                                    </apex:outputPanel>
+                                    <apex:outputPanel rendered="{!selectedProduct != category.name && NOT(contains(category.name,'All')) && NOT(contains(category.name,'ANGEL')) && NOT(contains(category.name,'Xythos')) && NOT(contains(category.name,'CE_Vista_BU')) && NOT(contains(category.name,'xpLor'))}" >
+                                        <option value="{!category.name}">{!category.label}</option>
+                                    </apex:outputPanel>
+                                </knowledge:categoryList>
+                            </select>
+                        </div>
+                        <apex:outputPanel id="release">
+                           <apex:outputpanel rendered="{!NOT(contains(selectedProduct,'Collaborate'))}">
+                            <h4 class="filterCollapsed">{!if(contains(selectedProduct,'Collaborate'),'Sub Product','Release')}</h4>
+                            <select name="buildList" onchange="updateVersionBuild(this.value)">
+                                <option value="{!selectedProduct}">All Releases</option>
+                                <knowledge:categoryList categoryVar="category" categoryGroup="Version" rootCategory="{!SUBSTITUTE(selectedProduct,'_BU','')}" level="1" rendered="{!selectedProduct != 'All_Solutions'}">
+                                    <apex:outputPanel rendered="{!selectedRelease == category.name}">
+                                        <option value="{!category.name}" selected="selected">{!category.label}</option>
+                                    </apex:outputPanel>
+                                    <apex:outputPanel rendered="{!selectedRelease != category.name}">
+                                        <option value="{!category.name}">{!category.label}</option>
+                                    </apex:outputPanel>
+                                </knowledge:categoryList>
+                            </select>
+                           </apex:outputpanel>
+                        </apex:outputPanel>
+                        <!-- <apex:outputPanel id="build">
+                        <apex:outputpanel rendered="{!NOT(contains(selectedProduct,'Collaborate'))}">
+                            <h4 class="filterCollapsed">Service Pack(s)</h4>
+                            <select name="versionList" onchange="updateServicePack(this.value)">
+                                <option value="{!selectedRelease}">All Service Packs</option>
+                                <knowledge:categoryList categoryVar="category" categoryGroup="Version" rootCategory="{!selectedRelease}" level="1">
+                                    <apex:outputPanel rendered="{!selectedServicePack == category.name}">
+                                        <option value="{!category.name}" selected="selected">{!category.label}</option>
+                                    </apex:outputPanel>
+                                    <apex:outputPanel rendered="{!selectedServicePack != category.name}">
+                                        <option value="{!category.name}">{!category.label}</option>
+                                    </apex:outputPanel>
+                                </knowledge:categoryList>
+                            </select>
+                           </apex:outputpanel>  
+                        </apex:outputPanel> -->
+                         <apex:outputPanel id="firstFix" rendered="{!isKnownIssue && selectedproduct != 'Collaborate'}">
+                            <h4 class="filterCollapsed">Planned First Fix</h4>
+                            <select name="versionList" onchange="updateFirstFix(this.value)">
+                                <option value="">All Service Packs</option>
+                                <knowledge:categoryList categoryVar="category" categoryGroup="Planned_First_Fix_Release" rootCategory="{!selectedProduct}" level="1">
+                                    <option value="{!category.name}">{!category.label}</option>
+                                </knowledge:categoryList>
+                            </select>
+                        </apex:outputPanel>
+                        <apex:outputPanel id="category">   
+                            <apex:pageblock id="categories">
+                                <h4 class="filterCollapsed">Article Category</h4>
+                                <select name="categoryList" multiselect="false" size="1" onchange="updateSubCategory(this.value)">
+                                    <option value="All">All Categories</option>
+                                    <knowledge:categoryList categoryVar="category" categoryGroup="Product" rootCategory="{!SUBSTITUTE(selectedProduct,'_BU','')}" level="1" rendered="{!selectedProduct != 'All_Solutions'}">
+                                        <option value="{!category.name}">{!category.label}</option>
+                                    </knowledge:categoryList>
+                                </select>
+                             </apex:pageblock>
+                        </apex:outputPanel>
+                        <apex:outputPanel id="subcategory">    
+                            <apex:pageblock id="subCategories">                             
+                                <h4 class="filterCollapsed">Article Sub Category</h4>
+                                <select name="subcategoryList" onchange="updateSubCategoryFinal(this.value)">
+                                    <option value="{!selectedCategory}">All Sub Categories</option>
+                                    <knowledge:categoryList categoryVar="category" categoryGroup="Product" rootCategory="{!selectedCategory}" level="1" rendered="{!selectedProduct != 'All_Solutions'}">
+                                        <option value="{!category.name}">{!category.label}</option>
+                                    </knowledge:categoryList>
+                                </select>
+                             </apex:pageblock>
+                        </apex:outputPanel> 
+                        <h4 class="filterCollapsed">Article Types</h4>
+                        <div class="btbbScrollCheckBoxes" id="articleType">
+                            <apex:repeat value="{!articleTypeList}" var="a">
+                                <apex:inputCheckbox value="{!a.selected}">
+                                    <apex:actionSupport event="onclick" action="{!updateArticleType}" rerender="articles, firstFix, btbbLeftCol, ProductSelection" status="counterStatus" />
+                                </apex:inputCheckbox>
+                                <apex:outputText value="{!a.name}" style="padding-left:3px;" /><br />
+                            </apex:repeat>
+                        </div>
+                        <br/>
+                    </apex:pageblock>
+                </div>
+                <div id="btbbRightCol">
+                    <apex:pageblock id="articles">                    
+                        <script>$(document).ready(function(){$('#paging_container').pajinate();});</script>                 
+                        <div id="paging_container">
+                        <!--    <span style="float:left;"><apex:outputText value="Filter: {!selectedFilter} " id="resultsSize" /></span>-->
+                            <!--<span style="float:left;">Your search returned<apex:outputText value=" {!maxSize} " id="resultsSize" />results.</span>-->
+                            <div class="page_navigation" style="padding-bottom:5px;"></div>
+                            <div class="cleaner divider"> </div>
+                            <div class="results">
+                                <apex:outputPanel styleClass="content" layout="block" id="articleList">
+                                    <apex:outputPanel layout="block" rendered="{!searchText != null || selectedProduct != null || selectedTypes != null}">
+                                        <apex:commandLink action="{!previous}" value="Previous" rendered="{!prevRequired}" reRender="articleList" style="float:left;" />
+                                        <apex:commandLink action="{!next}" value="Next" rendered="{!nextRequired}" reRender="articleList" style="float:right;" /> 
+                                        </apex:outputPanel>
+                                    <knowledge:articleList articleVar="article" keyword="{!searchText}" pageNumber="{!currentPage}" categories="{!selectedFilter}" 
+                                        articleTypes="{!selectedArticleTypes}" sortBy="lastUpdated" pageSize="10" rendered="{!selectedArticleTypes != null}" >
+                                        <div style="padding:10px 0px; border-bottom:1px dashed grey;">
+                                            <apex:outputLink value="publickbarticleview?id={!article.Id}" target="_blank"><b>{!article.title}</b></apex:outputLink>
+                                            <div class="btbbArticleType">
+                                                <b>{!article.articleTypeLabel}</b>  &mdash; <!--&mdash;
+                                                <span class="btbbArticleSummary"><apex:outputText value="{!article.lastPublishedDate}" /></span>-->
+                                            <span class="btbbArticleSummary"><apex:outputText value="{0,date,MMM dd, yyyy}"><apex:param value="{!article.lastPublishedDate}" /></apex:outputText></span> 
+                                            </div>
+                                            <div class="btbbArticleDetails"><b>Article #: {!article.ArticleNumber}</b></div>
+                                            <!-- <div class="btbbArticleDetails1"><b>Article Published Date  #: {!article.LastPublishedDate }</b></div> -->
+                                            <div class="btbbArticleSummary">&mdash; <apex:outputText value="{!article.abstract}" escape="false"/></div>
+                                        </div>
+                                    </knowledge:articleList>
+                                    <knowledge:articleList articleVar="article" keyword="{!searchText}" pageNumber="{!currentPage}" categories="{!selectedFilter}" 
+                                        sortBy="lastUpdated" pageSize="10" rendered="{!selectedArticleTypes == null}"> 
+                                            <div style="padding:10px 0px; border-bottom:1px dashed grey;">
+                                            <apex:outputLink value="publickbarticleview?id={!article.Id}" target="_blank"><b>{!article.title}</b></apex:outputLink>
+                                            <div class="btbbArticleType">
+                                                <b>{!article.articleTypeLabel}</b>  &mdash;
+                                                <span class="btbbArticleSummary"><apex:outputText value="{0,date,MMM dd, yyyy}"><apex:param value="{!article.lastPublishedDate}" /></apex:outputText></span> 
+                                            
+                                            </div>
+                                            <div class="btbbArticleDetails"><b>Article #: {!article.ArticleNumber}</b></div>
+                                            <div class="btbbArticleSummary">&mdash; <apex:outputText value="{!article.abstract}" escape="false"/></div>
+                                        </div>
+                                    </knowledge:articleList> 
+                                    <apex:outputPanel layout="block" rendered="{!searchText != null || selectedProduct != null || selectedTypes != null}">
+                                        <apex:commandLink action="{!previous}" value="Previous" rendered="{!prevRequired}" reRender="articleList" style="float:left;" />
+                                         <apex:commandLink action="{!next}" value="Next" rendered="{!nextRequired}" reRender="articleList" style="float:right;" />  
+                                   </apex:outputPanel>
+                                </apex:outputPanel>
+                            </div><!--*/.results -->
+                            <div class="cleaner divider"> </div>
+                            <div class="page_navigation" style="padding-top:8px;"></div>
+                        </div><!--*/#paging_container -->
+                    </apex:pageblock>
+                </div>
+            </apex:form>
+        </apex:define>
+    </apex:composition>
+</apex:page>

@@ -1,0 +1,14 @@
+<apex:page standardController="Survey__c" cache="false" sidebar="false" showheader="false">
+
+    <apex:composition template="btbb_template">
+        <apex:define name="nav"><c:btbb_auth_nav /></apex:define>
+        <apex:define name="topbar"><c:btbb_globalsearch /></apex:define>
+        <apex:define name="content">
+
+                        <H2>{!Survey__c.thankYouText__c}</H2><br /><br />
+                        <!-- <span style="font-weight:bold;">Please click <a href="{!Survey__c.thankYouLink__c}" >here</a> to continue.</span> -->
+                        <span style="font-weight:bold;">Please click <a href="/apex/btbb_casesearch" >here</a> to continue.</span> 
+         </apex:define>
+    </apex:composition>
+        
+</apex:page>

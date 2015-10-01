@@ -1,0 +1,15 @@
+<apex:page standardController="Survey__c" standardStylesheets="false" showHeader="false" sidebar="false" contentType="text/html" cache="false">
+
+    <apex:composition template="btbb_publictemplate">
+    <apex:define name="js"/>
+        <apex:define name="topbar"><c:btbb_unauthglobalsearch /></apex:define>
+            <apex:define name="nav"><c:btbb_unauth_nav /></apex:define> 
+        <apex:define name="content">
+
+                        <H2>{!Survey__c.thankYouText__c}</H2><br /><br />
+                        <!-- <span style="font-weight:bold;">Please click <a href="{!Survey__c.thankYouLink__c}" >here</a> to continue.</span> -->
+                        <span style="font-weight:bold;">Please click <a href="/btbb_publichome" >here</a> to continue.</span> 
+         </apex:define>
+    </apex:composition>
+        
+</apex:page>

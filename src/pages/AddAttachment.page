@@ -1,0 +1,79 @@
+<apex:page standardController="Case_Attachment__c" recordSetVar="Case_Attachment__r" extensions="AddAttachmentController" showHeader="false" sidebar="false">
+<head>
+   <script type="text/javascript">
+   
+   function closeEditorWarning(){
+       if(document.getElementById(fname).value != null){
+           return 'You have not uploaded the file yet, please click upload to complete the transaction or cancel to terminate the transaction.'
+       }
+       else{
+           return undefined;
+       }
+   }
+
+    window.onbeforeunload = closeEditorWarning;
+   
+   function display(x){
+            var y = document.getElementById(x).value;
+             filename(y);
+        }
+        
+        function delcase(){
+            deletecase();
+        }
+        
+        function CloseAndRefresh(){
+            opener.location.reload();
+            window.close();
+        }
+   </script>
+    </head>
+    <body>
+    <apex:form >
+        <apex:actionFunction action="{!updatefileinfo}" name="filename" immediate="true" reRender="fileinfo,messagepanel"><apex:param name="flname" value="" /></apex:actionFunction>
+        <apex:actionFunction action="{!delCaseAttach}" name="deletecase" oncomplete="window.opener.refrshpage()" reRender="fileinfo,messagepanel">
+        </apex:actionFunction>
+   </apex:form> 
+
+    <apex:outputPanel id="attachsec">
+     <form action="https://s3.amazonaws.com/Case-Attachments" method="post" enctype="multipart/form-data">
+           <apex:outputPanel id="fileinfo">
+                <apex:outputPanel rendered="{!showAttSec}">
+                <input type="hidden" name="key" value="{!record.File_Name_w_ext__c}" />
+                <input type="hidden" name="AWSAccessKeyId" value="{!key}" />
+                <input type="hidden" name="policy" value="{!policy}" />
+                <input type="hidden"  name="signature" value="{!signedPolicy}" />
+                <input type="hidden"  name="acl" value="{!record.Access__c}" /> 
+                <input type="hidden"  name="Content-Type" value="{!record.Content_Type__c}" /> 
+                <input type="hidden" name="success_action_redirect" value="{!instanceurl}/apex/AddAttachment?recordId={!supportIncidentObj.Id}&success=true&counterstring={!counterstring}&fname={!fnamenormal}" />
+                </apex:outputPanel>
+            </apex:outputPanel>
+    
+    <apex:pageBlock mode="edit" tabStyle="Contact">
+                     <apex:pageBlockSection columns="2" title="Upload File">
+                     <apex:pageBlockSectionItem >
+                        <apex:outputLabel value="Select a File to Upload"/>                        
+                        <input id="fname" type="file" size="50" name="file" onchange="display(this.id)" />
+                    </apex:pageBlockSectionItem>
+                    </apex:pageBlockSection>
+                    <apex:pageBlockSection id="messagepanel" columns="1">
+                    <apex:pageBlockSectionItem >
+                         <apex:outputLabel value="Select Action" style="color:#f8f8f8;"/>
+                         <input class="btn" type="submit" style="padding:7px;display:{!IF(ShowAttach == true, '', 'none;')}" value="Start Upload"/>
+                         <input class="btn" style="padding:7px;display:{!IF(ShowDelete == true, '', 'none;')}" type="reset" name="reset" value="Cancel" onclick="delcase()" />
+                         <input class="btn" style="padding:7px;display:{!IF(ShowDone == true, '', 'none;')}" type="button" value="Done" onclick="CloseAndRefresh()" />
+                    </apex:pageBlockSectionItem>
+                    <apex:pageBlockSectionItem rendered="{!showAttach}">
+                        <apex:outputLabel value="File Ready." />
+                        <apex:outputText value="Click 'Upload' to complete the transaction or 'Cancel' to cancel the transaction and select a different file." />                      
+                    </apex:pageBlockSectionItem>
+                    <apex:pageBlockSectionItem rendered="{!showSuccess}">
+                        <apex:outputLabel value="SUCCESS!" />
+                        <apex:outputText >Uploaded <b>{!SuccessFileName}</b> successfully. Click 'Done' if you are finished or select another file for upload.</apex:outputText>                      
+                    </apex:pageBlockSectionItem>
+                    </apex:pageBlockSection>
+                 </apex:pageBlock>
+        </form><br/> 
+    </apex:outputPanel>
+    </body>                  
+</apex:page>

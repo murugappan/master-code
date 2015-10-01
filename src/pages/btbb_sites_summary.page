@@ -1,0 +1,224 @@
+<apex:page standardcontroller="Account" extensions="btbb_Sites_Summary_Controller" id="sitesSummary" standardStylesheets="false" showHeader="false" sidebar="false" contentType="text/html" cache="false"  >
+  <script>
+function initialise()
+{
+
+  var $listItem = $("#primary-nav > li, #global-nav-inner > ul > li");
+    var $flyout = $("#primary-nav > li > ul, #global-nav-inner > ul > li > ul");
+ 
+    $listItem.has("ul").mouseenter(
+        function () {
+            clearTimeout(mytimer);
+            $flyout.hide().prev("a").removeClass("hover").parent("li").next("li").removeClass("hover");
+            $(this).next("li").addClass("hover").end().children("a").addClass("hover").append("<span></span>").next("ul").show();
+        }
+    );
+    var mytimer = false;
+    $listItem.has("ul").mouseleave(
+        function () {
+            clearTimeout(mytimer);
+            var self = $(this).children("ul");
+            mytimer = setTimeout(function () {
+                self.hide().prev("a").removeClass("hover").children("span").remove().end().parent("li").next("li").removeClass("hover");
+            },
+            300
+            );
+        }
+    ); 
+   liveagent.showWhenOnline('573S0000000CaSA', document.getElementById('liveagent_button_online_573S0000000CaSy'));
+   liveagent.showWhenOffline('573S0000000CaSA', document.getElementById('liveagent_button_offline_573S0000000CaSy')); 
+    
+}
+ </script>
+ 
+<script>
+    function myFunction()
+    {
+
+var sOpenUrl="/adminchatoffline";
+var screenW=window.screen.availWidth;
+var screenH=window.screen.availHeight;
+var winH = 250;
+var winW = 630;
+var winTop = (screenH/2)-(winH/2);
+var winLeft = (screenW/2)-(winW/2); 
+window.open(sOpenUrl,"HandOff","resizable=no,status=no,menubar=no,location=no,top=" +winTop + ",left=" + winLeft + ",width=" + winW + ",height=" + winH);
+    
+    }
+</script>
+ <apex:outputpanel layout="block" id="outerpanel">
+ <style>
+   .lgBoxContent {
+width: 800px;
+background: url(../../images/btbb_box_bg.gif) repeat-x top left;
+min-height: 150px;
+padding: 10px;
+line-height: normal;
+}
+</style> 
+  <apex:composition template="btbb_template"> 
+        <apex:define name="js">
+       
+          <link rel="stylesheet" href="{!URLFOR($Resource.ModalBox, 'js/jquery.fancybox-1.3.4.css')}" media="screen" />
+           <script type="text/javascript" charset="utf-8" src="{!URLFOR($Resource.ModalBox, 'js/jquery.mousewheel-3.0.4.pack.js')}" />
+           <script type="text/javascript" charset="utf-8" src="{!URLFOR($Resource.ModalBox, 'js/jquery.fancybox-1.3.4.pack.js')}"/> 
+          <script>
+        $(document).ready(function() { 
+            $("#anncment").fancybox({
+                'overlayOpacity'    : '.8',
+                'transitionIn'      : 'elastic',
+                'transitionOut'     : 'elastic',
+                'autoDimensions'    : true,
+                'overlayColor'      : '#000000',
+                'href'              : '#announcement',
+                'type'              : 'inline'
+                });
+             })   ;
+            function invokebox()
+            {
+                $.fancybox({
+                'overlayOpacity'    : '.8',
+                'transitionIn'      : 'elastic',
+                'transitionOut'     : 'elastic',
+                'autoDimensions'    : true,
+                'overlayColor'      : '#000000',
+                'href'              : '#announcement',
+                'type'              : 'inline'
+                });
+            } 
+           function checkannouncement()
+           { 
+            if(document.getElementById('dns').checked==true)
+            {
+                ancmntclose();
+                $.fancybox.close();
+            }
+            else
+            {
+                $.fancybox.close();
+            }
+           }
+         
+          </script>
+          
+       </apex:define>       
+       <apex:define name="topbar"><c:btbb_globalsearch /></apex:define>
+            <!-- <apex:define name="nav"><apex:outputPanel id="theID"><c:btbb_auth_nav /></apex:outputPanel></apex:define> -->
+            <apex:define name="nav" >
+              <c:btbb_auth_nav id="authnavid" />
+            </apex:define>
+                <apex:define name="content">                
+                 <apex:form >
+                 <div id="content">
+                  <!--<div class="lgBoxContainer"> -->
+                  <div class="lgBoxContent">
+                  <apex:pageBlock title="Sites Summary" id="thePageBlock" >
+                    
+                    <apex:pageBlockSection id="corefields" columns="2"
+                        showHeader="false">
+
+                        <apex:pageBlockSectionItem >
+                            <apex:outputLabel for="account" value="Account : " style="font-weight:bold;" />
+                        </apex:pageBlockSectionItem>
+
+                        <apex:pageBlockSectionItem >
+                            <apex:selectList value="{!selectedAccount}" size="1" id="account" styleClass="field">
+                              <apex:selectOptions value="{!accounts}" />
+                              <apex:actionSupport action="{!fetchAccountDetails}" event="onchange" rerender="block,datatableid" focus="environment" status="accountchange" />
+                            </apex:selectList>
+                            <apex:actionStatus startText="" id="accountchange">
+                                <apex:facet name="start">
+                                    <apex:image url="{!URLFOR($Resource.btbbLoader)}" />
+                                </apex:facet>
+                            </apex:actionStatus>
+                        </apex:pageBlockSectionItem>
+                       </apex:pageBlockSection>
+                        
+                 </apex:pageBlock>  
+                
+        <apex:pageblock id="block" >  
+         <table>
+           <tr>
+             <td style="font-weight:bold; padding: 5px;"> Total Purchased User Count : &nbsp;</td>  <td style="padding: 5px;"> {!Total_Purchased_Number_of_Users} </td> 
+             <td style="font-weight:bold; padding: 5px;"> Total Purchased Disk Storage (GB) : &nbsp;</td> <td style="padding: 5px;"> {!Total_Allocated_Disk_Storage}</td>
+           </tr>
+           <tr>
+             <td style="font-weight:bold; padding: 5px;"> Total Actual User Count : &nbsp;</td> <td style="padding: 5px;"> {!Total_Actual_Active_User_Count}</td>
+             <td style="font-weight:bold; padding: 5px;"> Total Actual Disk Storage (GB): &nbsp;</td> <td style="padding: 5px;"> {!Total_Actual_Disk_Usage} </td>
+           </tr>
+         </table>
+         <style type="text/css">
+            .outBorder
+            {
+                border:1px outset black;
+            }
+            
+            .inBorder
+            {
+                border-top:1px solid black;
+                border-left:1px solid black;
+            }    
+        </style>
+        <br />
+        
+                         <table width ="100%">
+                       <!-- <thead> -->
+                            <tr class="nohover">
+                                <th>Name</th>
+                                <th>Site Url</th>
+                                <th>Purchased User Count</th>
+                                <th>Actual User Count</th>
+                                <th>Purchased Disk Storage (GB)</th>
+                                <th>Actual Disk Storage (GB)</th>
+                                <th>Usage Snapshot Date</th>
+                                <th>Term Period End Date</th>
+                                <th>Status</th>
+                            </tr>
+
+                    <!--    </thead>  -->
+
+                      
+    
+                       <!-- <tbody> -->
+                            
+                            <apex:repeat value="{!aList}" var="a">
+                                <tr>
+                                    <td><apex:outputText >{!a.Name}</apex:outputText></td>
+                                    <td><apex:outputText >{!a.Software_URL__c}</apex:outputText></td>
+                                    <td><apex:outputText value="{0, number, integer}">
+                                        <apex:param value="{!a.User_Quantity__c}" />
+                                        </apex:outputText>
+                                    <!-- <apex:outputText >{!a.Quantity}</apex:outputText> -->
+                                    </td> 
+                                    <td><apex:outputText >{!a.Actual_Active_Users_Count__c}</apex:outputText></td>
+                                    <td><apex:outputText >{!a.Data_Storage_Quantity__c}</apex:outputText></td>
+                                    <td><apex:outputText >{!a.Actual_Disk_Usage_GB__c}</apex:outputText></td>
+                                    <td>
+                                    <apex:outputText value="{0,date,MM'/'dd'/'yyyy}">
+                                     <apex:param value="{!a.Usage_Snapshot_Date__c}" /> 
+                                     </apex:outputText>
+                                     <!-- <apex:outputText >{!a.Usage_Snapshot_Date__c}</apex:outputText> -->
+                                     </td>
+                                    <td>
+                                    <apex:outputText value="{0,date,MM'/'dd'/'yyyy}">
+                                     <apex:param value="{!a.CPQ_Contract_End_Date__c}" /> 
+                                     </apex:outputText>
+                                     <!-- <apex:outputText >{!a.CPQ_Contract_End_Date__c}</apex:outputText> -->
+                                     </td>
+                                    <td><apex:outputText >{!a.Status}</apex:outputText></td>
+                                </tr>
+                            </apex:repeat>
+                        
+                    <!--    </tbody> -->
+
+                     </table>
+          </apex:pageBlock> 
+                       
+                     </div>
+                    </div>
+                 <!-- </div> -->
+          </apex:form>    
+        </apex:define>
+    </apex:composition>
+   </apex:outputpanel>
+ </apex:page>

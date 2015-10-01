@@ -1,0 +1,33 @@
+<apex:page standardController="bbl__Enrollment__c" extensions="bbl.BBRedirect" action="{!doRedirect}">
+<style>
+	.errMsg {
+		font-size: 16px;
+		color: #000000; 
+		float: left;
+		width: 95%; 
+	}
+	.errMsg img {
+		display: inline;
+		float: left;
+	}
+	.errMsg .etext {
+		width: 600x;
+		float: left;
+		position: relative;
+		top: 9px;
+		margin-left: 10px;
+	} 
+</style>
+<script>
+	if ({!redir}) {
+		
+		var jsPath = '{!JSINHTMLENCODE(jsPath)}';
+		jsPath = jsPath.replace('&amp;', '&');
+		document.location = jsPath;
+	}
+</script>
+
+<apex:outputPanel rendered="{!NOT(redir)}">
+<div class="errMsg"><div class="etext">{!errMsg}</div></div>
+</apex:outputPanel>
+</apex:page>

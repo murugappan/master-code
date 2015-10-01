@@ -1,0 +1,8 @@
+<apex:page standardController="CameleonCPQ__QuoteRelease__c" extensions="CameleonCPQ.CPQQuoteRelease_VFCtrl" >
+   <apex:form >
+      <apex:actionFunction name="deleteRelease" action="{!deleteRelease}"/> 
+   </apex:form> 
+   <script type="text/javascript">
+      deleteRelease();
+   </script>
+</apex:page>

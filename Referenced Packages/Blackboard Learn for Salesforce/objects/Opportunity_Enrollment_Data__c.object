@@ -1,0 +1,159 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<CustomObject xmlns="http://soap.sforce.com/2006/04/metadata">
+    <actionOverrides>
+        <actionName>Accept</actionName>
+        <type>Default</type>
+    </actionOverrides>
+    <actionOverrides>
+        <actionName>Clone</actionName>
+        <type>Default</type>
+    </actionOverrides>
+    <actionOverrides>
+        <actionName>Delete</actionName>
+        <type>Default</type>
+    </actionOverrides>
+    <actionOverrides>
+        <actionName>Edit</actionName>
+        <type>Default</type>
+    </actionOverrides>
+    <actionOverrides>
+        <actionName>List</actionName>
+        <type>Default</type>
+    </actionOverrides>
+    <actionOverrides>
+        <actionName>New</actionName>
+        <type>Default</type>
+    </actionOverrides>
+    <actionOverrides>
+        <actionName>Tab</actionName>
+        <type>Default</type>
+    </actionOverrides>
+    <actionOverrides>
+        <actionName>View</actionName>
+        <type>Default</type>
+    </actionOverrides>
+    <deploymentStatus>Deployed</deploymentStatus>
+    <deprecated>false</deprecated>
+    <description>Custom Object specifically for the data collection of a Analytic Snapshot</description>
+    <enableActivities>false</enableActivities>
+    <enableFeeds>false</enableFeeds>
+    <enableHistory>false</enableHistory>
+    <enableReports>true</enableReports>
+    <fields>
+        <fullName>Enrollments_Last_90_Days__c</fullName>
+        <deprecated>false</deprecated>
+        <description>Number field refers to the total number of Enrollment records created in the last 90 days.</description>
+        <externalId>false</externalId>
+        <label>Enrollments Last 90 Days</label>
+        <precision>18</precision>
+        <required>false</required>
+        <scale>0</scale>
+        <type>Number</type>
+        <unique>false</unique>
+    </fields>
+    <fields>
+        <fullName>Learner__c</fullName>
+        <deleteConstraint>SetNull</deleteConstraint>
+        <deprecated>false</deprecated>
+        <description>Lookup refers to the Learner.</description>
+        <externalId>false</externalId>
+        <label>Learner</label>
+        <referenceTo>User</referenceTo>
+        <relationshipName>Opportunity_Data</relationshipName>
+        <required>false</required>
+        <type>Lookup</type>
+    </fields>
+    <fields>
+        <fullName>Opps_Amount_Closed_Lost_Last_90_Days__c</fullName>
+        <deprecated>false</deprecated>
+        <description>Currency field refers to the Total Amount Closed Lost created in the last 90 days.</description>
+        <externalId>false</externalId>
+        <label>Opps Amount Closed Lost Last 90 Days</label>
+        <precision>18</precision>
+        <required>false</required>
+        <scale>2</scale>
+        <type>Currency</type>
+    </fields>
+    <fields>
+        <fullName>Opps_Amount_Closed_Won_Last_90_Days__c</fullName>
+        <deprecated>false</deprecated>
+        <description>Currency field refers to the Total Amount Closed Won created in the last 90 days.</description>
+        <externalId>false</externalId>
+        <label>Opps Amount Closed Won Last 90 Days</label>
+        <precision>18</precision>
+        <required>false</required>
+        <scale>2</scale>
+        <type>Currency</type>
+    </fields>
+    <fields>
+        <fullName>Opps_Closed_Lost_Last_90_Days__c</fullName>
+        <deprecated>false</deprecated>
+        <description>Number field refers to the Total Opportunities Closed Lost created in the last 90 days.</description>
+        <externalId>false</externalId>
+        <label>Opps Closed Lost Last 90 Days</label>
+        <precision>18</precision>
+        <required>false</required>
+        <scale>0</scale>
+        <type>Number</type>
+        <unique>false</unique>
+    </fields>
+    <fields>
+        <fullName>Opps_Closed_Won_Last_90_Days__c</fullName>
+        <deprecated>false</deprecated>
+        <description>Number field refers to the Total Opportunities Closed Won created in the last 90 days.</description>
+        <externalId>false</externalId>
+        <label>Opps Closed Won Last 90 Days</label>
+        <precision>18</precision>
+        <required>false</required>
+        <scale>0</scale>
+        <type>Number</type>
+        <unique>false</unique>
+    </fields>
+    <fields>
+        <fullName>Opps_Created_Last_90_Days__c</fullName>
+        <deprecated>false</deprecated>
+        <description>Number refers to the Total Number of Created Opportunities created in the last 90 days.</description>
+        <externalId>false</externalId>
+        <label>Opps Created Last 90 Days</label>
+        <precision>18</precision>
+        <required>false</required>
+        <scale>0</scale>
+        <type>Number</type>
+        <unique>false</unique>
+    </fields>
+    <fields>
+        <fullName>Opps_Status_Open_Last_90_Days__c</fullName>
+        <deprecated>false</deprecated>
+        <description>Number refers to the Total Opportunities Open last 90 days.</description>
+        <externalId>false</externalId>
+        <label>Opps Status: Open Last 90 Days</label>
+        <precision>18</precision>
+        <required>false</required>
+        <scale>0</scale>
+        <type>Number</type>
+        <unique>false</unique>
+    </fields>
+    <fields>
+        <fullName>Snapshot_Date__c</fullName>
+        <deprecated>false</deprecated>
+        <description>Date refers to the Snapshot Date</description>
+        <externalId>false</externalId>
+        <label>Snapshot Date</label>
+        <required>false</required>
+        <type>Date</type>
+    </fields>
+    <label>Opportunity &amp; Enrollment Data</label>
+    <listViews>
+        <fullName>All</fullName>
+        <filterScope>Everything</filterScope>
+        <label>All</label>
+    </listViews>
+    <nameField>
+        <displayFormat>ODE-{000000}</displayFormat>
+        <label>Opportunity and Enrollment Data Number</label>
+        <type>AutoNumber</type>
+    </nameField>
+    <pluralLabel>Opportunity &amp; Enrollment Data</pluralLabel>
+    <searchLayouts/>
+    <sharingModel>Read</sharingModel>
+</CustomObject>

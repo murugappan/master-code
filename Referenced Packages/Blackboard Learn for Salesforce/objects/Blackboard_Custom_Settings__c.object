@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<CustomObject xmlns="http://soap.sforce.com/2006/04/metadata">
+    <customSettingsType>Hierarchy</customSettingsType>
+    <customSettingsVisibility>Public</customSettingsVisibility>
+    <description>These are the Custom Settings for the Blackboard Learn for Sales application.</description>
+    <enableEnhancedLookup>false</enableEnhancedLookup>
+    <enableFeeds>false</enableFeeds>
+    <fields>
+        <fullName>Host_Name__c</fullName>
+        <deprecated>false</deprecated>
+        <description>This is the host name to your Blackboard Learn account.</description>
+        <externalId>false</externalId>
+        <label>Host Name</label>
+        <length>255</length>
+        <required>false</required>
+        <type>Text</type>
+        <unique>false</unique>
+    </fields>
+    <label>Blackboard Custom Settings</label>
+</CustomObject>

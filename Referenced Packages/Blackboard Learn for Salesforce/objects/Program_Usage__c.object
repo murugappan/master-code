@@ -1,0 +1,267 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<CustomObject xmlns="http://soap.sforce.com/2006/04/metadata">
+    <actionOverrides>
+        <actionName>Accept</actionName>
+        <type>Default</type>
+    </actionOverrides>
+    <actionOverrides>
+        <actionName>Clone</actionName>
+        <type>Default</type>
+    </actionOverrides>
+    <actionOverrides>
+        <actionName>Delete</actionName>
+        <type>Default</type>
+    </actionOverrides>
+    <actionOverrides>
+        <actionName>Edit</actionName>
+        <type>Default</type>
+    </actionOverrides>
+    <actionOverrides>
+        <actionName>List</actionName>
+        <type>Default</type>
+    </actionOverrides>
+    <actionOverrides>
+        <actionName>New</actionName>
+        <type>Default</type>
+    </actionOverrides>
+    <actionOverrides>
+        <actionName>Tab</actionName>
+        <type>Default</type>
+    </actionOverrides>
+    <actionOverrides>
+        <actionName>View</actionName>
+        <type>Default</type>
+    </actionOverrides>
+    <deploymentStatus>Deployed</deploymentStatus>
+    <deprecated>false</deprecated>
+    <description>Tracks status and usage of programs by user.</description>
+    <enableActivities>true</enableActivities>
+    <enableFeeds>false</enableFeeds>
+    <enableHistory>true</enableHistory>
+    <enableReports>true</enableReports>
+    <fields>
+        <fullName>CourseId__c</fullName>
+        <deprecated>false</deprecated>
+        <description>The Course ID of the course in Blackboard Learn.</description>
+        <externalId>false</externalId>
+        <label>CourseId</label>
+        <length>255</length>
+        <required>false</required>
+        <trackHistory>false</trackHistory>
+        <type>Text</type>
+        <unique>false</unique>
+    </fields>
+    <fields>
+        <fullName>Course_Cost__c</fullName>
+        <deprecated>false</deprecated>
+        <description>The associated course cost for a given enrollment record.</description>
+        <externalId>false</externalId>
+        <label>Course_Cost</label>
+        <precision>18</precision>
+        <required>false</required>
+        <scale>2</scale>
+        <trackHistory>false</trackHistory>
+        <type>Currency</type>
+    </fields>
+    <fields>
+        <fullName>Course_End_Date__c</fullName>
+        <deprecated>false</deprecated>
+        <description>The target end date for a course by which a user should have completed the course.</description>
+        <externalId>false</externalId>
+        <label>Course End Date</label>
+        <required>false</required>
+        <trackHistory>false</trackHistory>
+        <type>Date</type>
+    </fields>
+    <fields>
+        <fullName>Course_Hours__c</fullName>
+        <deprecated>false</deprecated>
+        <description>The estimated number of hours it is expected a learner to complete the course.</description>
+        <externalId>false</externalId>
+        <label>Course Hours</label>
+        <precision>18</precision>
+        <required>false</required>
+        <scale>2</scale>
+        <trackHistory>false</trackHistory>
+        <type>Number</type>
+        <unique>false</unique>
+    </fields>
+    <fields>
+        <fullName>Course_Name__c</fullName>
+        <deprecated>false</deprecated>
+        <description>The Course Name in Blackboard Learn.</description>
+        <externalId>false</externalId>
+        <label>Course Name</label>
+        <length>255</length>
+        <required>false</required>
+        <trackHistory>false</trackHistory>
+        <type>Text</type>
+        <unique>false</unique>
+    </fields>
+    <fields>
+        <fullName>Course_Start_Date__c</fullName>
+        <deprecated>false</deprecated>
+        <description>The recommended date for which a learner should start a given course.</description>
+        <externalId>false</externalId>
+        <label>Course Start Date</label>
+        <required>false</required>
+        <trackHistory>false</trackHistory>
+        <type>Date</type>
+    </fields>
+    <fields>
+        <fullName>Enrollment_Completion_Date__c</fullName>
+        <deprecated>false</deprecated>
+        <description>The date a given learner completed a course.</description>
+        <externalId>false</externalId>
+        <label>Enrollment Completion Date</label>
+        <required>false</required>
+        <trackHistory>true</trackHistory>
+        <type>DateTime</type>
+    </fields>
+    <fields>
+        <fullName>Enrollment_Id__c</fullName>
+        <deprecated>false</deprecated>
+        <description>The ID for the given enrollment record.</description>
+        <externalId>false</externalId>
+        <label>Enrollment Id</label>
+        <length>255</length>
+        <required>false</required>
+        <trackHistory>false</trackHistory>
+        <type>Text</type>
+        <unique>false</unique>
+    </fields>
+    <fields>
+        <fullName>Enrollment_Status__c</fullName>
+        <deprecated>false</deprecated>
+        <description>The calculated status of program enrollments.</description>
+        <externalId>false</externalId>
+        <label>Enrollment Status</label>
+        <length>20</length>
+        <required>false</required>
+        <trackHistory>true</trackHistory>
+        <type>Text</type>
+        <unique>false</unique>
+    </fields>
+    <fields>
+        <fullName>External_ID__c</fullName>
+        <deprecated>false</deprecated>
+        <externalId>true</externalId>
+        <label>External ID</label>
+        <length>255</length>
+        <required>false</required>
+        <trackHistory>false</trackHistory>
+        <type>Text</type>
+        <unique>false</unique>
+    </fields>
+    <fields>
+        <fullName>Last_Accessed__c</fullName>
+        <deprecated>false</deprecated>
+        <description>The last time the learner accessed the course.</description>
+        <externalId>false</externalId>
+        <label>Last Accessed</label>
+        <required>false</required>
+        <trackHistory>false</trackHistory>
+        <type>DateTime</type>
+    </fields>
+    <fields>
+        <fullName>Learner__c</fullName>
+        <deleteConstraint>SetNull</deleteConstraint>
+        <deprecated>false</deprecated>
+        <description>The learner name lookup.</description>
+        <externalId>false</externalId>
+        <label>Learner</label>
+        <referenceTo>User</referenceTo>
+        <relationshipName>Program_Usage</relationshipName>
+        <required>false</required>
+        <trackHistory>false</trackHistory>
+        <type>Lookup</type>
+    </fields>
+    <fields>
+        <fullName>Manager__c</fullName>
+        <deprecated>false</deprecated>
+        <description>Retrieves the manager name for a given learner.</description>
+        <externalId>false</externalId>
+        <formula>IF (Learner__r.Manager.FirstName = &quot;&quot;, &quot;&quot;,  Learner__r.Manager.FirstName )&amp;&quot; &quot;&amp; Learner__r.Manager.LastName</formula>
+        <formulaTreatBlanksAs>BlankAsZero</formulaTreatBlanksAs>
+        <label>Manager</label>
+        <required>false</required>
+        <trackHistory>false</trackHistory>
+        <type>Text</type>
+        <unique>false</unique>
+    </fields>
+    <fields>
+        <fullName>Program_Name__c</fullName>
+        <deprecated>false</deprecated>
+        <description>The name of the program with which an enrollment record is associated.</description>
+        <externalId>false</externalId>
+        <label>Program Name</label>
+        <length>255</length>
+        <required>false</required>
+        <trackHistory>false</trackHistory>
+        <type>Text</type>
+        <unique>false</unique>
+    </fields>
+    <fields>
+        <fullName>Program_Offering_End_Date__c</fullName>
+        <deprecated>false</deprecated>
+        <description>The calculated end date for which the entire program offering should be completed by the learner.</description>
+        <externalId>false</externalId>
+        <label>Program Offering End Date</label>
+        <required>false</required>
+        <trackHistory>false</trackHistory>
+        <type>Date</type>
+    </fields>
+    <fields>
+        <fullName>Program_Offering_Id__c</fullName>
+        <deprecated>false</deprecated>
+        <description>ID of the program offering.</description>
+        <externalId>false</externalId>
+        <label>Program Offering Id</label>
+        <length>255</length>
+        <required>false</required>
+        <trackHistory>false</trackHistory>
+        <type>Text</type>
+        <unique>false</unique>
+    </fields>
+    <fields>
+        <fullName>Program_Offering_Name__c</fullName>
+        <deprecated>false</deprecated>
+        <description>Name of the program offering.</description>
+        <externalId>false</externalId>
+        <label>Program Offering Name</label>
+        <length>255</length>
+        <required>false</required>
+        <trackHistory>false</trackHistory>
+        <type>Text</type>
+        <unique>false</unique>
+    </fields>
+    <fields>
+        <fullName>Program_Offering_Start_Date__c</fullName>
+        <deprecated>false</deprecated>
+        <description>The specified date on which the program offering was scheduled to start.</description>
+        <externalId>false</externalId>
+        <label>Program Offering Start Date</label>
+        <required>false</required>
+        <trackHistory>false</trackHistory>
+        <type>Date</type>
+    </fields>
+    <fields>
+        <fullName>Visible__c</fullName>
+        <defaultValue>false</defaultValue>
+        <deprecated>false</deprecated>
+        <description>Visibility flag used in some circumstances to filter historical or other unavailable records.</description>
+        <externalId>false</externalId>
+        <label>Visible</label>
+        <trackHistory>false</trackHistory>
+        <type>Checkbox</type>
+    </fields>
+    <label>Program Usage</label>
+    <nameField>
+        <label>Program Usage Id</label>
+        <trackHistory>false</trackHistory>
+        <type>Text</type>
+    </nameField>
+    <pluralLabel>Program Usage</pluralLabel>
+    <searchLayouts/>
+    <sharingModel>ReadWrite</sharingModel>
+</CustomObject>

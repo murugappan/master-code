@@ -1,0 +1,30 @@
+<apex:component allowDML="true">
+    <apex:attribute name="btbbController" type="publickbarticleview" required="true" description="handle to the btbb article view controller" />
+    <apex:outputPanel layout="block" styleClass="btbbCaseTab" title="Attachments" rendered="{!btbbController.hasAttachments}">
+        <h2>Attachments</h2>
+        <table width="100%" style="border:none;">
+            <tr class="nohover" style="border:none;">
+                <th style="border:none;">Filename</th>
+                <th style="border:none;">Notes</th>
+                <th style="border:none;">Last Updated</th>
+            </tr>
+            <apex:repeat value="{!btbbController.caseAttachmentList}" var="att">
+                <tr>                                        
+                    <td style="border:none;">
+                        <a href="{!$Page.AttachmentRedirect}?bname={!att.Bucket_Name__c}&fname={!att.File_Name_URL__c}&uval=article" target="_blank">
+                            <apex:outputField value="{!att.File_Name__c}" />
+                        </a>
+                    </td>
+                    <td style="border:none;">
+                        <apex:outputField value="{!att.Notes__c}"/>
+                    </td>
+                    <td style="border:none;">
+                        <apex:outputText value="{0,date,MMM dd,yyyy}">
+                            <apex:param value="{!DATEVALUE(att.CreatedDate)}" />
+                        </apex:outputText>
+                    </td>
+                </tr>
+            </apex:repeat>
+        </table> 
+    </apex:outputPanel>
+</apex:component>

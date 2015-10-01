@@ -1,0 +1,7 @@
+<apex:page standardController="Case_Attachment__c" extensions="InternalAttachmentView" showHeader="false" sidebar="false">
+   <apex:form >
+   <div style="padding:30px;">
+      <apex:commandLink value="View/Download" action="{!redirect}" target="_blank" style="font-size:12px;" />
+   </div>
+   </apex:form> 
+</apex:page>

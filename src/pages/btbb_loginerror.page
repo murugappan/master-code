@@ -1,0 +1,12 @@
+<apex:page showHeader="false" sidebar="false">
+   <apex:composition template="btbb_template">
+        <apex:define name="content">
+            <h2>Login Error</h2>
+                <p style="margin-top:25px;">Your login attempt has failed.  Please contact Blackboard Client Support for assistance using one of the numbers below.  When calling, please have your clientID available.</p><br />
+                <p>
+                    United States and Canada: 1.888.788.5264<br />
+                    If you are calling from outside of the US, please call +1.202.715.6019.
+                </p>
+        </apex:define>
+   </apex:composition>
+</apex:page>

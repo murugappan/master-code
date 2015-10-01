@@ -1,0 +1,212 @@
+<apex:page showHeader="false" sidebar="false" controller="ProfilepageController" contentType="text/html" standardStylesheets="false" action="{!Redirect}">
+  <apex:composition template="btbb_template">
+  <apex:define name="head">
+      <style>
+          .fieldlabel {margin-right: 10px; margin-top:5px;}
+          .fieldinput {margin-top:5px;}
+      </style>
+  </apex:define>
+  <apex:define name="topbar"><c:btbb_globalsearch /></apex:define>
+  <apex:define name="nav"><c:btbb_auth_nav /></apex:define>
+  <apex:define name="content">
+  <h2>My Profile</h2>
+
+       <apex:form id="noneditsec"> 
+            <apex:pageBlock rendered="{!NOT(editsec)}">
+                   <div id="btbbAccountLeftCol">
+                        <ul>
+                            <li>My Profile</li>
+                            <li><a href="{!$Page.btbb_myinstitution}?cid={!ContactId}">My Institution</a></li>
+                            <li><a href="{!$Page.btbb_mysubscriptions}" title="My Subscriptions">My Subscriptions</a></li>
+                        </ul>
+                    </div>     
+                   
+                    <div id="btbbAccountRightCol">
+                        <div class="btbbAccountItem">                       
+                            <div id="btbbAccountOwner"> {!FirstName} {!LastName}</div>
+                           
+                            <div class="btbbAccountEditLink"><apex:commandLink action="{!showeditsec}" immediate="true" value="[Update Your Profile]" reRender="editsec,noneditsec"/></div>                           
+
+                        </div>
+                                              
+                        <div class="btbbAccountItem">
+                            <h4>Username</h4>
+                            {!Email }<br />
+                          <!--    [&nbsp;<a href="https://behind.blackboard.com/slfsvc/myaccount/changepwd.jsp?retURL={!$Site.CurrentSiteUrl}" title="Change Password">Change Password</a>&nbsp;]  -->
+                            
+                            [&nbsp;<apex:commandLink action="{!changepassword}" title="Change Password">Change Password</apex:commandlink>&nbsp;]
+                            [&nbsp;<a href="/ChangeEmailPage?retURL={!$Site.CurrentSiteUrl}" title="Change UserName/Email">Change Username/Email</a>&nbsp;]
+                         
+                          <!--    [&nbsp;<a href="https://behind.blackboard.com/slfsvc/myaccount/editE-mail.jsp?retURL={!$Site.CurrentSiteUrl}" title="Change Username">Change Username/Email</a>&nbsp;]  -->  
+                          <!--    [&nbsp;<a href="https://behind.blackboard.com/slfsvc/myaccount/editChallenges.jsp?retURL={!$Site.CurrentSiteUrl}" title="Change Challenge Questions">Change Challenge Questions</a>&nbsp;]   -->
+                            
+                            
+                        </div>
+                         <div class="btbbAccountItem">
+                            <h4>Title</h4>
+                            {!Title }<br />                        
+                            
+                        </div>
+                        
+                        <div class="btbbAccountItem">
+                            <h4>Email Address</h4>
+                            {!Email} 
+                        </div>  
+                        <div class="btbbAccountItem">
+                            <h4>Phone Numbers</h4>
+                            <b>Mobile</b>&nbsp;&nbsp;&nbsp;&nbsp;{!MobilePhone}<br />
+                            <b>Phone</b>&nbsp;&nbsp;&nbsp;&nbsp;{!Phone}<br />
+                            <b>Fax </b>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;{!Fax}                      
+                        </div> 
+                        <div class="btbbAccountItem">
+                            <h4>Time Zone</h4>
+                            <apex:outputfield value="{!u.TimeZoneSidKey}" />
+                        </div>
+                        <div class="btbbAccountItem">
+                            <h4>Address</h4>
+                            <address>
+                            {!Street}<br />
+                            {!City} {!State} {!PostalCode}
+                            </address>
+                        </div>
+                        <div class="btbbAccountItem"  style="display: {!IF(isTransactUser = True, '' , 'none;')}">
+                            <h4>Login Preference</h4>
+                            You currently have <span style="display: {!IF(NOVPreferredSite == null, 'none;', '' )} " >"{!NOVPreferredSite }" as your default login.</span><span style="display: {!IF(NOVPreferredSite  == null, null, 'none;' )} " >not set your default login preference.</span>
+                            
+                                
+                            
+                        </div>
+                        <div class="btbbAccountItem">
+                            <h4>Default Product </h4>
+                            You currently have <span style="display: {!IF(BTBBKBDefaultProd == null, 'none;', '' )} " >"{!SUBSTITUTE(BTBBKBDefaultProd,'_BU','')}" as your default for Knowledge Base search.</span><span style="display: {!IF(BTBBKBDefaultProd == null, null, 'none;' )} " >not set your default for Knowledge Base search.</span> 
+                        </div>  
+                        <div class="btbbAccountItem">
+                            <h4>Email Addresses to be copied on all case communications</h4>
+                            <strong>The following email addresses will be copied on all of your case communications:</strong>
+                            <br/>
+                            {!substitute(ccRecipients,';',', ')}
+                        </div>                    
+                    </div>
+             </apex:pageBlock>
+        </apex:form>   
+    
+        <apex:form id="editsec">
+            <apex:pageblock rendered="{!editsec}">
+                 <div id="btbbAccountLeftCol">
+                        <ul>
+                            <li>My Profile</li>
+                            <li><a href="{!$Page.btbb_myinstitution}?cid={!ContactId}">My Institution</a></li>
+                            <li><a href="{!$Page.btbb_mysubscriptions}" title="My Subscriptions">My Subscriptions</a></li>
+                        </ul>
+                  </div>    
+                 <div id="btbbAccountRightCol"> 
+                     <div class="btbbAccountItem">
+                         <h4>Contact Information</h4>
+                             <table>
+                                 <thead>
+                                     <tr>
+                                         <th><b>First Name</b></th>
+                                         <th><b>Last Name</b></th>
+                                     </tr>
+                                 </thead>
+                                 <tbody>
+                                     <tr>
+                                         <td><apex:inputField value="{!u.FirstName}"/></td>
+                                         <td><apex:inputField value="{!u.LastName}"/></td>
+                                     </tr>                       
+                                </tbody>
+                            </table>
+                            <br/>
+                            <table>
+                                 <thead>
+                                     <tr>
+                                         <th><b>Title</b></th>                                        
+                                     </tr>
+                                 </thead>
+                                 <tbody>
+                                     <tr>
+                                         <td><apex:inputField value="{!u.Title}"/></td>                                         
+                                     </tr>                       
+                                </tbody>
+                            </table>
+                     </div>
+                     
+                     <div class="btbbAccountItem">
+                            <h4>Email Address/Username</h4>
+                            <apex:outputText value="{!u.Email}"/><br /><br />
+                            <!--   [&nbsp;<a href="http://behind.blackboard.com/slfsvc/myaccount/editE-mail.jsp?retURL={!$Site.CurrentSiteUrl}" title="Change Username">Change Username/Email</a>&nbsp;]<br />  -->
+                            [&nbsp;<a href="/ChangeEmailPage?retURL={!$Site.CurrentSiteUrl}" title="Change Email">Change Username/Email</a>&nbsp;]
+                            
+                            <p style="font-size: 11px;"><span style="color:#e9ac10; font-weight: bold;">Note!&nbsp;</span>Changing your email will also change your Username for Behind the Blackboard.</p>
+                      </div>  
+                      <div class="btbbAccountItem">
+                            <h4>Phone Numbers</h4>
+                            <span class="fieldlabel">Mobile</span><apex:inputField styleClass="fieldinput" value="{!u.MobilePhone}"/><br />
+                            <span class="fieldlabel">Phone</span><apex:inputField styleClass="fieldinput" value="{!u.Phone}"/><br />
+                            <span class="fieldlabel">Fax</span>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<apex:inputField styleClass="fieldinput" value="{!u.Fax}"/>     
+                      </div>
+                      <div class="btbbAccountItem">
+                            <h4>Time Zone</h4>
+                            <b>Time Zone</b><apex:inputfield value="{!u.TimeZoneSidKey}" />
+                        </div>    
+                      <div class="btbbAccountItem">
+                            <h4>Address Information</h4>
+                            <strong>Street</strong><br />
+                                <apex:inputField value="{!u.Street}" style="width:200px;height:24px;" />
+                                <br />
+                            <strong>City</strong><br />
+                                <apex:inputField value="{!u.City}"/>
+                                <br />
+                            <strong>State</strong><br />
+                                <apex:inputField value="{!u.State}" />
+                                <br />
+                            <strong>Postal Code</strong><br />
+                                <apex:inputField value="{!u.PostalCode}"/>
+                                <br />
+                      </div>  
+                      <div class="btbbAccountItem" style="Display: {!IF(isTransactUser = True, '' , 'none;')}">
+                            <h4>Login Preference</h4>
+                                <apex:selectList value="{!NOVPreferredSite}" styleClass="select" size="1" multiselect="false">
+                                    <apex:selectOptions value="{!LoginPreference}"></apex:selectOptions>                                    
+                                </apex:selectList>
+                                <!--<apex:inputText value="{!NOVPreferredSite}" />-->
+                      </div>
+                      <div class="btbbAccountItem">
+                         <apex:actionFunction name="updateReleases" action="{!updateproduct}" rerender="" >
+                                <apex:param name="product" value="" assignTo="{!selectedproduct}" />
+                          </apex:actionfunction>      
+                            <h4>Default Product for Searching the Knowledgebase</h4>
+                             <select name="productList" onchange="updateReleases(this.value)" >
+                                     <knowledge:categoryList categoryVar="category" categoryGroup="Version" rootCategory="All" level="1">
+                                            <apex:outputPanel rendered="{!BTBBKBDefaultProd== category.name &&  Not(contains(category.name,'All')) && contains(BUAccess,category.name) }"  >
+                                                <option value="{!category.name}" selected="selected" >{!category.label}</option>
+                                            </apex:outputPanel>
+                                            <apex:outputPanel rendered="{!BTBBKBDefaultProd!= category.name && Not(contains(category.name,'All')) && contains(BUAccess,category.name)}"   >
+                                                <option value="{!category.name}">{!category.label}</option>
+                                            </apex:outputPanel>
+                                        </knowledge:categoryList>                                   
+                                </select>
+                                <!--<apex:inputText value="{!BTBBKBDefaultProd}" />-->
+                      </div>
+                       <div class="btbbAccountItem">
+                            <h4>Email Addresses to be copied on all case communications</h4>
+                            <strong>Cced Emails</strong> (Maximum 5 emails separated by semicolon ';')<br />
+                            <apex:outputpanel id="ccemailerror" rendered="{!ccerrorShow}">
+                            <apex:outputtext value="{!ccerrorMessage}" rendered="{!ccerrorShow}"/><br/>
+                            </apex:outputpanel>
+                                <apex:inputtext value="{!ccRecipients}" style="width:425px;height:24px;" />
+                                <br />
+                            
+                      </div>  
+                      <div class="btbbAccountItem">
+                          <apex:commandButton styleClass="gray-button" value="Save" action="{!doSave}" reRender="editsec,noneditsec"/>
+                          <apex:commandButton styleClass="gray-button" value="Cancel" action="{!doCancel}" reRender="editsec,noneditsec" />
+                      </div>       
+                 </div>     
+            </apex:pageBlock>
+        </apex:form>      
+         
+  </apex:define>
+  
+  </apex:composition>
+</apex:page>

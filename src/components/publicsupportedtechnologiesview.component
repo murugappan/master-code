@@ -1,0 +1,42 @@
+<apex:component allowDML="true">
+    <apex:attribute name="btbbController" type="publickbarticleview" required="true" description="handle to the btbb article view controller" />
+    <apex:attribute name="showBackLinks" type="Boolean" required="true" description="flag to indicate if 'back to...' buttons should be shown" />
+    <div id="btbbArticleViewBody">          
+        <div id="articleDescription">                             
+            <apex:outputPanel layout="block" id="btbbarticledetail" style="margin-top: 20px;" rendered="{!btbbController.caseId == null}">                   
+                <apex:outputPanel layout="block" id="Product" rendered="{!btbbController.mainArticle.product != null}">
+                    <p>
+                        <strong>Product:</strong>
+                        <apex:outputText escape="false" value="  {!btbbController.mainArticle.product}"/>
+                    </p>                        
+                </apex:outputPanel> 
+                <apex:outputPanel layout="block" id="major" rendered="{!btbbController.mainArticle.release != null}">
+                    <p>
+                        <strong>Release:</strong>
+                        <apex:outputText escape="false" value="  {!btbbController.mainArticle.release}"/>
+                    </p>                                           
+                </apex:outputPanel>
+                <apex:outputPanel layout="block" id="version" rendered="{!btbbController.mainArticle.servicePacks != null}">
+                    <p>
+                        <strong>Service Pack:</strong>
+                        <apex:outputText escape="false" value="{!btbbController.mainArticle.servicePacks}" />
+                    </p>                          
+                </apex:outputPanel>
+            </apex:outputPanel>
+        </div>                    
+        <div class="cleaner divider"></div>
+        <div id="Support Technology" style="overflow: auto;width: 100%">
+            <apex:outputText style="font-weight:bold;display:block;" rendered="{!btbbController.mainArticle.platformTechnologies != null}" value="Platform Technology:  " />
+            <apex:OutputText rendered="{!btbbController.mainArticle.platformTechnologies != null}" value="{!btbbController.mainArticle.platformTechnologies}" escape="false" /><br />                        
+            <apex:outputText style="font-weight:bold;display:block;" rendered="{!btbbController.mainArticle.clientTechnologies != null}" value="Client Technology:  " />
+            <apex:OutputText rendered="{!btbbController.mainArticle.clientTechnologies != null}" value="{!btbbController.mainArticle.clientTechnologies}" escape="false" /><br />                      
+            <apex:outputText style="font-weight:bold;display:block;" rendered="{!btbbController.mainArticle.upgradePaths != null}" value="Upgrade Paths:  " />
+            <apex:OutputText rendered="{!btbbController.mainArticle.upgradePaths != null}" value="{!btbbController.mainArticle.upgradePaths}" escape="false" />      
+        </div> 
+    </div>
+    <br />
+    <c:btbbArticleTerms />
+    <br />
+    <c:publicarticleattachment btbbController="{!btbbController}" rendered="{!btbbController.hasAttachments}" />
+    <br />         
+</apex:component>

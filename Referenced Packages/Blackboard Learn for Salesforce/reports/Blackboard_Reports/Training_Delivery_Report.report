@@ -1,0 +1,55 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<Report xmlns="http://soap.sforce.com/2006/04/metadata">
+    <columns>
+        <field>Enrollment__c.Course__c</field>
+    </columns>
+    <columns>
+        <field>Enrollment__c.Status__c</field>
+    </columns>
+    <columns>
+        <aggregateTypes>Sum</aggregateTypes>
+        <field>Enrollment__c.Est_Cost__c</field>
+    </columns>
+    <columns>
+        <aggregateTypes>Sum</aggregateTypes>
+        <field>Enrollment__c.Est_Completion_Hours__c</field>
+    </columns>
+    <columns>
+        <field>Enrollment__c.Result__c</field>
+    </columns>
+    <columns>
+        <field>Enrollment__c.Enrollment_Date__c</field>
+    </columns>
+    <description>Report shows all Courses with Enrollments by Enrollment Status</description>
+    <filter>
+        <criteriaItems>
+            <column>Enrollment__c.Status__c</column>
+            <operator>notEqual</operator>
+            <value></value>
+        </criteriaItems>
+        <criteriaItems>
+            <column>Enrollment__c.Status__c</column>
+            <operator>equals</operator>
+            <value>In Progress</value>
+        </criteriaItems>
+        <language>en_US</language>
+    </filter>
+    <format>Summary</format>
+    <groupingsDown>
+        <dateGranularity>Day</dateGranularity>
+        <field>Enrollment__c.Person__c</field>
+        <sortOrder>Asc</sortOrder>
+    </groupingsDown>
+    <name>Training Delivery Report</name>
+    <params>
+        <name>co</name>
+        <value>1</value>
+    </params>
+    <reportType>CustomEntityAuditHistory$Enrollment__c</reportType>
+    <scope>organization</scope>
+    <showDetails>true</showDetails>
+    <timeFrameFilter>
+        <dateColumn>CREATED_DATE</dateColumn>
+        <interval>INTERVAL_CUSTOM</interval>
+    </timeFrameFilter>
+</Report>

@@ -1,0 +1,7 @@
+<apex:page showHeader="false" sidebar="false" standardStylesheets="fasle" cache="false" contentType="application/json" controller="btbbrestlogincontroller">
+{
+  "Success" : {!response.success},
+  "Status" : "{!response.status}",
+  "BBPSoftUID" :"{!response.BBPSoftUID}"
+}
+</apex:page>

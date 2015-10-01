@@ -1,0 +1,801 @@
+<apex:page tabStyle="Opportunity" standardcontroller="Opportunity" extensions="PSS_OppProd" action="{!init}" cache="true">
+
+<apex:includeScript value="{!$Resource.BALINK1__BALINK_Utils}"/>
+<apex:includeScript value="{!$Resource.BALINK1__Search}"/> 
+<style type="text/css">
+ .scrollable{
+   overflow: auto;
+   width: 400px; /* adjust this width depending to amount of text to display */
+   height: 100px; /* adjust height depending on number of options to display */
+   border: 1px silver solid;
+ }
+ .scrollable select{
+    height:100px;
+    min-width:400px; 
+   border: none;
+ }
+</style>
+<BALINK1:BALINK_Header />
+<BALINK1:BALINK_UTILS sobj="{!currentOpp}"/> 
+
+ <apex:pageMessages id="pageMessages" rendered="{!!isId}"/>
+ 
+ <form id="myform1" action="/oppitm/multilineitem.jsp?oppId={!currentOpp.id}" method="post" >
+     <input type="hidden" name="oppId" value="{!currentOpp.id}"/>
+     <input type="hidden" name="retURL" value="/{!currentOpp.id}"/>
+     <input type="hidden" name="save_new_url" value="/apex/PSS_OppProd?id={!currentOpp.id}"/>
+     <input id="sendForm" type="submit" value="Send" id="sendForm" style="display: none;"/>
+ </form>
+
+ 
+  
+<apex:form id="myform" onkeypress="onEnter(event);" rendered="{!isId}">
+ 
+<apex:outputLabel value="{!log + '  *** '}"  id="log_j" style="display:none"></apex:outputLabel>
+<apex:outputText value="{!Paging.log}"  id="log2" style="display:none"/>
+
+<apex:inputText value="{!selectedIds}" id="selectedIds_j" style="display:none"/> 
+<apex:inputText value="{!Paging.currentSortingField}" id="currentSortingField_j" style="display:none"/>
+<apex:outputLabel value="{!txtTitle}" id="out2" style="display:none" ></apex:outputLabel>  
+<apex:outputText value="{!Paging.StartIndex}" id="startIndextxt"  style="display:none"/> 
+<apex:outputText value="{!Paging.stopIndex}" id="stopIndextxt" style="display:none"/>
+<apex:outputText value="{!Paging.PageIndexLimit}" id="PageIndexLimittxt" style="display:none"/>
+<apex:outputText value="{!Paging.PageIndex}" id="PageIndextxt" style="display:none"/>
+<apex:outputText value="{!Paging.numRecords}" id="numRecordstxt" style="display:none"/>
+<apex:inputHidden value="{!Paging.pageSize1}" id="pageSizetxt"/>
+<apex:commandLink value="Previous page" style="display:none" id="previouspageBtn" action="{!Previous}"  status="counterStatus"  rerender="pageMessages,selectedIds_j,log_j,PageIndextxt,PageIndexLimittxt,stopIndextxt,startIndextxt,nogrid,pnlButton,tbl,out1,out2,vl,numRec,gridSize,errorMsg"/>
+<apex:commandLink value="Next page" id="nextpageBtn" action="{!next}" style="display:none"  status="counterStatus"  rerender="pageMessages,selectedIds_j,log_j,PageIndextxt,PageIndexLimittxt,stopIndextxt,startIndextxt,nogrid,pnlButton,tbl,out1,out2,vl,numRec,gridSize,errorMsg"/>
+
+
+    <br/> 
+  Enter your keyword and filter criteria, then click Search to begin your search. Click More filters to use more than one filter. Search results include all records that match both your keyword and filter entries. 
+  <br/> 
+   <apex:outputPanel id="pageMessages2">
+        <div style="display:{!If(showErrorMessage,'','none')}">
+        <apex:pageMessages />
+        </div>
+   </apex:outputPanel>
+  <br/>
+      <div class="selectButtons">
+         <center>
+            <!--<apex:commandButton value="Select" onclick="checkAll(event);" action="{!selectProd}" /> --> 
+                <input type="button" value="Select" onclick="checkBeforCon()" class="btn"/>
+            <apex:commandButton value="Cancel"  action="{!cancel}" />
+         </center>
+      <br/>
+      </div>
+  <apex:pageBlock id="pgBlock">
+  <apex:facet name="header">
+  <apex:outputpanel >
+        <table width="100%" cellpadding="0" cellspacing="0" border="0" style="border-collapse:collapse;table-layout: fixed">
+        <tr>
+           <td valign="bottom" style="vertical-align:bottom;font-size:12px;font-weight:bold;">
+             <b>Find Products [  <apex:outputpanel id="itemGrid"><span id="itemGrid">{!Paging.gridSize}"</span></apex:outputpanel>
+                                &nbsp;/&nbsp; 
+                                <apex:outputLabel id="numRec" value="{!Paging.numRecords}"/>]</b> 
+           </td>
+           <td valign="bottom" align="center"> <span id="searching" style="display:none">Searching...</span></td>
+           <td align="right">
+            <span>
+            <b>Number Of Records Per Page</b> &nbsp;
+            <select name="{!paging.pageSize}" size="1" onchange="changePagesize(this);" id="pagingPageSizeId"   style="font-size:8pt">
+               <option value="25">25</option>
+               <option value="50">50</option>
+               <option value="100">100</option>
+            </select>
+            </span>
+          </td>
+        </tr>
+       </table>   
+
+<div class="searchFilterFieldsHolder" >
+    <table  width="100%" cellpadding="0" cellspacing="0" class="searchFilterFields" style="font-size:8pt">
+        <tr>
+            <td style="vertical-align: top;">
+                <b>By Keyword</b><br/>
+                 <span id="bySearchKeyWord">
+                      <apex:inputText id="SearchKeyWord" value="{!SearchKeyWord}" style="font-size:10.9167px;font-family:MS Shell Dlg"></apex:inputText>
+                  </span>
+            </td>
+            <td style="vertical-align: top;" width="10%">
+                <table  cellspacing="0" cellpadding="0"  border="0">
+                    <tr>
+                        <td id="ProFamilyID" >
+                            <b>Family</b><br/>
+                            <apex:selectList value="{!ProFamily}" size="1" style="width:150px;font-size:8pt" >
+                               <apex:selectOptions value="{!ProductFamilies}"></apex:selectOptions>
+                              </apex:selectList>
+                          </td>
+                        <td id="UnitofMeasure"> 
+                            <b>Unit of Measure</b><br/> 
+                              <apex:selectList value="{!SelectedUOM}" size="1" style="width:150px;font-size:8pt" >
+                               <apex:selectOptions value="{!UOM}"></apex:selectOptions>
+                              </apex:selectList> 
+                          </td>
+                        <td id="Type">
+                            <b>Type</b><br/>
+                              <apex:selectList value="{!SelectedType}" size="1" style="width:150px;font-size:8pt" >
+                               <apex:selectOptions value="{!Type}"></apex:selectOptions>
+                              </apex:selectList>    
+                          </td>
+                      </tr> 
+                </table>   
+                     <br/><br/>
+                    <table  cellspacing="0" cellpadding="0"  border="0" id="tableFilrerId">
+                        <tr>
+                             <td><b>Field</b></td>
+                             <td><b>Operator</b></td>
+                             <td><b>Value</b></td>
+                         </tr>
+                         <apex:repeat value="{!filterRow}" var="filterRowI" id="theRepeat">
+                         <tr id="TR1" style="{!filterRowI.display}; "> 
+                              <td valign="top" style="text-align:left;" width="150px"> 
+                                  <apex:selectList value="{!filterRowI.searchField}" size="1" onchange="updateOperator(this);" style="width:150px;font-size:8pt; padding:0px;">
+                                      <apex:selectOptions value="{!ProductFields}"></apex:selectOptions>
+                                  </apex:selectList>
+                              </td> 
+                         <td valign="top"  width="140px">
+                              <apex:selectList id="o331" value="{!filterRowI.operator}" size="1" style="font-size:8pt;width:120px">
+                                  <apex:selectOption ItemLabel="--None--" Itemvalue=""></apex:selectOption>     
+                                  <apex:selectOption ItemLabel="equals" Itemvalue="e"></apex:selectOption>
+                                  <apex:selectOption ItemLabel="not equal to" Itemvalue="n"></apex:selectOption>
+                                  <apex:selectOption ItemLabel="starts with" Itemvalue="s"></apex:selectOption>
+                                  <apex:selectOption ItemLabel="contains" Itemvalue="c"></apex:selectOption>
+                                  <apex:selectOption ItemLabel="does not contain" Itemvalue="k"></apex:selectOption>
+                                  <apex:selectOption ItemLabel="less than" Itemvalue="l"></apex:selectOption>
+                                  <apex:selectOption ItemLabel="greater than" Itemvalue="g"></apex:selectOption>
+                                  <apex:selectOption ItemLabel="less or equal" Itemvalue="m"></apex:selectOption>
+                                  <apex:selectOption ItemLabel="greater or equal" Itemvalue="h"></apex:selectOption>
+                                  <apex:selectOption ItemLabel="includes" Itemvalue="u"></apex:selectOption>
+                                  <apex:selectOption ItemLabel="excludes" Itemvalue="x"></apex:selectOption>
+                              </apex:selectList>
+                           
+                          </td>
+                              <td width="150px" id="tdtxt">
+                                 <apex:inputText id="displayid" value="{!filterRowI.display}" style="display:none"></apex:inputText>
+                                 <apex:inputText id="o341" value="{!filterRowI.searchValue}" style="width:150px;font-size:8pt; margin:0 "></apex:inputText>  
+                              </td>
+                              <td style="display:none" id="tdFamily" width="150px; padding:0px;">
+                                   <apex:selectList value="{!log}" size="1"  style="width:150px;font-size:8pt" onchange="UpdateSearchValue(this);">
+                                        <apex:selectOptions value="{!FamilyList}"></apex:selectOptions>
+                                    </apex:selectList>
+                              </td>
+                              <td style="display:none;text-align:right" width="5px; padding:0px;">
+                                 <apex:selectList value="{!filterRowI.searchFieldType}" size="1" style="font-size:8pt">
+                                      <apex:selectOptions value="{!ProductFieldsType}"></apex:selectOptions>
+                                 </apex:selectList>
+                              </td>
+            
+                              <td style="font-size:12px;font-family:MS Shell Dlg;vertical-align:middle;text-align:left;font-size:8pt;"  >
+                                   <a  href="javascript:void(0)" id="showMoreFilters" onclick="showMoreFilters(this);" style="white-space: nowrap;">AND</a> 
+                              </td>
+                              
+                          </tr>
+                          </apex:repeat>      
+                          
+                      </table>      
+            </td>
+            <td style="vertical-align: top;" align="right">   
+                <div style="width:400px; margin-right:7px; font-size:10.9167px;font-family:MS Shell Dlg; text-align:center" >
+                    <div  style="width:398px; padding:2px; color:white; background-color:#e5c130;font-weight:bold;text-align:center ">Selected Products (<span id="nbrSelected">0</span>)</div>
+                    <div class="scrollable">
+                        <select  size="5" id="selectedIds2_j" style="height: 1300px;"></select>
+                    </div>
+                    <br/>
+                    <div style="">
+                        <a href="javascript:deleteId()">Remove</a>
+                    </div>
+                </div>
+    
+        </td>
+      </tr>
+       
+        <tr>
+            <TD>
+                    <div class="searchFilterButtons productButtons" style="padding-top: 10px;">
+                     <apex:commandButton value="Search" action="{!search}" id="go"  rerender="pageMessages2,pageMessages,selectedIds_j,log_j,PageIndextxt,errorMsg,PageIndexLimittxt,stopIndextxt,startIndextxt,nogrid,tbl,out1,out2,vl,numRec,gridSize,log2" status="counterStatus"/> 
+                        &nbsp;
+                     <apex:commandLink value="Clear Filters" onclick="clearFilters();clearFilters2();" action="{!search}" id="clearFilter" rerender="pageMessages2,pageMessages,log_j,PageIndextxt,errorMsg,PageIndexLimittxt,stopIndextxt,startIndextxt,nogrid,tbl,out1,out2,vl,numRec,gridSize,itemGrid" status="counterStatus"/>        
+                    </div>  
+            </TD>
+         </tr>
+        </table>
+</div>
+ </apex:outputpanel>
+  </apex:facet>
+
+  
+
+
+
+<apex:actionStatus id="counterStatus" onstop="document.body.style.cursor = 'default';document.getElementById('searching').style.display = 'none'; updateSelected();" onstart="document.body.style.cursor = 'wait';document.getElementById('searching').style.display = 'inline'" layout="inline"/>
+          
+<div id="noGrid2" style="display:none">No records were found based on your criteria</div>
+<span id="gridId"> 
+<apex:outputLabel value="{!Paging.gridsize}" id="gridSize" style="display:none"/>
+<table width="100%" cellpadding="0" cellspacing="0" border="0" style="border-collapse:collapse;table-layout: fixed">
+    <tr>
+        <td align="center" id="idpn1">
+            <img src="/img/search_prevarrow.gif" alt="No Previous Page" width="5" height="8" class="prevArrow" title="No Previous Page" />
+            <a id="pp1" href="javascript:void(0);" onclick="clickLink(document.getElementById('{!$Component.myform.previouspageBtn}'));">Previous page </a>
+            <span id="pp11">Previous page</span>
+            <span  class="itemsRange" id="tdIndex">({!Paging.startIndex}-{!Paging.stopIndex})</span>&nbsp;
+            <a id="np1" href="javascript:void(0);" onclick="clickLink(document.getElementById('{!$Component.myform.nextpageBtn}'));">Next page </a>
+            <span id="np11">Next page</span>
+            <img src="/img/search_nextarrow.gif" alt="Next Page" width="5" height="8" title="Next Page" />
+        </td>
+    </tr>
+</table>
+<br/>       
+    <apex:pageBlockTable value="{!TV.l}" var="Prod" id="tbl"> 
+
+        <apex:column width="20px">
+                    <apex:facet name="header"  >
+                       <input type="checkbox" id="checkbox1" onclick="selectAll(this)" />
+                    </apex:facet>  
+                    <apex:inputCheckBox value="{!Prod.IsSelected}" onclick="selectId(this,'{!Prod.opp2.id}','{!JSENCODE(Prod.opp2.Product2.Name)}','{!JSENCODE(Prod.opp2.Product2.ProductCode)}');" />
+                   
+                    <input type="hidden" value="{!Prod.opp2.id}" />
+                    
+        </apex:column>       
+  
+
+         <apex:column >
+            <apex:facet name="header">
+                <apex:commandLink onclick="setcurrentSortingField('Product2.Name');" value="{!$ObjectType.Product2.fields.Name.label}" action="{!sortlist}" status="counterStatus" rerender="pageMessages2,pageMessages,log_j,PageIndextxt,PageIndexLimittxt,stopIndextxt,startIndextxt,noGrid2,pnlButton,tbl,out1,out2,vl,numRec,gridSize,errorMsg"/>
+            </apex:facet>
+            <apex:commandLink value="{!Prod.opp2.Product2.Name}" action="/{!Prod.opp2.Product2.Id}" target="_blank" /> &nbsp;
+ 
+        </apex:column>      
+
+        <apex:column headerValue="Product Code" >
+          <apex:facet name="header">
+                <apex:commandLink onclick="setcurrentSortingField('Product2.ProductCode');" value="{!$ObjectType.Product2.fields.ProductCode.label}" action="{!sortlist}" status="counterStatus" rerender="pageMessages2,pageMessages,log_j,PageIndextxt,PageIndexLimittxt,stopIndextxt,startIndextxt,noGrid2,pnlButton,tbl,out1,out2,vl,numRec,gridSize,errorMsg" />
+            </apex:facet>
+          <apex:outputField value="{!Prod.opp2.Product2.ProductCode}" />&nbsp;
+        </apex:column>
+       
+        <apex:column headerValue="External Long Description" >
+          <apex:facet name="header">
+                <apex:commandLink onclick="setcurrentSortingField('Product2.External_Long_Description__c');" value="{!$ObjectType.Product2.fields.External_Long_Description__c.label}" action="{!sortlist}" status="counterStatus" rerender="pageMessages2,pageMessages,log_j,PageIndextxt,PageIndexLimittxt,stopIndextxt,startIndextxt,noGrid2,pnlButton,tbl,out1,out2,vl,numRec,gridSize,errorMsg"/>
+            </apex:facet>
+            <apex:outputField value="{!Prod.opp2.Product2.External_Long_Description__c}" />&nbsp;
+          </apex:column>
+          
+         <apex:column headerValue="Unit of Measure" >
+          <apex:facet name="header">
+                <apex:commandLink onclick="setcurrentSortingField('Product2.Unit_of_Measure__c');" value="{!$ObjectType.Product2.fields.Unit_of_Measure__c.label}" action="{!sortlist}" status="counterStatus" rerender="pageMessages2,pageMessages,log_j,PageIndextxt,PageIndexLimittxt,stopIndextxt,startIndextxt,noGrid2,pnlButton,tbl,out1,out2,vl,numRec,gridSize,errorMsg"/>
+            </apex:facet>
+            <apex:outputField value="{!Prod.opp2.Product2.Unit_of_Measure__c}" />&nbsp;
+          </apex:column>
+          
+         <apex:column headerValue="Type" >
+          <apex:facet name="header">
+                <apex:commandLink onclick="setcurrentSortingField('Product2.Type__c');" value="{!$ObjectType.Product2.fields.Type__c.label}" action="{!sortlist}" status="counterStatus" rerender="pageMessages2,pageMessages,log_j,PageIndextxt,PageIndexLimittxt,stopIndextxt,startIndextxt,noGrid2,pnlButton,tbl,out1,out2,vl,numRec,gridSize,errorMsg"/>
+            </apex:facet>
+            <apex:outputField value="{!Prod.opp2.Product2.Type__c}" />&nbsp;
+          </apex:column>
+          
+        
+        <apex:column headerValue="List Price" styleClass="CurrencyElement" headerClass="CurrencyElement">
+            <apex:facet name="header">
+                <apex:commandLink onclick="setcurrentSortingField('PriceBookEntry.UnitPrice');" value="{!$ObjectType.PricebookEntry.fields.UnitPrice.label}" action="{!sortlist}" status="counterStatus" rerender="pageMessages2,pageMessages,log_j,PageIndextxt,PageIndexLimittxt,stopIndextxt,startIndextxt,noGrid2,pnlButton,tbl,out1,out2,vl,numRec,gridSize,errorMsg"/>
+            </apex:facet>
+            <DIV id="{!Prod.opp2.Id}">
+               <script language="javascript">
+               document.getElementById("{!Prod.opp2.Id}").innerHTML = FormatCurrency({!Prod.opp2.UnitPrice}*1,2)
+               </script>
+            </DIV>
+         </apex:column>
+       
+        <apex:column headerValue="Product Family">
+         <apex:facet name="header">
+                <apex:commandLink onclick="setcurrentSortingField('Product2.Family');" value="{!$ObjectType.Product2.fields.Family.label}" action="{!sortlist}" status="counterStatus" rerender="pageMessages2,pageMessages,log_j,PageIndextxt,PageIndexLimittxt,stopIndextxt,startIndextxt,noGrid2,pnlButton,tbl,out1,out2,vl,numRec,gridSize,errorMsg"/>
+            </apex:facet>
+            <apex:outputField value="{!Prod.opp2.Product2.Family}" />&nbsp;
+        </apex:column>
+     
+   </apex:pageBlockTable>
+    
+
+
+<table width="100%" cellpadding="0" cellspacing="0" border="0" style="border-collapse:collapse;table-layout: fixed">
+    <tr>
+        <td align="center" id="idpn2">
+            <img src="/img/search_prevarrow.gif" alt="No Previous Page" width="5" height="8" class="prevArrow" title="No Previous Page" />
+            <a id="pp2" href="javascript:void(0);" onclick="clickLink(document.getElementById('{!$Component.myform.previouspageBtn}'));">Previous page </a>
+            <span id="pp21">Previous page</span>
+            <span  class="itemsRange" id="tdIndex2">({!Paging.startIndex}-{!Paging.stopIndex})</span>&nbsp;
+            <a id="np2" href="javascript:void(0);" onclick="clickLink(document.getElementById('{!$Component.myform.nextpageBtn}'));">Next page </a>
+            <span id="np21">Next page</span>
+            <img src="/img/search_nextarrow.gif" alt="Next Page" width="5" height="8" title="Next Page" />
+        </td>
+    </tr>
+    </table>
+</span>
+
+</apex:pageBlock>
+<div class="selectButtons">
+         <center>
+            <!--<apex:commandButton value="Select" onclick="checkAll(event);" action="{!selectProd}" /> --> 
+            <input type="button" value="Select" onclick="checkBeforCon()" class="btn"/>
+            <apex:commandButton value="Cancel"  action="{!cancel}" />
+         </center>
+      <br/>
+</div>
+
+
+
+ </apex:form>
+ <script type='text/javascript' src='/js/prototype-1.6.0.2.js'></script>
+ <script language="javascript">
+ function checkBeforCon()
+ {
+    var elem1 = document.getElementById("{!$Component.myform.selectedIds_j}");
+    if(elem1.value=='')
+        {
+            alert("Please select at least one row");
+        }
+        else
+        {
+            document.getElementById('sendForm').click();
+        }
+        
+ }
+ 
+ 
+//Click Link
+function clickLink(linkobj) {
+     if (linkobj.getAttribute('onclick') == null) {
+          if (linkobj.getAttribute('href')) document.location = linkobj.getAttribute('href');
+          else linkobj.click();
+     }
+     else linkobj.onclick();
+}
+
+//enter pressed
+function onEnter(ev)
+{
+    if(window.event)
+    {
+        if(event.keyCode == 13)  //enter pressed
+        {
+           
+          window.event.cancelBubble = true;
+          window.event.returnValue = false;
+          
+            document.getElementById("{!$Component.myform.pgBlock.go}").click();
+        }
+    }
+    else
+    {
+        if(ev.keyCode == 13)  //enter pressed
+        {
+        ev.preventDefault(); 
+        document.getElementById("{!$Component.myform.pgBlock.go}").click();
+        }
+    }
+}
+
+function showFamily(obj)
+{
+    //debugger;
+     if(obj.options[obj.selectedIndex].value == 'Product2.Family') 
+     {
+         obj.parentNode.parentNode.getElementsByTagName('select')[2].parentNode.style.display='';
+         obj.parentNode.parentNode.getElementsByTagName('input')[1].parentNode.style.display='none';
+     }
+     else
+     {
+         obj.parentNode.parentNode.getElementsByTagName('select')[2].parentNode.style.display='none';
+         obj.parentNode.parentNode.getElementsByTagName('input')[1].parentNode.style.display='';
+     }
+     obj.parentNode.parentNode.getElementsByTagName('input')[1].value="";
+ } 
+function UpdateSearchValue(obj)
+{
+    //debugger;
+    obj.parentNode.parentNode.getElementsByTagName('input')[1].value=obj.value;
+}
+/*******************     PAGING ************************************/
+function changePagesize(obj)
+{
+    //debugger; 
+    document.getElementById('{!$Component.myform.pageSizetxt}').value=obj.value;
+    document.getElementById('{!$Component.myform.pgBlock.go}').click()
+}
+
+
+/*******************     GRID   ************************************/
+function setcurrentSortingField (field)
+{
+    document.getElementById("{!$Component.myform.currentSortingField_j}").value = field;
+}
+
+function updateSelected()
+ {
+    //debugger;
+    checkHasItems();
+    var elem1 = document.getElementById("{!$Component.myform.selectedIds_j}");
+    var elem2 = document.getElementById("selectedIds2_j");
+    //var elem2 = document.getElementById("{!$Component.o1.o2.selectedIds2_j}");
+    
+     var mobj = document.getElementById("checkbox1");
+     var ckbx = mobj.parentNode.parentNode.parentNode.parentNode.parentNode;
+     
+     for(i=1 ; i <= ckbx.rows.length -1; i++)
+     {
+        var r = ckbx.rows[i];
+        var tname = r.cells[1].getElementsByTagName("a")[0].innerHTML;
+        var tId = r.cells[0].getElementsByTagName("input")[1].value;
+        for(j=0 ; j <= elem2.length -1; j++)
+         {
+            var rName = elem2.options[j].text;
+            var rId = elem2.options[j].value;
+            if(rId == tId)
+                 r.cells[0].childNodes[0].checked = true;
+         
+            //var t = elem2.options[j].text;
+            //if(t == tname)
+            //     r.cells[0].childNodes[0].checked = true;
+         }
+     }
+
+    
+
+ }
+
+function checkAll(e)
+{
+    //debugger;
+    var elem1 = document.getElementById("{!$Component.myform.selectedIds_j}");
+           
+     if(elem1.value == '')
+     {
+        alert('Please select at least one row');
+        if(window.event)
+        {
+            window.event.cancelBubble = true;
+            window.event.returnValue = false;
+        }
+        else
+        {
+          e.preventDefault(); 
+        }
+        return false;
+     }
+}
+function updateNbrSelected()
+{
+    var elem2 = document.getElementById("selectedIds2_j");
+    document.getElementById("nbrSelected").innerHTML =elem2.length; 
+}
+
+/*********************************************************START***********************************************************************/
+function selectId(obj,id,name,productCode)
+{
+   // debugger;
+    var elem1 = document.getElementById("{!$Component.myform.selectedIds_j}");
+    var elem2 = document.getElementById("selectedIds2_j");
+    if(obj.checked)
+    {
+        elem1.value += id + ';'   
+        elem2.options[elem2.length]=new Option(name+" ( "+productCode+" )",id);
+        
+        currentElement = document.createElement("input");
+        currentElement.setAttribute("type", "hidden");
+        currentElement.setAttribute("name", "ids");
+        currentElement.setAttribute("id", 'op'+id);
+        currentElement.setAttribute("value", id);
+        document.getElementById('myform1').appendChild(currentElement);
+    }   
+    else
+    {
+        elem1.value = elem1.value.replace(id+';','');
+         for(i=0 ; i <= elem2.length -1; i++)
+         {
+            //var r = elem2.options[i].text;
+           // r=r.split(" ( ")[0];
+            var rId =elem2.options[i].value;
+            if(rId == id)
+            {
+                elem2.options[i] = null;
+                break;
+            }
+            var d = document.getElementById('myform1');
+            currentElement = document.getElementById('op'+id);
+            d.removeChild(currentElement);
+         }
+    }
+    updateNbrSelected();
+}
+
+function selectAll(obj)
+{
+   // debugger;
+
+    var elem =  document.getElementById("{!$Component.myform.pgBlock.tbl}");
+    var elem1 = document.getElementById("{!$Component.myform.selectedIds_j}");
+    var elem2 = document.getElementById("selectedIds2_j");
+    for(i=1 ; i <= elem.rows.length -1; i++)
+    {
+        var r = elem.rows[i];
+        //if(r.cells[0].childNodes[0].checked ==  obj.checked)
+        //    continue;
+        r.cells[0].childNodes[0].checked =  obj.checked;
+        var id = r.cells[0].getElementsByTagName("input")[1].value;
+        var name = r.cells[1].getElementsByTagName("a")[0].innerHTML;
+        
+        var productCode = r.cells[2].getElementsByTagName("span")[0].innerHTML;
+        
+        if(r.cells[0].childNodes[0].checked == true)
+        {
+            elem1.value += id + ';'  
+            elem2.options[elem2.length]=new Option(name+" ( "+productCode+" )",id);
+            currentElement = document.createElement("input");
+            currentElement.setAttribute("type", "hidden");
+            currentElement.setAttribute("name", "ids");
+            currentElement.setAttribute("id", 'op'+id);
+            currentElement.setAttribute("value", id);
+            document.getElementById('myform1').appendChild(currentElement);
+        }
+        else
+        {
+            elem1.value = elem1.value.replace(id+';','');
+             for(j=0 ; j <= elem2.length -1; j++)
+             {
+                var r = elem2.options[j].text;
+                var rId = elem2.options[j].value;
+                if(rId == id)
+                {
+                    elem2.options[j] = null;
+                    break;
+                }
+             }
+             var d = document.getElementById('myform1');
+            currentElement = document.getElementById('op'+id);
+            d.removeChild(currentElement);
+        }
+    }
+    updateNbrSelected();
+}
+function deleteId()
+{
+    //debugger;
+    var elem1 = document.getElementById("{!$Component.myform.selectedIds_j}");
+    var elem2 = document.getElementById("selectedIds2_j");
+    var id;
+    var name;
+     for(j=0 ; j <= elem2.length -1; j++)
+     {
+        if(elem2.options[j].selected==true)
+        {
+            id =elem2.options[j].value;
+            name = elem2.options[j].text;
+            elem2.options[j] = null;
+        }
+     }
+     var mobj = document.getElementById("checkbox1");
+     var ckbx = mobj.parentNode.parentNode.parentNode.parentNode.parentNode;  
+     name = name.split(" ( ")[0]; //cutting of the product code 
+    
+     for(i=1 ; i <= ckbx.rows.length -1; i++)
+     {
+       var r = ckbx.rows[i];
+        if(r.cells[0].childNodes[0].checked)
+        {
+           
+           var tname = r.cells[1].getElementsByTagName("a")[0].innerHTML;
+                  var tid = r.cells[0].getElementsByTagName("input")[1].value;
+            if(tid == id)
+                r.cells[0].childNodes[0].checked =false;
+           
+        }
+     }
+    elem1.value = elem1.value.replace(id+';','');
+    updateNbrSelected();
+}/********************************************************END***********************************************************************/
+
+/*
+function selectId(obj,id,name)
+{
+   // debugger;
+    var elem1 = document.getElementById("{!$Component.myform.selectedIds_j}");
+    var elem2 = document.getElementById("selectedIds2_j");
+    if(obj.checked)
+    {
+        elem1.value += id + ';'   
+        elem2.options[elem2.length]=new Option(name,id);
+        
+        currentElement = document.createElement("input");
+        currentElement.setAttribute("type", "hidden");
+        currentElement.setAttribute("name", "ids");
+        currentElement.setAttribute("id", 'op'+id);
+        currentElement.setAttribute("value", id);
+        document.getElementById('myform1').appendChild(currentElement);
+    }   
+    else
+    {
+        elem1.value = elem1.value.replace(id+';','');
+         for(i=0 ; i <= elem2.length -1; i++)
+         {
+            var r = elem2.options[i].text;
+            var rId =elem2.options[i].value;
+            if(rId == id)
+            {
+                elem2.options[i] = null;
+                break;
+            }
+         }
+        var d = document.getElementById('myform1');
+        currentElement = document.getElementById('op'+id);
+        d.removeChild(currentElement);
+    }
+    updateNbrSelected();
+   
+}
+
+
+function selectAll(obj)
+{
+    //debugger;
+    var elem =  document.getElementById("{!$Component.myform.pgBlock.tbl}");
+    var elem1 = document.getElementById("{!$Component.myform.selectedIds_j}");
+    var elem2 = document.getElementById("selectedIds2_j");
+    for(i=1 ; i <= elem.rows.length -1; i++)
+    {
+        var r = elem.rows[i];
+        //if(r.cells[0].childNodes[0].checked ==  obj.checked)
+        //    continue;
+        r.cells[0].childNodes[0].checked =  obj.checked;
+        var id = r.cells[0].getElementsByTagName("input")[1].value;
+        var name = r.cells[1].getElementsByTagName("a")[0].innerHTML;
+        if(r.cells[0].childNodes[0].checked == true)
+        {
+            elem1.value += id + ';'  
+            elem2.options[elem2.length]=new Option(name,id);
+            currentElement = document.createElement("input");
+            currentElement.setAttribute("type", "hidden");
+            currentElement.setAttribute("name", "ids");
+            currentElement.setAttribute("id", 'op'+id);
+            currentElement.setAttribute("value", id);
+            document.getElementById('myform1').appendChild(currentElement);
+        }
+        else
+        {
+            elem1.value = elem1.value.replace(id+';','');
+             for(j=0 ; j <= elem2.length -1; j++)
+             {
+                var r = elem2.options[j].text;
+                var rId = elem2.options[j].value;
+                if(rId == id)
+                {
+                    elem2.options[j] = null;
+                    break;
+                }
+             }
+             var d = document.getElementById('myform1');
+            currentElement = document.getElementById('op'+id);
+            d.removeChild(currentElement);
+        }
+    }
+    updateNbrSelected();
+}
+
+function deleteId()
+{
+    //debugger;
+    var elem1 = document.getElementById("{!$Component.myform.selectedIds_j}");
+    var elem2 = document.getElementById("selectedIds2_j");
+    var id;
+    var name;
+     for(j=0 ; j <= elem2.length -1; j++)
+     {
+        if(elem2.options[j].selected==true)
+        {
+            id =elem2.options[j].value;
+            name = elem2.options[j].text;
+            elem2.options[j] = null;
+        }
+     }
+     var ckbx = document.getElementById("{!$Component.myform.pgBlock.tbl}"); 
+     for(i=1 ; i <= ckbx.rows.length -1; i++)
+     {
+       var r = ckbx.rows[i];
+        if(r.cells[0].childNodes[0].checked)
+        {
+            var tname = r.cells[1].getElementsByTagName("a")[0].innerHTML;
+            var tid = r.cells[0].getElementsByTagName("input")[1].value;
+            if(tid == id)
+            {
+                r.cells[0].childNodes[0].checked =false;
+                break;
+            }
+        }
+     }
+    elem1.value = elem1.value.replace(id+';','');
+    var d = document.getElementById('myform1');
+    currentElement = document.getElementById('op'+id);
+    d.removeChild(currentElement);
+    updateNbrSelected();
+}
+*/
+
+/*******************        ************************************/
+ ChangeOptDisabled();
+ var fieldRows=document.getElementById("tableFilrerId");
+fieldRows.rows[1].style.display='';
+document.getElementById("tableFilrerId").rows[1].getElementsByTagName('a')[0].innerHTML = "More&nbsp;&gt;&gt;";
+ checkHasItems();
+ 
+ 
+ 
+ function checkHasItems()
+ {
+    var startindex=document.getElementById("{!$Component.myform.startIndextxt}").innerHTML;
+    var stopindex=document.getElementById("{!$Component.myform.stopIndextxt}").innerHTML;
+    var numRecords=document.getElementById("{!$Component.myform.numRecordstxt}").innerHTML;
+    var PageIndex=document.getElementById("{!$Component.myform.PageIndextxt}").innerHTML;
+    var PageIndexLimit=document.getElementById("{!$Component.myform.PageIndexLimittxt}").innerHTML;
+    document.getElementById("itemGrid").innerHTML = (stopindex-startindex+1);
+    document.getElementById("tdIndex").innerHTML = "(" + startindex + "-" + stopindex + ")";
+    document.getElementById("tdIndex2").innerHTML = "(" + startindex + "-" + stopindex + ")";
+   //Previous And Next 
+   if(startindex == "1")
+   {
+        document.getElementById("pp1").style.display = 'none';
+        document.getElementById("pp11").style.display = '';
+        document.getElementById("pp2").style.display = 'none';
+        document.getElementById("pp21").style.display = '';
+   }
+   else
+   {
+        document.getElementById("pp11").style.display = 'none';
+        document.getElementById("pp1").style.display = '';
+        document.getElementById("pp21").style.display = 'none';
+        document.getElementById("pp2").style.display = '';
+   }
+
+   if(PageIndex == PageIndexLimit || PageIndexLimit==0)
+   {
+        document.getElementById("np1").style.display = 'none';
+        document.getElementById("np11").style.display = '';
+        document.getElementById("np2").style.display = 'none';
+        document.getElementById("np21").style.display = '';
+   }
+   else
+   {
+        document.getElementById("np11").style.display = 'none';
+        document.getElementById("np1").style.display = '';
+        document.getElementById("np21").style.display = 'none';
+        document.getElementById("np2").style.display = '';
+   }
+   
+   var nbrelem = stopindex -startindex+1;
+    
+    //No Elem
+    //debugger;
+    
+   if(document.getElementById("{!$Component.myform.PageIndexLimittxt}").innerHTML == "0" )
+   {
+       document.getElementById("noGrid2").style.display='';
+       document.getElementById("idpn1").style.display='none';
+       document.getElementById("gridId").style.display='none';
+       document.getElementById("idpn2").style.display='none';
+   }
+   else
+   {
+       document.getElementById("noGrid2").style.display='none';
+       document.getElementById("idpn1").style.display='';
+       document.getElementById("gridId").style.display='';
+       document.getElementById("idpn2").style.display='';
+   }   
+    
+ }
+function clearFilters2(){
+    document.getElementById("UnitofMeasure").getElementsByTagName('select')[0].value='';
+    document.getElementById("Type").getElementsByTagName('select')[0].value='';
+}
+</script>
+  
+</apex:page>

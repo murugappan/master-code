@@ -1,0 +1,86 @@
+<apex:page standardController="E2CP__Canned_Comment__c" extensions="E2CP.CannedCommentBuilderCtrl" id="pg">
+
+
+<script>
+function insertField() {
+    
+    var myField = document.getElementById('pg:frm:pb:pbs2:Comment');
+    var sText = document.getElementById('pg:frm:pb:pbs2:pbsiFieldList:selFieldList').value;
+    
+    sText = '{' + sText + '}';
+             
+    if (document.selection) {  //IE
+        myField.focus();
+        sel = document.selection.createRange();
+        sel.text = sText;
+    }
+    else if (myField.selectionStart || myField.selectionStart == '0') { //firefox
+        var startPos = myField.selectionStart;
+        var endPos = myField.selectionEnd;
+        myField.value = myField.value.substring(0, startPos) + sText + myField.value.substring(endPos, myField.value.length);
+    } 
+    else { 
+        myField.value += sText;
+    }
+        
+}
+</script>
+
+<apex:form id="frm">
+
+<apex:pageMessages />
+
+<apex:pageBlock title="Canned Comment Edit" id="pb">
+
+<apex:pageBlockButtons >
+    <apex:commandButton action="{!Save}" value="Save"/>
+    <Apex:commandButton action="{!saveAndNew}" value="Save and New" />
+    <apex:commandButton action="{!Cancel}" value="Cancel" />
+</apex:pageBlockButtons>
+    
+<apex:pageBlockSection title="Information" columns="2">
+<apex:inputField value="{!thisCC.E2CP__Category__c}" />
+<apex:inputField value="{!thisCC.E2CP__Active__c}"/>
+<apex:inputField value="{!thisCC.E2CP__Title__c}"/>
+</apex:pageBlockSection>
+
+<apex:pageBlockSection title="Comment" columns="1" id="pbs2">
+
+<apex:pageBlockSectionItem id="pbsiFieldList">
+<apex:outputLabel value="Insert Field" />
+<apex:outputPanel id="opFieldList">
+    <apex:selectList size="1" multiselect="false" id="selFieldList">
+        <apex:selectOptions value="{!FieldOptions}" />
+    </apex:selectList>
+    <input class="btn" id="btnInsertCanned" type="button" value="Insert" onclick="insertField();"/>
+</apex:outputPanel>
+</apex:pageBlockSectionItem>
+
+<apex:inputField value="{!thisCC.E2CP__Comment__c}" id="Comment" style="width:420px; height:120px;"/>
+
+</apex:pageBlockSection>
+
+
+
+</apex:pageBlock>
+
+
+</apex:form>
+
+<script>
+    //copies extra fields found in the controller to the list box
+    var sel = document.getElementById('pg:frm:pb:pbs2:pbsiFieldList:selFieldList');
+    
+    var overflow = {
+        {!overflow}
+    };
+    
+    for(var o in overflow){
+        var newOpt = new Option(overflow[o], o);
+        var selLength = sel.length; 
+        sel.options[selLength] = newOpt;
+    } 
+
+</script>
+
+</apex:page>

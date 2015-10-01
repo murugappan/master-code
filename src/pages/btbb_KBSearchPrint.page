@@ -1,0 +1,45 @@
+<apex:page controller="btbb_articleSearchController" standardstylesheets="false" readOnly="true" showHeader="false" cache="false" sidebar="false" renderAs="html" name="BtBB KB Search - Print">
+	<style>
+		p {margin-top:7px;margin-bottom:4px;}
+		table { border-collapse:collapse;margin-top:7px;margin-bottom:7px;}
+		table, td {border:1px solid #757575;padding:5px;}
+		th {font-weight:bold;border:1px solid #757575;padding:5px;}
+		
+	</style>
+    <div class="mainpdf" style="font-family:arial,helvetica,sans-serif;font-size:85%;margin-left:2%;margin-right:2%;display:block;">
+            
+    	<apex:image style="float:left;clear:all;margin-top:2%;height:80px%;width:80px;" alt="BtBB KB Search" value="{!URLFOR($Resource.BtBbKBPrint, '/Bb_Logo.jpg')}" /><br /><br /><br /><br /><br />
+            
+        <span style="background: transparent url('{!URLFOR($Resource.BtBbKBPrint, '/yellow_gray_blocks.jpg')}') repeat x;clear:none;">&nbsp;</span>
+        
+        <apex:pageBlock >
+	        <<table width="100%" style="margin: 1em; border-collapse: collapse;">
+                <tr>
+                    <th width="10%">Article Number</th>
+                    <th width="20%">Title</th>
+                    <th width="10%">Published Date</th>
+                    <th width="20%">Category</th>
+                    <th width="10%">Release</th>
+                    <th width="10%">Service Pack(s)</th>
+                    <th width="10%">Target Release</th>
+                    <th width="8%">Patch Available</th>
+                </tr>
+                <apex:repeat value="{!kavWrapperListPDF}" var="listvar" rows="1000">
+	                <apex:repeat value="{!listvar}" var="k" rows="1000">
+	                    <tr>
+	                        <td>{!k.articleNumber}</td>
+	                        <td>{!k.name}</td>
+	                        <td>{!k.lastpublisheddate}</td>
+	                        <td>{!k.articleType}</td>
+	                        <td>{!k.release}</td>
+	                        <td>{!k.versionsPDF}</td>          
+	                        <td>{!k.targetRelease}</td>
+	                        <td>{!k.patchAvailable}</td>                          
+	                    </tr>
+	                </apex:repeat>
+                </apex:repeat>
+            </table> 
+    	</apex:pageBlock>  
+        
+    </div>
+</apex:page>

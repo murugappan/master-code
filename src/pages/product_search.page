@@ -1,0 +1,96 @@
+<apex:page standardController="Opportunity" extensions="AddOpportunityLineItemsController" action="{!choosePricebook}">
+<script>
+function checkAll(cb)
+{
+    var inputElem = document.getElementsByTagName("input");
+    for(var i=0; i<inputElem.length; i++)
+    {
+        if(inputElem[i].id.indexOf("checkedone")!=-1)
+        inputElem[i].checked = cb.checked;
+    }
+}    
+</script>
+    <apex:sectionHeader title="Opportunity {!Opportunity.Name}" subtitle="Product Selection"/>
+    <apex:form >
+        <apex:pageBlock Title="Find Products" id="block">
+            <apex:pageBlockButtons >
+                <apex:commandButton action="{!next}" value="Select" disabled="{!OR(ISNULL(searchResults),searchResults.size = 0)}"/>
+                <apex:commandButton action="{!cancel}" value="Cancel"/>
+            </apex:pageBlockButtons>
+            <apex:pageMessages />
+            <table>
+                <tbody>
+                    <tr>
+                        <td>
+                            <table>
+                                <tbody>
+                                    <tr>
+                                        <td><span style="font-weight:bold;color:#333333;font-size:1.1em">Filter by </span></td>
+                                    </tr>
+                                    <tr style="text-align:center;">
+                                        <td>
+                                            <span style="font-weight:bold;color:#333333;font-size:0.8em">Product Category</span><br/>
+                                            <apex:selectList value="{!productCategories}" multiselect="true" size="7" id="productCategory">
+                                                <apex:selectOptions value="{!ProductCategoryList}"/>
+                                                <apex:actionSupport event="onchange" rerender="productSubCategory, productBand"/>
+                                            </apex:selectList>
+                                        </td>
+                                        <td>
+                                            <span style="font-weight:bold;color:#333333;font-size:0.8em">Sub Category</span><br/>
+                                            <apex:selectList value="{!productSubCategories}" multiselect="true" size="7" id="productSubCategory">
+                                                <apex:selectOptions value="{!ProductSubCategoryList}"/>
+                                                <apex:actionSupport event="onchange" rerender="productBand"/>
+                                            </apex:selectList>
+                                        </td>
+                                        <td>
+                                            <span style="font-weight:bold;color:#333333;font-size:0.8em">Band</span><br/>
+                                            <apex:selectList value="{!productBand}" multiselect="false" size="7" id="productBand">
+                                                <apex:selectOptions value="{!productBands}"/>
+                                            </apex:selectList>
+                                        </td>
+                                        <td>
+                                            <span style="font-weight:bold;color:#333333;font-size:0.8em"> </span><br/>
+                                            <apex:commandButton value="Filter" action="{!filter}" rerender="block" style="margin-left:10px;margin-right:10px;" status="filterStatus"/>
+                                            <apex:actionStatus id="filterStatus" startText="Searching... " startStyle="font-weight:bold;color:red;"/>
+                                        </td>
+                                    </tr>
+                                </tbody>
+                            </table>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td><span>or</span><br/><br/></td>
+                    </tr>
+                    <tr>
+                        <td><span style="font-weight:bold;color:#333333;font-size:1.1em">Search by Name</span><br/>
+                            <apex:inputText id="searchText" value="{!searchText}"/>
+                            <apex:commandButton value="Search" action="{!search}" rerender="block" style="margin-left:10px;margin-right:10px;" status="searchStatus"/>
+                            <apex:actionStatus id="searchStatus" startText="Searching... " startStyle="font-weight:bold;color:red;"/>
+                            <br/>
+                        </td>
+                    </tr>
+                </tbody>
+            </table>
+            <apex:pageBlockSection collapsible="false" title="Search Results" id="resultsBlock" columns="1">
+                <apex:pageBlockTable value="{!searchResults}" var="c" cellpadding="4" rendered="{!NOT(ISNULL(searchResults))}">
+                    <apex:column >
+                        <apex:facet name="header"> <apex:inputCheckbox onchange="checkAll(this)"></apex:inputCheckbox></apex:facet>
+                        <apex:inputCheckbox value="{!c.selected}" id="checkedone"></apex:inputCheckbox>
+                    </apex:column>
+                    <apex:column headervalue="Name">
+                        <apex:outputField value="{!c.product.Product2.External_Long_Description__c}"/>
+                    </apex:column>
+                    <apex:column headervalue="Sub Category">
+                        <apex:outputField value="{!c.product.Product2.Product_Sub_Category__c}"/>
+                    </apex:column>
+                    <apex:column headervalue="Band">
+                        <apex:outputField value="{!c.product.Product2.Band__c}"/>
+                    </apex:column>
+                    <apex:column headervalue="Product Code">
+                        <apex:outputField value="{!c.product.Product2.ProductCode}"/>
+                    </apex:column>
+                </apex:pageBlockTable>
+            </apex:pageBlockSection>
+        </apex:pageBlock>
+    </apex:form>
+</apex:page>

@@ -1,0 +1,159 @@
+<apex:page standardController="Asset" extensions="LicenseKeyGeneratorExt" sidebar="false" showHeader="false">
+    
+    <!-- pop-out link -->
+    <apex:outputLink rendered="{!Asset.KEYGEN_isLicenseEligible__c}" target="{!Asset.Id}" value="/apex/licenseKeyGenerator?id={!Asset.Id}">Pop out</apex:outputLink>
+
+	<!-- license is parent and eligible so show the key section -->
+    <apex:pageBlock rendered="{!Asset.KEYGEN_isLicenseEligible__c}">
+        <apex:form id="parent_form">
+            <apex:pageBlockSection columns="2">
+                <apex:outputField style="width:200px; text-align:left;" value="{!Asset.KEYGEN_isLicenseEligible__c}"/> 
+                <apex:outputLink value="/servlet/servlet.FileDownload?file={!Asset.KEYGEN_Latest_License_File__c}" target="_top" rendered="{!Asset.KEYGEN_Latest_License_File__c != null}" >{!Asset.KEYGEN_Latest_License_Filename__c}</apex:outputLink>
+            </apex:pageBlockSection>       
+        </apex:form>    
+    </apex:pageBlock>
+    
+    <!-- else child so direct to the Eligible Parents -->
+    <apex:pageBlock rendered="{!Asset.KEYGEN_isLicenseEligible__c == false}">
+        <apex:form id="parent_link_form">
+            <apex:pageBlockSection columns="1" title="Selected Parent" collapsible="false" >
+                <apex:pageBlockTable var="a" value="{!selectedParentAsset}" rendered="{!hasParent}">
+                    
+                    <!-- removal link -- this does work but does not refresh the list.
+                    <apex:column headerValue="" style="width: 40px;">
+                             <apex:commandLink value="Delete" action="{!doRemoveChild}" >
+                                 <apex:param name="childAssetId" value="{!Asset.Id}" assignTo="{!childAssetId}" />
+                             </apex:commandLink>
+                    </apex:column> -->
+                    
+                     <apex:column headerValue="Asset Name"> 
+                         <apex:outputLink target="{!a.Id}" value="/{!a.Id}">{!a.Name}</apex:outputLink>
+                     </apex:column>   
+                    <apex:column value="{!a.Status}" />                   
+               		<apex:column value="{!a.Product2.GKEY_Product_Group__c}" />
+                	<apex:column value="{!a.Product2.ProductCode}" />
+                	<apex:column value="{!a.True_ID__c}" />         
+                </apex:pageBlockTable>    
+            </apex:pageBlockSection>       
+
+            <apex:pageBlockSection columns="1" title="Eligible Parents" collapsible="false">
+				<apex:pageBlockTable var="a" value="{!eligibleParentAssets}" >
+                     <apex:column headerValue="Asset Name"> 
+                         <apex:outputLink target="{!a.Id}" value="/{!a.Id}">{!a.Name}</apex:outputLink>
+                     </apex:column>   
+                    <apex:column value="{!a.Status}" />                   
+               		<apex:column value="{!a.Product2.GKEY_Product_Group__c}" />
+                	<apex:column value="{!a.Product2.ProductCode}" />
+                	<apex:column value="{!a.True_ID__c}" />  
+                    
+                 </apex:pageBlockTable>
+            </apex:pageBlockSection>       
+
+
+        </apex:form>    
+    	</apex:pageBlock>    
+    
+    	<apex:pageBlock rendered="{!Asset.KEYGEN_isLicenseEligible__c}">	
+            
+            <apex:pageBlockSection title="Selected Child Assets"  columns="1" collapsible="false" >
+            	<apex:form id="formRemoveChild">        
+                     <apex:pageBlockTable var="child" value="{!childAssets}" rendered="{!hasChildAssets}">
+                         
+                         <apex:column headerValue="" style="width: 40px;">
+                             <apex:commandLink value="Delete" action="{!doRemoveChild}" immediate="true">
+                                 <apex:param name="childAssetId" value="{!child.Id}" assignTo="{!childAssetId}" />
+                             </apex:commandLink>
+                         </apex:column>
+                         
+                         
+                         <apex:column headerValue="Product"> <apex:outputLink target="{!child.Id}" value="/{!child.Id}">{!child.Product2.ProductCode}</apex:outputLink>   </apex:column>
+                         <apex:column value="{!child.Product2.GKEY_Product_Group__c}" /> 
+                         <apex:column value="{!child.CPQ_Contract_Start_Date__c}" /> 
+                         <apex:column value="{!child.CPQ_Contract_End_Date__c}" /> 
+                         <apex:column value="{!child.True_ID__c}" /> 
+                         <apex:column value="{!child.Original_True_ID__c}" /> 
+                    </apex:pageBlockTable>
+                </apex:form>        
+             </apex:pageBlockSection>
+            
+            <apex:pageBlockSection title="Eligible Child Assets"  columns="1" collapsible="false" >
+                 <apex:form id="formMakeChild" >
+	                 <apex:pageBlockTable var="child2" value="{!eligibleChildAssets}" rendered="{!hasEligibleChildAssets}">
+                         
+                         <apex:column headerValue="" style="width: 40px;">
+                             <apex:commandLink value="Add" action="{!doMakeChild}">
+                                 <apex:param name="childAssetId" value="{!child2.Id}" assignTo="{!childAssetId}" />
+                             </apex:commandLink>
+                         </apex:column>
+                         
+                         <apex:column headerValue="Product"> <apex:outputLink target="{!child2.Id}" value="/{!child2.Id}">{!child2.Product2.ProductCode}</apex:outputLink>   </apex:column>
+                         <apex:column value="{!child2.Product2.GKEY_Product_Group__c}" /> 
+                         <apex:column value="{!child2.CPQ_Contract_Start_Date__c}" /> 
+                         <apex:column value="{!child2.CPQ_Contract_End_Date__c}" /> 
+                         <apex:column value="{!child2.True_ID__c}" /> 
+                         <apex:column value="{!child2.Original_True_ID__c}" /> 
+                    </apex:pageBlockTable>
+                </apex:form>
+ 		    </apex:pageBlockSection>
+            
+
+            <apex:pageBlockSection title="Add Ons"  columns="1" collapsible="false" >
+                <apex:outputField label="Product Name" value="{!Asset.KEYGEN_Product_Name__c}" />
+                <apex:outputField label="SSL" value="{!Asset.KEYGEN_hasSSL__c}" /> 
+                <!-- <apex:outputField label="Commercial Branding" value="{!Asset.Name}" /> -->
+                <apex:outputField label="Compatability" value="{!Asset.KEYGEN_Compatability__c}" />
+                <apex:outputField label="Market: International" value="{!Asset.KEYGEN_MarketIntl__c}" /> 
+                <apex:outputField label="Market: K12" value="{!Asset.KEYGEN_MarketK12__c}" /> 
+                <apex:outputField label="Market: NAHE" value="{!Asset.KEYGEN_MarketNahe__c}" /> 
+                <apex:outputField label="Market: Pro Ed." value="{!Asset.KEYGEN_MarketPro__c}" />
+                <apex:outputField label="Virtual Installations" value="{!Asset.KEYGEN_Number_of_Virtuals__c}" />
+                <apex:outputField label="Web Email" value="{!Asset.KEYGEN_hasWebEmail__c}" />
+               
+            </apex:pageBlockSection>
+            
+            <apex:form id="expiry"> 
+            <apex:pageBlockSection title="Product Limitations" columns="1" collapsible="false" >
+                    <apex:inputField label="Expiry Override Days"  value="{!Asset.KEYGEN_Expiry_Override__c}">
+                    <apex:commandLink value="Update" action="{!save}" target="_top"/><br />
+                </apex:inputField>	
+                <apex:outputField label="Expiration Days" value="{!Asset.KEYGEN_Expiry_in_Days__c}" />
+                <apex:outputField label="Max Courses" value="{!Asset.KEYGEN_Number_of_Courses__c}" />
+                <apex:outputField label="Max Organizations" value="{!Asset.KEYGEN_Number_of_Orgs__c}" />
+                <apex:outputField label="Max Users" value="{!Asset.KEYGEN_Number_of_Users__c}" />
+                
+            </apex:pageBlockSection>
+            </apex:form>            
+
+            <apex:pageBlockSection title="Product Options" columns="1" collapsible="false" >
+                <!-- <apex:outputField title="E Martket" value="{!Asset.KEYGEN_hasContentSystem__c}" /> -->
+                <apex:outputField label="Content System" value="{!Asset.KEYGEN_hasContentSystem__c}" />
+                <apex:outputField label="Enterprise" value="{!Asset.KEYGEN_isEnterprise__c}" />
+                <apex:outputField label="Learning" value="{!Asset.KEYGEN_hasLearning__c}" />
+                <apex:outputField label="Outcomes" value="{!Asset.KEYGEN_hasOutcomes__c}" />
+                <apex:outputField label="Outcomes Assessment" value="{!Asset.KEYGEN_hasOutcomesAssessment__c}" />
+                <apex:outputField label="Community System (Portal)" value="{!Asset.KEYGEN_hasCommunitySystem__c}" />
+                <apex:outputField label="Standalone Portal" value="{!Asset.KEYGEN_hasStandalonePortal__c}" />
+                <apex:outputField label="Status" value="{!Asset.KEYGEN_Status__c}" />
+                
+                
+            </apex:pageBlockSection>
+            
+            
+            
+            
+            <apex:pageBlockSection title="Key Generation" columns="1" collapsible="false" >
+          
+ 			    <apex:form id="generate" >           
+                    <apex:commandlink value="Generate" action="{!doGenerate}" target="_top"/>&nbsp;&nbsp;
+                    <apex:commandLink value="Reload" action="{!cancel}" target="_top"  /><br/><br />
+                    Generator Status: <apex:outputField value="{!Asset.KEYGEN_Webservice_Msg_Status__c}" /><br/><br /> 
+                    <apex:inputField style="width: 95%; height: 200px;"  value="{!Asset.KEYGEN_License_XML__c}" /><br /> 
+                    <apex:commandLink value="Save" action="{!save}" target="_top"/><br />
+
+                </apex:form>   
+            </apex:pageBlockSection>
+    
+          
+        </apex:pageBlock>     
+
+</apex:page>

@@ -1,0 +1,17 @@
+<apex:page standardStylesheets="false" showHeader="false" sidebar="false" contentType="text/html" cache="false" >
+
+
+<apex:composition template="btbb_template">
+        
+        
+         
+       
+          
+           
+                
+                <apex:define name="content">
+                
+                </apex:define>
+                </apex:composition>
+    
+</apex:page>

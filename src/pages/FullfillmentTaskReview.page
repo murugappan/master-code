@@ -1,0 +1,317 @@
+<apex:page standardController="Opportunity" extensions="FulfillmentTaskReviewClass" sidebar="false">
+<script type="text/javascript">
+function setFocusOnLoad() {}
+</script>
+
+<style type="text/css">
+ table.exceptionText td {
+
+                 font-style:italic;
+                 font-size:16px;
+                 font-weight:bold;
+                 text-align:center;
+                 color:blue;}
+<!--
+.datePicker,.datePicker .dateBar,.datePicker .calBody, .datePicker .calDays,.datePicker .buttonBar,.datePickerSelect,.datePicker{ display:none;}   -->            
+</style> 
+
+
+ <apex:includeScript value="{!$Resource.Fullfillment}"/>
+<script>
+$(document).ready(function(){
+  $("input").focus(function(){
+    $(".datePicker").html('').hide();
+  });
+});   
+</script> 
+
+    <apex:form >
+    <apex:pageMessages />
+          <apex:pageBlock mode="Edit" title="Task related Products" >
+         
+          <apex:messages layout="table" styleClass="exceptionText"/>
+              <apex:pageBlockButtons >
+                <apex:commandButton action="{!save}" value="Save"/>
+                <apex:commandButton action="{!cancel}" Value="Cancel"/>
+                 <apex:commandButton action="{!SendMail}" Value="Send Fulfillment Email"/>
+              </apex:pageBlockButtons>
+               
+               <apex:pageBlockTable value="{!oppline}" var="item"> 
+                    
+                          <!-- Products(Start)--->
+                          
+                          <apex:column headerValue="Product Name"   >
+                                <apex:facet name="header">Product Name</apex:facet> 
+                                <apex:repeat value="{!cTask}" var="i">
+                                <apex:outputLink value="/{!item.id}" rendered="{!item.Store_combination__c==i.Store_combination__c}" >{!item.Product2.Name}</apex:outputLink> 
+                                </apex:repeat>
+                          </apex:column> 
+                          
+                          <!-- Products(End)---> 
+                          
+                          <!-- Assets(Start)--->
+                          
+                          <apex:column headerValue="Asset Name"   >
+                                <apex:facet name="header">Asset Name</apex:facet> 
+                                <apex:repeat value="{!Lass}" var="i">
+                                <apex:outputLink value="/{!i.id}" rendered="{!item.product2id==i.product2id && item.Renewal_Unique_Line_ID__c==i.CPQ_LineIdentifier__c }" >{!i.Name}</apex:outputLink> 
+                                </apex:repeat>
+                          </apex:column> 
+                          
+                          <apex:column headerValue="Asset Status"   >
+                                <apex:facet name="header">Asset Status</apex:facet> 
+                                <apex:repeat value="{!Lass}" var="i">
+                                <apex:outputField value="{!i.Status}"  rendered="{!item.product2id==i.product2id && item.Renewal_Unique_Line_ID__c==i.CPQ_LineIdentifier__c }"  style="width: 10px;"/> 
+                                </apex:repeat>
+                          </apex:column> 
+                          
+                          <!-- Assets(End)---> 
+                          
+
+                          <apex:column headerValue="Task Name">
+                                  <apex:facet name="header">Task Name</apex:facet> 
+                                  <apex:repeat value="{!cTask}" var="i">
+                                   <apex:outputLink value="/{!i.id}" rendered="{!item.Store_combination__c==i.Store_combination__c}" >{!i.Name}</apex:outputLink> 
+                                  </apex:repeat>
+                          </apex:column>
+                                
+                          <apex:column headerValue="Queue Name"   >
+                                  <apex:facet name="header">Owner Name</apex:facet>
+                                  <apex:repeat value="{!cTask}" var="i"> 
+                                  <apex:outputField value="{!i.Owner.Name}"  rendered="{!item.Store_combination__c==i.Store_combination__c}"  style="width: 10px;"/>
+                                  </apex:repeat>
+                          </apex:column>
+                          
+                           <apex:column headerValue="Status"   >
+                                  <apex:facet name="header">Task Status</apex:facet>
+                                  <apex:repeat value="{!cTask}" var="i"> 
+                                  <apex:outputField value="{!i.Status__c}"  rendered="{!item.Store_combination__c==i.Store_combination__c}"  style="width: 10px;"/>
+                                  </apex:repeat>
+                          </apex:column>
+                          
+                           <apex:column headerValue="Comments"   >
+                                  <apex:facet name="header">Comments</apex:facet>
+                                  <apex:repeat value="{!cTask}" var="i"> 
+                                  <apex:outputField value="{!i.Comments__c}"  rendered="{!item.Store_combination__c==i.Store_combination__c}"  style="width: 10px;"/>
+                                  </apex:repeat>
+                          </apex:column>
+                                   
+                          <apex:column headerValue="Last Updated"   >
+                                <apex:facet name="header">Last Updated</apex:facet> 
+                                <apex:repeat value="{!cTask}" var="i">
+                                <apex:outputField value="{!i.LastModifiedDate}"  rendered="{!item.Store_combination__c==i.Store_combination__c}"  style="width: 10px;"/>
+                                </apex:repeat>
+                          </apex:column>
+                          
+                          <apex:column headerValue="PS Product Id"> 
+                                 <apex:facet name="header">PS Product Id</apex:facet>
+                                 <apex:repeat value="{!cTask}" var="i">
+                                  <apex:outputField value="{!item.PS_Product_ID__c}" rendered="{!item.Store_combination__c=i.Store_combination__c}"/>
+                                 </apex:repeat>
+                          </apex:column> 
+                                               
+
+                           <apex:column headerValue="Sales Value"> 
+                                 <apex:facet name="header">Sales Value</apex:facet>
+                                 <apex:repeat value="{!cTask}" var="i">
+                                  <apex:outputText value="{!item.CurrencyIsoCode}{!item.TotalPrice}" rendered="{!item.Store_combination__c=i.Store_combination__c}"/>
+                                 </apex:repeat>
+                          </apex:column> 
+                                
+                          <apex:column headerValue="Product Status"> 
+                                 <apex:facet name="header">Product Status</apex:facet>
+                                 <apex:repeat value="{!cTask}" var="i">
+                                  <apex:inputField value="{!item.CPQ_Product_Status__c}" rendered="{!item.Store_combination__c=i.Store_combination__c}"/>
+                                 </apex:repeat>
+                          </apex:column>
+                                
+                          <apex:column headerValue="Delivery Date"> 
+                                 <apex:facet name="header">Delivery Date</apex:facet>
+                                  <apex:repeat value="{!cTask}" var="i">
+                                  <apex:inputField value="{!item.CPQ_Delivery_Date__c}" rendered="{!item.Store_combination__c==i.Store_combination__c}" />
+                                  </apex:repeat>
+                         </apex:column>
+                                
+                         <apex:column headerValue="Delivery Status" > 
+                                 <apex:facet name="header">Delivery Status</apex:facet>
+                                   <apex:repeat value="{!cTask}" var="i">
+                                   <apex:inputField value="{!item.CPQ_Delivery_Status__c}" rendered="{!item.Store_combination__c==i.Store_combination__c}"/>
+                                   </apex:repeat>
+                         </apex:column>
+                                
+                         <apex:column headerValue="Product Start Date "> 
+                                 <apex:facet name="header">Contract Start Date</apex:facet>
+                                 <apex:repeat value="{!cTask}" var="i">
+                                  <apex:outputField value="{!item.CPQ_Product_Start_Date__c}" rendered="{!item.Store_combination__c=i.Store_combination__c}"/>
+                                  </apex:repeat>
+                          </apex:column>
+                                
+                          <apex:column headerValue="Product End Date "> 
+                                 <apex:facet name="header">Contract  End Date</apex:facet>
+                                 <apex:repeat value="{!cTask}" var="i">
+                                  <apex:outputField value="{!item.CPQ_Product_End_Date__c}" rendered="{!item.Store_combination__c=i.Store_combination__c}"/>
+                                 </apex:repeat>
+                          </apex:column>
+                          
+                                
+                           </apex:pageBlockTable>
+                               
+                           
+                            </apex:pageblock>
+                            <Apex:pageblock >
+                              <apex:pageblockSection title="Task History" columns="1" collapsible="true">
+                                <apex:pageBlockTable value="{!Acthistory}" var="f">
+                                   <apex:column >
+                                      <apex:facet name="header">Field</apex:facet> 
+                                      <apex:outputField value="{!f.field}"/>
+                                    </apex:column>
+                                    <apex:column >
+                                      <apex:facet name="header">OldValue</apex:facet> 
+                                      <apex:outputField value="{!f.OldValue}"/>
+                                    </apex:column>
+                                    <apex:column >
+                                      <apex:facet name="header">NewValue</apex:facet> 
+                                      <apex:outputField value="{!f.NewValue}"/>
+                                    </apex:column>
+                                    <apex:column >
+                                      <apex:facet name="header">User</apex:facet> 
+                                      <apex:outputLink value="/{!f.Parent.LastModifiedbyId}" >{!f.Parent.LastModifiedby.Name}</apex:outputLink>
+                                    </apex:column>
+                                    <apex:column >
+                                      <apex:facet name="header">Last Modified Date</apex:facet> 
+                                      <apex:outputField value="{!f.Parent.LastModifiedDate}"/>
+                                    </apex:column>
+                                     
+                                    <apex:column >
+                                      <apex:facet name="header">Task Name</apex:facet> 
+                                      <apex:outputLink value="/{!f.Parentid}" >{!f.Parent.Name}</apex:outputLink>
+                                    </apex:column> 
+                                    
+                               </apex:pageBlockTable>
+                             </apex:pageblockSection>  
+                            </Apex:pageblock> 
+                            
+                           <!-- commented below as no needed(Start)--->
+                           <!--   
+                             <Apex:pageblock >
+                              <apex:pageblockSection title="Assets" columns="1">
+                                <apex:pageBlockTable value="{!Lass}" var="f">
+                                   <apex:column >
+                                      <apex:facet name="header">Asset Name</apex:facet> 
+                                      <apex:outputLink value="/{!f.Id}" >{!f.Name}</apex:outputLink>
+                                    </apex:column>
+                                    
+                                    <apex:column >
+                                      <apex:facet name="header">Status</apex:facet> 
+                                      <apex:outputField value="{!f.Status}"/>
+                                    </apex:column>
+                                    <apex:column >
+                                     <apex:facet name="header">Net Price</apex:facet> 
+                                      <apex:outputField value="{!f.CPQ_Net_Price__c}"/>
+                                    </apex:column>
+                                    <apex:column >
+                                      <apex:facet name="header">Contract Start Date</apex:facet> 
+                                      <apex:outputField value="{!f.CPQ_Contract_Start_Date__c}"/>
+                                    </apex:column>
+                                    <apex:column >
+                                      <apex:facet name="header">Contract End date</apex:facet> 
+                                      <apex:outputField value="{!f.CPQ_Contract_End_Date__c }"/>
+                                    </apex:column>
+                               </apex:pageBlockTable>
+                             </apex:pageblockSection>  
+                            </Apex:pageblock> 
+                           -->          
+                         <!-- commented below as no needed(End)---> 
+                                 
+                              <Apex:pageblock >
+                              <apex:pageblockSection title="Related Contacts" columns="1">
+                                <apex:pageBlockTable value="{!fullContactRoleList}" var="f">
+                                  <apex:column >
+                                    <apex:facet name="header">Contact Name</apex:facet> 
+                                      <apex:outputLink value="/{!f.Contact_Role__r.Contact__r.id}" >{!f.Contact_Role__r.Contact__r.Name}</apex:outputLink>
+                                    </apex:column>
+                                     <apex:column >
+                                      <apex:facet name="header">Contact Mailing Address</apex:facet> 
+                                      <apex:outputField value="{!f.Contact_Role__r.Contact__r.MailingStreet}"/><br></br>
+                                      
+                                      <apex:outputField value="{!f.Contact_Role__r.Contact__r.MailingCity}"/>
+                                      <apex:outputText value="," rendered="{!f.Contact_Role__r.Contact__r.MailingCity!='' && f.Contact_Role__r.Contact__r.MailingState !=''}"/>
+                                      <apex:outputField value="{!f.Contact_Role__r.Contact__r.MailingState}"/>
+                                      <apex:outputText value=" "/>
+                                      <apex:outputField value="{!f.Contact_Role__r.Contact__r.MailingPostalCode}"/><br></br>
+                                      <apex:outputfield value="{!f.Contact_Role__r.Contact__r.MailingCountry}"/>
+                                    </apex:column>
+                   
+                    <apex:column >
+                      <apex:facet name="header">Contact PS Person Id</apex:facet> 
+                      <apex:outputField value="{!f.Contact_Role__r.Contact__r.PS_Person_Id__c}"/>
+                    </apex:column>
+                    <apex:column >
+                      <apex:facet name="header">Email</apex:facet> 
+                      <apex:outputField value="{!f.Contact_Role__r.Contact__r.Email}"/>
+                    </apex:column>
+                    <apex:column >
+                      <apex:facet name="header">Contact Role</apex:facet> 
+                      <apex:outputField value="{!f.Contact_Role__r.Role__c}"/>
+                    </apex:column>
+                    <apex:column >
+                      <apex:facet name="header">Mobile Phone</apex:facet> 
+                      <apex:outputField value="{!f.Contact_Role__r.Contact__r.MobilePhone}"/>
+                    </apex:column>
+                    <apex:column >
+                      <apex:facet name="header">Phone</apex:facet> 
+                      <apex:outputField value="{!f.Contact_Role__r.Contact__r.Phone}"/>
+                    </apex:column>
+                    <apex:column >
+                      <apex:facet name="header">Active Portal User</apex:facet> 
+                      <apex:outputField value="{!f.Contact_Role__r.Contact__r.NOV_isActive__c}"/>
+                    </apex:column>
+                </apex:pageBlockTable>
+                <apex:outputPanel layout="block">
+                            <apex:outputText value="No Primary Sales Contact Selected" rendered="{!NOT(hasPCs)}" style="font-style:italic; color:red;" />
+                        </apex:outputPanel>
+                        <apex:outputPanel layout="block">
+                            <apex:outputText value="No Primary Sales Technical Contact Selected" rendered="{!NOT(hasSAs)}" style="font-style:italic; color:red;" />
+                        </apex:outputPanel>
+              </apex:pageblockSection>
+              
+          </Apex:pageblock>
+         <apex:pageBlock mode="edit">
+            <apex:pageBlockSection collapsible="false" columns="1" title="Attachments">
+                <apex:pageBlockSectionItem >
+                    <apex:outputText value="Attach New File: " />
+                    <apex:outputPanel >
+                        <apex:inputFile value="{!attachObj.Body}" fileName="{!attachObj.Name}" fileSize="{!fileSize}" size="40" />
+                        <apex:outputText value="  Type: " />
+                        <apex:selectList multiselect="false" size="1" value="{!selectedAttachmentType}">
+                            <apex:selectOption itemValue="" itemLabel="--None--" />
+                            <apex:selectOption itemValue="Customer Billing Information" itemLabel="Customer Billing Information" />
+                            <apex:selectOption itemValue="SOW" itemLabel="SOW" />
+                            <apex:selectOption itemValue="Hosting Specs" itemLabel="Hosting Specs" />
+                            <apex:selectOption itemValue="Purchase Order" itemLabel="Purchase Order" />
+                            <apex:selectOption itemValue="Purchase Order Exemption" itemLabel="Purchase Order Exemption" />
+                            <apex:selectOption itemValue="Fulfillment Welcome Letter" itemLabel="Fulfillment Welcome Letter" />
+                        </apex:selectList>
+                        <apex:commandButton action="{!uploadFile}" value="Upload" />
+                    </apex:outputPanel>
+                </apex:pageBlockSectionItem>
+                <apex:outputPanel layout="block">
+                    <apex:pageBlockTable value="{!attachmentList}" var="a">
+                        <apex:facet name="header">
+                            <apex:outputText value="Attachment List" />
+                        </apex:facet>
+                        <apex:column >
+                            <apex:outputLink value="/servlet/servlet.FileDownload?file={!a.Id}" target="_blank">
+                                <apex:outputText value="{!a.Name}" />
+                            </apex:outputLink>
+                        </apex:column>
+                        <apex:column value="{!a.Description}" />
+                        <apex:column value="{!a.ContentType}" />
+                        <apex:column value="{!a.CreatedDate}" />
+                        <apex:column headerValue="Created By" value="{!a.CreatedBy.Name}" />
+                    </apex:pageBlockTable>
+                </apex:outputPanel>
+            </apex:pageBlockSection> 
+        </apex:pageBlock> 
+    </apex:form> 
+</apex:page>

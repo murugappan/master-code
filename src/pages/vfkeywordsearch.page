@@ -1,0 +1,52 @@
+<apex:page sidebar="false" title="Article List" controller="vfKeywordSearchController">
+<style>
+td{
+vertical-align : top;
+text-align: left;
+}
+</style>
+<apex:form >
+<apex:pageBlock title="Search" >
+<apex:inputText value="{!searchstring}" id="theSearchstring" maxlength="100" size="110"/>
+<!-- <apex:outputtext value="Total {!maxSize} Articles returned" rendered="{!searchstring != null}" /> -->
+&nbsp;
+<!-- <apex:commandButton value="Go" id="submitButton" style="width:30"
+reRender="theSearchResults" /> -->
+<apex:commandButton action="{!Go}" value="Go"  />
+<apex:outputtext value="Total {!maxSize} Articles returned" rendered="{!(searchstring != null )}" />
+</apex:pageBlock>
+<apex:messages />
+<apex:pageBlock title="Article List">
+<apex:panelGroup id="theSearchResults" >
+<apex:panelGrid width="100%">
+<table width="99%">
+<tr>
+<th width="33%">Title</th>
+<th width="33%">Article Type</th>
+<th width="33%">Summary</th>
+</tr>
+</table>
+<knowledge:articleList articleVar="article" pageNumber="{!currentPageNumber}"
+Keyword="{!searchstring}" hasMoreVar="false" pageSize="10">
+<table width="99%">
+<tr>
+<td width="33%">
+<apex:outputLink target="_blank" value="{!URLFOR($Action.KnowledgeArticle.View,
+article.id,['popup' = 'true'])}">{!article.title}</apex:outputLink>
+</td>
+<td width="33%"><apex:outputText >{!article.articleTypeLabel}</apex:outputText></td>
+<td width="33%"><apex:outputText >{!article.abstract}</apex:outputText></td>
+</tr>
+</table>
+</knowledge:articleList>
+</apex:panelGrid>
+<apex:panelGrid columns="2">
+<apex:commandLink action="{!previous}" value="Previous" style="{!IF(prevRequired =
+true,'display:block','display:none')}" reRender="theSearchResults"/>
+<apex:commandLink action="{!next}" value="Next" style="{!IF(nextRequired =
+true,'display:block','display:none')}" reRender="theSearchResults"/>
+</apex:panelGrid>
+</apex:panelGroup>
+</apex:pageBlock>
+</apex:form>
+</apex:page>

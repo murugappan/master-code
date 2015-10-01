@@ -1,0 +1,74 @@
+<apex:page standardController="Contact_Role_Selector__c" extensions="ModifyContactRoleConnectorController" title="{!pageTitle}" tabStyle="Opportunity">
+	<apex:sectionHeader title="Contact Role Selector Edit" subtitle="{!connector.Name}" />
+	<apex:pageMessages rendered="{!pageError}" />
+	<apex:form rendered="{!isNew && hasConnector}">
+		<apex:pageBlock mode="edit">
+			<apex:pageBlockButtons rendered="{!NOT(showNewContactRole)}">
+				<apex:commandButton action="{!doSave}" value="Save" />
+				<apex:commandButton action="{!doCancel}" value="Cancel" immediate="true" />
+			</apex:pageBlockButtons>
+			<apex:pageBlockSection title="Please use the Add buttons to select your Primary Sales and Sales Technical Contacts. If the Contacts are not listed, use the Link to add them.">
+				<apex:outputField value="{!connector.Opportunity__c}" rendered="{!connector.Opportunity__c != null}" />
+			</apex:pageBlockSection>
+			<apex:outputPanel layout="block" id="contactRoleList">
+				<apex:pageBlockSection columns="1">
+					<apex:pageBlockTable value="{!cRoleList}" var="c">
+						<apex:facet name="header">
+							<apex:outputText value="Current contact roles on {!accountName} Account" />
+						</apex:facet>
+						<apex:column >
+							<apex:commandButton value="Add" action="{!c.doAdd}" disabled="{!c.selected}" />
+						</apex:column>
+						<apex:column value="{!c.cRole.Contact__r.Name}" />
+						<apex:column value="{!c.cRole.Role__c}" />
+					</apex:pageBlockTable>
+				</apex:pageBlockSection>
+			</apex:outputPanel>
+			<apex:outputPanel layout="block" id="newContactRole">
+				<apex:pageBlockSection columns="1" rendered="{!NOT(showNewContactRole)}">
+					<apex:commandLink value="Click Here if your Contact Role is not found" action="{!displayNewContactRoleSection}" />
+				</apex:pageBlockSection>
+				<apex:pageBlockSection columns="1" title="Add New Contact Role...This will add this Contact Role to the Account Selected" rendered="{!showNewContactRole}">
+					<apex:pageMessages rendered="{!newContactRoleError}" />
+				</apex:pageBlockSection>
+				<apex:pageBlockSection rendered="{!showNewContactRole}">
+					<apex:inputField value="{!cRole.Contact__c}" required="true" />
+					<apex:inputField value="{!cRole.Account__c}" />
+					<apex:pageBlockSectionItem >
+						<apex:outputText value="Business Unit" />
+						<apex:selectList value="{!selectedBusinessUnit}" multiselect="false" size="1">
+							<apex:selectOptions value="{!businessUnitList}" />
+						</apex:selectList>
+					</apex:pageBlockSectionItem>
+					<apex:inputField value="{!cRole.Expire_Role__c}" />
+					<apex:pageBlockSectionItem >
+						<apex:outputText value="Role" />
+						<apex:selectList value="{!selectedRole}" multiselect="false" size="1">
+							<apex:selectOptions value="{!roleList}" />
+						</apex:selectList>
+					</apex:pageBlockSectionItem>
+				</apex:pageBlockSection>
+				<apex:pageBlockSection columns="1" rendered="{!showNewContactRole}">
+					<apex:outputPanel layout="block" style="text-align:center">
+						<apex:commandButton action="{!addNewRole}" value="Save" />
+						<apex:commandButton action="{!cancelNewRole}" value="Cancel" immediate="true" />
+					</apex:outputPanel>
+				</apex:pageBlockSection>
+			</apex:outputPanel>
+			<apex:outputPanel layout="block" id="contactRoleUpdateList">
+				<apex:pageBlockSection columns="1">
+					<apex:pageBlockTable value="{!cRoleList}" var="c">
+						<apex:facet name="header">
+							<apex:outputText value="Roles to be added" />
+						</apex:facet>
+						<apex:column rendered="{!c.selected}">
+							<apex:commandButton value="Remove" action="{!c.doRemove}" />
+						</apex:column>
+						<apex:column value="{!c.cRole.Contact__r.Name}" rendered="{!c.selected}" />
+						<apex:column value="{!c.cRole.Role__c}" rendered="{!c.selected}" />
+					</apex:pageBlockTable>
+				</apex:pageBlockSection>
+			</apex:outputPanel>
+		</apex:pageBlock>
+	</apex:form>
+</apex:page>

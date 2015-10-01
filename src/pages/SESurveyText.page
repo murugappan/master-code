@@ -1,0 +1,3 @@
+<apex:page standardController="SE_MobilEdu_Request__c">
+<apex:outputText style="font-weight:bold" value="According to the Key Perfomance Indicators in the help bubbles, how would you rate the SE's ability to: (1=Needs Work, 5=Rock Star)"/>
+</apex:page>

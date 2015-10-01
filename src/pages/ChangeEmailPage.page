@@ -1,0 +1,45 @@
+<apex:page id="changeUserName" showHeader="false" controller="ChangeEmailController"  standardstylesheets="false" title="Change UserName" cache="false" action="{!Redirect}">
+    <apex:outputpanel layout="block" id="outerpanel">
+        <apex:composition template="btbb_template"> 
+            
+            <apex:define name="js">
+                <apex:stylesheet value="{!URLFOR($Resource.BtBbStyles,'includes/theme2011/css/idm.css')}"/>
+            </apex:define>
+            
+            <apex:define name="head">
+            </apex:define>
+            
+            <div align="center">
+            
+            <apex:define name="topbar"><c:btbb_globalsearch /></apex:define>
+            <apex:define name="nav"><c:btbb_auth_nav /></apex:define>
+            <apex:define name="content">
+                <apex:form >
+                    <h3>Change User Name / Email</h3>
+                        <br/>
+                         <apex:messages />
+                        <apex:panelGrid columns="2" style="margin-top:1em;">
+                           
+                                                       
+                            <apex:outputLabel value="New Email" for="cemail"  style="font-size:12px;margin-right:3px"/>
+                            <apex:inputText value="{!CEmail}" id="cemail" size="30"/>
+                            <apex:panelGroup />
+                            <apex:panelGroup >
+                                <br/>
+                                <apex:commandButton id="cbemail" action="{!changeEmail}" value="Change Email"/> &nbsp;&nbsp;
+                                <apex:commandButton id="cancel" action="{!cancel}" immediate="true" value="Cancel"/>
+                    
+                            </apex:panelGroup>
+                            
+                        </apex:panelGrid>
+                        
+                        
+            </apex:form>
+        </apex:define>
+        
+        
+        </div>
+        </apex:composition>
+        </apex:outputpanel>
+        
+        </apex:page>

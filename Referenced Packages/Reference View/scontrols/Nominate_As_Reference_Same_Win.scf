@@ -1,0 +1,16 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.0 Transitional//EN">
+<html>
+<head>
+    <script src="/soap/ajax/14.0/connection.js"></script>
+</head>
+<body>
+{!INCLUDE($SControl.ReferenceViewTabUtils)}
+<script>
+var tabURL = getTabURL();
+tabURL += "&cid={!Contact.Id}";
+tabURL += "&aid={!Account.Id}";
+tabURL += "&page=Nominate";
+window.parent.location.href = tabURL;
+</script>
+</body>
+</html>

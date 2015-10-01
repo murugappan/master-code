@@ -1,0 +1,86 @@
+<apex:page controller="CaseRelevantArticlesController" cache="false" id="CaseReleventArticle" standardStylesheets="false" showHeader="false" sidebar="false" contentType="text/html" action="{!Redirect}">
+    
+    <apex:composition template="btbb_template">
+        <apex:define name="js">
+                <style type="text/css" title="currentStyle"> 
+                    @import "{!URLFOR($Resource.DataTables, 'media/css/demo_page.css')}";
+                    @import "{!URLFOR($Resource.DataTables, 'media/css/casesearch.css')}";
+                    @import "{!URLFOR($Resource.DataTables, 'media/css/ColumnFilterWidgets.css')}";
+                    tr.selected {background-color: red !important;}
+                    .dataTables_filter input[type="text"] { font-size:11px;font-weight:bold;color:#767676;padding-left:7px; }
+                    .fullContent { margin-top: 10px; }
+                    .nohover (cursor:pointer;)
+                </style> 
+                
+                <script type="text/javascript" charset="utf-8" src="{!URLFOR($Resource.DataTables, 'media/js/jquery.js')}"></script> 
+                <script type="text/javascript" charset="utf-8" src="{!URLFOR($Resource.DataTables, 'media/js/jquery.dataTables.js')}"></script> 
+                <script type="text/javascript" charset="utf-8" src="{!URLFOR($Resource.DataTables, 'media/js/ColumnFilterWidgets.js')}"></script>
+                
+                <script type="text/javascript" charset="utf-8"> 
+                    $(document).ready( function () {
+                        var oTable = $('#resultsTable').dataTable( {
+                            "bSort": false,
+                            "sPaginationType": "full_numbers",
+                             "aoColumnDefs": 
+                                [
+                                { "bSortable": false, "aTargets": [ 0,1,2 ] },
+                                { "sWidth": "70px", "aTargets": [  2 ] },
+                                { "sWidth": "200px", "aTargets": [ 1 ] }
+                                ],
+                        } );                        
+                } );
+                </script>
+                </apex:define>
+        <apex:define name="topbar"><c:btbb_globalsearch /></apex:define>
+        <apex:define name="nav"><c:btbb_auth_nav /></apex:define>
+        <apex:define name="content">
+          <apex:form >
+          <span style="float: right; clear:none; font-size: 14px; margin-top: 10px;">
+          <apex:outputLink style="font-size: 14px; font-weight: bold; text-decoration: none; color: #555;line-height: 14px;" value="{!$Page.btbb_caseview}?id={!caseId}">
+          Go Back to Case #{!casenumber}&nbsp;&rarr;</apex:outputLink>
+          </span>           
+            <h2>Relevant Knowledge Base Articles</h2>
+            <p>We searched our Knowledge Base for you using the search term <b><i>{!searchtext}</i></b> as it was determined to be related to your support case. The results can be further refined by keyword search using the search box below.</p>
+                <p>The list below contains the most relevant and up-to-date knowledge Base articles that relate to the subject and details of your support case.</p>
+                <div class="fullContent" style="margin-top:25px;">                                      
+                    <apex:outputPanel id="output">
+                    
+                    <table width="100%" cellpadding="0" cellspacing="0" id="resultsTable">
+                        <thead class="nohover">
+                            <!--<th>Article #</th>-->
+                            <th>Title</th>
+                            <th>Type</th>
+                            <th>Updated</th>
+                        </thead>
+                        <tbody>
+                        <apex:repeat var="k" value="{!kavWrapperList}" id="articleList">
+                        
+                        <tr>
+                            <!--<td align="center" valign="center">
+                            	<apex:outputLink value="{!$Page.btbb_articleview}?id={!k.knowledgeArticleId}&cid={!caseId}">
+                            		<apex:outputText value="{!k.articleNumber}" />
+                            	</apex:outputLink>
+                            </td>-->
+                            <td align="left" valign="top">
+                            	<apex:outputLink value="{!$Page.btbb_articleview}?id={!k.knowledgeArticleId}&cid={!caseId}">
+                            		<apex:outputText value="{!k.name}" />
+                            	</apex:outputLink>
+                            </td>
+                            <td align="left" valign="center">
+                            	<apex:outputText value="{!k.articleType}"/>
+                            </td>
+                            <td align="center" valign="center" style="white-space:nowrap;">
+                            	<apex:outputText value="{0,date,MMM dd, yyyy}">
+                            		<apex:param value="{!DATEVALUE(k.LastPublishedDate)}" />
+                            	</apex:outputText>
+                            </td>
+                        </tr>
+                        </apex:repeat>
+                        </tbody>
+                        </table>                          
+                        </apex:outputPanel>
+                </div>
+             </apex:form>   
+        </apex:define>
+    </apex:composition>
+</apex:page>

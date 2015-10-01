@@ -1,0 +1,111 @@
+<apex:page showHeader="false" sidebar="false" extensions="btbbSubcriptionsControllerExtension,btbb_articleFollowManagementController" contentType="text/html" standardController="Subscriber__c" standardStylesheets="false" action="{!redirect}">
+   
+  
+  <apex:composition template="btbb_template" >
+  <apex:define name="js">
+  
+  </apex:define>
+  <apex:define name="head">
+      <style>
+      p {margin-bottom: 10px; }
+      </style>
+       <link rel="stylesheet" href="{!URLFOR($Resource.btbbSubscriptions, 'styles.css')}" type="text/css" media="all" />
+  <script type="text/javascript" charset="utf-8" src="{!URLFOR($Resource.btbbSubscriptions, 'js/organictabs.jquery.js')}"></script> 
+  <script type="text/javascript" charset="utf-8"> 
+                
+                    $(document).ready( function () {
+                     $("#tabbed").organicTabs({
+				         "speed": 100,
+				          "param": "tab"
+			              });
+                     });
+   </script>
+   <script>
+    var isClicked = false;
+    function checkDoubleSubmit(obj){
+                if (isClicked) {
+                    return false;
+                }else {
+                    isClicked = true;
+                    obj.className = 'btnDisabled';//only shows the button as disabled.
+                    return true;
+                }
+     }
+
+
+</script>
+  </apex:define>
+  <apex:define name="topbar"><c:btbb_globalsearch /></apex:define>
+  <apex:define name="nav"><c:btbb_auth_nav /></apex:define>
+  <apex:define name="content">
+  <h2>My Subscriptions </h2>
+
+       <apex:form >
+            <apex:pageBlock >
+                   <div  id="btbbAccountLeftCol">
+                        <ul>
+                            <li><a href="{!$Page.btbb_myprofile}?id={!UserId}">My Profile</a></li>
+                            <li><a href="{!$Page.btbb_myinstitution}?cid={!UserContactId}">My Institution</a></li>
+                             <li>My Subscriptions</li>
+                        </ul>
+                    </div>    
+                    <div style="float:left;width:200px">
+                  <div id="tabbed" class="container">
+                          <ul class="nav" style="list-style: none;">
+	                        <li class="nav-one" style="list-style: none;"><a href="#subscriptions1" class="current">Email Subscriptions</a></li>
+	                        <li class="nav-two" style="list-style: none;"><a href="#subscriptions2">Subscribed Articles</a></li>
+	                        
+                          </ul>
+                           <div id="subscriptions1">
+                            <div class="section">
+	                          <div class="key">
+    	                       <p><a class="check on" style="text-decoration:none;">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</a>Subscribed via Email</p>
+                               <p><a class="check" style="text-decoration:none;">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</a>Subscription Available</p>
+                             </div>
+                           <table>
+            	              <thead>
+                                <tr>
+                                  <th><h3 style="color: #4d4d4f;font-size: 13px;font-weight: bold;"><img src="{!URLFOR($Resource.btbbSubscriptions,'img/arrow_icon.png')}" alt="arrow" />Article Types</h3></th>
+                                    <apex:repeat value="{!productlist}" var="p">
+                                    <th>
+                                 <b> <div style="font-family:Cambria; color:#454545; font-size: 13px; align:left;"> {!p}</div> </b></th>
+                                    </apex:repeat>
+                               </tr>
+                             </thead>
+            		          <apex:repeat value="{!followList}" var="f">
+            		           <tr>
+            		             <td><apex:outputText value="{!f.articletype}" /></td>
+            		             <apex:repeat value="{!f.followlist}" var="r">
+            		               <td>
+	            			          <apex:commandLink styleClass="{!r.styleclass}"  style="text-decoration:none;" action="{!r.updateFollow}" title="{!r.tooltip}" onclick="return checkDoubleSubmit(this)">
+	            			           &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+	            			          </apex:commandLink>
+	            	                 </td>	
+	            	                </apex:repeat>
+	            	             </tr>	
+            		           </apex:repeat>
+            		         </table>
+            		        
+                             </div>
+                           </div>   
+                       <div id="subscriptions2" class="hide">
+                        <apex:outputpanel layout="block" styleclass="section" id="subscibsection">
+                         <table class="articles">
+                         <apex:repeat value="{!articlefollowlist}" var="k">
+                            <tr>
+                            <td><p class="{!k.styleclass}">Yes</p></td>
+                             <td><a href="/btbb_articleview?id={!k.kav.knowledgearticleid}" target="_blank">{!k.kav.title}</a></td>
+                             <td><apex:commandLink value="{!k.linkDisplay}" title="{!k.tooltip}" action="{!k.updateFollow}" rerender="subscibsection"/></td>
+                            </tr>
+                         </apex:repeat>   
+                          </table>
+                        </apex:outputpanel>
+                     </div>
+                 </div>
+                 </div>       
+            </apex:pageBlock>
+        </apex:form>      
+         
+  </apex:define> 
+  </apex:composition>
+</apex:page>

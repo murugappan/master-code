@@ -1,0 +1,17 @@
+<apex:page controller="CameleonCPQ.CPQError_VFCtrl">
+  <script type="text/javascript">
+      function backToEntity() {
+          top.location.href = '/{!URLENCODE(entityId)}';
+      }
+      window.setTimeout(backToEntity,10000)
+  </script>
+
+  <apex:form id="maintenanceForm">
+    <apex:pageBlock >
+        <apex:pageMessage severity="error" strength="3" summary="{!msg}" detail="{!errMsg}"/>
+        <apex:pageBlockButtons location="bottom">
+            <apex:commandButton value="Back to {!entityType}" action="{!redirect}" />
+        </apex:pageBlockButtons>
+    </apex:pageBlock>
+  </apex:form>
+</apex:page>

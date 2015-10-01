@@ -1,0 +1,37 @@
+<apex:page cache="false" controller="btbb_community" id="Community" standardStylesheets="false" showHeader="false" sidebar="false" contentType="text/html" action="{!Redirect}">
+    <apex:composition template="btbb_template">
+        <apex:define name="topbar"><c:btbb_globalsearch /></apex:define>
+        <apex:define name="nav"><c:btbb_auth_nav /></apex:define>
+        <apex:define name="content">
+            
+            <h2>Community Resources</h2>
+                    <p style="display:{!IF((CONTAINS(corelicense,'Moodlerooms')), 'block','none' )}">One of Moodle’s greatest strengths is its extensive and diverse community. There are a variety of ways to connect with Moodle educators, system administrators, instructional designers, developers, and users from around the world.</p>
+                    <p style="display:{!IF((NOT(CONTAINS(corelicense,'Moodlerooms'))), 'block','none' )}">The Blackboard Client Community is a community like no other. It is home to thousands of educators, system administrators, instructional designers and developers from around the globe that bring together the fresh ideas and the passion it takes to create a better education experience. Join them and you'll get the most out of the technology you're using.</p>
+                    <div class="content2ColContainer">
+                    <apex:variable var="size" value="{!btbbCommunitylinks.size}" />
+                        <div class="content2ColL">
+                        <apex:variable var="c" value="{!1}" />
+                            <apex:repeat value="{!btbbCommunitylinks}" var="k" rows="{!CEILING(size/2)}">
+                            <h3 id="{!k.elementid__c}" class="ssHeading"><a href="{!k.URL__C}" target="{!k.target__c}">{!k.Link_Name__c}</a></h3>
+                            <p><apex:outputtext value="{!k.Description__c}" escape="false"/></p>
+                            <div class="cleaner divider" style="{!if(c==CEILING(size/2),'display:none','display:block')}">&nbsp;</div>
+                             <apex:variable var="c" value="{!c+1}"/>
+                            </apex:repeat>
+                          
+                        </div>
+                        <div class="content2ColR">
+                         <apex:variable var="d" value="{!CEILING(size/2)+1}" />
+                            <apex:repeat value="{!btbbCommunitylinks}" var="k" first="{!CEILING(size/2)}">
+                            <h3 id="{!k.elementid__c}" class="ssHeading"><a href="{!k.URL__C}" target="{!k.target__c}">{!k.Link_Name__c}</a></h3>
+                            <p><apex:outputtext value="{!k.Description__c}" escape="false"/></p>
+                            <div class="cleaner divider" style="{!if(d==size,'display:none','display:block')}">&nbsp;</div>
+                             <apex:variable var="d" value="{!d+1}"/>
+                            </apex:repeat>
+                        </div>                    
+                    </div>
+                    <div class="cleaner">&nbsp;</div>    
+
+    
+        </apex:define>
+    </apex:composition>
+</apex:page>

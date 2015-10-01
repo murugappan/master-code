@@ -1,0 +1,10 @@
+<apex:page controller="AttachRedirect" action="{!redirect}" sidebar="false" showHeader="false" standardStylesheets="false">
+ <apex:composition template="btbb_template">
+        <apex:define name="topbar"><c:btbb_globalsearch /></apex:define>
+        <apex:define name="nav"><c:btbb_auth_nav /></apex:define>
+        <apex:define name="content">
+            <h2>Attachment Download</h2>
+            <p>You are currently downloading a file from Behind the Blackboard.  You may close/navigate away from this page at any time.</p>
+        </apex:define>
+</apex:composition>
+</apex:page>

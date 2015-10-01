@@ -1,0 +1,140 @@
+<apex:page standardController="Opportunity" tabStyle="Opportunity" showHeader="false" sidebar="false" extensions="OpportunityExtension" id="OppStagePage">
+    <style type="text/css">
+        body{
+            width: 700px;
+            margin-left: 10px;
+            margin-right: 10px;
+        }
+    </style>
+    <apex:form id="OppStageForm" >
+        <apex:pageBlock title="Opportunity Detail" rendered="{!editMode}" id="editBlock">
+            <apex:pageBlockButtons >
+                <apex:commandButton action="{!save}" value="Save"/>
+            </apex:pageBlockButtons>    
+            <apex:pageMessages />
+            <apex:pageBlockSection columns="2" title="Lead Generation" showHeader="false">
+                <apex:outputField value="{!Opportunity.OwnerId}"/>
+                <apex:pageBlockSectionItem >
+                    <apex:outputLabel value="Sales Value" for="opportunity_amount"/>
+                    <apex:outputText value="{!Opportunity.CurrencyIsoCode} {!Opportunity.Amount}" id="opportunity_amount"/> 
+                </apex:pageBlockSectionItem>
+                <apex:outputField value="{!Opportunity.Type}"/>
+                <apex:outputField value="{!Opportunity.Revenue_Type__c}"/>
+                <apex:outputField value="{!Opportunity.AccountId}"/>
+                <apex:outputField value="{!Opportunity.Contract__c}"/>
+                <apex:inputField value="{!Opportunity.CloseDate}"/>
+                <apex:outputField value="{!Opportunity.StageName}"/>
+            </apex:pageBlockSection>
+            <apex:pageBlockSection columns="2" title="(D) Power Sponsor Qualification">
+                <apex:inputField value="{!Opportunity.CMS_Type__c}"/>
+                <apex:inputField value="{!Opportunity.CMS_Version__c}"/>
+                <apex:outputField value="{!Opportunity.Sales_Team_assigned__c}" rendered="{!Opportunity.Amount > 0}"/>
+            </apex:pageBlockSection>
+            <apex:pageBlockSection columns="2" title="(B) Pending Contract">
+                <apex:pageBlockSectionItem rendered="{!NOT(AND(Opportunity.StageName == '(B) Pending Contract', Opportunity.VP_approved__c == false))}">
+                    <apex:outputLabel value="Approval: "/>
+                    <apex:outputText value="Submit for Approval"/>
+                </apex:pageBlockSectionItem>
+                <apex:pageBlockSectionItem rendered="{!AND(Opportunity.StageName == '(B) Pending Contract', Opportunity.VP_approved__c == false)}">
+                    <apex:outputLabel value="Approval: "/>
+                    <apex:commandLink target="_blank" action="/p/process/Submit?id={!Opportunity.Id}&retURL=/{!Opportunity.Id}" value="Submit for Approval"/>
+                </apex:pageBlockSectionItem>
+                <apex:outputField value="{!Opportunity.VP_approved__c}"/>
+                <apex:pageBlockSectionItem >
+                    <apex:outputText value=" "/> 
+                </apex:pageBlockSectionItem>
+            </apex:pageBlockSection>
+            <apex:pageBlockSection columns="2" title=" " showHeader="false">
+                <apex:inputField value="{!Opportunity.Billing_Contact__c}" rendered="{!Opportunity.Amount > 0}"/>
+                <apex:inputField value="{!Opportunity.License_Start_Date__c}"/>
+                <apex:inputField value="{!Opportunity.Primary_Contact__c}"/>
+                <apex:inputField value="{!Opportunity.License_End_Date__c}"/>
+                <apex:inputField value="{!Opportunity.Technical_Contact__c}"/>
+                <apex:inputField value="{!Opportunity.Tax_Exempt__c}" rendered="{!Opportunity.Amount > 0}"/>
+                <apex:pageBlockSectionItem rendered="{!AND(Opportunity.Amount>0,NOT(ISNULL(Opportunity.Contact_List__c)),CONTAINS(Opportunity.Contact_List__c, 'Original Sponsor'))}">
+                    <apex:outputLabel value="Original Sponsor"/>
+                        <apex:repeat value="{!Opportunity.OpportunityContactRoles}" var="contactRole">
+                            <apex:outputText value="{!contactRole.Contact.Name} " rendered="{! contactRole.Role == 'Sponsor'}"/>
+                        </apex:repeat>
+                </apex:pageBlockSectionItem>
+                <apex:pageBlockSectionItem rendered="{!AND(Opportunity.Amount > 0,OR(ISNULL(Opportunity.Contact_List__c),NOT(CONTAINS(Opportunity.Contact_List__c, 'Original Sponsor'))))}">
+                    <apex:outputLabel value="Original Sponsor"/>
+                    <apex:commandLink target="_blank" action="/p/opp/ContactRoleEditUi/e?oppid={!Opportunity.Id}&retURL=/{!Opportunity.Id}" value="Add"/>
+                </apex:pageBlockSectionItem>
+                <apex:inputField value="{!Opportunity.Non_Tax_Exempt__c}" rendered="{!Opportunity.Amount > 0}"/>
+                <apex:pageBlockSectionItem rendered="{!AND(Opportunity.Amount>0,NOT(ISNULL(Opportunity.Contact_List__c)),CONTAINS(Opportunity.Contact_List__c, 'Power Sponsor'))}">
+                    <apex:outputLabel value="Power Sponsor"/>
+                        <apex:repeat value="{!Opportunity.OpportunityContactRoles}" var="contactRole">
+                            <apex:outputText value="{!contactRole.Contact.Name} " rendered="{!contactRole.Role == 'Power Sponsor'}"/>
+                        </apex:repeat>
+                </apex:pageBlockSectionItem>
+                <apex:pageBlockSectionItem rendered="{!AND(Opportunity.Amount>0,OR(ISNULL(Opportunity.Contact_List__c),NOT(CONTAINS(Opportunity.Contact_List__c, 'Power Sponsor'))))}">
+                    <apex:outputLabel value="Power Sponsor "/>
+                    <apex:commandLink target="_blank" action="/p/opp/ContactRoleEditUi/e?oppid={!Opportunity.Id}&retURL=/{!Opportunity.Id}" value="Add"/>
+                </apex:pageBlockSectionItem>
+                <apex:inputField value="{!Opportunity.Deployment_server_URL__c}"/>            
+            </apex:pageBlockSection>
+        </apex:pageBlock>
+        <apex:pageBlock title="Opportunity Detail" rendered="{!NOT(editMode)}" id="viewBlock">
+        <apex:pageBlockButtons >
+                <apex:commandButton action="{!edit}" value="Edit"/>
+            </apex:pageBlockButtons>
+            <apex:pageMessages />
+            <apex:pageBlockSection columns="2" title="Lead Generation" showHeader="false">
+                <apex:outputField value="{!Opportunity.OwnerId}"/>
+                <apex:pageBlockSectionItem >
+                    <apex:outputLabel value="Amount" for="opportunity_amount"/>
+                    <apex:outputText value="{!Opportunity.CurrencyIsoCode} {!Opportunity.Amount}" id="opportunity_amount"/> 
+                </apex:pageBlockSectionItem>
+                <apex:outputField value="{!Opportunity.Type}"/>
+                <apex:outputField value="{!Opportunity.Revenue_Type__c}"/>
+                <apex:outputField value="{!Opportunity.AccountId}"/>
+                <apex:outputField value="{!Opportunity.Contract__c}"/>
+                <apex:outputField value="{!Opportunity.CloseDate}"/>
+                <apex:outputField value="{!Opportunity.StageName}"/>
+            </apex:pageBlockSection>
+            <apex:pageBlockSection columns="2" title="(D) Power Sponsor Qualification">
+                <apex:outputField value="{!Opportunity.CMS_Type__c}"/>
+                <apex:outputField value="{!Opportunity.CMS_Version__c}"/>
+                <apex:outputField value="{!Opportunity.Sales_Team_assigned__c}" rendered="{!Opportunity.Amount > 0}"/>
+            </apex:pageBlockSection>
+            <apex:pageBlockSection columns="2" title="(B) Pending Contract">
+                <apex:pageBlockSectionItem rendered="{!NOT(AND(Opportunity.StageName == '(B) Pending Contract', Opportunity.VP_approved__c == false))}">
+                    <apex:outputLabel value="Approval: "/>
+                    <apex:outputText value="Submit for Approval"/>
+                </apex:pageBlockSectionItem>
+                <apex:pageBlockSectionItem rendered="{!AND(Opportunity.StageName == '(B) Pending Contract', Opportunity.VP_approved__c == false)}">
+                    <apex:outputLabel value="Approval: "/>
+                    <apex:commandLink target="_blank" action="/p/process/Submit?id={!Opportunity.Id}&retURL=/{!Opportunity.Id}" value="Submit for Approval"/>
+                </apex:pageBlockSectionItem>
+                <apex:outputField value="{!Opportunity.VP_approved__c}"/>
+                <apex:pageBlockSectionItem >
+                    <apex:outputText value=" "/> 
+                </apex:pageBlockSectionItem>
+            </apex:pageBlockSection>
+            <apex:pageBlockSection columns="2" title=" " showHeader="false">
+                <apex:outputField value="{!Opportunity.Billing_Contact__c}" rendered="{!Opportunity.Amount > 0}"/>
+                <apex:outputField value="{!Opportunity.License_Start_Date__c}"/>
+                <apex:outputField value="{!Opportunity.Primary_Contact__c}"/>
+                <apex:outputField value="{!Opportunity.License_End_Date__c}"/>
+                <apex:outputField value="{!Opportunity.Technical_Contact__c}"/>
+                <apex:outputField value="{!Opportunity.Tax_Exempt__c}" rendered="{!Opportunity.Amount > 0}"/>
+                <apex:pageBlockSectionItem rendered="{!Opportunity.Amount > 0}">
+                    <apex:outputLabel value="Sponsor"/>
+                        <apex:repeat value="{!Opportunity.OpportunityContactRoles}" var="contactRole">
+                            <apex:outputText value="{!contactRole.Contact.Name} " rendered="{!contactRole.Role == 'Sponsor'}"/>
+                        </apex:repeat>
+                </apex:pageBlockSectionItem>
+                <apex:outputField value="{!Opportunity.Non_Tax_Exempt__c}" rendered="{!Opportunity.Amount > 0}"/>
+                <apex:outputField value="{!Opportunity.Contact_List__c}" rendered="false"/>
+                <apex:pageBlockSectionItem rendered="{!Opportunity.Amount > 0}">
+                    <apex:outputLabel value="Power Sponsor"/>
+                        <apex:repeat value="{!Opportunity.OpportunityContactRoles}" var="contactRole">
+                            <apex:outputText value="{!contactRole.Contact.Name} " rendered="{!contactRole.Role == 'Power Sponsor'}"/>
+                        </apex:repeat>
+                </apex:pageBlockSectionItem>
+                <apex:outputField value="{!Opportunity.Deployment_server_URL__c}"/>
+            </apex:pageBlockSection>
+        </apex:pageBlock>
+    </apex:form>
+</apex:page>

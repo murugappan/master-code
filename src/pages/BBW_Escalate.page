@@ -1,0 +1,254 @@
+<apex:page title="Escalate Page" controller="BBW_Escalation" tabstyle="case" showHeader="false" sidebar="false" id="thepage">
+<!--<apex:includeScript value="{!$Resource.jquery}"/>-->
+<script>document.title = "Escalate Case";</script>
+<apex:sectionHeader title="Case" subtitle="Escalate Page"/>
+<style>
+.lblStyle{font-weight:bold;}
+.clmStyle{ text-align:center;}
+textarea { overflow: auto; }
+</style>
+<apex:includeScript value="/support/console/28.0/integration.js"/> 
+<script type="text/javascript">
+var idlist;
+function CloseTabs() {
+     if (sforce.console.isInConsole()) {
+          sforce.console.getEnclosingPrimaryTabId(primaryidtab);
+       } 
+     else {
+           parent.window.opener.location.reload();
+           window.parent.close();
+         } 
+    }
+   var primaryidtab = function primaryidtab(result) {
+     var tabId = result.id;
+     sforce.console.getSubtabIds(tabId , showTabId);
+    };
+    var showTabId = function showTabId(result) {
+       idlist=result.ids;
+       sforce.console.getEnclosingTabId(scndidtab);
+    };
+    var scndidtab = function scndidtab(result) {
+       var tabId = result.id;
+        var x;
+        for(x in idlist)
+            {
+             if(tabId!=idlist[x])
+             {
+               sforce.console.refreshSubtabById(idlist[x], true);
+             }
+            }
+          sforce.console.closeTab(tabId);   
+        };
+        
+</script>
+<apex:form id="theform">
+
+            
+<!--<apex:outputPanel id="errorPanel">-->
+        <apex:pageMessage strength="2" title="{!errorTitle}" summary="{!errorMessage}" severity="{!errorSeverity}" rendered="{!errorShow}" />
+    <!--</apex:outputPanel>--> 
+
+<apex:pageBlock title="" mode="edit" >
+<apex:messages />
+<apex:pageBlockButtons >
+<apex:CommandButton value="Escalate" action="{!escalate}"/>
+<apex:commandButton action="{!save}" value="Save"/>
+<apex:commandButton action="{!cancel}" value="Cancel" onclick="CloseTabs();"/>
+</apex:pageBlockButtons>
+<!--<apex:inputField value="{!Case.Replication_in_the_Case__c}" style="width:400px"/>-->
+<apex:pageBlockSection title="Available Template Type" columns="1">
+<apex:pageBlockSectionItem dataStyleClass="clmStyle">
+
+<!--<apex:inputField value="{!Template.Record_Type__c}"/>
+<apex:selectList id="RList" size="1" value="{!RecordName}" required="true" styleClass="clmStyle">                            
+                        <apex:selectOptions id="RLO" value="{!RecordList}"/>
+                        </apex:selectList>
+<apex:outputLabel value="Available Template" styleClass="lblStyle"/>-->
+<apex:selectList id="TList" size="1" value="{!TemplateName}"  style="text-align: left">                            
+                        <apex:selectOptions id="TLO" value="{!TemplateList}"/> 
+       
+    
+<apex:actionSupport event="onchange" action="{!QuestionTemplate}" rerender="TempQs" status="status"/>
+</apex:selectList>
+
+</apex:pageBlockSectionItem>
+
+</apex:pageBlockSection>
+
+<apex:pageBlock id="TempQs">
+<!--
+<apex:outputLabel value="Escalation Comment" for="stage" />
+<apex:inputField value="{!Case.Esca_Comment_4m_2to3__c}" style="width:400px"/>-->
+
+<apex:dataTable id="escComment" value="{!Qv1}" var="" columns="2" columnsWidth="400px" cellpadding="2px" rendered="{!a}">
+<apex:column >
+<apex:outputLabel value="Tier3 Escalation Comment" for="stage" />
+</apex:column>
+<apex:column >
+<apex:inputField value="{!Case.Esca_Com_4m_2to3__c}" style="width:400px"/>
+</apex:column>
+</apex:dataTable>
+<apex:outputPanel id="MyPanel"> 
+<apex:dataTable value="{!Qv1}" var="" columns="2" columnsWidth="400px" border="0px" cellpadding="5px" cellspacing="2px">
+
+<apex:column > 
+<apex:outputLabel value="Questions." for="stage" styleClass="lblStyle"/>
+</apex:column>
+<apex:column >
+<apex:outputLabel value="Answers." for="stage" styleClass="lblStyle"/>
+</apex:column>
+</apex:dataTable>
+
+<apex:dataTable value="{!Qv1}" var="" columns="2" columnsWidth="400px" cellpadding="2px">
+<apex:column >
+<apex:outputLabel value="1."/>
+<apex:outputText value="{!Qv1}"  />
+
+</apex:column>
+
+
+<apex:column >
+<apex:inPutField value="{!Case.A1__c}" style="width:400px"/> 
+
+</apex:column>
+</apex:dataTable>
+<apex:dataTable value="{!Qv2}" var="" columns="2" columnsWidth="400px" cellpadding="2px">
+<apex:column >
+<apex:outputLabel value="2." for="stage"/>
+<apex:outputtext value="{!Qv2}"/>
+</apex:column>
+<apex:column >
+<apex:inputField value="{!Case.A2__c}" style="width:400px"/>
+</apex:column>
+</apex:dataTable>
+<apex:dataTable value="{!Qv3}" var="" columns="2" columnsWidth="400px" cellpadding="2px">
+<apex:column >
+<apex:outputLabel value="3." for="stage"/>
+<apex:outputtext value="{!Qv3}"/>
+</apex:column>
+<apex:column >
+<apex:inputField value="{!Case.A3__c}" style="width:400px"/>
+</apex:column>
+</apex:dataTable>
+<apex:dataTable value="{!Qv4}" var="" columns="2" columnsWidth="400px" cellpadding="2px">
+<apex:column >
+<apex:outputLabel value="4." for="stage"/>
+<apex:outputtext value="{!Qv4}"/>
+</apex:column>
+<apex:column >
+<apex:inputField value="{!Case.A4__c}" style="width:400px"/>
+</apex:column>
+</apex:dataTable>
+<apex:dataTable value="{!Qv5}" var="" columns="2" columnsWidth="400px" cellpadding="2px">
+<apex:column >
+<apex:outputLabel value="5." for="stage"/>
+<apex:outputtext value="{!Qv5}"/>
+</apex:column>
+<apex:column >
+<apex:inputField value="{!Case.A5__c}" style="width:400px"/>
+</apex:column>
+</apex:dataTable>
+<apex:dataTable value="{!Qv6}" var="" columns="2" columnsWidth="400px" cellpadding="2px">
+<apex:column >
+<apex:outputLabel value="6." for="stage"/>
+<apex:outputtext value="{!Qv6}"/>
+</apex:column>
+<apex:column >
+<apex:inputField value="{!Case.A6__c}" style="width:400px"/>
+</apex:column>
+</apex:dataTable>
+<apex:dataTable value="{!Qv7}" var="" columns="2" columnsWidth="400px" cellpadding="2px">
+<apex:column >
+<apex:outputLabel value="7." for="stage"/>
+<apex:outputtext value="{!Qv7}"/>
+</apex:column>
+<apex:column >
+<apex:inputField value="{!Case.A7__c}" style="width:400px"/>
+</apex:column>
+</apex:dataTable>
+<apex:dataTable value="{!Qv8}" var="" columns="2" columnsWidth="400px" cellpadding="2px">
+<apex:column >
+<apex:outputLabel value="8." for="stage"/>
+<apex:outputtext value="{!Qv8}"/>
+</apex:column>
+<apex:column >
+<apex:inputField value="{!Case.A8__c}" style="width:400px"/>
+</apex:column>
+</apex:dataTable>
+<apex:dataTable value="{!Qv9}" var="" columns="2" columnsWidth="400px" cellpadding="2px">
+<apex:column >
+<apex:outputLabel value="9." for="stage"/>
+<apex:outputtext value="{!Qv9}"/>
+</apex:column>
+<apex:column >
+<apex:inputField value="{!Case.A9__c}" style="width:400px"/>
+</apex:column>
+</apex:dataTable>
+<apex:dataTable value="{!Qv10}" var="" columns="2" columnsWidth="400px" cellpadding="2px">
+<apex:column >
+<apex:outputLabel value="10." for="stage"/>
+<apex:outputtext value="{!Qv10}"/>
+</apex:column>
+<apex:column >
+<apex:inputField value="{!Case.A10__c}" style="width:400px"/>
+</apex:column>
+</apex:dataTable>
+
+</apex:outputPanel>
+</apex:pageBlock>
+<apex:pageBlockSection id="newSection" title="Other Information" columns="2">
+<apex:inputField value="{!Case.Replication_in_the_Case__c}"/>
+<apex:inputField value="{!Case.Request_Creation_of_Internal_Knowledge__c}"/>
+<!-- <apex:inputField value="{!Case.Is_this_a_Support_Managers_escalation__c}"/> -->
+<apex:pageblocksectionitem >
+<apex:outputlabel value="Observed via Screen Share" for="thecheckbox"/>
+<apex:inputcheckbox value="{!Case.Observed_via_WebEx__c}" id="thecheckbox"/>
+</apex:pageblocksectionitem>
+</apex:pageBlockSection>
+</apex:pageBlock>
+<apex:inputHidden value="{!closeWin}" id="closeWinAdmin" />
+
+</apex:form>
+<!--<script language='javascript'>      
+        var closeWinVal = document.getElementById('j_id0:j_id3:closeWinAdmin');
+        alert(closeWinVal.value);
+        //alert("Ans Field can not  left blank");
+    if(closeWinVal.value=="true")    {
+    alert('Ans Field can not left blank');
+       
+       
+       //this.parent.window.close(); 
+       window.opener.location.reload();
+       window.parent.close();
+         alert('After1');
+       opener.location.reload();
+       alert('After');
+    }
+    </script>--> 
+<script language="javascript">
+//var a=document.getElementById('j_id0:j_id3:j_id18:TempQs:escComment');
+//alert(a.value);
+ /*if(document.getElementById('j_id0:j_id3:j_id18:TempQs:escComment'))
+{
+document.getElementById('j_id0:j_id3:j_id18:j_id24').style.display='none';
+document.getElementById('j_id0:j_id3:j_id18:j_id24:j_id25:TList').disabled='true';
+
+//document.getElementById('j_id0:j_id3:j_id18:TempQs:MyPanel').disabled='true';
+//document.getElementById('j_id0:j_id3:j_id18:TempQs:MyPanel').style.display='none';
+document.getElementById('j_id0:j_id3:j_id18:newSection').style.display='none';
+
+}  */    
+        var closeWinVal = document.getElementById('{!$Component.thepage.theform.closeWinAdmin}');
+      //  alert(closeWinVal.value);
+   
+    if(closeWinVal.value=="true")    {
+       
+          CloseTabs();
+        }
+   
+
+
+
+    </script> 
+
+</apex:page>

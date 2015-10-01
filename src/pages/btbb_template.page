@@ -1,0 +1,196 @@
+<apex:page standardStylesheets="false" showHeader="false" sidebar="false"  cache="false" >
+<apex:outputText escape="false" value="<!DOCTYPE HTML>" />
+
+<html xmlns="http://www.w3.org/1999/xhtml" lang="en-us">
+
+<head id="ctl00_Head1">
+<title>Behind the Blackboard</title>
+<meta http-equiv="content-type" content="text/html" />
+<meta http-equiv="content-style-type" content="text/css" /> 
+<meta http-equiv="content-script-type" content="text/javascript" /> 
+ 
+<link rel="shortcut icon" href="https://www.blackboard.com/favicon.ico" /> 
+<link rel="icon" href="https://www.blackboard.com/favicon.ico" />
+        <link rel="stylesheet" href="{!URLFOR($Resource.btbbSubscriptions, 'logostyles.css')}" type="text/css" media="all" />
+        <apex:stylesheet value="{!URLFOR($Resource.BtBbStyles,'includes/theme2011/css/global.css')}"/>
+        <apex:stylesheet value="{!URLFOR($Resource.BtBbStyles,'includes/theme2011/css/colors.css')}"/>
+        <apex:stylesheet value="{!URLFOR($Resource.BtBbStyles,'includes/theme2011/css/btbb.css')}"/>
+        <apex:stylesheet value="{!URLFOR($Resource.BtBbStyles,'includes/theme2011/css/logos.css')}"/>
+        <script type="text/javascript" charset="utf-8" src="{!URLFOR($Resource.DataTables, 'media/js/jquery.js')}"></script> 
+        <apex:includeScript value="{!URLFOR($Resource.BtBbStyles,'includes/theme2011/js/jquery-1.4.4.min.js')}"/>
+        <!--<apex:includeScript value="{!URLFOR($Resource.BtBbStyles,'includes/theme2011/js/jq/jquery-ui-1.8.7.custom.min.js')}"/>-->
+        <apex:includeScript value="{!URLFOR($Resource.BtBbStyles,'includes/theme2011/js/common.js')}"/>
+        <!--
+        <apex:includeScript value="{!URLFOR($Resource.BtBbStyles,'includes/theme2011/js/jquery-1.4.4.min.js.js')}"/>
+        <apex:includeScript value="{!URLFOR($Resource.BtBbStyles,'includes/theme2011/js/jq/jquery-ui-1.8.7.custom.min.js')}"/>
+        <apex:includeScript value="{!URLFOR($Resource.BtBbStyles,'includes/theme2011/js/common.js')}"/>
+        -->
+            <apex:insert name="js"/>
+        
+            <apex:insert name="head"/>
+        
+        <style>
+            <apex:insert name="styles" />
+        </style>
+
+    <!-- Google Analytics Top part -->
+     <script type="text/javascript">
+         var _gaq = _gaq || [];
+         _gaq.push(['_setAccount', 'UA-1394520-1']);
+         _gaq.push(['_setDomainName', 'force.com']);
+         _gaq.push(['_setAllowLinker', true]);
+         _gaq.push(['_setAllowHash', false]);
+         _gaq.push(['_trackPageview']);
+
+
+     </script>
+
+</head>
+
+<body class="LTR Safari ENUS Home view-mode">
+    
+    <!-- Javascript Error Renders If Browser Has Javascript Disabled -->
+            <noscript>
+                <div align="center" style="margin-left:auto; margin-right:auto; margin-top:20px; margin-bottom: 20px;">    
+                    <p>
+                        This page uses Javascript. Your browser either <br />
+                        doesn't support Javascript or you have it turned off.  <br />    
+                        To see this page as it is meant to appear please use <br />
+                        a Javascript enabled browser.
+                    </p>
+                </div>
+            </noscript> 
+    
+        <!-- Skip Top Navigation Link' -->    
+        <a href="#main" id="mainContentLink" tabindex="1" accesskey="1" title="Skip repetitive navigation links" style="position: absolute; left: -3000em; width: 20em;">Skip Navigation</a>
+        
+<!--Begin Page Header-->
+
+<div id="head">
+    
+            <div id="head-inner">
+    
+                <p class="logo"><a href="./" id="ctl00_header_logoLink">Behind the Blackboard</a></p>
+
+<!--#globalnav//globalsearch-->
+<apex:insert name="topbar" />
+
+                <apex:insert name="nav" /><!--INSERT NAVIGATION HERE-->
+   
+            </div><!-- /#head-inner -->
+    
+        </div><!-- /#head -->
+
+<!-- #main -->
+<div id="main" style="background-image: none;"> 
+    
+    <div id="drilldown" >
+
+                <div id="content" class="btbb">
+
+<!-- #define:content -->
+<apex:insert name="content" />
+<!-- /#define -->
+
+                 </div><!-- /#content --> 
+                
+     </div><!-- /#drilldown --> 
+            
+</div><!-- /#main -->
+
+<!-- #foot -->        
+<div id="btbbFoot">
+
+        <div id="foot-inner">
+        
+            <div class="quick-links">
+            
+                <div class="column">
+                    <h2 class="gotham">Stay In Touch</h2>
+                    <ul>
+                        <li><a href="http://www.blackboard.com/Contact-Us/Contact-Form.aspx" target="_blank">Contact Us</a></li>
+                        <li><a href="http://www.blackboard.com/Contact-Us/Feedback/Overview.aspx " target="_blank">Feedback</a></li>
+                        <li><a href=" http://www.blackboard.com/news-and-events/index.aspx " target="_blank">News &amp; Events</a></li>
+                        <li><a href="https://behind.blackboard.com/s/suggest.aspx">BtBb Suggestions</a></li>
+                    </ul>
+                    <div class="social-media">
+                        <a href="http://twitter.com/blackboard" target="_blank" class="twitter">Twitter</a>
+                        <a href="http://www.facebook.com/blackboard" target="_blank" class="facebook">Facebook</a>
+                        <a href="http://blog.blackboard.com/" target="_blank" class="blog">Blog</a>
+                        <a class="youtube" href="http://www.youtube.com/BlackboardTV" target="_blank">You Tube</a>
+                    </div>
+                </div>
+                
+                <div class="column">
+                    <h2 class="gotham">Get Involved</h2>
+                    <ul>
+                        <li><a href="http://www.blackboard.com/Platforms/Learn/Resources/Accessibility.aspx" target="_blank">Accessibility</a></li>
+                        <li><a href="http://www.blackboard.com/Platforms/Learn/Resources/Community-Programs/Meet-Your-Peers/User-Groups.aspx " target="_blank">User Groups</a></li>
+                        <li><a href="http://www.blackboard.com/Platforms/Learn/Resources/Community-Programs/Suggest-Product-Improvements/Idea-Exchange.aspx " target="_blank">Blackboard Idea Exchange</a></li>
+                        <li><a href="http://www.blackboard.com/Contact-Us/Events-Center/User-Conferences.aspx " target="_blank">Bb World</a></li>
+                        <li><a href=" http://www.blackboard.com/community/catalyst-awards.aspx" target="_blank">Catalyst Awards</a></li>
+                    </ul>
+                </div>
+
+                <div class="column">
+                    <h2 class="gotham">Explore Learn</h2>
+                    <ul>
+                        <!-- <li><a href="http://www.blackboard.com/Sites/UpgradeCenter/index.aspx" target="_blank">Upgrade Center</a></li> -->
+                        <!--<li><a href="https://behind.blackboard.com/Downloads/Preview-Accounts " target="_blank">NG Playground</a></li>-->
+                        <li><a href="https://www.coursesites.com" target="_blank">Coursesites</a></li>
+                        <li><a href="https://www.coursesites.com/webapps/Bb-sites-signup-BBLEARN/signup.form?isTrial=true&utm_source=Bb.com&utm_medium=vanityURL&utm_campaign=LearnSp10 "  target="_blank">Preview Accounts</a></li>
+                        <li><a href="http://www.blackboard.com/Platforms/Learn/Resources/Community-Programs/Community-Support/Release-9-1-Upgrade-Cohort-Program.aspx " target="_blank">Upgrade Cohorts</a></li>
+                        <li><a href="http://help.blackboard.com/ " target="_blank">Blackboard Help</a></li> 
+                        <li><a href="http://ondemand.blackboard.com/ " target="_blank">Videos</a></li>                   
+                    </ul>
+
+                </div>
+
+                <div class="column">
+                    <h2 class="gotham">Access More</h2>
+                    <ul>
+                        <li><a href="http://www.blackboard.com/Services/Education-Technology-Consulting.aspx" target="_blank">Platform Consulting</a></li>
+                        <li><a href="http://www.blackboard.com/Platforms/Learn/Services/Implementation-Services/Effective-Practices-and-Training.aspx" target="_blank">Training</a></li>
+                        <li><a href="http://www.blackboard.com/Services/Managed-Hosting.aspx" target="_blank">Managed Hosting</a></li>
+                        <li><a href="http://www.blackboard.com/Services/Blackboard-Online-Program-Management.aspx" target="_blank">Program Management</a></li>
+                        <li><a href="http://www.blackboard.com/Services/Student-Services/Overview.aspx" target="_blank">Student Services</a></li>
+                        <li><a href="http://www.blackboard.com/Services/Enterprise-Consulting.aspx " target="_blank">Enterprise Consulting</a></li>
+                        <li><a href="http://www.blackboard.com/ " target="_blank">Blackboard Website</a></li>
+                    </ul>
+                </div>
+
+            </div><!-- /#quick-links -->
+            
+            <div class="cleaner">&nbsp;</div>
+
+            <p><span class="copy">Copyright &copy; 1997-2015. Blackboard Inc. All rights reserved. Blackboard, the Blackboard logo, BbWorld, Blackboard Learn, Blackboard Transact, Blackboard Connect, Blackboard Mobile, Blackboard Collaborate, Blackboard Analytics, Blackboard Engage, Edline, the Edline logo, the Blackboard Outcomes System, Behind the Blackboard, and Connect-ED are trademarks or registered trademarks of Blackboard Inc. or its subsidiaries in the United States and/or other countries. Blackboard products and services may be covered by one or more of the following U.S. Patents: 8,265,968, 7,493,396; 7,558,853; 6,816,878, 8,150,925.</span></p>
+            
+                <div class="logo"><a href="http://www.blackboard.com" target="_blank">Blackboard&reg;</a></div>
+
+                    <ul class="utility">
+                        <li><a href="http://www.blackboard.com/Footer/Security-Policy.aspx" target="_blank">Security</a></li>
+                        <li><a href="http://www.blackboard.com/Footer/Privacy-Policy.aspx" target="_blank">Privacy Policy</a></li>
+                        <li><a href="http://www.blackboard.com/Footer/Terms-of-Use.aspx" target="_blank">Terms of use</a></li>
+                    </ul>
+
+                    </div><!-- /#foot-inner -->
+
+                </div><!-- /#foot -->
+            
+            
+<!-- Google Analytics Bottom part -->
+<script type="text/javascript">
+    (function() {
+        var ga = document.createElement('script'); ga.type = 'text/javascript';  
+ga.async = true;
+        ga.src = ('https:' == document.location.protocol ? 'https://ssl' :  
+'http://www') + '.google-analytics.com/ga.js';
+        var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore 
+(ga, s);
+    })();
+</script>
+
+        </body>
+
+    </html>
+</apex:page>

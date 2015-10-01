@@ -1,0 +1,35 @@
+<apex:page Controller="btbb_confirmdisplay" standardStylesheets="false" showheader="false" sidebar="false"  >
+
+
+
+
+<apex:composition template="btbb_template">
+<apex:define name="topbar"><c:btbb_globalsearch /></apex:define>
+<apex:define name="nav"><c:btbb_auth_nav /></apex:define>
+<apex:define name="content">
+<h2>Institution Direct Help</h2>
+<!-- <div style="border: 2px solid #ccc; padding: 1em; background-color: #E9FFE9; margin-bottom: 1em; width: 100%; color: #000;">
+Blackboard offers many support tools for end users that are considered great suppliment to your campus helpdesk (your primary source of support). User Direct help to learn more about your institution's support options.</div> -->
+My Institution Help Desk gives you the ability to enter access information for the help desk that your students and instructors should contact for assistance.<br/><br/>
+<apex:form >
+<apex:pageBlock >
+
+<apex:outputpanel layout="block" rendered="{!NOT(isVld)}" > 
+<strong><u><h3>Updated HTML for the help page:</h3></u></strong>
+<apex:outputText value="{!univsnamess.HTML_Text__c }" escape="false" /><br/><br/> 
+</apex:outputpanel>
+
+<apex:outputpanel layout="block" rendered="{!isVld}" > 
+<strong><u><h3>Updated URL for the help page:</h3></u></strong>
+{!univsnamess.Website__c}        
+</apex:outputpanel>
+
+
+</apex:pageBlock>
+</apex:form>
+</apex:define>
+</apex:composition>
+
+
+
+</apex:page>

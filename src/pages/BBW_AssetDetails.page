@@ -1,0 +1,135 @@
+<apex:page standardController="Case" showHeader="true" extensions="BBW_AssetDetails">
+<apex:includeScript value="/support/console/22.0/integration.js"/>
+<script type="text/javascript">
+ var primaryID;
+ var subID; 
+ var stid;
+ var caid;
+     function View1(strId,casID){ 
+           stid=strId;
+           caid=casID;
+            var loc = String(parent.location.href);   
+            if (loc.indexOf('isdtp') != -1) {//For Console View
+            // parent.location = "/" + strId + "?isdtp=vw&retURL=%2F" + casID;
+                sforce.console.getEnclosingPrimaryTabId(refershtab);
+               
+            }else {   //For Salesforce
+              //  window.open("/"+strId+"?isdtp=vw&retURL=%2F"+casID);
+                window.open("../" + strId + "?retURL=%2F" + casID, "_parent");
+            }
+          
+          
+            
+         }
+  var refershtab= function refershtab(result)  
+          {
+          primaryID=result.id;
+          sforce.console.openSubtab(primaryID,"/" + stid + "?retURL=%2F" + caid,true,'Asset',
+           null,opensuccess);
+          }         
+   var opensuccess = function opensuccess(result)    
+        {
+          
+        }        
+  </script>
+<apex:form >
+<!--<apex:dataTable id="escComment" value="{!a}" var="" columns="2" columnsWidth="400px" cellpadding="2px" rendered="{!a}">
+<apex:column >
+<apex:outputLabel value="Tier3 Escalation Comment" for="stage" />
+</apex:column>
+<apex:column >
+<apex:outputText value="{!a}" style="width:400px"/>
+</apex:column>
+</apex:dataTable>-->
+
+<apex:pageBlock mode="maindetail">
+<apex:pageBlockSection columns="2" title="Installed Product Information">
+
+
+			    <apex:pageBlockSectionItem >    
+			      <apex:outputLabel value="Asset:" for="silink"/>      
+			     <apex:outputlink id="assetlink"  onclick="View1('{!AssetId}','{!Case.ID}');" value="#" >{!assetname}</apex:outputlink> 
+			        
+			   </apex:pageBlockSectionItem>
+
+
+             <apex:pageBlockSectionItem >
+	  		<apex:outputLabel style="margin-left: 100px;">
+			<a id="editasset" href="#" onclick="View1('{!AssetId}/e','{!Case.ID}');">   [Edit Asset Environment]</a> 
+			</apex:outputLabel>
+			</apex:pageBlockSectionItem>
+			    
+   
+   
+<apex:pageBlockSectionItem >
+<apex:outputLabel: value="External Asset Name:" for="asset" />
+<apex:outputText value="{!assetExtName}"/>
+</apex:pageBlockSectionItem>
+			 
+
+
+      
+<apex:pageBlockSectionItem >
+            <apex:outputLabel: value="Installed Product ID:" for="asset" />
+            <apex:outputText value="{!assetInsProdId}"/>
+
+</apex:pageBlockSectionItem>
+
+  <apex:pageBlockSectionItem >
+            <apex:outputLabel: value="Psft Product ID:" for="asset" />
+            <apex:outputText value="{!psftProdId}"/>
+
+</apex:pageBlockSectionItem>
+
+
+        
+
+<apex:pageBlockSectionItem rendered="{!NOT(moodleroom)}" >
+<apex:outputLabel: value="Database Server OS:" for="asset" rendered="{!NOT(moodleroom)}" />
+<apex:outputText value="{!assetDBSerOS}"/>
+</apex:pageBlockSectionItem>
+ 
+ 
+        <apex:pageBlockSectionItem >
+            <apex:outputLabel: value="Software URL:" for="asset" />
+            <apex:outputText value="{!assetsoftwareURL}"/>
+        </apex:pageBlockSectionItem>
+
+        
+<apex:pageBlockSectionItem id="assetpageBlockSectionItem" rendered="{!NOT(moodleroom)}">
+            <apex:outputLabel: value="Application server OS:" for="asset" rendered="{!NOT(moodleroom)}" />
+            <apex:outputText value="{!assetAppSerOS}"/>
+
+</apex:pageBlockSectionItem>
+
+ 
+<apex:pageBlockSectionItem rendered="{!NOT(moodleroom)}">
+<apex:outputLabel: value="JDK Version:" for="asset" rendered="{!NOT(moodleroom)}" />
+<apex:outputText value="{!assetJDKVersion}"/>
+
+</apex:pageBlockSectionItem>
+
+
+<apex:pageBlockSectionItem rendered="{!NOT(moodleroom)}">
+<apex:outputLabel: value="Database:" for="asset" rendered="{!NOT(moodleroom)}" />
+<apex:outputText value="{!assetDb}"/>
+</apex:pageBlockSectionItem>
+
+
+<!--<apex:pageBlockSectionItem >
+<apex:outputLabel: value="Version" for="asset" />
+<apex:outputText value="{!h}"/>
+</apex:pageBlockSectionItem>-->
+<apex:pageBlockSectionItem rendered="{!NOT(moodleroom)}">
+<apex:outputLabel value="Front Back End Access:" for="asset" rendered="{!NOT(moodleroom)}"/> 
+ <!--<apex:outputText value="{!assetFrntBkAccess}" />-->
+<apex:outputfield value="{!ast.Front_Back_Access__c}" />
+</apex:pageBlockSectionItem>
+
+       
+      
+</apex:pageBlockSection> 
+</apex:pageblock>
+</apex:form>
+
+</apex:page>
